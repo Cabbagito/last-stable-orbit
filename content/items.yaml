@@ -15,6 +15,7 @@
 - id: stun-rings
   name: Stun rings
   icon: icons/items/stun-rings.png
+  codex: stun-rings
   kind: weapon
   text: Heavy signet rings that discharge on contact. They look like bad taste until they land, and they put people down without killing them. You have to be within reach.
 
