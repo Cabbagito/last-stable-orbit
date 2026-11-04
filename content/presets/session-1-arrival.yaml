@@ -35,11 +35,11 @@ tokens:
   - {kind: npc, ref: happy-resident, map: event-horizon, at: [12.1, 7.3, 0]}
   - {kind: npc, ref: service-droid, map: event-horizon, at: [9.6, 7.9, 0]}
 inventory:  # DRAFT starting kit from the bible, for Peter to edit. Lale never carries a weapon.
-  lale: [invitation, {item: credits, count: 140}]
+  lale: [fob-watch, invitation, {item: credits, count: 140}]
   marlo: [stun-rings, invitation, {item: credits, count: 140}]
   tally: [tally-notebook, invitation, {item: credits, count: 140}]
   ves: [sidearm, splice-kit, invitation, {item: credits, count: 140}]
-  tomo: [invitation, {item: credits, count: 140}]
+  tomo: [sourdough-jar, invitation, {item: credits, count: 140}]
 
 # The Codex at the start of session 1 (DRAFT): the crew pages, How to play, where they start or reach on day one,
 # and what everyone on Ergo already knows. Everything else stays locked until Peter unlocks it in the GM tab.

@@ -17,7 +17,21 @@
   icon: icons/items/stun-rings.png
   codex: stun-rings
   kind: weapon
-  text: Heavy signet rings that discharge on contact. They look like bad taste until they land, and they put people down without killing them. You have to be within reach.
+  text: Heavy signet rings that discharge on contact. They let you use Reflex to hit people, and they put people down without killing them. You have to be within reach.
+
+- id: fob-watch
+  name: Fob watch
+  icon: icons/items/fob-watch.png
+  codex: fob-watch
+  kind: gear
+  text: A wind-up fob watch, inherited, that keeps its own time whatever the station clocks say. There's a small ring engraved on the back. You've never known what it means.
+
+- id: sourdough-jar
+  name: Sourdough starter
+  icon: icons/items/sourdough-jar.png
+  codex: sourdough-jar
+  kind: gear
+  text: A jar of sourdough starter, the same culture kept alive through every move. It gets you into kitchens and back rooms, and in with anyone homesick for real bread.
 
 - id: splice-kit
   name: Splice kit
@@ -46,7 +60,7 @@
 
 - id: tally-notebook
   name: Tally's notebook
-  icon: icons/items/note.png
+  icon: icons/items/tally-notebook.png
   codex: tally-notebook
   kind: note
   text: |-

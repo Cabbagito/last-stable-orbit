@@ -278,8 +278,24 @@ entries:
   role: Weapon
   label: Item · weapon
   art: {src: icons/items/stun-rings.png, kind: icon}
-  lead: Heavy signet rings that discharge on contact. They look like bad taste until they land, and they put people down without killing them. You have to be within reach.
+  lead: Heavy signet rings that discharge on contact. They let you use Reflex to hit people, and they put people down without killing them. You have to be within reach.
   see: [rule-fights]
+- id: fob-watch
+  sec: items
+  item: fob-watch
+  role: Gear
+  label: Item · gear
+  art: {src: icons/items/fob-watch.png, kind: icon}
+  lead: A wind-up fob watch, inherited, that keeps its own time whatever the station clocks say. There's a small ring engraved on the back. You've never known what it means.
+  see: [lale]
+- id: sourdough-jar
+  sec: items
+  item: sourdough-jar
+  role: Gear
+  label: Item · gear
+  art: {src: icons/items/sourdough-jar.png, kind: icon}
+  lead: A jar of sourdough starter, the same culture kept alive through every move. It gets you into kitchens and back rooms, and in with anyone homesick for real bread.
+  see: [tomo]
 - id: splice-kit
   sec: items
   item: splice-kit
@@ -310,7 +326,7 @@ entries:
   item: tally-notebook
   role: Note
   label: Item · note
-  art: {src: icons/items/note.png, kind: icon}
+  art: {src: icons/items/tally-notebook.png, kind: icon}
   lead: Field notes on human behaviour, in very neat handwriting.
   see: [tally]
 - id: access-chit

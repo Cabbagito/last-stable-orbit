@@ -17,11 +17,11 @@ tokens:
   - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0], hidden: true}
 inventory:
-  lale: [{item: credits, count: 120}]
+  lale: [fob-watch, {item: credits, count: 120}]
   marlo: [stun-rings, {item: credits, count: 60}]
   tally: [tally-notebook, {item: credits, count: 140}]
   ves: [sidearm, splice-kit, {item: credits, count: 90}, maintenance-log]
-  tomo: [{item: credits, count: 140}]
+  tomo: [sourdough-jar, {item: credits, count: 140}]
 
 # The Codex by the end of the night at the bar (DRAFT): session 1's start, plus who and what they met there.
 codex: [lale, marlo, tally, ves, tomo,

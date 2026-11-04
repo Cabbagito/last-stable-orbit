@@ -470,6 +470,27 @@ assets:
     bytes: 795
     width: 48
     height: 48
+  - path: icons/items/fob-watch.png
+    store: ICONS
+    asset_id: "cfe83fdc1b99c582138712977f3c2e0b"
+    sha256: "38f960b3292566d13bbcf3ce2280a30f365f83b7b5536b4ed989c8f07e30c248"
+    bytes: 1609
+    width: 48
+    height: 48
+  - path: icons/items/tally-notebook.png
+    store: ICONS
+    asset_id: "ad48407ef2c7c44a3d58b717426d0334"
+    sha256: "962249923f57932c23fbecfb687366164ed5338895b01395ef89c77a3fc55993"
+    bytes: 1796
+    width: 48
+    height: 48
+  - path: icons/items/sourdough-jar.png
+    store: ICONS
+    asset_id: "7b6eb142b0502a920a2e8ce7871e2539"
+    sha256: "ea1ffc840990ced435270696882414f496a31ba9f9971878090c6b708d1fe23a"
+    bytes: 1553
+    width: 48
+    height: 48
   - path: icons/items/stun-rings.png
     store: ICONS
     asset_id: "3eb68f76c43e63a8af104606a2b20866"
