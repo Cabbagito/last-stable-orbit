@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import FilmState, GameState, InvEntry, MapState, Preset, PresetItem, RollState, TokenState, Vitals
+from .models import RULES, BurnState, FilmState, GameState, InvEntry, MapState, Preset, PresetItem, RollState, TokenState, Vitals
 
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
 
@@ -38,7 +38,7 @@ def state_from_preset(preset: Preset, content: Content) -> dict:
         while tid in tokens:
             tid, n = f"{t.id or t.ref}-{n}", n + 1
         tokens[tid] = TokenState(kind=t.kind, ref=t.ref, map=t.map, at=t.at, hidden=t.hidden).model_dump()
-    vitals = {c: (preset.vitals.get(c) or Vitals()).model_dump() for c in content.characters}
+    vitals = {c: (preset.vitals.get(c) or Vitals(hp=ch.health)).model_dump() for c, ch in content.characters.items()}
     inventory = {c: [] for c in content.characters}
     for holder, entries in preset.inventory.items():
         inventory[holder] = [
@@ -47,7 +47,7 @@ def state_from_preset(preset: Preset, content: Content) -> dict:
             else InvEntry(uid=f"{holder}-{i + 1}", item=e).model_dump()
             for i, e in enumerate(entries)
         ]
-    return {"party_map": preset.party_map, "maps": maps, "tokens": tokens, "vitals": vitals, "inventory": inventory}
+    return {"rules": RULES, "party_map": preset.party_map, "maps": maps, "tokens": tokens, "vitals": vitals, "inventory": inventory}
 
 
 def _entry(s: GameState, holder: str, uid: str) -> InvEntry:
@@ -82,8 +82,12 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "map.switch_set":
         s.maps[data["map"]].switches[data["switch"]] = int(data["value"])
     elif ev_type == "vitals.set":
-        v = s.vitals.setdefault(data["char"], Vitals())
+        v = s.vitals.setdefault(data["char"], Vitals(hp=0))
         v.hp, v.entropy = int(data["hp"]), int(data["entropy"])
+    elif ev_type == "rules.updated":  # a game saved under older rules, brought up to date at boot
+        for char, hp in data.get("hp", {}).items():
+            s.vitals.setdefault(char, Vitals(hp=0)).hp = int(hp)
+        s.rules = int(data["rules"])
     elif ev_type == "object.shown":
         ms = s.maps[data["map"]]
         ms.shown = [o for o in ms.shown if o != data["object"]] + ([data["object"]] if data["shown"] else [])
@@ -115,6 +119,8 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "roll.pushed":
         r = _roll(s, data["roll"])
         r.shown, r.pushes, r.pushed = len(r.dice), r.pushes + 1, r.pushed + int(data["gain"])
+    elif ev_type == "roll.failed":
+        _roll(s, data["roll"]).failed = True
     elif ev_type == "roll.closed":
         r = _roll(s, data["roll"])
         r.shown, r.open = len(r.dice), False
@@ -127,6 +133,10 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         s.stage.film = None
         if data["cue"] not in s.stage.played:
             s.stage.played.append(data["cue"])
+    elif ev_type == "burn.started":
+        s.stage.burn = BurnState.model_validate(data)
+    elif ev_type == "burn.ended":
+        s.stage.burn = None
     elif ev_type == "stage.setup_set":
         s.stage.setup = data["setup"]
     elif ev_type == "stage.camera_set":

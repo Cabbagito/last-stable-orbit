@@ -3,6 +3,7 @@
 /* ---------- films, on any screen that plays one ---------- */
 .app-film{position:fixed;inset:0;z-index:50;background:#000;opacity:0;pointer-events:none;transition:opacity .8s ease}
 .app-film.on{opacity:1;pointer-events:auto}
+.app-film.hard{transition:none} /* a Burn: a hard cut in, the film, a hard cut back */
 .app-film video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;image-rendering:pixelated;display:block}
 .app-filmsound{position:absolute;left:50%;bottom:24px;transform:translateX(-50%)}
 .app-hole{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated}
@@ -67,3 +68,14 @@
 /* ---------- login: the TV's way in ---------- */
 .app-loginlinks{display:flex;gap:28px;align-items:center}
 .app-loginlinks .app-link,.app-gmlogin .app-link{min-height:44px}
+/* A failed skill's downside, for the whole table */
+.app-down{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:calc(20px * var(--k,1));box-sizing:border-box;max-width:min(92vw,calc(1040px * var(--k,1)));padding:calc(18px * var(--k,1)) calc(28px * var(--k,1)) calc(18px * var(--k,1)) calc(18px * var(--k,1));background:#000;box-shadow:0 0 0 1px #f2b544,0 0 40px rgba(0,0,0,.8);z-index:40;animation:app-down-in .35s cubic-bezier(.2,.8,.2,1)}
+.app-down.tv{top:calc(36px * var(--k,1))}
+.app-down.laptop{position:fixed;top:72px;--k:.7}
+.app-down img{width:calc(96px * var(--k,1));height:calc(96px * var(--k,1));flex:none;image-rendering:pixelated}
+.app-down-txt{display:flex;flex-direction:column;gap:calc(8px * var(--k,1));min-width:0}
+.app-down-lab{font-family:'Michroma',sans-serif;font-size:calc(11px * var(--k,1));letter-spacing:.16em;text-transform:uppercase;color:#f2b544}
+.app-down-name{font-family:'Michroma',sans-serif;font-size:calc(22px * var(--k,1));letter-spacing:.03em;color:#fff;text-transform:uppercase}
+.app-down-say{font-size:calc(26px * var(--k,1));line-height:1.35;color:#eceef1}
+@keyframes app-down-in{from{opacity:0;transform:translate(-50%,-12px)}to{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion:reduce){.app-down{animation:none}}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { plainRing, ring } from '../lib/ring'
 import { RingPortrait } from '../shell/RingPortrait'
+import { BurnRow } from '../sheet/BurnRow'
 import { send, useGame } from '../store/game'
 import { STATS, type CrewMember, type RollView, type StatKey } from '../types'
 import { RollClock } from './clock'
@@ -41,7 +42,7 @@ function Head({ roll, me, onClose }: { roll?: RollView; me?: CrewMember; onClose
   return (
     <div className="app-rollhead">
       {crew ? (
-        <RingPortrait src={crew.portrait} ring={ring(crew.hp, crew.entropy, 52, 7)} size={52} />
+        <RingPortrait src={crew.portrait} ring={ring(crew.hp, crew.entropy, 52, 7, crew.health)} size={52} />
       ) : tok ? (
         <RingPortrait src={tok.portrait} ring={plainRing(tok.color, 52, 4)} size={52} />
       ) : null}
@@ -352,6 +353,12 @@ function Stage({ rollId, resume }: { rollId: string; resume: boolean }) {
               <button type="button" className="r4-btn" onClick={reroll}>
                 Reroll
               </button>
+            )}
+            {crew?.burn?.react === 'roll' && roll.char === crew.id && (
+              // Tally's roll screen covers the sheet, so Recount sits beside Push too, and holds the same way
+              <div className="app-rollburn">
+                <BurnRow me={crew} cut={null} tip={{ on: false, enter: () => undefined, leave: () => undefined }} />
+              </div>
             )}
             <button type="button" className="r4-btn" onClick={close}>
               {nat1 ? 'Yeah. Okay.' : 'Back to the map'}

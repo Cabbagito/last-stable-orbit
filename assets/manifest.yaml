@@ -6,6 +6,7 @@ stores:
   ICONS: https://claude.ai/artifact/Hi3fgpcXR84e5cy2y7jNBs
   UI: https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff
   SHOTGUN: https://claude.ai/artifact/ExqP99kRwpzUP9Funyg7Sv
+  BURNS: https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg
 assets:
   - path: maps/event-horizon/base-open.png
     store: MAPS
@@ -994,3 +995,80 @@ assets:
     bytes: 34401
     width: 128
     height: 128
+  - path: icons/burns/lale.png
+    store: BURNS
+    asset_id: "265f1724f2905ac295bf6425333dfc70"
+    sha256: "84a0890cfc5541733fccba0be11b0678eb4420c293b1fc6c49f37f9c3de2e882"
+    bytes: 964
+    width: 48
+    height: 48
+  - path: icons/burns/marlo.png
+    store: BURNS
+    asset_id: "9e97e58bb3e14dd00d9d9593917e303d"
+    sha256: "e28dade20006ef8c630db41ccc792935b4fbdb28bd4bfe192bacd8fa68f48f18"
+    bytes: 1503
+    width: 48
+    height: 48
+  - path: icons/burns/tally.png
+    store: BURNS
+    asset_id: "c7364361dcdb24b555b9198063f27435"
+    sha256: "63119da3f92c9e641739dc8ac78413829a8eb9926566959691b58efb52eef630"
+    bytes: 1055
+    width: 48
+    height: 48
+  - path: icons/burns/ves.png
+    store: BURNS
+    asset_id: "8fdaa110219e2f87ef816f63d616de2b"
+    sha256: "53497ba2bf2b4396c41e098d449feb7fe0543935b053a9ec5146e3839f910c64"
+    bytes: 1104
+    width: 48
+    height: 48
+  - path: icons/burns/tomo.png
+    store: BURNS
+    asset_id: "0d20d209dd3da8fdd0e255fb300b3a37"
+    sha256: "eb0d18a2f03ac9a05d245ec430f905f7b53500435916ce4e5efb41a4e69767f4"
+    bytes: 1495
+    width: 48
+    height: 48
+  - path: films/burns/on-your-feet.mp4
+    store: BURNS
+    asset_id: "fd60361157148729548f4d1ea668ac6e"
+    sha256: "543b36c5a772ef81690d7845bc0ae9588855cb84fe7f8c2bee489d8733e2ebf6"
+    bytes: 272280
+    width: 1920
+    height: 1080
+  - path: films/burns/cheap-shot.mp4
+    store: BURNS
+    asset_id: "fe4dbeffb8ed2d2ad3a2f04193aebc12"
+    sha256: "230c1c6f574c1db276de8b49bde7d172691202b046dc34c6d727ee329bc9d3b2"
+    bytes: 269253
+    width: 1920
+    height: 1080
+  - path: films/burns/recount.mp4
+    store: BURNS
+    asset_id: "3ca7620dfeb7b26b13849875950d7b73"
+    sha256: "63235e7bd418b85fdec50185d47c9713c5a10b027d22f7a6f0864c2aa3cbf48d"
+    bytes: 378529
+    width: 1920
+    height: 1080
+  - path: films/burns/gone.mp4
+    store: BURNS
+    asset_id: "aa0d4e66d8f267160d53ab4a12ef4b65"
+    sha256: "65b4cceacee47a6e9056e8ff59d7cdb36d22898d6cd763d582654ddb51d03347"
+    bytes: 282086
+    width: 1920
+    height: 1080
+  - path: films/burns/gone-quiet.mp4
+    store: BURNS
+    asset_id: "f0b430c4dfa67901bfd0c3d60b7423d8"
+    sha256: "44a02c3990ccfb2ea1f20ab901e9f7a8ed284478a7e2bcabfc6668b146f12fde"
+    bytes: 226279
+    width: 1920
+    height: 1080
+  - path: films/burns/not-them.mp4
+    store: BURNS
+    asset_id: "bc01677bcb13ae38167d2571ef5f5faa"
+    sha256: "5736cfb4b76dfef8f105a02ba347910e13d18be9270df68d3fb6ff6d871e2a9d"
+    bytes: 184620
+    width: 1920
+    height: 1080

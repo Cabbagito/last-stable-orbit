@@ -5,7 +5,8 @@ import { GmTab } from './pages/GmTab'
 import { Placeholder } from './pages/Placeholder'
 import { Scene } from './pages/Scene'
 import { Header, type Tab } from './shell/Header'
-import { LaptopFilm } from './stage/Film'
+import { Downside } from './stage/Downside'
+import { BurnFilms, LaptopFilm } from './stage/Film'
 import { Tv } from './stage/Tv'
 import { useGame } from './store/game'
 import type { Me } from './types'
@@ -108,8 +109,10 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
     <div className={'r4 th-meridian' + (preview ? ' app-preview' : '')}>
       <Header tab={tab} isGm={isGm} onLogout={onLogout} />
       {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : <Placeholder tab={tab} />}
+      <Downside where="laptop" />
       <RollDialog />
       <LaptopFilm />
+      <BurnFilms />
     </div>
   )
 }

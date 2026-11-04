@@ -6,6 +6,7 @@ import { ring } from '../lib/ring'
 import { STAT_LOOK } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
 import { useGame } from '../store/game'
+import { BURN_COST, BurnCuts, BurnRow } from './BurnRow'
 import { ItemRow } from './ItemRow'
 import { STATS, type CrewMember, type InvEntry } from '../types'
 
@@ -18,21 +19,28 @@ const STAT_NAME: Record<string, string> = {
   empathy: 'EMPATHY',
 }
 
-/** The R6 character sheet: portrait in its ring, name, the 3x2 stat table, skills + chrome, items. */
+/** The R6 character sheet: portrait in its ring, name, the Burn row, the 3x2 stat table, skills, items. */
 export function Sheet({ me, items }: { me: CrewMember; items: InvEntry[] }) {
   const openPick = useGame((s) => s.openPick)
   const [hover, setHover] = useState<Anchor | null>(null)
+  const [cut, setCut] = useState<string | null>(null)
   const onHover = (key: string, el: HTMLElement) => setHover(anchorOf(key, el))
   const onLeave = (key: string) => setHover((h) => (h?.key === key ? null : h))
   return (
     <aside aria-label="Character sheet" className="r4-col">
-      <div role="img" aria-label={`${me.short}. HP ${me.hp} of 6, Entropy ${me.entropy} of 6`} style={{ alignSelf: 'center' }}>
-        <RingPortrait src={me.portrait} ring={ring(me.hp, me.entropy, 216, 12)} size={216} />
+      <div role="img" aria-label={`${me.short}. HP ${me.hp} of ${me.health}, Entropy ${me.entropy} of 6`} style={{ alignSelf: 'center' }}>
+        <RingPortrait src={me.portrait} ring={ring(me.hp, me.entropy, 216, 12, me.health)} size={216} />
       </div>
       <div style={{ flex: 'none' }}>
         <div className="r4-name">{me.name}</div>
         <div className="r5-role">{me.role}</div>
       </div>
+      {me.burn && (
+        <div style={{ flex: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <BurnRow me={me} cut={cut} tip={{ on: hover?.key === 'burn', enter: (el) => onHover('burn', el), leave: () => onLeave('burn') }} />
+          <BurnCuts me={me} cut={cut} onCut={setCut} />
+        </div>
+      )}
       <section aria-label="Stats" className="r5-table" style={{ flex: 'none' }}>
         {STATS.map((s) => {
           const die = me.stats[s]
@@ -83,6 +91,17 @@ function SheetTip({ hover, me, items }: { hover: Anchor; me: CrewMember; items: 
   if (hover.key.startsWith('item:')) {
     const e = items.find((i) => `item:${i.uid}` === hover.key)
     return e ? <ItemInspector id="app-sheettip" item={e.item} count={e.count} at={{ style, side }} /> : null
+  }
+  if (hover.key === 'burn' && me.burn) {
+    const b = me.burn
+    return (
+      <Inspector {...at} label="BURN" name={b.name} media={<InspectIcon src={b.icon} fallback="BURN" />} sub={<span className="app-ins-sub">{b.when}</span>}>
+        <div className="app-ins-txt">{b.text}</div>
+        <InspectBlock label={`${BURN_COST} ENTROPY`} tone="down">
+          <div className="app-ins-txt">Hold to burn. It can't fail. Say who it's for, and Peter does the rest.</div>
+        </InspectBlock>
+      </Inspector>
+    )
   }
   const k = me.list[Number(hover.key.slice('row:'.length))]
   if (!k) return null

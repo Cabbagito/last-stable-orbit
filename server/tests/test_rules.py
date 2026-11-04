@@ -44,7 +44,7 @@ async def test_seeded_from_default_preset(engine):
     assert s.seq == 1 and s.party_map == "event-horizon"
     assert s.maps["event-horizon"].mood == "open"
     assert {t.ref for t in s.tokens.values() if t.kind == "crew"} == {"lale", "marlo", "tally", "ves", "tomo"}
-    assert s.vitals["ves"].hp == 6 and s.vitals["ves"].entropy == 2
+    assert s.vitals["ves"].hp == 4 and s.vitals["ves"].entropy == 2
     assert "hired-gun" not in s.tokens
 
 

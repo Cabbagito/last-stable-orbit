@@ -178,7 +178,7 @@ async def test_reveal_push_close(engine, dice):
     assert (await run(engine, VES, "roll.push", {"roll": rid}))["ok"]
     r = roll(engine, rid)
     assert (r.pushes, r.pushed, r.shown) == (1, 2, 2)  # exploded: +2, and pushing shows the dice
-    assert engine.state.vitals["ves"].entropy == 1 and engine.state.vitals["ves"].hp == 6
+    assert engine.state.vitals["ves"].entropy == 1 and engine.state.vitals["ves"].hp == 4
     assert (await run(engine, VES, "roll.push", {"roll": rid}))["ok"]
     assert roll(engine, rid).pushed == 4 and engine.state.vitals["ves"].entropy == 0
     ack = await run(engine, VES, "roll.push", {"roll": rid})

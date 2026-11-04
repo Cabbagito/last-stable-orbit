@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { serverClock } from '../net/clock'
 import { useGame } from '../store/game'
 import type { FilmView } from '../types'
@@ -14,7 +14,7 @@ type Phase = 'idle' | 'wait' | 'play' | 'over'
  * that's late (it fetched the file slowly, or joined mid-film) jumps to where everyone else is. Full screen,
  * with no controls; it fades back to the map at the end. Mounted ahead with `film` null, it just fetches.
  */
-export function FilmPlayer({ src, film, sound }: { src: string; film: FilmView | null | undefined; sound: boolean }) {
+export function FilmPlayer({ src, film, sound, hard = false }: { src: string; film: FilmView | null | undefined; sound: boolean; hard?: boolean }) {
   const v = useRef<HTMLVideoElement>(null)
   const [phase, setPhase] = useState<Phase>('idle')
   const [blocked, setBlocked] = useState(false) // the browser wouldn't start the sound by itself
@@ -79,7 +79,7 @@ export function FilmPlayer({ src, film, sound }: { src: string; film: FilmView |
 
   const showing = active && (phase === 'wait' || phase === 'play')
   return (
-    <div className={'app-film' + (showing ? ' on' : '')} aria-hidden={!showing}>
+    <div className={'app-film' + (hard ? ' hard' : '') + (showing ? ' on' : '')} aria-hidden={!showing}>
       <video ref={v} src={src} preload="auto" playsInline />
       {showing && <div className="app-sr" role="status">A film is playing.</div>}
       {showing && blocked && (
@@ -114,6 +114,28 @@ export function LaptopFilm() {
   if (film.src) return <FilmPlayer key={film.at} src={film.src} film={film} sound={!!film.sound && !preview} />
   if (role === 'player') return <HoleScreen key={film.at} ends={film.ends} />
   return null
+}
+
+/**
+ * The Burn films. Every screen loads all of them ahead (they're small), so a Burn starts at once wherever it plays:
+ * on the TV when there is one, while the players' laptops go dark; otherwise on every laptop. The GM's laptop keeps
+ * working while the TV plays it, as for cutscenes. `tv`: this is the TV, which never goes dark.
+ */
+export function BurnFilms({ tv = false }: { tv?: boolean }) {
+  const crew = useGame((s) => s.view?.crew)
+  const burn = useGame((s) => s.view?.stage.burn)
+  const role = useGame((s) => s.view?.me.role)
+  const preview = useGame((s) => s.preview)
+  const key = (crew ?? []).flatMap((c) => c.burn?.cuts.map((x) => x.src) ?? []).join('|')
+  const srcs = useMemo(() => (key ? [...new Set(key.split('|'))] : []), [key])
+  return (
+    <>
+      {srcs.map((src) => (
+        <FilmPlayer key={src} src={src} film={burn?.src === src ? burn : null} sound={!!burn?.sound && !preview} hard />
+      ))}
+      {!tv && burn && !burn.src && role === 'player' && <HoleScreen key={burn.at} ends={burn.ends} />}
+    </>
+  )
 }
 
 function HoleScreen({ ends }: { ends: number }) {

@@ -27,8 +27,40 @@ export interface CrewMember {
   color: string
   stats: Record<StatKey, number>
   list: ListEntry[]
+  health: number // the most health they can have
   hp: number
   entropy: number
+  burn: BurnDef | null
+}
+
+/** One of a Burn's films. Ves has two: in a fight, and just vanishing. */
+export interface BurnCut {
+  id: string
+  label: string
+  src: string
+  length: number
+}
+
+/** A character's signature move: 2 Entropy, no roll, and its film on the TV. Public, like the skills. */
+export interface BurnDef {
+  name: string
+  when: string
+  text: string
+  icon: string
+  color: string
+  react: 'roll' | 'hurt' | null // its row pulses after a die lands (Recount) or one of the others is hurt (Not them)
+  cuts: BurnCut[]
+}
+
+/** A Burn's film playing now. `src` only reaches the screens that play it. */
+export interface BurnView {
+  char: string
+  name: string
+  color: string
+  at: number
+  ends: number
+  src?: string
+  sound?: boolean
 }
 
 export type Hum = 'bar' | 'street' | 'none' | 'beat'
@@ -200,6 +232,7 @@ export interface RollView {
   open: boolean
   pushes: number
   pushed: number
+  failed: boolean // the GM called it a failure, or it's a natural 1: a skill's downside shows on the TV
   value?: number // once landed
   count?: number // dice it took
   // the roller, the GM and the TV only:
@@ -242,6 +275,7 @@ export interface StageView {
   camera: Camera
   follow: string | null
   film: FilmView | null
+  burn: BurnView | null
   tv?: boolean // GM only: the TV is connected
   cues?: CueView[] // GM only
   films?: string[] // the TV only: every film, fetched ahead

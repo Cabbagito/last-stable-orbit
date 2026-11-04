@@ -100,11 +100,21 @@ def _crew_view(content: Content, state: GameState) -> list[dict]:
                 "color": c.color,
                 "stats": c.stats,
                 "list": [{**e.model_dump(), "icon": url(e.icon)} for e in c.entries],
-                "hp": v.hp if v else 6,
+                "health": c.health,
+                "hp": v.hp if v else c.health,
                 "entropy": v.entropy if v else 2,
+                "burn": _burn_view(c.burn),
             }
         )
     return out
+
+
+def _burn_view(b) -> dict | None:
+    """A Burn is public, like the skills. Its films go to every screen, so whichever plays it has them ready."""
+    if not b:
+        return None
+    cuts = [{"id": x.id, "label": x.label, "src": url(x.file), "length": x.length} for x in b.cuts]
+    return {"name": b.name, "when": b.when, "text": b.text, "icon": url(b.icon), "color": b.color, "react": b.react, "cuts": cuts}
 
 
 def _token_view(content: Content, tid: str, t, gm: bool) -> dict:
@@ -163,7 +173,10 @@ def _roll_view(state: GameState, r: RollState, viewer: Viewer, visible_tokens: s
         "open": r.open,
         "pushes": r.pushes,
         "pushed": r.pushed,
+        "failed": r.failed or phase == "nat1",
     }
+    if out["failed"] and r.entry:
+        out["entry"] = r.entry  # a failed skill's downside shows for everyone, so everyone knows which skill
     if phase == "nat1":
         out |= {"value": 1, "count": len(r.dice)}  # it fails, whatever the bonus: everyone sees the red 1
     elif phase in ("land", "push"):
@@ -224,6 +237,15 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
         if viewer.is_gm:
             film |= {"cue": cue.id, "name": cue.name}
         out["film"] = film
+    b = st.burn
+    if b and b.char in content.characters and content.characters[b.char].burn:
+        burn = content.characters[b.char].burn
+        cut = burn.cut(b.cut) or burn.cuts[0]
+        out["burn"] = {"char": b.char, "name": burn.name, "color": burn.color, "at": b.at, "ends": b.ends}
+        if plays_film(st.setup, viewer):
+            out["burn"] |= {"src": url(cut.file), "sound": viewer.is_stage or viewer.is_gm or st.setup == "online"}
+    else:
+        out["burn"] = None
     if viewer.is_gm:
         out["tv"] = "stage" in online
         out["cues"] = [

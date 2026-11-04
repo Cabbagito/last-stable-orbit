@@ -247,7 +247,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
             const on = selected === t.id
             const foot = on ? '#ffffff' : t.color
             const crew = t.kind === 'crew' ? crewList?.find((c) => c.id === t.ref) : undefined
-            const r = crew ? ring(crew.hp, crew.entropy, 64, 9) : plainRing(t.color, 64, 5)
+            const r = crew ? ring(crew.hp, crew.entropy, 64, 9, crew.health) : plainRing(t.color, 64, 5)
             const call = callouts[t.id]
             return (
               <button

@@ -11,7 +11,7 @@ import random
 from . import rules
 from .auth import Viewer
 from .content import Content
-from .models import CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_MAX, HP_MAX, SETUPS, STATS, GameState, InvEntry, RollState, TokenState
+from .models import BURN_COST, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_MAX, SETUPS, STATS, GameState, InvEntry, RollState, TokenState
 from .state import state_from_preset
 from .views import viewer_map
 
@@ -27,6 +27,7 @@ STALE_CLOSE_AFTER = 600.0  # nothing stays open longer than this
 # A film starts this long after the GM presses Play, at one moment on every screen that plays it. The TV has
 # every film already; laptops fetch theirs when the cue fires, so they get longer.
 FILM_LEAD = {"tv": 1.5, "notv": 3.0, "online": 3.0}
+BURN_LEAD = 0.4  # every screen has the Burn films already, so a Burn starts almost at once
 
 
 class CommandError(Exception):
@@ -147,7 +148,7 @@ def _roll_intent(viewer: Viewer, state: GameState, content: Content, kind: str, 
         if r.char is None:
             raise _invalid("only crew rolls can be pushed")
         v = state.vitals.get(r.char)
-        hp, entropy = (v.hp, v.entropy) if v else (HP_MAX, 2)
+        hp, entropy = (v.hp, v.entropy) if v else (content.characters[r.char].health, 2)
         if why := rules.push_refusal(r.dice, r.pushes, entropy):
             raise _invalid(why)
         return [
@@ -264,6 +265,37 @@ def film_playing(state: GameState, now: float) -> bool:
     return f is not None and now < f.ends
 
 
+def burn_playing(state: GameState, now: float) -> bool:
+    b = state.stage.burn
+    return b is not None and now < b.ends
+
+
+def _burn(state: GameState, content: Content, char: str, cut_id, now: float) -> Events:
+    """A Burn: 2 Entropy, no roll, and its film on the screens that play films. What it does, Peter applies."""
+    c = content.characters[char]
+    if not c.burn:
+        raise _invalid(f"{c.short} has no Burn")
+    if cut_id is not None and not isinstance(cut_id, str):
+        raise _invalid("cut must be one of the Burn's films")
+    cut = c.burn.cut(cut_id)
+    if not cut:
+        raise _invalid(f"{c.burn.name} has no film {cut_id!r}")
+    v = state.vitals.get(char)
+    hp, entropy = (v.hp, v.entropy) if v else (c.health, 2)
+    if entropy < BURN_COST:
+        raise _invalid(f"a Burn costs {BURN_COST} Entropy")
+    if film_playing(state, now):
+        raise _invalid("a film is playing: Burn once it ends")
+    if burn_playing(state, now):
+        raise _invalid("a Burn is playing: wait for it to end")
+    events: Events = [("burn.ended", {"char": state.stage.burn.char})] if state.stage.burn else []
+    at = round(now + BURN_LEAD, 3)
+    return events + [
+        ("vitals.set", {"char": char, "hp": hp, "entropy": entropy - BURN_COST}),
+        ("burn.started", {"char": char, "cut": cut.id, "at": at, "ends": round(at + cut.length, 3)}),
+    ]
+
+
 def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: float) -> Events:
     """Films and the TV. A film can't be stopped once it starts, so nothing here touches one that's playing."""
     if kind == "gm.film.play":
@@ -274,6 +306,8 @@ def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: fl
             raise _invalid(f"{cue.name} isn't made yet")
         if film_playing(state, now):
             raise _invalid("a film is playing: it can't be stopped, so wait for it to end")
+        if burn_playing(state, now):
+            raise _invalid("a Burn is playing: play the film once it ends")
         events: Events = []
         if state.stage.film:  # it ended a moment ago and the sweeper hasn't caught up
             events.append(("film.ended", {"cue": state.stage.film.cue}))
@@ -352,6 +386,8 @@ def sweep(state: GameState, now: float, online: set[str]) -> Events:
     events: Events = []
     if state.stage.film and now >= state.stage.film.ends:
         events.append(("film.ended", {"cue": state.stage.film.cue}))
+    if state.stage.burn and now >= state.stage.burn.ends:
+        events.append(("burn.ended", {"char": state.stage.burn.char}))
     for r in state.rolls:
         if not r.open:
             continue
@@ -392,6 +428,11 @@ def handle(
             raise _invalid("there's nothing like that here")
         key = f"{map_id}/{obj}"
         return [] if key in state.seen.get(viewer.char, []) else [("object.seen", {"char": viewer.char, "key": key})]
+
+    if kind == "burn.use":
+        if not viewer.char:
+            raise _invalid("the GM burns for someone with gm.burn.use")
+        return _burn(state, content, viewer.char, args.get("cut"), now)
 
     if kind == "item.seen":
         if viewer.is_gm:
@@ -470,11 +511,24 @@ def handle(
         if char not in content.characters:
             raise _invalid("unknown character")
         cur = state.vitals.get(char)
-        hp = args.get("hp", cur.hp if cur else HP_MAX)
+        top = content.characters[char].health
+        hp = args.get("hp", cur.hp if cur else top)
         en = args.get("entropy", cur.entropy if cur else 2)
         if not isinstance(hp, int) or not isinstance(en, int) or isinstance(hp, bool) or isinstance(en, bool):
             raise _invalid("hp and entropy must be whole numbers")
-        return [("vitals.set", {"char": char, "hp": max(0, min(HP_MAX, hp)), "entropy": max(0, min(ENTROPY_MAX, en))})]
+        return [("vitals.set", {"char": char, "hp": max(0, min(top, hp)), "entropy": max(0, min(ENTROPY_MAX, en))})]
+
+    if kind == "gm.burn.use":
+        return _burn(state, content, _holder(content, args, "char"), args.get("cut"), now)
+
+    if kind == "gm.roll.failed":
+        # Peter names the number, so only he knows a roll failed. A failed skill roll shows its downside on the TV.
+        r = _the_roll(viewer, state, args, gm_too=True)
+        if r.char is None or r.entry is None:
+            raise _invalid("only a crew roll that used a skill has a downside")
+        if r.shown < len(r.dice):
+            raise _invalid("the dice haven't landed yet")
+        return [] if r.failed else [("roll.failed", {"roll": r.id})]
 
     if kind == "gm.session.new":
         # Everyone starts a session with 2 Entropy. HP, pockets and the maps carry over.

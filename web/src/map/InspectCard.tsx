@@ -77,7 +77,7 @@ export function InspectCard() {
         name={crew ? crew.name : t.name}
         media={
           crew ? (
-            <RingPortrait src={crew.portrait} ring={ring(crew.hp, crew.entropy, 96, 10)} size={96} />
+            <RingPortrait src={crew.portrait} ring={ring(crew.hp, crew.entropy, 96, 10, crew.health)} size={96} />
           ) : (
             <img src={t.portrait} alt="" className="r3-px" style={{ width: 96, height: 96, flex: 'none' }} />
           )
@@ -86,7 +86,7 @@ export function InspectCard() {
           crew ? (
             !isGm && (
               <span className="app-ins-vit">
-                HP <span className="app-ins-hp">{crew.hp}</span>/6 · EN <span className="app-ins-en">{crew.entropy}</span>/6
+                HP <span className="app-ins-hp">{crew.hp}</span>/{crew.health} · EN <span className="app-ins-en">{crew.entropy}</span>/6
               </span>
             )
           ) : (

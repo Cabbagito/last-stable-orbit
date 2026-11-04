@@ -29,4 +29,10 @@ describe('ring', () => {
     expect(r.arcs.filter((a) => a.c === '#5ee08c')).toHaveLength(4)
     expect(r.arcs.filter((a) => a.c === '#f2b544')).toHaveLength(2)
   })
+  it("has one health segment per point of the character's own health", () => {
+    const ves = ring(3, 6, 216, 12, 4)
+    expect(ves.arcs).toHaveLength(4 + 6)
+    expect(ves.arcs.filter((a) => a.c === '#5ee08c')).toHaveLength(3)
+    expect(ring(9, 0, 64, 9, 9).arcs).toHaveLength(9 + 6)
+  })
 })

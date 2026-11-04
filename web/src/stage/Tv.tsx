@@ -5,7 +5,8 @@ import { MapLayers } from '../map/MapLayers'
 import { RingPortrait } from '../shell/RingPortrait'
 import { useGame } from '../store/game'
 import type { MapView, TokenView, Vec3, View } from '../types'
-import { FilmPlayer } from './Film'
+import { Downside } from './Downside'
+import { BurnFilms, FilmPlayer } from './Film'
 import { TvBand } from './TvBand'
 
 /**
@@ -41,9 +42,11 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
         </div>
       )}
       <TvBand onFocus={setFocus} />
+      <Downside where="tv" />
       {(view.stage.films ?? []).map((src) => (
         <FilmPlayer key={src} src={src} film={view.stage.film} sound={!preview} />
       ))}
+      <BurnFilms tv />
       {!started && (
         <div className="app-tvstart">
           <button type="button" className="app-tvgo" onClick={start}>
@@ -172,7 +175,7 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
           {tokens.map((t) => {
             const [x, y] = at(t)
             const c = t.kind === 'crew' ? view.crew.find((m) => m.id === t.ref) : undefined
-            const r = c ? ring(c.hp, c.entropy, 64, 9) : plainRing(t.color, 64, 5)
+            const r = c ? ring(c.hp, c.entropy, 64, 9, c.health) : plainRing(t.color, 64, 5)
             return (
               <span key={t.id} className="r3-tok app-fixedtok" role="img" aria-label={t.name} style={{ left: x, top: y, zIndex: Math.round(y), transform: t.size && t.size !== 1 ? `scale(${t.size})` : undefined }}>
                 <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${t.color}`, background: 'rgba(0,0,0,.35)' }} />

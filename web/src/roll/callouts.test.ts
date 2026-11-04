@@ -3,7 +3,7 @@ import type { RollView } from '../types'
 import { FADE, LINGER, calloutsBy, emptyMemo, remember } from './callouts'
 
 const roll = (id: string, open: boolean, char = 'ves'): RollView => ({
-  id, by: char, char, token: char, stat: 'tech', sides: 10, phase: open ? 'roll' : 'land', open, pushes: 0, pushed: 0,
+  id, by: char, char, token: char, stat: 'tech', sides: 10, phase: open ? 'roll' : 'land', open, pushes: 0, pushed: 0, failed: false,
 })
 const byChar = (r: RollView) => r.char
 

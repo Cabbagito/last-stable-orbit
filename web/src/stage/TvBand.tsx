@@ -117,7 +117,7 @@ function Band({ roll, out, onDone }: { roll: RollView | undefined; out: boolean;
   const L = lookOf(roll.stat)
   const name = crew?.short ?? tok?.name ?? ''
   const portrait = crew?.portrait ?? tok?.portrait
-  const r = crew ? ring(crew.hp, crew.entropy, 120, 12) : plainRing(tok?.color ?? '#2f3238', 120, 8)
+  const r = crew ? ring(crew.hp, crew.entropy, 120, 12, crew.health) : plainRing(tok?.color ?? '#2f3238', 120, 8)
   const landed = roll.phase !== 'roll' && roll.phase !== 'boom'
   return (
     <div className={'app-band' + (up && !out ? ' on' : '')} style={{ '--c': L.col } as React.CSSProperties}>

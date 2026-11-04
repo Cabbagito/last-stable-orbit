@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { GiveRow, Pocket, Step, Diamond, Eye, HP_MAX, ENTROPY_MAX, itemAria } from '../gm/parts'
+import { GiveRow, Pocket, Step, Diamond, Eye, ENTROPY_MAX, itemAria } from '../gm/parts'
 import { CamerasButton, liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
 import { MiniMap } from '../gm/MiniMap'
 import { SendCrew, mapList } from '../gm/SendCrew'
@@ -124,14 +124,14 @@ function CrewSection({ view, onView }: { view: View; onView: (id: string) => voi
               }}
             >
               <div className="r10-who2">
-                <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 56, 8)} size={56} />
+                <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 56, 8, c.health)} size={56} />
                 <span style={{ minWidth: 0 }}>
                   <span className="r10-cname">{c.name}</span>
                   <br />
                   <span className="r5-role">{c.role}</span>
                 </span>
               </div>
-              <Step who={c.short} label="HP" tone="hp" value={c.hp} max={HP_MAX} showLabel={false} onChange={(hp) => void gmRun('gm.vitals.set', { char: c.id, hp })} />
+              <Step who={c.short} label="HP" tone="hp" value={c.hp} max={c.health} showLabel={false} onChange={(hp) => void gmRun('gm.vitals.set', { char: c.id, hp })} />
               <Step who={c.short} label="EN" tone="en" value={c.entropy} max={ENTROPY_MAX} showLabel={false} onChange={(entropy) => void gmRun('gm.vitals.set', { char: c.id, entropy })} />
               <div className="r10-pkrow" role="group" aria-label={`${c.short}'s pockets`}>
                 {items.map((e) => (

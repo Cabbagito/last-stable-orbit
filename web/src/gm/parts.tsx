@@ -5,7 +5,6 @@ import type { CrewMember, InvEntry, Item } from '../types'
 
 // Pieces of Round 12 the GM's Scene, its cards and the GM tab share.
 
-export const HP_MAX = 6
 export const ENTROPY_MAX = 6
 export const GIVE_COUNTED = 50 // a counted item (credits) from the Give row: change the amount in the GM tab
 
@@ -59,7 +58,7 @@ export function Vitals({ c, showLabels = true }: { c: CrewMember; showLabels?: b
   const set = (field: 'hp' | 'entropy', v: number) => void gmRun('gm.vitals.set', { char: c.id, [field]: v })
   return (
     <>
-      <Step who={c.short} label="HP" tone="hp" value={c.hp} max={HP_MAX} showLabel={showLabels} onChange={(v) => set('hp', v)} />
+      <Step who={c.short} label="HP" tone="hp" value={c.hp} max={c.health} showLabel={showLabels} onChange={(v) => set('hp', v)} />
       <Step who={c.short} label="EN" tone="en" value={c.entropy} max={ENTROPY_MAX} showLabel={showLabels} onChange={(v) => set('entropy', v)} />
     </>
   )

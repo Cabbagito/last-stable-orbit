@@ -9,8 +9,9 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 STATS = ("body", "reflex", "tech", "intel", "cool", "empathy")
 DIE_SIDES = (4, 6, 8, 10, 12, 20)
-HP_MAX = 6
 ENTROPY_MAX = 6
+BURN_COST = 2  # Entropy a Burn spends
+RULES = 1  # the rules version a saved game is on: 1 gave each character their own health
 
 Vec3 = tuple[float, float, float]
 
@@ -42,6 +43,30 @@ def _six_dice(v: dict[str, int]) -> dict[str, int]:
     return {k: v[k] for k in STATS}
 
 
+class BurnCut(Strict):
+    """One of a Burn's films, with its sound baked in. Ves has two: in a fight, and just vanishing."""
+
+    id: str
+    label: str = ""  # how the sheet names it when there's a choice
+    file: str
+    length: float = Field(gt=0, le=10)  # seconds
+
+
+class Burn(Strict):
+    """A character's signature move: 2 Entropy, no roll, and its film on the TV. Peter applies what it does."""
+
+    name: str
+    when: str  # "On her turn", "Any time"
+    text: str
+    icon: str
+    color: str  # the Burn row's sweep and flash
+    react: Literal["roll", "hurt"] | None = None  # its row pulses after a die lands (Recount) or someone is hurt (Not them)
+    cuts: list[BurnCut] = Field(min_length=1)
+
+    def cut(self, cut_id: str | None) -> BurnCut | None:
+        return self.cuts[0] if cut_id is None else next((c for c in self.cuts if c.id == cut_id), None)
+
+
 class Character(Strict):
     id: str
     name: str  # full name, on the sheet
@@ -49,8 +74,10 @@ class Character(Strict):
     role: str  # "The Thief"
     portrait: str
     color: str = "#ff4fa3"
+    health: int = Field(ge=1, le=20)  # the most health they can have, and where they start
     stats: dict[str, int]
     entries: list[ListEntry] = Field(default_factory=list, alias="list")  # YAML key: list
+    burn: Burn | None = None
 
     @field_validator("stats")
     @classmethod
@@ -335,7 +362,7 @@ class MapState(Strict):
 
 
 class Vitals(Strict):
-    hp: int = HP_MAX
+    hp: int  # 0 up to the character's health
     entropy: int = 2
 
 
@@ -348,7 +375,7 @@ class Preset(Strict):
     party_map: str
     maps: dict[str, MapState] = {}
     tokens: list[PresetToken] = []
-    vitals: dict[str, Vitals] = {}  # missing crew get HP 6, Entropy 2
+    vitals: dict[str, Vitals] = {}  # missing crew get their full health and 2 Entropy
     inventory: dict[str, list[str | PresetItem]] = {}  # holder -> item ids, or {item, count} for counted items
 
 
@@ -393,6 +420,7 @@ class RollState(Strict):
     shown: int = 0  # dice that have landed on the roller's screen
     pushes: int = 0
     pushed: int = 0  # total added by pushes
+    failed: bool = False  # the GM called it a failure (a natural 1 always is): a skill's downside shows on the TV
     open: bool = True
     started: float = 0.0  # server time, for the sweeper
 
@@ -409,18 +437,29 @@ class FilmState(Strict):
     ends: float
 
 
+class BurnState(Strict):
+    """A Burn's film playing now, on the same screens a cutscene plays on, from `at` to `ends` (server time)."""
+
+    char: str
+    cut: str
+    at: float
+    ends: float
+
+
 class StageState(Strict):
-    """The TV and the table: where you're playing, the TV's camera, and the film playing now, if any."""
+    """The TV and the table: where you're playing, the TV's camera, and the film or Burn playing now, if any."""
 
     setup: Literal["tv", "notv", "online"] = "tv"
     camera: Literal["crew", "follow", "roller"] = "crew"
     follow: str | None = None  # a character, for the "follow" camera
     film: FilmState | None = None
+    burn: BurnState | None = None
     played: list[str] = []  # cues played this campaign, for the GM's list
 
 
 class GameState(Strict):
     seq: int = 0  # seq of the last applied event
+    rules: int = 0  # the rules version this game is on (RULES); boot brings an older game up to date
     party_map: str = ""  # where viewers without a token on a map look
     maps: dict[str, MapState] = {}
     tokens: dict[str, TokenState] = {}

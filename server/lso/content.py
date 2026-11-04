@@ -145,6 +145,11 @@ def check_refs(c: Content) -> None:
                 else:
                     counted |= {item_id} if it.counted else set()
         problems += [f"{where}: vitals for unknown character {k!r}" for k in pr.vitals if k not in c.characters]
+        problems += [
+            f"{where}: {k} has {v.hp} health, more than their {c.characters[k].health}"
+            for k, v in pr.vitals.items()
+            if k in c.characters and v.hp > c.characters[k].health
+        ]
     for m in c.maps.values():
         if m.arrive and len(m.arrive) < len(c.characters):
             problems.append(f"map {m.id}: arrive has {len(m.arrive)} spots for {len(c.characters)} crew")
@@ -173,6 +178,9 @@ def asset_paths(c: Content) -> set[str]:
     for ch in c.characters.values():
         paths.add(ch.portrait)
         paths |= {e.icon for e in ch.entries if e.icon}
+        if ch.burn:
+            paths.add(ch.burn.icon)
+            paths |= {x.file for x in ch.burn.cuts}
     paths |= {n.portrait for n in c.npcs.values()}
     paths |= {i.icon for i in c.items.values()}
     for m in c.maps.values():

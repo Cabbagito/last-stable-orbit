@@ -2,58 +2,110 @@
 # stats: the die for each stat. Every line costs 16 points (d4 0, d6 1, d8 2, d10 3, d12 4, d20 6).
 # list: three skills, one pick per roll. A skill can be a trait, a talent, knowledge or chrome; the sheet doesn't label which.
 # text: what it covers. downside: what happens every time a roll using it fails.
+# health: where their health starts and the most it can be (the bible's crew table).
+# burn: the signature move, from the bible and the Burn animations canvas. It spends 2 Entropy, can't fail, and
+# plays its film: on the TV, or on every laptop when there's no TV. Peter applies what it does by hand.
+# `cuts` are the films; the first is the one the Burn row plays. Ves's second cut is for outside a fight.
 
 - id: lale
   name: Dr. Lale Osei
   short: Lale
   role: The Doctor
   portrait: portraits/lale.gif
+  health: 5
   stats: {body: 6, reflex: 6, tech: 8, intel: 12, cool: 8, empathy: 20}
   list:
     - {kind: skill, name: "Has seen worse", text: "Medicine, wounds and delicate work under pressure.", downside: "It's worse than it looked, so she stays with them and misses the next beat.", icon: icons/list/lale-seen-worse.png}
     - {kind: skill, name: "Your pulse says otherwise", text: "Two fingers on a wrist and an eye on her fob watch: is this person lying, scared or hurt?", downside: "They notice what she's doing, pull away and stop trusting her.", icon: icons/list/lale-pulse.png}
     - {kind: skill, name: "Bedside manner", text: "Calming people, and getting them to open up or do as they're told.", downside: "Now they're her patient. They won't leave her alone, and they talk about her.", icon: icons/list/lale-bedside.png}
+  burn:
+    name: On your feet
+    when: On her turn
+    text: Someone she can reach heals 3, even from 0 health.
+    icon: icons/burns/lale.png
+    color: "#a8f4c4"
+    cuts:
+      - {id: film, file: films/burns/on-your-feet.mp4, length: 2.834}
 
 - id: marlo
   name: Marlo Quill
   short: Marlo
   role: The Face
   portrait: portraits/marlo.gif
+  health: 5
   stats: {body: 4, reflex: 8, tech: 6, intel: 10, cool: 20, empathy: 12}
   list:
     - {kind: skill, name: "I know a man who knows you", text: "Name-dropping, contacts and knowing how a place works.", downside: "They do know him, and he burned them.", icon: icons/list/marlo-man.png}
     - {kind: skill, name: "Sorry, wrong room", text: "Getting into places he shouldn't be, or talking his way out.", downside: "They're happy to help. Someone walks him to the right room and stays with him.", icon: icons/list/marlo-wrong-room.png}
     - {kind: skill, name: "Someone's cousin", text: "A voice and face that shift: he sounds like anyone he has heard talk for a minute, and looks older, younger or like someone's cousin.", downside: "It slips mid-sentence, where they can see it.", icon: icons/list/marlo-cousin.png}
+  burn:
+    name: Cheap shot
+    when: On his turn
+    text: Exactly 1 damage to someone he can reach, and they lose their next action.
+    icon: icons/burns/marlo.png
+    color: "#ff8ac4"
+    cuts:
+      - {id: film, file: films/burns/cheap-shot.mp4, length: 2.5}
 
 - id: tally
   name: Tally
   short: Tally
   role: The Hacker
   portrait: portraits/tally.gif
+  health: 7
   stats: {body: 10, reflex: 10, tech: 20, intel: 12, cool: 4, empathy: 4}
   list:
     - {kind: skill, name: "Talks to machines like dogs", text: "Coaxing machines and plugging into them, through a port for anything.", downside: "It goes and tells its owner: ISCO below the executive decks, the company above.", icon: icons/list/tally-dogs.png}
     - {kind: skill, name: "Has read the manual, all of them", text: "How anything is built, and tool fingers to take it apart.", downside: "Tally explains out loud, at length, and everyone nearby hears.", icon: icons/list/tally-manual.png}
     - {kind: skill, name: "Statistically, no", text: "Spotting a lie, a bad bet or a rigged game.", downside: "Tally announces the conclusion aloud, to the person it's about, and it's wrong.", icon: icons/list/tally-statistically.png}
+  burn:
+    name: Recount
+    when: Any time
+    text: Any die just rolled is rerolled, friend's or enemy's, and the new result stands. It can undo a natural 1.
+    icon: icons/burns/tally.png
+    color: "#8ef6ff"
+    react: roll  # its row pulses for 5 seconds after a die lands
+    cuts:
+      - {id: film, file: films/burns/recount.mp4, length: 2.084}
 
 - id: ves
   name: Vesna Dragan
   short: Ves
   role: The Thief
   portrait: portraits/ves.gif
+  health: 4
   stats: {body: 4, reflex: 20, tech: 10, intel: 8, cool: 12, empathy: 6}
   list:
     - {kind: skill, name: "Been in worse vents", text: "Vents, locks, climbing and tight spaces.", downside: "She's stuck, and it's loud.", icon: icons/list/ves-vents.png}
     - {kind: skill, name: "Nobody looks at the small woman", text: "Walking past people unnoticed.", downside: "Someone looks, and they'll remember her face.", icon: icons/list/ves-nobody.png}
     - {kind: skill, name: "Tomo, no", text: "Keeping Tomo out of trouble, or getting him out.", downside: "Tomo thinks she's in trouble. He drops what he's doing and comes running to the rescue, loudly.", icon: icons/list/ves-tomo-no.png}
+  burn:
+    name: Gone
+    when: On her turn
+    text: Exactly 3 damage to someone she can reach. Then nothing can target her until her next action. Outside a fight she can skip the damage and just vanish.
+    icon: icons/burns/ves.png
+    color: "#ff6a40"
+    cuts:
+      - {id: fight, label: In a fight, file: films/burns/gone.mp4, length: 2.5}
+      - {id: quiet, label: Just vanish, file: films/burns/gone-quiet.mp4, length: 2.167}
 
 - id: tomo
   name: Tomo Dragan
   short: Tomo
   role: The Bruiser
   portrait: portraits/tomo.gif
+  health: 9
   stats: {body: 20, reflex: 8, tech: 6, intel: 6, cool: 8, empathy: 12}
   list:
     - {kind: skill, name: "Please don't make me", text: "Frightening people by being huge and sorry about it.", downside: "He apologises and says his wife will sort it out. Now they're looking for Ves.", icon: icons/list/tomo-dont-make-me.png}
     - {kind: skill, name: "Have you eaten?", text: "Earning trust, usually with bread.", downside: "Now everyone wants feeding, right now, and they're loud about it.", icon: icons/list/tomo-eaten.png}
     - {kind: skill, name: "Steel forearm", text: "It hits like a door, knocks people out and breaks things, and it counts as a weapon.", downside: "It sticks in whatever he hit, and he misses the next beat pulling it out.", icon: icons/list/implant-arm.png}
+  burn:
+    name: Not them
+    when: Any time
+    text: When someone is hit, he takes all the damage instead.
+    icon: icons/burns/tomo.png
+    color: "#ffb050"
+    react: hurt  # its row pulses for 5 seconds after one of the others loses health
+    cuts:
+      - {id: film, file: films/burns/not-them.mp4, length: 2.084}
