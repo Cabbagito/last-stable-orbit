@@ -9,8 +9,9 @@
 | Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
 | M4: GM tab | **Done** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Peter tried it and is happy. NPC dice are drafts for Peter to set |
-| Stage: the TV and cutscenes | **Built** 2026-11-04, waiting on Peter's try. The TV's login and feed, the cue list, films in sync, the table setting, the camera and the laptops' black hole. See "How Stage turned out" |
-| M5–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
+| Stage: the TV and cutscenes | **Done** 2026-11-04. Peter tried it: "looks good and works well". The TV logs in with one click, no passcode. See "How Stage turned out" |
+| M5: The other 10 maps | **Next** (recommended over M6). Open questions are in M5, under "Before M5" |
+| M6–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
 - **Login:** players pick their character on a picker screen, and only the GM types a passcode (`LSO_GM_PASSCODE`). This replaces the per-player passcodes in "Auth flow".
@@ -378,6 +379,14 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **Order:** Patience and Promenade CALM (session 1), Executive decks (session 2), then the rest.
 - **Done when:** a screenshot of each map in each mood matches its board, and a token placed on a key point lands on it.
 - **Why here:** it depends only on M1's map schema. It can run in parallel with M3–M4.
+- **Why next, over M6 (2026-11-04):** session 1 can't be played without Patience and the Promenade, the intro film ends on the Patience map, and the map boards are approved. M6's Station still needs its design session, and the Codex needs content Peter writes.
+- **Before M5, open questions** (each with the default I'd take):
+  1. **Order:** session 1's maps first (Patience, the Promenade in Calm and Hunted), checked by Peter, then the other eight? Default: yes. Should the eight run as a multi-agent workflow (faster, more tokens)? That's Peter's call.
+  2. **Camera cones:** do players see them? Default: yes. They're drawn on the walls, avoiding them is the play, and Hunted widens them.
+  3. **Things to inspect on each new map:** drafted from the Key boards and the bible, for Peter to edit, like the item texts. Hidden until he reveals each one, as in the bar.
+  4. **Pins only the GM sees:** each map's "what's where" from its Key board, as small labels on the GM's map.
+  5. **Send the crew to a map:** the crew land in a small cluster at that map's entrance (from its Key board), and it becomes the party's map. The TV shows the party's map; on "Follow one" it follows that player to whatever map they're on.
+  - Not a question: once Patience exists, the intro cue sets Patience behind its film. Before building, re-read the live Maps canvas in case it's newer than `design/reference/maps/`.
 
 ### M6: Station and Codex tabs · M · the Codex is designed; the Station still needs its design session
 - **Goal:** the two remaining tabs, with no spoilers.
