@@ -2,7 +2,7 @@
 
 The login cookie carries the seat id and the auth epoch; bumping LSO_AUTH_EPOCH logs everyone out.
 Player seats aren't secret (the table trusts each other); the GM seat is, because it sees everything.
-The TV logs in as the Stage seat, with the GM's passcode: it may fetch every film ahead of its cue.
+The TV logs in as the Stage seat, picked like a crew seat. It only watches, and it fetches every film ahead.
 """
 
 from __future__ import annotations

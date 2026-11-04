@@ -1,6 +1,6 @@
 """The TV (the Stage seat) and cutscenes.
 
-The TV logs in with the GM's passcode, only watches, and gets only what everyone may see. Films start at one
+The TV is picked on the login screen like a seat, only watches, and gets only what everyone may see. Films start at one
 server moment on the screens that play them; which screens those are, and who may fetch a film's file, depends
 on where you're playing.
 """
@@ -18,7 +18,6 @@ from lso.engine import Engine
 from lso.store import Store
 from lso.views import project
 
-GM_CODE = "gm-code"  # as in conftest.py
 
 GM = Viewer("gm", "gm")
 STAGE = Viewer("stage", "stage")
@@ -64,8 +63,8 @@ def recv(ws, t):
             return f
 
 
-def tv_login(client, passcode=GM_CODE) -> dict:
-    r = client.post("/api/login", json={"seat": "stage", "passcode": passcode})
+def tv_login(client) -> dict:
+    r = client.post("/api/login", json={"seat": "stage"})
     assert r.status_code == 200, r.text
     token = r.cookies.get(COOKIE)
     client.cookies.clear()
@@ -75,13 +74,12 @@ def tv_login(client, passcode=GM_CODE) -> dict:
 # ---------- logging in ----------
 
 
-def test_the_tv_logs_in_with_the_gm_passcode(client):
-    assert client.post("/api/login", json={"seat": "stage"}).status_code == 401
-    assert client.post("/api/login", json={"seat": "stage", "passcode": "nope"}).status_code == 401
-    client.cookies.clear()
-    tv = tv_login(client)
+def test_the_tv_is_picked_like_a_seat_and_logs_out(client):
+    tv = tv_login(client)  # no passcode
     me = client.get("/api/me", headers=tv).json()
     assert me == {"seat": "stage", "role": "stage", "char": None}
+    r = client.post("/api/logout", headers=tv)
+    assert r.status_code == 200 and 'lso_session=""' in r.headers["set-cookie"]
 
 
 # ---------- what the TV sees ----------

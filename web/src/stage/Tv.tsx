@@ -12,13 +12,15 @@ import { TvBand } from './TvBand'
  * The TV at the table (the Stage seat). Full screen: the party's map with only what everyone may see, no crew
  * rail; public rolls slide up in a band along the bottom (Round 12's TV 2); films play here, with all the sound.
  * Its camera is set from the GM tab. It needs one click before the browser lets it go full screen and play sound.
+ * Moving the mouse shows the cursor and a way to log out, for a few seconds; the GM tab's preview has neither.
  */
-export function Tv() {
+export function Tv({ onLogout }: { onLogout?: () => void }) {
   const view = useGame((s) => s.view)
   const preview = useGame((s) => s.preview) // the GM tab's small preview of the TV: no click, no sound
   const [started, setStarted] = useState(!!preview)
   const [focus, setFocus] = useState<string | null>(null) // the token whose roll is in the band
   const k = useScale()
+  const awake = useAwake()
   if (!view) return <div className="app-tv app-wait">Docking…</div>
   const map = view.maps[view.party_map]
   const tokens = Object.values(view.tokens).filter((t) => map && t.map === map.id)
@@ -30,7 +32,7 @@ export function Tv() {
   }
 
   return (
-    <div className="app-tv" style={{ '--k': k } as React.CSSProperties}>
+    <div className={'app-tv' + (awake ? ' awake' : '')} style={{ '--k': k } as React.CSSProperties}>
       {map ? <TvMap map={map} tokens={tokens} view={view} focus={focus} /> : <div className="app-wait">Somewhere the map doesn't reach.</div>}
       {map && (
         <div className="app-tvplace">
@@ -43,9 +45,21 @@ export function Tv() {
         <FilmPlayer key={src} src={src} film={view.stage.film} sound={!preview} />
       ))}
       {!started && (
-        <button type="button" className="app-tvstart" onClick={start}>
-          <span className="r4-place">The TV</span>
-          <span>Click anywhere to start. It goes full screen, and films play their sound here.</span>
+        <div className="app-tvstart">
+          <button type="button" className="app-tvgo" onClick={start}>
+            <span className="r4-place">The TV</span>
+            <span>Click anywhere to start. It goes full screen, and films play their sound here.</span>
+          </button>
+          {onLogout && (
+            <button type="button" className="r4-btn app-tvout" onClick={onLogout}>
+              Not the TV? Log out
+            </button>
+          )}
+        </div>
+      )}
+      {started && onLogout && (
+        <button type="button" className="r4-btn app-tvexit" onClick={onLogout}>
+          Log out of the TV
         </button>
       )}
     </div>
@@ -62,6 +76,25 @@ function useScale() {
     return () => window.removeEventListener('resize', on)
   }, [])
   return k
+}
+
+/** True for a few seconds after the mouse moves: the cursor and the log-out show. */
+function useAwake() {
+  const [awake, setAwake] = useState(false)
+  useEffect(() => {
+    let t = 0
+    const on = () => {
+      setAwake(true)
+      window.clearTimeout(t)
+      t = window.setTimeout(() => setAwake(false), 3000)
+    }
+    window.addEventListener('pointermove', on)
+    return () => {
+      window.removeEventListener('pointermove', on)
+      window.clearTimeout(t)
+    }
+  }, [])
+  return awake
 }
 
 interface Cam {

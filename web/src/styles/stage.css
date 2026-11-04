@@ -13,8 +13,14 @@
 .app-tvmap{position:absolute;inset:0;cursor:none}
 .app-tvworld{transition:transform .9s cubic-bezier(.4,0,.2,1)}
 .app-tvplace{position:absolute;left:0;top:0;padding:18px 24px;transform:scale(var(--k));transform-origin:0 0;pointer-events:none;z-index:4}
-.app-tvstart{position:absolute;inset:0;z-index:60;background:rgba(0,0,0,.86);border:0;color:var(--ink);font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer}
-.app-tvstart:focus-visible{outline:2px solid #fff;outline-offset:-6px}
+.app-tv.awake,.app-tv.awake .app-tvmap{cursor:default}
+.app-tvstart{position:absolute;inset:0;z-index:60;background:rgba(0,0,0,.86);cursor:default}
+.app-tvgo{position:absolute;inset:0;border:0;background:none;color:var(--ink);font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer}
+.app-tvgo:focus-visible{outline:2px solid #fff;outline-offset:-6px}
+.app-tvout{position:absolute;left:50%;bottom:48px;transform:translateX(-50%)}
+/* hidden until the mouse moves (or it gets keyboard focus), so it never sits on the picture */
+.app-tvexit{position:absolute;right:16px;top:16px;z-index:55;opacity:0;pointer-events:none;transition:opacity .3s}
+.app-tv.awake .app-tvexit,.app-tvexit:focus-visible{opacity:1;pointer-events:auto}
 
 /* TV 2: a public roll slides up in a band along the bottom (R12StageBand), laid out at 1440 x 810 and scaled */
 .app-band{position:absolute;left:0;bottom:0;width:calc(100% / var(--k));height:210px;box-sizing:border-box;display:flex;align-items:center;gap:24px;padding:0 32px;background:rgba(0,0,0,.92);box-shadow:0 -1px 0 var(--c, #2f3238);transform:scale(var(--k)) translateY(102%);transform-origin:0 100%;transition:transform .5s cubic-bezier(.2,.8,.2,1);z-index:6}

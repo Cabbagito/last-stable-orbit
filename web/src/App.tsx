@@ -49,17 +49,13 @@ export function App() {
   if (preview) return <Preview seat={preview} />
   if (me === 'loading') return <div className="r4 th-meridian" />
   if (!me) return <Login onIn={setMe} />
-  if (me.role === 'stage') return <TvScreen />
-  return (
-    <Game
-      me={me}
-      onLogout={async () => {
-        await fetch('/api/logout', { method: 'POST' }).catch(() => undefined)
-        useGame.getState().disconnect()
-        setMe(null)
-      }}
-    />
-  )
+  const logout = async () => {
+    await fetch('/api/logout', { method: 'POST' }).catch(() => undefined)
+    useGame.getState().disconnect()
+    setMe(null)
+  }
+  if (me.role === 'stage') return <TvScreen onLogout={logout} />
+  return <Game me={me} onLogout={logout} />
 }
 
 /**
@@ -80,8 +76,8 @@ function Preview({ seat }: { seat: string }) {
   return <Game me={{ seat, role: 'player', char: seat }} />
 }
 
-/** The TV: no header, no tabs, nothing to press. Logging out is for another screen: it only watches. */
-function TvScreen() {
+/** The TV: no header, no tabs, nothing to press but a way out, which shows when the mouse moves. */
+function TvScreen({ onLogout }: { onLogout?: () => void }) {
   const connect = useGame((s) => s.connect)
   const disconnect = useGame((s) => s.disconnect)
   useEffect(() => {
@@ -91,7 +87,7 @@ function TvScreen() {
   }, [connect, disconnect])
   return (
     <div className="r4 th-meridian">
-      <Tv />
+      <Tv onLogout={onLogout} />
     </div>
   )
 }

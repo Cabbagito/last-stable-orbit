@@ -325,7 +325,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
 - **Peter's answers (2026-11-04):**
   1. **Stage comes first,** then M5.
   2. **The TV logs in from the login screen,** with a TV option beside the crew. Peter drags that browser tab onto the TV as a second screen and goes full screen.
-     - Default taken: the TV option asks for the GM passcode. The TV may fetch films ahead of their cues, and a player who picked TV could dig an ending out of their browser. Peter can overrule this.
+     - Default taken at first: the TV option asked for the GM passcode, because the TV fetches films ahead of their cues. **Peter overruled it after trying it (2026-11-04): no passcode.** The TV is picked like a seat. The cost: a player who picks the TV could find the films in their browser.
   3. **Laptops during a film at the table aren't pure black.** They show something a player glances at, thinks "cool", and looks away from: Peter's idea is the spinning black hole.
      - My proposal: small and dim in the middle of the black, turning slowly, drawn by the app in pixels; a faint "LOOK UP" could fade in once and go.
      - Draw it on the UI canvas first, with a variant or two, before building it.
@@ -338,7 +338,8 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   4. **Sound:** only the films' own baked-in sound in this milestone. The soundboard, per-map ambience and roll sounds come later.
 - **Known limits:** the online setup can be built now, but it can only be tested once the app is hosted (M7).
 - **How Stage turned out** (built 2026-11-04; this wins over the proposals above):
-  - **The TV is the Stage seat.** On the login screen, "This screen is the TV" asks for the GM passcode and logs in as `stage`. Its screen (`web/src/stage/Tv.tsx`) has no header, no rail and nothing to press. It needs one click to start, which goes full screen and lets films play their sound. The mouse is hidden on it.
+  - **The TV is the Stage seat.** On the login screen, "This screen is the TV" logs in as `stage` with one click, no passcode (Peter's call). Its screen (`web/src/stage/Tv.tsx`) has no header and no rail. It needs one click to start, which goes full screen and lets films play their sound. The mouse is hidden on it.
+    - Logging out: the start screen has "Not the TV? Log out". Once started, moving the mouse shows the cursor and "Log out of the TV" in the top right for 3 s (Peter couldn't get out of it at first).
     - Its socket refuses every intent (`read_only`), like view as player.
     - Its feed is a player's with no seat: the party map, its visible tokens and revealed objects, the crew's public sheets, no pockets. It gets each public roll's dice as the roll starts, as the roller's screen does, to play the same animation. It gets every film's file, to have them ready. Never hidden tokens or rolls, NPC dice, notes, the roster or the cue list. Leak tests in `server/tests/test_stage.py`.
     - The GM tab knows when it's connected.

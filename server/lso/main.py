@@ -48,7 +48,7 @@ async def sweeper(engine: Engine, hub: Hub) -> None:
 
 class LoginBody(BaseModel):
     seat: str | None = None  # a character id: players just pick who they are. "stage": the TV
-    passcode: str | None = None  # the GM's passcode, for the GM and for the TV
+    passcode: str | None = None  # the GM's passcode
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -101,10 +101,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def login(body: LoginBody, request: Request, response: Response):
         auth: Auth = request.app.state.auth
         if body.seat == "stage":
-            # the TV fetches every film ahead of its cue, so it takes the GM's passcode
-            if not auth.check_gm(body.passcode or ""):
-                raise HTTPException(401, "That passcode doesn't open anything.")
-            v = auth.stage()
+            v = auth.stage()  # the TV: picked like a seat, no passcode (Peter's call)
         elif body.seat and body.seat != "gm":
             v = auth.player(body.seat)
             if not v:

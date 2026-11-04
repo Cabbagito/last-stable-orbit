@@ -31,13 +31,10 @@ async function login(body: Record<string, string>): Promise<Me | string> {
   }
 }
 
-/**
- * Players pick who they are. The GM, and only the GM, types a passcode. The TV takes the GM's passcode too: it
- * fetches every film ahead of its cue, so it mustn't be a seat anyone can pick.
- */
+/** Players pick who they are, and the TV is picked the same way. The GM, and only the GM, types a passcode. */
 export function Login({ onIn }: { onIn: (me: Me) => void }) {
   const [seats, setSeats] = useState<Seat[] | null>(null)
-  const [open, setOpen] = useState<false | 'gm' | 'tv'>(false) // the passcode form: the GM's, or the TV's
+  const [gmOpen, setGmOpen] = useState(false)
   const [code, setCode] = useState('')
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
@@ -93,16 +90,16 @@ export function Login({ onIn }: { onIn: (me: Me) => void }) {
             {err}
           </div>
         )}
-        {open ? (
+        {gmOpen ? (
           <form
             className="app-gmlogin"
             onSubmit={(e) => {
               e.preventDefault()
-              go(open === 'tv' ? { seat: 'stage', passcode: code } : { passcode: code })
+              go({ passcode: code })
             }}
           >
             <label className="r5-sec" htmlFor="passcode">
-              {open === 'tv' ? 'GM passcode, to make this the TV' : 'GM passcode'}
+              GM passcode
             </label>
             <input
               id="passcode"
@@ -115,18 +112,15 @@ export function Login({ onIn }: { onIn: (me: Me) => void }) {
               onChange={(e) => setCode(e.target.value)}
             />
             <button type="submit" className="r4-cta" disabled={!code.trim() || busy}>
-              {open === 'tv' ? 'Show it on the TV' : 'Board'}
-            </button>
-            <button type="button" className="app-link" onClick={() => setOpen(open === 'tv' ? 'gm' : 'tv')}>
-              {open === 'tv' ? "No, I'm the GM" : 'This screen is the TV'}
+              Board
             </button>
           </form>
         ) : (
           <div className="app-loginlinks">
-            <button type="button" className="app-link" onClick={() => setOpen('gm')}>
+            <button type="button" className="app-link" onClick={() => setGmOpen(true)}>
               I'm the GM
             </button>
-            <button type="button" className="app-link" onClick={() => setOpen('tv')}>
+            <button type="button" className="app-link" disabled={busy} onClick={() => go({ seat: 'stage' })}>
               This screen is the TV
             </button>
           </div>
