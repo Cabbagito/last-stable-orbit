@@ -1,11 +1,45 @@
 # Last Stable Orbit: recommended build plan
 
+## Progress (updated 2026-11-04)
+
+| Milestone | Status |
+|---|---|
+| M1: Tokens at The Event Horizon | **Done** (commits 05cddc2, 4901ce3, 9a51d7c) |
+| M2: The roll | **Next** |
+| M3–M9 | Not started |
+
+**How M1 differs from the plan below** (this section wins where they disagree):
+- **Login:** players pick their character on a picker screen, and only the GM types a passcode (`LSO_GM_PASSCODE`). This replaces the per-player passcodes in "Auth flow".
+- **Port:** the app runs on http://localhost:8070, because 8000 and 8001 belong to other projects on Peter's Mac.
+- **GM controls:** the GM's Scene swaps the sheet column for a GM column (crew vitals, mood and switches, tokens, roster, presets). There is no separate dock. M4 still designs a proper GM tab.
+- **Critique fixes applied:**
+  - every frame is filtered per viewer, including content, and sent only when it changed, with a per-connection counter;
+  - map art and portraits are allowlisted per viewer;
+  - an `intents` table makes retries safe;
+  - the state already has inventories, rolls and per-token maps;
+  - no spoiler NPCs at the start;
+  - a "load preset" GM action;
+  - no `VOLUME` in the Dockerfile, and `FORWARDED_ALLOW_IPS` is set for Railway.
+- **Moved to M7:** the login rate limit, TypeScript codegen and the R6 overlay.
+- **Added:** trackpad handling (two-finger scroll pans, pinch zooms, swipe-back blocked).
+- **Defaults taken:**
+  - A player sees the map their own token is on (split party).
+  - Skill and chrome rows without art show a SKILL / CHROME box.
+- **Still placeholders:** starting inventories in `content/presets/session-1.yaml`, for Peter to set.
+
+**Decide before M2:**
+1. **When others see a roll's result.** Either as soon as the dice land, or when the roller reaches their Done screen. The second keeps the suspense but needs an automatic reveal after a timeout.
+2. **Entropy on a failed roll.** Either +1 automatically when the GM has named a difficulty, or only after the GM confirms it.
+3. **Roll requests.** Should the GM be able to send "Cool, Hard 7" to open a player's roll picker?
+
+**On ultracode:** writing the keyword in a message does turn it on for that message; that's how this plan was made. The paragraph on ultracode further down is outdated.
+
 ## Recommendation
 
 - **Make Milestone 1 (M1) the first turn.** Run it as one focused session, or two, while you watch the screen.
 - **Don't turn on ultracode for the whole build.** Turn it on per task: the other 10 maps (M5), content entry, and the final review sweep (M7).
 - **Playtest after M2.** Run 20 minutes of the bar scene with 2–3 people before building more.
-- The visual reference is the R6 board ("Meridian, ruled"), never the round-4 Meridian. M1 copies it into the repo at `design/reference/R6.dc.html`, from `/private/tmp/claude-501/-Users-peki--claude-spares-spare-0Hs2z9/3247a5ba-0047-403b-937a-7ddb44285d38/scratchpad/artifact-files/2f53fddb-d4ff-445b-9d24-7740b781a4b2/project/R6.dc.html`.
+- The visual reference is the R6 board ("Meridian, ruled"), never the round-4 Meridian. It is in the repo at `design/reference/ui/R6.dc.html`.
 
 ---
 
