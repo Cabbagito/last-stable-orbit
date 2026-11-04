@@ -9,7 +9,7 @@
 | Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
 | M4: GM tab | **Done** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Peter tried it and is happy. NPC dice are drafts for Peter to set |
-| Stage: the TV and cutscenes | **Started.** Planned, with Peter's answers, in the Stage section after M4. Round 13 draws three looks for the laptops' black-hole screen; waiting on Peter's pick |
+| Stage: the TV and cutscenes | **Started.** Planned, with Peter's answers, in the Stage section after M4. Round 13 drew the laptops' black-hole screen; Peter picked the dust in the disc's colours, with no text |
 | M5–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -334,7 +334,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
        - **B · Ring:** the logo's black hole, larger and in pixels: the shadow's rim, a hairline ring tilted as in the logo, and the pink satellite going round once every 28 s, passing behind the hole.
        - **C · Dust:** faint lilac grains spiral in over about a minute, warming through pink to white, and go out at the edge. It echoes ISCO's public "Swarm" face (particles round a black hole).
        - Drawn the way the app will draw it: a low-resolution canvas scaled up with crisp pixels, at 30 frames a second, and a still frame for anyone who has reduced motion on.
-       - Waiting on Peter's pick.
+       - **Peter's pick (2026-11-04): C's falling dust, in A's colours (pink on the side turning away, cyan on the side turning toward you, brighter there), at 5 px pixels, with no text on screen at all.** The `R13FilmDust` board is updated to that; A and B stay as drawn.
   4. **Sound:** only the films' own baked-in sound in this milestone. The soundboard, per-map ambience and roll sounds come later.
 - **Known limits:** the online setup can be built now, but it can only be tested once the app is hosted (M7).
 
