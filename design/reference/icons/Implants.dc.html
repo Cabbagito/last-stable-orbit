@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Implant icons</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#09080c}
+</style>
+</helmet>
+<div style="width: 640px; height: 480px; box-sizing: border-box; padding: 40px; background: #09080c; color: #ece8f2; font-family: 'Space Grotesk', system-ui, sans-serif;">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px;">
+<sc-for list="{{items}}" as="s" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; align-items: flex-end; gap: 14px;">
+<div style="width: 112px; height: 112px; flex: none; display: flex; align-items: center; justify-content: center; background: #0b0a0f; border: 1px solid #221e2a; border-radius: 6px;">
+<img src="{{s.src}}" alt="{{s.name}} icon" style="display: block; width: 96px; height: 96px; image-rendering: pixelated;">
+</div>
+<img src="{{s.src}}" alt="" style="display: block; width: 48px; height: 48px; image-rendering: pixelated;">
+<img src="{{s.src}}" alt="" style="display: block; width: 24px; height: 24px;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px;">
+<span style="font-family: 'Silkscreen', monospace; font-size: 13px; color: #ffffff;">{{s.name}}</span>
+<span style="font-size: 13px; color: #b8b1c9;">{{s.does}}</span>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":640,"height":480}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      items: [
+        { name: 'OPTIC-9 CYBER-EYE', does: 'Thermal, zoom, reads faces', src: '/_blob/d2cb4292b6c6da98904a5fc19694201a' },
+        { name: 'SKULL PORT', does: 'Direct jack into any terminal', src: '/_blob/d373b388a21c1d24bf4c25f81078e3e1' },
+        { name: 'GRIP-SERVO HAND', does: 'Crushes, holds, never shakes', src: '/_blob/13f21d18295b5c7476406bd747e95ef0' },
+        { name: 'BIONIC ARM', does: 'Hits harder than a person should', src: '/_blob/c29123aef72877d3c7f5310e04545ef2' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

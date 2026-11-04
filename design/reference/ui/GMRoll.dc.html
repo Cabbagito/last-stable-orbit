@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GM, hidden roll</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..700&amp;family=Doto:wght@800&amp;family=Silkscreen&amp;family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#050608}
+.gm a{color:#a4a9b5;text-decoration:none}.gm a:hover{color:#ffffff}
+.gm-die{font:inherit;background:none;border:0;padding:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:0}
+.gm-die svg{transition:transform .14s ease}
+.gm-die:hover svg{transform:translateY(-4px)}
+.gm-die:hover polygon{stroke:#f2b544}
+.gm-die:focus-visible{outline:1px solid #f2b544;outline-offset:2px}
+@keyframes gm-rat{0%,100%{transform:rotate(0)}25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+.gm-rat{animation:gm-rat .1s linear infinite}
+@media (prefers-reduced-motion:reduce){.gm-rat{animation:none}}
+</style>
+</helmet>
+<div class="gm" style="width: 100%; min-height: 900px; box-sizing: border-box; background: #050608; color: #e6e7ea; font-family: 'Archivo', system-ui, sans-serif; font-stretch: 88%; font-size: 14px; line-height: 1.35; display: flex; flex-direction: column;">
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; padding: 8px 14px; background: #0d0f13; box-shadow: inset 0 -1px 0 #23262e;">
+<span style="font-stretch: 75%; font-weight: 700; font-size: 24px; letter-spacing: .14em; color: #ffffff; padding-left: 4px;">ERGO</span>
+<nav aria-label="Sections" style="display: flex; flex-wrap: wrap; gap: 2px; font-family: 'Silkscreen', monospace; font-size: 11px;">
+<a href="Round2.dc.html" style="padding: 9px 14px;">SCENE</a>
+<a href="#station" style="padding: 9px 14px;">STATION</a>
+<a href="#crew" style="padding: 9px 14px;">CREW</a>
+<a href="#comms" style="padding: 9px 14px;">COMMS</a>
+<a href="#items" style="padding: 9px 14px;">ITEMS</a>
+<a href="#codex" style="padding: 9px 14px;">CODEX</a>
+<a href="#gm" aria-current="page" style="padding: 9px 14px; background: #1d2027; color: #ffffff; box-shadow: inset 0 -2px 0 #f2b544;">GM</a>
+</nav>
+</header>
+<div style="flex: 1; display: flex; flex-wrap: wrap; gap: 28px; padding: 36px 40px; box-sizing: border-box;">
+<section aria-label="Hidden roll" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 28px;">
+<h1 style="margin: 0; font-stretch: 75%; font-weight: 700; font-size: 34px; letter-spacing: .03em; color: #ffffff;">HIDDEN ROLL</h1>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(120px, 45%), 1fr)); gap: 8px;">
+<sc-for list="{{dice}}" as="d" hint-placeholder-count="6">
+<button type="button" class="gm-die" onClick="{{d.roll}}" aria-label="Roll {{d.label}}">
+<span style="position: relative; display: block; width: 124px; height: 124px;">
+<svg class="{{d.cls}}" viewBox="0 0 100 100" width="124" height="124" aria-hidden="true" style="display: block; overflow: visible;"><polygon points="{{d.o}}" fill="#0c0d11" stroke="{{d.stroke}}" stroke-width="1.6"></polygon><path d="{{d.f}}" fill="none" stroke="#2c2f38" stroke-width="1"></path></svg>
+<span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Doto', monospace; font-weight: 800; font-size: 40px; color: #ffffff; padding-top: {{d.dy}}px; pointer-events: none;">{{d.sides}}</span>
+</span>
+</button>
+</sc-for>
+</div>
+<div aria-live="polite" style="flex: 1; min-height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+<div style="font-family: 'VT323', monospace; font-size: 280px; line-height: .85; color: {{big.col}}; text-shadow: {{big.glow}};">{{big.num}}</div>
+<div style="font-family: 'VT323', monospace; font-size: 30px; color: {{big.col}};">{{big.sub}}</div>
+</div>
+</section>
+<aside aria-label="Roll log" style="flex: 1 1 280px; max-width: 340px; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 10px; color: #9096a3;">LOG</div>
+<sc-for list="{{log}}" as="l" hint-placeholder-count="5">
+<div style="display: flex; align-items: baseline; gap: 12px; font-family: 'VT323', monospace; font-size: 21px; line-height: 1.2; border-top: 1px solid #1d2027; padding-top: 6px;">
+<span style="color: #8f939e; width: 40px;">{{l.die}}</span><span style="color: {{l.col}}; width: 44px; font-size: 26px;">{{l.num}}</span><span style="color: #a4a9b5;">{{l.sub}}</span>
+</div>
+</sc-for>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  state = { log: [{ s: 12, r: [8] }, { s: 8, r: [8, 3] }, { s: 6, r: [1] }], cur: { s: 8, r: [8, 3] }, rat: null };
+  componentWillUnmount() { clearTimeout(this.t); }
+  shape(s) {
+    const S = {
+      4: { o: '50,9 93,84 7,84', f: 'M50 9L50 58M7 84L50 58M93 84L50 58', dy: 18 },
+      6: { o: '14,14 86,14 86,86 14,86', f: 'M24 24L76 24L76 76L24 76Z', dy: 0 },
+      8: { o: '50,5 91,50 50,95 9,50', f: 'M9 50L91 50M50 5L34 50M50 5L66 50M50 95L34 50M50 95L66 50', dy: 0 },
+      10: { o: '50,5 93,44 50,95 7,44', f: 'M7 44L50 60L93 44M50 60L50 95M50 5L30 40L50 60L70 40L50 5', dy: 0 },
+      12: { o: '50,4 94,36 77,90 23,90 6,36', f: 'M50 24L72 41L64 70L36 70L28 41ZM50 4L50 24M94 36L72 41M77 90L64 70M23 90L36 70M6 36L28 41', dy: 3 },
+      20: { o: '50,3 91,27 91,73 50,97 9,73 9,27', f: 'M50 27L74 67L26 67ZM50 3L50 27M91 27L50 27M9 27L50 27M91 27L74 67M9 27L26 67M91 73L74 67M9 73L26 67M50 97L74 67M50 97L26 67', dy: 5 }
+    };
+    return S[s];
+  }
+  roll(s) {
+    const r = [];
+    let v, g = 0;
+    do { v = 1 + Math.floor(Math.random() * s); r.push(v); g++; } while (v === s && g < 8);
+    this.setState({ rat: s, cur: null });
+    clearTimeout(this.t);
+    this.t = setTimeout(() => {
+      const e = { s, r };
+      this.setState({ rat: null, cur: e, log: [e].concat(this.state.log).slice(0, 12) });
+    }, 380);
+  }
+  view(e) {
+    const total = e.r.reduce((a, b) => a + b, 0), nat1 = e.r[0] === 1, expl = e.r.length > 1;
+    return { num: String(nat1 ? 1 : total), col: nat1 ? '#ff5b4d' : (expl ? '#ffd98a' : '#ffffff'), sub: nat1 ? 'NATURAL 1' : (expl ? 'EXPLODED ' + e.r.join(' + ') : ''), die: 'd' + e.s };
+  }
+  renderVals() {
+    const st = this.state;
+    const cur = st.cur ? this.view(st.cur) : null;
+    return {
+      dice: [4, 6, 8, 10, 12, 20].map((s) => {
+        const sh = this.shape(s);
+        return { sides: s, label: 'd' + s, o: sh.o, f: sh.f, dy: sh.dy, cls: st.rat === s ? 'gm-rat' : '', stroke: st.rat === s ? '#f2b544' : '#7d828e', roll: () => this.roll(s) };
+      }),
+      big: cur ? { num: cur.num, sub: cur.sub, col: cur.col, glow: '0 0 34px ' + cur.col } : { num: '', sub: '', col: '#ffffff', glow: 'none' },
+      log: st.log.map((e) => this.view(e))
+    };
+  }
+}
+</script>
+</body>
+</html>

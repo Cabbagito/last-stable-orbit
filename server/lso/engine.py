@@ -1,0 +1,73 @@
+"""The engine: one authoritative GameState, changed only by logged events, one intent at a time."""
+
+from __future__ import annotations
+
+import asyncio
+import logging
+
+from .auth import Viewer
+from .commands import CommandError, handle
+from .content import Content
+from .models import GameState
+from .state import apply, state_from_preset
+from .store import Store
+
+log = logging.getLogger("lso.engine")
+
+
+class Engine:
+    def __init__(self, content: Content, store: Store):
+        self.content = content
+        self.store = store
+        self.lock = asyncio.Lock()
+        snap = store.load_snapshot()
+        if snap is None:
+            self.state = GameState()
+            preset = content.default_preset
+            self._commit("system", None, [("world.loaded", {"preset": preset.id, "state": state_from_preset(preset, content)})], {})
+            log.info("seeded the world from preset %s", preset.id)
+        else:
+            self.state = GameState.model_validate(snap[1])
+            self._check_refs()
+
+    def _check_refs(self) -> None:
+        """A renamed content id would leave state pointing at nothing. Say so at boot, loudly."""
+        c, s, bad = self.content, self.state, []
+        for tid, t in s.tokens.items():
+            if t.ref not in (c.characters if t.kind == "crew" else c.npcs):
+                bad.append(f"token {tid} -> {t.kind} {t.ref!r}")
+            if t.map not in c.maps:
+                bad.append(f"token {tid} -> map {t.map!r}")
+        bad += [f"map state {m!r}" for m in s.maps if m not in c.maps]
+        bad += [f"inventory {h}: item {e.item!r}" for h, es in s.inventory.items() for e in es if e.item not in c.items]
+        if s.party_map and s.party_map not in c.maps:
+            bad.append(f"party_map {s.party_map!r}")
+        if bad:
+            raise RuntimeError(
+                "Saved state refers to content that no longer exists:\n  "
+                + "\n  ".join(bad)
+                + "\nFix the content, or load a preset into a fresh database (make reset-world)."
+            )
+
+    def _commit(self, actor: str, intent_id: str | None, events: list[tuple[str, dict]], ack: dict) -> None:
+        state, seq = self.state, self.store.next_seq()
+        for i, (ev_type, data) in enumerate(events):
+            state = apply(state, seq + i, ev_type, data)
+        seqs = self.store.commit(actor, intent_id, events, state.model_dump(mode="json"), ack)
+        assert not seqs or seqs[-1] == state.seq, "event log and state disagree on seq"
+        self.state = state
+
+    async def run(self, viewer: Viewer, intent_id: str | None, kind: str, args: dict) -> tuple[dict, bool]:
+        """Apply one intent. Returns (ack, changed). A retried intent id gets its first ack back."""
+        async with self.lock:
+            if intent_id:
+                prior = self.store.find_intent(intent_id)
+                if prior is not None:
+                    return prior, False
+            try:
+                events = handle(viewer, self.state, self.content, kind, args)
+            except CommandError as e:
+                return {"id": intent_id, "ok": False, "code": e.code, "error": str(e)}, False
+            ack = {"id": intent_id, "ok": True}
+            self._commit(viewer.seat, intent_id, events, ack)
+            return ack, bool(events)

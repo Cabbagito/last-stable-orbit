@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Patience</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+.e-map{position:absolute;left:0;top:0;width:1480px;height:980px;display:block;pointer-events:none;user-select:none;image-rendering:pixelated;transition:opacity .9s ease}
+.e-glow{position:absolute;left:0;top:0;width:1480px;height:980px;pointer-events:none;mix-blend-mode:screen;transition:opacity .9s ease}
+.e-hum{display:block;width:1480px;height:980px;user-select:none}
+.e-tok{position:absolute;width:64px;height:100px;margin:-94px 0 0 -32px;background:none;border:0;padding:0;cursor:grab;font:inherit;transform-origin:32px 94px}
+.e-key{font-family:'Silkscreen',monospace;font-size:11px;color:#ece8f2;background:#14121a;border:1px solid #3a3446;padding:0 12px;height:44px;min-width:44px;cursor:pointer}
+.e-key:hover{background:#221e2a}
+</style>
+</helmet>
+<div style="position: relative; width: 100%; height: 900px; overflow: hidden; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
+<div onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onUp}}" onWheel="{{onWheel}}" style="position: absolute; inset: 0; cursor: {{cursor}}; touch-action: none;">
+<div style="position: absolute; left: 0; top: 0; width: 1480px; height: 980px; isolation: isolate; transform-origin: 0 0; transform: {{worldTransform}};">
+<div role="img" aria-label="The Patience seen from above at an angle: a cream corridor with three portholes showing the black hole, a brass rail, a lounge with a red sofa and two round tables, a steward's desk and a gangway door marked Dock 7."></div>
+<sc-for list="{{bases}}" as="b" hint-placeholder-count="1">
+<img class="e-map" src="{{b.src}}" alt="" draggable="false" style="opacity: {{b.op}};">
+</sc-for>
+<div class="e-glow" style="opacity: {{glow_one}};"><img class="e-hum" src="/_blob/52bc2e7829f687d07dff36a2bb9f4487" alt="" draggable="false"></div>
+<sc-for list="{{toks}}" as="t" hint-placeholder-count="9">
+<button type="button" class="e-tok" onPointerDown="{{t.down}}" onClick="{{t.select}}" aria-label="{{t.name}}" style="left: {{t.x}}px; top: {{t.y}}px; transform: scale({{t.scale}}); z-index: {{t.z}};">
+<span style="position: absolute; left: 50%; bottom: 0; width: 40px; height: 20px; margin-left: -20px; border-radius: 50%; box-sizing: border-box; border: 2px solid {{t.col}}; background: rgba(0,0,0,.35);"></span>
+<span style="position: absolute; left: 50%; bottom: 10px; width: 2px; height: 34px; margin-left: -1px; background: {{t.col}};"></span>
+<span style="position: absolute; left: 4px; top: 0; width: 56px; height: 56px; border-radius: 50%; overflow: hidden; background: #09080c; box-shadow: 0 0 0 2px {{t.col}}, 0 3px 8px rgba(0,0,0,.7);">
+<img src="{{t.img}}" alt="" draggable="false" style="position: absolute; left: -7px; top: -1px; width: 70px; height: 70px; max-width: none; pointer-events: none;">
+</span>
+<sc-if value="{{t.showName}}" hint-placeholder-val="{{ false }}">
+<span style="position: absolute; left: 66px; top: 20px; font-family: 'Silkscreen', monospace; font-size: 10px; color: #ffffff; background: rgba(5,6,8,.88); padding: 3px 7px; white-space: nowrap;">{{t.NAME}}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="position: absolute; left: 12px; top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ffffff; background: rgba(5,6,8,.88); padding: 0 12px; height: 44px; display: flex; align-items: center;">PATIENCE</div>
+<button type="button" class="e-key" onClick="{{zoomOut}}" aria-label="Zoom out">-</button>
+<button type="button" class="e-key" onClick="{{zoomIn}}" aria-label="Zoom in">+</button>
+<button type="button" class="e-key" onClick="{{fit}}">FIT</button>
+<button type="button" class="e-key" onClick="{{toggleNames}}">NAMES</button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  state = { px: 69, py: 19, zoom: 0.88, pos: {}, drag: null, tokDrag: null, sel: null, names: false, mood: 'one' };
+
+  proj(X, Y, Z) { return [((X - Y) * 30 + 310) * 2, ((X + Y) * 15 - Z * 36 + 130) * 2]; }
+
+  defs() {
+    return [
+      { id: 'lale', name: 'Lale', img: '/_blob/bf086769fdeeb5815c8bb26655c27de8', col: '#ff4fa3', at: [10.0, 7.4, 0] },
+      { id: 'marlo', name: 'Marlo', img: '/_blob/89e77d4081ac45a581d0deab2125331d', col: '#ff4fa3', at: [8.4, 7.8, 0] },
+      { id: 'tally', name: 'Tally', img: '/_blob/33e082d9f196e64d462f147828f1070c', col: '#ff4fa3', at: [11.8, 6.8, 0] },
+      { id: 'ves', name: 'Ves', img: '/_blob/8935375f70d3e50fdacbe2628025b6e0', col: '#ff4fa3', at: [7.0, 1.2, 0] },
+      { id: 'tomo', name: 'Tomo', img: '/_blob/0516ced15d3d4704cb408bc93a529fef', col: '#ff4fa3', at: [5.0, 7.4, 0] },
+      { id: 'st', name: 'Steward', img: '/_blob/3d54725d392d8fdae4742a4c0925b98b', col: '#8f88a3', at: [11.0, 4.1, 0] },
+      { id: 'p1', name: 'Passenger (stand-in)', img: '/_blob/5322e3c4d1540b2c913df44d8910c780', col: '#8f88a3', at: [2.4, 4.4, 0] },
+      { id: 'p2', name: 'Passenger (stand-in)', img: '/_blob/94537b20b4eb11a4cff4b2a05191b270', col: '#8f88a3', at: [5.9, 6.2, 0] },
+      { id: 'p3', name: 'Passenger (stand-in)', img: '/_blob/4623f7851bb0115bdb1c7fb5a7fa17d8', col: '#8f88a3', at: [0.6, 5.0, 0.2] }
+    ];
+  }
+
+  zoomAt(z, cx, cy) {
+    const st = this.state;
+    const nz = Math.min(3, Math.max(.2, z));
+    const k = nz / st.zoom;
+    this.setState({ zoom: nz, px: cx - (cx - st.px) * k, py: cy - (cy - st.py) * k });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const scale = Math.min(1.8, Math.max(.8, .8 / st.zoom));
+    const toks = this.defs().map((d) => {
+      const home = this.proj(d.at[0], d.at[1], d.at[2]);
+      const p = st.pos[d.id] || { x: home[0], y: home[1] };
+      return {
+        name: d.name, NAME: d.name.toUpperCase(), img: d.img, col: d.col, x: p.x, y: p.y, z: Math.round(p.y),
+        scale: scale, showName: st.names || st.sel === d.id,
+        down: (e) => { e.stopPropagation(); this.dragged = false; this.setState({ tokDrag: { id: d.id, sx: e.clientX, sy: e.clientY, ox: p.x, oy: p.y } }); },
+        select: () => { if (!this.dragged) this.setState({ sel: st.sel === d.id ? null : d.id }); }
+      };
+    });
+    const ids = ['one'];
+    const src = { one: '/_blob/224e0bfdca50895845a240d09188a1cf' };
+    const labels = { one: '' };
+    return {
+      toks,
+      bases: ids.map((m) => ({ src: src[m], op: st.mood === m ? 1 : 0 })),
+      glow_one: st.mood === 'one' ? 1 : 0,
+      moodBtns: ids.map((m) => ({ label: labels[m], bg: st.mood === m ? '#ff4fa3' : '#14121a', fg: st.mood === m ? '#09080c' : '#ece8f2', pick: () => this.setState({ mood: m }) })),
+      worldTransform: 'translate(' + st.px + 'px, ' + st.py + 'px) scale(' + st.zoom + ')',
+      cursor: st.drag ? 'grabbing' : 'grab',
+      onDown: (e) => { this.setState({ drag: { x: e.clientX, y: e.clientY, px: st.px, py: st.py } }); },
+      onMove: (e) => {
+        const td = this.state.tokDrag;
+        if (td) {
+          const z = this.state.zoom;
+          const dx = (e.clientX - td.sx) / z, dy = (e.clientY - td.sy) / z;
+          if (Math.abs(dx) + Math.abs(dy) > 3) this.dragged = true;
+          const pos = Object.assign({}, this.state.pos);
+          pos[td.id] = { x: Math.round(td.ox + dx), y: Math.round(td.oy + dy) };
+          this.setState({ pos });
+          return;
+        }
+        const d = this.state.drag;
+        if (!d) return;
+        this.setState({ px: d.px + e.clientX - d.x, py: d.py + e.clientY - d.y });
+      },
+      onUp: () => { if (this.state.drag || this.state.tokDrag) this.setState({ drag: null, tokDrag: null }); },
+      onWheel: (e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        this.zoomAt(this.state.zoom * Math.exp(-e.deltaY * .0015), e.clientX - r.left, e.clientY - r.top);
+      },
+      zoomIn: () => this.zoomAt(st.zoom * 1.3, 720, 450),
+      zoomOut: () => this.zoomAt(st.zoom / 1.3, 720, 450),
+      fit: () => this.setState({ px: 69, py: 19, zoom: 0.88 }),
+      toggleNames: () => this.setState({ names: !st.names })
+    };
+  }
+}
+</script>
+</body>
+</html>

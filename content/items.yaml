@@ -1,0 +1,6 @@
+# Things a character can hold. kind: gear | weapon | tool | cash | key | note
+- {id: sidearm, name: Sidearm, icon: icons/items/sidearm.png, kind: weapon}
+- {id: splice-kit, name: Splice kit, icon: icons/items/splice-kit.png, kind: tool}
+- {id: credits, name: 140 credits, icon: icons/items/credits.png, kind: cash}
+- {id: access-chit, name: Access chit, icon: icons/items/access-chit.png, kind: key}
+- {id: note, name: Note, icon: icons/items/note.png, kind: note}

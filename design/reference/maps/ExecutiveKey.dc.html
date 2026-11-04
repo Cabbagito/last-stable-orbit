@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Executive floors, what's where</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 1880px; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
+<div style="position: absolute; left: 0; top: 0; width: 840px; height: 1880px;">
+<img src="/_blob/064450cbfb7574ef8c2309d94e42de36" alt="The Executive floors tower with numbered markers" style="position: absolute; left: 0; top: 0; width: 840px; height: 1880px; display: block; image-rendering: pixelated;">
+<sc-for list="{{pins}}" as="p" hint-placeholder-count="24">
+<div style="position: absolute; left: {{p.x}}px; top: {{p.y}}px; width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Silkscreen', monospace; font-size: 10px; background: {{p.bg}}; color: #000000; box-shadow: 0 0 0 2px #000000;">{{p.k}}</div>
+</sc-for>
+</div>
+<div style="position: absolute; left: 872px; top: 32px; width: 536px; display: flex; flex-direction: column; gap: 28px; font-size: 16px; line-height: 1.4;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ffffff;">FROM THE BIBLE AND OUR PLAN</div>
+<div>1 · Lift from the Promenade, guard desk</div>
+<div>2 · Deck 6: reviewers' rows</div>
+<div>3 · Throughput board</div>
+<div>4 · Deck 7: managers in glass</div>
+<div>5 · The scientist's room and plots</div>
+<div>6 · Deck 8: boardroom</div>
+<div>7 · Dashboard, every eval green</div>
+<div>8 · Guarded door to the Secure floor</div>
+<div>9 · Deck 9: the old man's study</div>
+<div>10 · His cryo pod</div>
+<div>11 · Vent duct, a hatch on every floor (your idea)</div>
+<div>Cameras: six, cones on the CAMERAS switch</div>
+<div>No white-violet anywhere</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ff6fb5;">MY ADDITIONS</div>
+<div>A · Main stairs and steel stair tower: open, on camera</div>
+<div>B · Duct's last hatch opens inside the study</div>
+<div>C · Deck number on each floor's wall</div>
+<div>D · Doors: frame, brass threshold, door standing open</div>
+<div>E · Landing and bench outside the study</div>
+<div>F · Waiting area and water cooler</div>
+<div>G · Lounge with armchairs</div>
+<div>H · One wall screen in each manager's office</div>
+<div>I · Her cot and bookshelf</div>
+<div>J · Corners. Deck 6: filing cabinets, copier, archive boxes. Deck 7: sofa, stool, plant. Deck 8: drinks cabinet, plant. Deck 9: long-case clock, old trunk</div>
+<div>No cameras on deck 9, in her room, or on the duct</div>
+<div>In Alert: papers, pushed chairs, secure door open</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ffffff;">HOW TO READ THE GAPS</div>
+<div>The gaps between floors aren't real space. The floors sit directly on top of each other. A token going up the stairs or the duct jumps straight to the same spot on the next floor up.</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1880}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const at = (X, Y, Z, d) => [(X - Y) * 30 + 360, (X + Y) * 15 - Z * 36 + 150 + (9 - d) * 450];
+    const list = [
+      ['1', 7, .1, 1.4, 6, 0], ['2', 6.7, 7, 1.2, 6, 0], ['3', 0, 2.6, 2.0, 6, 0], ['4', 8.9, 7.1, 2.7, 7, 0], ['5', 2.6, 0, 1.7, 7, 0],
+      ['6', 5.9, 7.1, 1.6, 8, 0], ['7', 0, 2.5, 1.9, 8, 0], ['8', 7.1, .1, 1.4, 8, 0], ['9', 5.3, 5, .4, 9, 0], ['10', 1.05, 1.05, 2.8, 9, 0], ['11', .25, 5.4, 6, 8, 0],
+      ['A', 12.7, .6, 1.4, 6, 1], ['B', .5, 5.4, 1.0, 9, 1], ['C', 10.9, 0, 3.25, 9, 1], ['D', 5.7, 8.05, 2.6, 9, 1], ['E', 10.5, 6.3, .8, 9, 1],
+      ['F', 10.3, .6, 1.7, 6, 1], ['G', 2.85, 2.2, 1.2, 8, 1], ['H', 8.9, 5.5, 2.4, 7, 1], ['I', .9, 3.2, .9, 7, 1],
+      ['J', .3, 8.6, 1.7, 6, 1], ['J', .5, 8.4, 1.15, 7, 1], ['J', .3, 8.4, 1.7, 8, 1], ['J', .2, 8.7, 2.75, 9, 1]
+    ];
+    return {
+      pins: list.map((p) => {
+        const a = at(p[1], p[2], p[3], p[4]);
+        return { k: p[0], x: a[0], y: a[1], bg: p[5] ? '#ff6fb5' : '#ffffff' };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,392 @@
+{
+ "download_works": true,
+ "download_notes": "Single-asset download works with the Artifact tool's read action (url plus path set to the 32-hex asset id). Files land in that artifact's scratchpad folder and the sha256 matches the store listing. (1) Map: Maps artifact, AFTER HOURS base 4965f74fff3c969d0d7a453b7646a840. PNG, 1280x720, 8-bit RGB, no alpha, 181,077 bytes. Saved to /private/tmp/claude-501/-Users-peki--claude-spares-spare-0Hs2z9/3247a5ba-0047-403b-937a-7ddb44285d38/scratchpad/artifact-files/35e08d1d-7c09-4667-9e8b-a7d4aecfb660/4965f74fff3c969d0d7a453b7646a840.png. Base PNGs are stored at native 1280x720 and drawn at 2560x1440 (2x, image-rendering: pixelated). (2) Portrait: Portraits artifact, Tomo 78d811e2b134ebf012671f17ee37365d. GIF89a, 96x96, 48 frames (counted graphic-control blocks), 115,762 bytes. Saved to /private/tmp/claude-501/-Users-peki--claude-spares-spare-0Hs2z9/3247a5ba-0047-403b-937a-7ddb44285d38/scratchpad/artifact-files/fb4e5316-d1d2-4388-a16e-dc665b796af0/78d811e2b134ebf012671f17ee37365d.gif. Pipeline limit: batch reads with `paths` and asset ids FAIL (\"no file is published at that path\"), so each asset needs its own read call. Many calls can go in one message. Milestone 1 is about 85-90 calls; the whole game is about 250. Earlier readers already saved some files: the OPEN base 6d77cc9b... (Maps id); the OPEN and LAST STAND bases 47158da9... and 0e0ed6a0... (UI ids); Ves GIF e6071441...; BODY icon 933eb259...; skill icon 5987e17f...; icons 4e11ef2d..., 17a4faaf..., a8196f36... (24x24 glyph) and be0340e9... (16x16 pip); Lale GIF 5256eee6...; a 360x640 poster GIF b76debd0.... Stat, item and dice icons are 48x48 RGBA PNGs, pips are 16x16, glyphs are 24x24. Everything is raster, so no conversion is needed: files are served as static PNG/GIF. The real work is renaming to semantic paths, deduping by sha256 (the same file has a different id in each artifact) and rewriting /_blob/ references.",
+ "event_horizon_assets": [
+  {
+   "id": "6d77cc9b170e9047c637ce4ba8bc1e31",
+   "role": "base image, mood OPEN",
+   "details": "PNG 1280x720 RGB, 185,775 B; also the Key board's background; R6/UI-store copy 47158da971c4f2937f3d16de862f5f9e. Layer class m-map, opacity 1 when mood==open, .7s fade"
+  },
+  {
+   "id": "72fa38d907ef0dbd4cc9e97644c937c0",
+   "role": "glow layer, mood OPEN",
+   "details": "PNG 46,007 B; mix-blend-mode:screen inside .m-glow, inner img runs the 7s m-hum flicker keyframes; UI copy e4e226280eefc41fbdd8d2ada6c8fff8"
+  },
+  {
+   "id": "4965f74fff3c969d0d7a453b7646a840",
+   "role": "base image, mood AFTER HOURS",
+   "details": "PNG 1280x720 RGB, 181,077 B (test-downloaded); UI copy 5a7a4e099f6e204725bdd4ca4a5414ec"
+  },
+  {
+   "id": "08030bf4cec8312f65df0ee9b9526b72",
+   "role": "glow layer, mood AFTER HOURS",
+   "details": "PNG 17,278 B; UI copy e23283b74b088ee5958af3cc8779f38d"
+  },
+  {
+   "id": "9038079d83e956367552ca9d61f0a19f",
+   "role": "base image, mood LAST STAND",
+   "details": "PNG 1280x720 RGB, 176,041 B; UI copy 0e0ed6a073a45188da837896c4315330"
+  },
+  {
+   "id": "982bcd859cd286b4917817ed33fefee8",
+   "role": "glow layer, mood LAST STAND",
+   "details": "PNG 34,914 B; UI copy 7f451c4434b3bc8a6fc6d52fd5eaa792"
+  },
+  {
+   "id": "58636de4d3b67ffca61852a1eb015fa6",
+   "role": "patch: Seal's box (lid open)",
+   "details": "PNG 4,588 B; full-frame overlay, visible only when mood==after AND box toggle on (SEAL'S BOX button shows only in AFTER HOURS)"
+  },
+  {
+   "id": "c59a7cd8acef218de240cee99e81b854",
+   "role": "patch: hatch open (hidden exit under the kegs, key point 9)",
+   "details": "PNG 14,486 B; visible only when mood==stand AND hatch toggle on"
+  },
+  {
+   "id": "bbd777f48fa50c407056f2bc4890d8d2",
+   "role": "gas level 1",
+   "details": "PNG 21,923 B; LAST STAND only; gas cycles 0-3 via GAS button; .m-gas opacity transition 2.4s; gas 0 = no layer"
+  },
+  {
+   "id": "81b446fbd6a0d90989fcb7c33e90fb17",
+   "role": "gas level 2",
+   "details": "PNG 38,806 B; LAST STAND only"
+  },
+  {
+   "id": "bfae8b7f77913378ff544a34f534377a",
+   "role": "gas level 3",
+   "details": "PNG 48,655 B; LAST STAND only"
+  },
+  {
+   "id": "5322e3c4d1540b2c913df44d8910c780",
+   "role": "token portrait: Happy resident (extra)",
+   "details": "GIF 130,175 B; Portraits id 1e2284cd197d16c050c7da970872b06c; UI id 9547f658f907d28dc2ddc5b01047921b; ring colour #8f88a3 (R6 uses #a9a2bc)"
+  },
+  {
+   "id": "4623f7851bb0115bdb1c7fb5a7fa17d8",
+   "role": "token portrait: Night Market vendor (extra)",
+   "details": "GIF 132,226 B; Portraits id 833abde5ffaac6023f72276776b09a27; Maps board only"
+  },
+  {
+   "id": "94537b20b4eb11a4cff4b2a05191b270",
+   "role": "token portrait: Dock 7 clerk (extra)",
+   "details": "GIF 24,357 B; Portraits id f70a16d8ec7b46fe7695143b342e0e91; Maps board only"
+  },
+  {
+   "id": "70eb1d72152cdc6852ad196fa2bc8ab9",
+   "role": "token portrait: Service droid (extra)",
+   "details": "GIF 29,684 B; Portraits id 61802dca8d5aadf50bb690899f9bc62a; UI id 5b8e42ff7ec5b93fbba654c103b7eca4; ISCO #c9bcff"
+  },
+  {
+   "id": "3d54725d392d8fdae4742a4c0925b98b",
+   "role": "token portrait: Patience steward (extra)",
+   "details": "GIF 25,844 B; Portraits id 4465e7611b1ae3d303636ebcb850c99d; Maps board only"
+  },
+  {
+   "id": "080fd1ed3d22da65e7f18a9214ade791",
+   "role": "token portrait: Med Bay nurse (extra)",
+   "details": "GIF 25,176 B; Portraits id 461939aba3c23dece06b3992b82c4571; Maps board only"
+  },
+  {
+   "id": "b973adbc5e5ed1657eb66ec462918892",
+   "role": "token portrait: Hired gun",
+   "details": "GIF 40,167 B; Portraits id 69b890b22fc69dfadfbdaace5cfe5830; colour #ff5a4a; Maps board only"
+  },
+  {
+   "id": "(none)",
+   "role": "layer stack and coordinates",
+   "details": "Main.dc.html layer order inside a 2560x1440 world div (isolation:isolate, CSS transform translate+scale for pan/zoom, zoom clamp .4-3): bases (3, one opaque) -> patches (2) -> glows (3) -> gases (3) -> 16 token buttons (64x100, margin -94/-32, z-index=round(y), scale clamp(.8/zoom,.8,1.35); R6 uses clamp .6-1.8). proj(X,Y,Z)=[((X-Y)*30+536)*2, ((X+Y)*15-Z*36+201)*2]. Key.dc.html: 23 numbered/lettered POIs (1-9 incl. four '8' vents; A-L additions) with world X,Y,Z, drawn at scale 1.125 over the OPEN base. Total Event Horizon map layers: 11 files, 769,550 B."
+  }
+ ],
+ "scene_portraits": [
+  {
+   "id": "5256eee66c5ddc27ba8488eb7ab0f6bc",
+   "name": "Lale (Dr. Lale Osei), green light. Portraits id; Maps-store id bf086769fdeeb5815c8bb26655c27de8; UI/R6 id 46800f055cd6c0e10837bb4ae6df661e; GIF 96x96, 134,952 B"
+  },
+  {
+   "id": "6d95a903857c355bb0b3e86bcce84d74",
+   "name": "Marlo Quill, pink light. Maps id 89e77d4081ac45a581d0deab2125331d; UI id 35097f28e94ec04b3d9a0d76ffb3be93; 41,838 B"
+  },
+  {
+   "id": "4c0eba89fed930f70b67556207fb41e8",
+   "name": "Tally, cyan light. Maps id 33e082d9f196e64d462f147828f1070c; UI id 8b2742d12aa2b84b941c77912fb08e77; 60,881 B"
+  },
+  {
+   "id": "0380c5df3bc3279fee3ebe029034097f",
+   "name": "Ves (Vesna Dragan), red light. Maps id 8935375f70d3e50fdacbe2628025b6e0; UI id e6071441b882bfcc677068003d8bb15d (already saved locally); 124,381 B"
+  },
+  {
+   "id": "78d811e2b134ebf012671f17ee37365d",
+   "name": "Tomo Dragan, orange light. Maps id 0516ced15d3d4704cb408bc93a529fef; UI id dc1a093262f3347a48b05362bace7b6e; 115,762 B (test-downloaded)"
+  },
+  {
+   "id": "b9b9c5821d2c5f7758f85831fa5952a8",
+   "name": "Old Dax, amber light (DaxLight board; the older 'Last Call' Dax 94b7e3dfd6f024fcb80463f7086c10bc is unused). Maps id 3e7fe7dfb7f468fe7a215011e890951f; UI id 3019026dbad6747ba98eba12032f431e; 44,819 B; ring #f2b544"
+  },
+  {
+   "id": "6c4506cf8b7745cde7aa63d1ba14268c",
+   "name": "The fixer (board 'The Upload, red light'). Maps id 2b1a067acd9401d34b3bf9c168b7e0cb; UI id 112776eab026804ed6afaf6ae62d971f; 44,674 B; ring #ff5a4a"
+  },
+  {
+   "id": "51f224219211073385bbe06f53ba92e1",
+   "name": "Slot regular (Extras board). Maps id 4bf44a35c33e7cea71fdc61e08de68b2; UI id 2913081280d4d441b556fc50dd13750f; 55,123 B; ring #c9bcff"
+  },
+  {
+   "id": "e065b6cc803bfdab881c69144ecf5f93",
+   "name": "Cleaner Unit 14, ISCO. Maps id 2e2ccea94bad777dcf618a96955ecdaf; UI id 910ec99eac0fba46e493cb0ddf4c2dc4; 41,774 B; ring #c9bcff. These 9 total 664,204 B; with the 7 extras on the Maps board, 16 portraits total 1,071,833 B"
+  }
+ ],
+ "sheet_icons": [
+  {
+   "id": "4e11ef2d2ff1effda9a8adae24eaafb1",
+   "name": "Stat icon BODY (A Objects, 48px RGBA); R6/UI copy 933eb2595dd2d975433d9f200fcbcb75"
+  },
+  {
+   "id": "9891bbfe6ce0a8704e5b8cb8c991aa72",
+   "name": "Stat icon REFLEX; UI copy 6e46704e0e227474778d11dbb3cfd2e7"
+  },
+  {
+   "id": "c443e48177ee9c0755ea3f8ef0a670ad",
+   "name": "Stat icon TECH; UI copy e1f2d9c83b351a0b30bdc0c35137a79d"
+  },
+  {
+   "id": "2cbafb8283097452be35c194589cd271",
+   "name": "Stat icon INTEL; UI copy 6d2b1a91cb409d16d06896c8d06193ea"
+  },
+  {
+   "id": "04e947f32be196125faafa0b3c29dbb0",
+   "name": "Stat icon COOL; UI copy 7c98b50b9224dad80c17b4b5379fdf7f"
+  },
+  {
+   "id": "dbee64bf3a857658f07e9762d9519a63",
+   "name": "Stat icon EMPATHY; UI copy b0902dd9bed0eede4f0850c38709f914"
+  },
+  {
+   "id": "353e5bbf7fd9fe21b14561aa845b27fb",
+   "name": "Die BODY d4 (R6 copy dc3c946d78128b4f168caf41f16b03aa)"
+  },
+  {
+   "id": "17a4faaf78ca8a2936ca50088d310b30",
+   "name": "Die BODY d6 (R6 copy d98726799ef02c19ace8993b17780525)"
+  },
+  {
+   "id": "49f933853aa12c09d609181270e91831",
+   "name": "Die BODY d8"
+  },
+  {
+   "id": "7b2a685f860a995db8fd98f9a8eb3809",
+   "name": "Die BODY d10"
+  },
+  {
+   "id": "4587dcc0b6ffe9ab05da3c37bf4f96dd",
+   "name": "Die BODY d12"
+  },
+  {
+   "id": "9d6c96b9bd82e26a94d98508687c3d3a",
+   "name": "Die BODY d20"
+  },
+  {
+   "id": "5e5d2e36fb4963fe2c21c212b561d36e",
+   "name": "Die REFLEX d4"
+  },
+  {
+   "id": "a79e9b783c82647dc249392bdb02cb0c",
+   "name": "Die REFLEX d6"
+  },
+  {
+   "id": "6639dfb4ca0473021a44109094cea96f",
+   "name": "Die REFLEX d8"
+  },
+  {
+   "id": "a1b288bd12c8e13380ce11f3f0e88d4c",
+   "name": "Die REFLEX d10"
+  },
+  {
+   "id": "2368a85667e0107f9c70df9acf4250eb",
+   "name": "Die REFLEX d12"
+  },
+  {
+   "id": "1c991641b525370388352ee29a12711e",
+   "name": "Die REFLEX d20 (R6 copy 42d52e57d700145acb45e2ab97a8144a)"
+  },
+  {
+   "id": "8cd782648550b1819cbe74cc6e964b81",
+   "name": "Die TECH d4"
+  },
+  {
+   "id": "44f4e97e2936eb9205d6fcfa96ba7e9d",
+   "name": "Die TECH d6"
+  },
+  {
+   "id": "72c83a6e4586b705cf96361225be3ba5",
+   "name": "Die TECH d8"
+  },
+  {
+   "id": "450255f60691c89ca817ba11aec06b8c",
+   "name": "Die TECH d10 (R6 copy a243dd0eee6ed5a8c76004da73572686)"
+  },
+  {
+   "id": "05946c1b0b0715bbee2947268089ee57",
+   "name": "Die TECH d12 (R6 copy 2443a7588603cc2105eb208f24833fe2)"
+  },
+  {
+   "id": "9770ab367ba4b6c7a04f15fd8facc9f5",
+   "name": "Die TECH d20"
+  },
+  {
+   "id": "1cb3b3e2421cf2f11431d33bd497f766",
+   "name": "Die INTEL d4"
+  },
+  {
+   "id": "507a3b3e179563e180d193c987867f64",
+   "name": "Die INTEL d6"
+  },
+  {
+   "id": "466fe089461bf780ec9c34437402273d",
+   "name": "Die INTEL d8 (R6 copy f66fc6484c624de289c8f0e38aa04fe0)"
+  },
+  {
+   "id": "baa58960ecfe446f2b565c0172a03445",
+   "name": "Die INTEL d10 (R6 copy 96893374dc00556186cf996010f5b617)"
+  },
+  {
+   "id": "3e0f35a6b7005e2c1fd7649a9cf5b831",
+   "name": "Die INTEL d12"
+  },
+  {
+   "id": "528867f8f3ef627b2823df9576c47a40",
+   "name": "Die INTEL d20"
+  },
+  {
+   "id": "b0d722b3b5e50860f9432bf78e84e735",
+   "name": "Die COOL d4"
+  },
+  {
+   "id": "e4869cf1241987640df5d119e7657412",
+   "name": "Die COOL d6"
+  },
+  {
+   "id": "287340603b686cdcb0a35a8455b90b25",
+   "name": "Die COOL d8"
+  },
+  {
+   "id": "e512567839b3d8e9812bb5f7969eaae5",
+   "name": "Die COOL d10"
+  },
+  {
+   "id": "041d0bf2e89914bf6618b7f28dc438c8",
+   "name": "Die COOL d12 (R6 copy 40b7b126eabfd38f050862ceb2d4a235)"
+  },
+  {
+   "id": "8486a92248bbd8aebacfaa2ce49a73dd",
+   "name": "Die COOL d20 (R6 copy 28b098d3134248ba90785f534e5f07fe)"
+  },
+  {
+   "id": "241dd9050fc768cc7c7accf70992b5bb",
+   "name": "Die EMPATHY d4"
+  },
+  {
+   "id": "5996113ed2f8a2179f089378ad2e660b",
+   "name": "Die EMPATHY d6 (R6 copy a2e4580ad154aab81b3e09726684b3b0)"
+  },
+  {
+   "id": "851857463d993f654e789e968746f658",
+   "name": "Die EMPATHY d8 (R6 copy 19f8160ccb2143083ce49dc7da7122f1)"
+  },
+  {
+   "id": "663583993a93f5a4dbba3a2abcf6674b",
+   "name": "Die EMPATHY d10"
+  },
+  {
+   "id": "75cbaaa105979fb11002f98ec612e491",
+   "name": "Die EMPATHY d12"
+  },
+  {
+   "id": "aca72226992ec5f55e395adef23b58d1",
+   "name": "Die EMPATHY d20"
+  },
+  {
+   "id": "e9e30d5688bf5b2a2d6d58e2345df578",
+   "name": "Vital HP icon (R6 does not use it; its HP/Entropy ring is procedural SVG)"
+  },
+  {
+   "id": "be0340e9ff5140ac52a25b43e8ff5c8d",
+   "name": "HP pip full (16x16)"
+  },
+  {
+   "id": "e95ffc4900e0867a401722eb7f677984",
+   "name": "HP pip empty"
+  },
+  {
+   "id": "77bd57bb5d07a5b4c7e42315431b13b6",
+   "name": "Vital Entropy icon"
+  },
+  {
+   "id": "fe82833f614f61eb71b91a94387623ad",
+   "name": "Entropy pip full"
+  },
+  {
+   "id": "6ec70f87bfd4c2221408fe1b637d6049",
+   "name": "Entropy pip empty (skip the Humanity set: 564ec454d85321a0baf5e7ad0f437d53, 1d3befb754fdbb041ee41e2a9f8196f5, c1f90f487ec9b0642c8908dd94febb24)"
+  },
+  {
+   "id": "c7a9d5b6ad52f454af2248bc98cc72ed",
+   "name": "Item: Laser pistol / 'Sidearm' (WEAPON); R6 copy 8bab6a616422fb90957f3cc377678d64"
+  },
+  {
+   "id": "624ba83b18f3dce2046bb80c9eb5f369",
+   "name": "Item: Splice kit (TOOL); R6 copy 20cb902dfe7bbd92e89f4e173d1380ad"
+  },
+  {
+   "id": "345c318da5fa39d204c6c0aedc9bf057",
+   "name": "Item: Credits (CASH, '140 credits'); R6 copy 0ba6b37ee2b31f94c94529ebcf9ec1f2"
+  },
+  {
+   "id": "f61d0ff4c00bbf2a8f84aa2a74cc8186",
+   "name": "Item: Vault 3 access chit (KEY); R6 copy fe82c5d936a26b4de8d90f27595cd9b1"
+  },
+  {
+   "id": "2702d4d8d535dfb3d159e6f6b283506a",
+   "name": "Item: CLUE (not in R6). The only existing icon for the note/document item kind"
+  },
+  {
+   "id": "5987e17ffcf3c2dc9df8431c49057b5a",
+   "name": "Ves skill: Been in worse vents (UI store only)"
+  },
+  {
+   "id": "44fc57b486fd7ae5940105ffbf9a3b0e",
+   "name": "Ves skill: Nobody looks at the small woman (UI store only)"
+  },
+  {
+   "id": "b35e102084d52c7f1d101adda71356e2",
+   "name": "Ves skill: Tomo, no (UI store only)"
+  },
+  {
+   "id": "212739529d8a97b82d1957f97edaef9d",
+   "name": "Ves chrome: Silent legs (UI store only)"
+  },
+  {
+   "id": "5ddd0a329467fe83c0a7711ecf9a2529",
+   "name": "Ves chrome: Camera-cone eye (UI store only)"
+  },
+  {
+   "id": "d2cb4292b6c6da98904a5fc19694201a",
+   "name": "Implant (old name): Optic-9 cyber-eye"
+  },
+  {
+   "id": "d373b388a21c1d24bf4c25f81078e3e1",
+   "name": "Implant (old name): Skull port (closest to Tally's universal port)"
+  },
+  {
+   "id": "13f21d18295b5c7476406bd747e95ef0",
+   "name": "Implant (old name): Grip-servo hand (closest to Tally's tool fingers)"
+  },
+  {
+   "id": "c29123aef72877d3c7f5310e04545ef2",
+   "name": "Implant (old name): Bionic arm (closest to Tomo's steel forearm)"
+  }
+ ],
+ "totals": "Asset stores (live listings). Maps: 105 files, 12,323,218 B (~12.3 MB): 83 PNG (~9.9 MB) and 22 GIF (~2.4 MB), the GIFs being portrait copies plus a 1.1 MB black-hole GIF used in the Promenade window; 70 of the 105 are referenced by boards, the rest are superseded uploads. Portraits: 51 files, 3,790,764 B (~3.8 MB): 47 GIF and 4 PNG (mural, photo); 45 referenced. Icons: 73 files, 51,291 B (~0.05 MB); 72 referenced. Posters: 15 files, 21,914,832 B (~21.9 MB), one GIF alone is 12.8 MB; 9 referenced; not needed in-game. UI direction: 110 files, 2,567,937 B (~2.6 MB), mostly copies of map, portrait and icon assets plus round-3 UI textures; R6 uses 44 unique ids. All stores: about 40.6 MB, heavily duplicated (the same sha256 under a different id in each artifact). Unique game-relevant set without posters: about 13-14 MB. Milestone 1 (Event Horizon plus the R6 sheet for all 5 crew): 11 map layers (0.77 MB), 16 portraits (1.07 MB; the 9 core ones are 0.66 MB), 6 stat icons, 36 tinted dice, 6 vitals, 5 items, 5 Ves skill/chrome icons and 4 implants (~45 KB). That is about 89 files and about 1.9 MB.",
+ "board_format_notes": "Format. A .dc.html board is an HTML file that loads ./support.js (the DC runtime, which was not saved). The markup sits in an <x-dc> root. <helmet> holds head content: a Google Fonts <link> and a <style> block with the classes and @keyframes. After that comes one template tree with heavy inline style=\"\" attributes. Templating is logic-less mustache: {{name}} or {{obj.field}} in attributes and text; loops are <sc-for list=\"{{arr}}\" as=\"x\" hint-placeholder-count=\"N\">; conditionals are <sc-if value=\"{{bool}}\" hint-placeholder-val=\"{{ false }}\">. The hint-* attributes are editor placeholders only. Event props use React-style names bound to functions: onClick, onPointerDown/Move/Up/Leave, onWheel and onDoubleClick, plus ref=\"{{setCv}}\" for a canvas. Handlers get React-like events (clientX, currentTarget, stopPropagation). <dc-import name=\"R6\" view=\"pick\"> embeds another board with props; R6Pick and R6Result are 500-byte wrappers that do this. Logic lives in <script type=\"text/x-dc\" data-dc-script data-props='{...}'>. data-props declares editor props, e.g. R6 ring enum (9 styles, default segments), mood enum open/after/stand, view, and $preview size. The script is `class Component extends DCLogic` with React-class semantics: state = {...}, this.setState, this.props, componentDidMount/DidUpdate/WillUnmount. Its renderVals() returns a flat object of derived values and closures that the template reads. Assets are absolute /_blob/<32-hex> URLs that resolve only inside that artifact's asset store, so each must be downloaded, renamed and rewritten. Colours are hard-coded hex plus a few CSS custom properties: .th-meridian sets --ink, --dim, --line, --accent, --fill, --body and others. How much ports to React. R6.dc.html (1,119 lines, 87 KB): (a) the RollFX IIFE (lines ~186-805, ~55% of the file) is framework-free canvas code and copies almost verbatim into a TS module. It covers maths helpers, the d4-d20 die mesh and physics sim, the six SCENES (term, math, reel, cool, pulse, phys), plan(), and draw() with the gold explode burst, the nat-1 hard cut, the red crack lines, and the auto-fitting Archivo insult with white then red flash. The INSULT table at lines 351-359 includes 'YOU BRICKED IT, GENIUS.' under Tech. (b) ring() is a pure SVG-arc generator; keep only 'segments'. (c) The ~95 lines of CSS copy as-is into a global stylesheet, which cleans up the r3/r4/r5 prefixes. (d) The ~75-line template converts to JSX mechanically: sc-for to .map, sc-if to &&, style strings to objects or classes. (e) Component logic (~310 lines) needs rework, not copying. Pan, zoom and token drag become a shared hook. The pick, rolling (explosion gate auto-releases after 4 s, Skip) and done state machine moves to a store. startRoll currently uses client-side Math.random; the server must roll instead. RollFX.plan already takes a rolls array, so server results slot in. Hard-coded data must move to YAML/DB: Ves's name, role and stat dice, the skill/chrome list, the items, the people() list of 11, the mood image map, and the tab list (add GM). Token drag must emit WebSocket moves. Overall about 80% of R6 ports directly, and the rest is rewiring to server state. Event Horizon board, Maps/project/Main.dc.html (179 lines, 12 KB): close to 100% portable. It has proj(), defs() with the seat() helper and 16 tokens, the layer lists (bases, patches, glows, gases) with opacity toggles, and the same pan/zoom/drag code. The mood, Seal's box, hatch and gas toggles become server-side scene state driven from the GM tab. The Key board (80 lines) is a static POI list that becomes YAML.",
+ "other_notes": "STEP 1, saved folders under /private/tmp/claude-501/-Users-peki--claude-spares-spare-0Hs2z9/3247a5ba-0047-403b-937a-7ddb44285d38/scratchpad/artifact-files/. 2f53fddb-d4ff-445b-9d24-7740b781a4b2 = 'LSO \u2014 UI direction' (https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff); 57 boards across pages round6..archive; the round-6 page is 'Meridian, ruled' (R6, R6Pick, R6Result). 35e08d1d-7c09-4667-9e8b-a7d4aecfb660 = 'LSO \u2014 Maps' (7esdM3p2PBtgpppj1bDoXV); 17 boards; Main = Event Horizon, Key = its POI key. fb4e5316-d1d2-4388-a16e-dc665b796af0 = 'LSO \u2014 Portraits' (Y2sm7h6zcsYAcQNxqqAUVd); 34 boards. 874d5b52-da87-4138-9c91-9e110abfe39a = 'LSO \u2014 Icons' (Hi3fgpcXR84e5cy2y7jNBs); Main = stats A Objects, Glyphs, Implants, Items, Dice, Vitals. e4cd28a1-7479-4f04-8ce1-10bf97158fcb = 'LSO \u2014 Posters' (https://claude.ai/artifact/VFhM1PKa4gWq2hSstCSp4A; this URL was not in the task text, found via list). 7a96ad01-0a49-449e-b7b6-7cb80ac2aeff = 'LSO \u2014 Rules' (G8zRfDF2r9n6xgoidr82JS); one 792-line Codex 'How to play' board with 7 asset refs. 76f0540b-0f53-451f-8ad9-f30f057c3197 = 'Campaign Site \u2014 Style Explorations (archived)' (https://claude.ai/artifact/FgrJCJE9t5GHB6RWg7uaHt); old round-1 work, ignore. The Campaign Bible artifact is https://claude.ai/artifact/M1yC81nP1if8VLKYnviCHp. DISCREPANCIES TO RESOLVE WHEN PORTING: (1) R6 draws only bases and glows; the Seal's box/hatch patches and gas layers exist only on the Maps board, so merge the two. (2) Token positions differ: the Maps board seats the crew and fixer around the founder's table (seat() at S=2.8, T=3.7, R=1.62), while R6 stands them elsewhere (e.g. C14 [3.35,9.55] in R6 vs [6.3,5.4] on Maps). Pick one as the YAML default. (3) R6 ring colours are HP #5ee08c and Entropy #f2b544 with unlit #2a2a31; crew tokens use the same ring at 64 px, and NPCs get a plain ring in their colour. The Vitals PNGs (HP #7dff9a) are unused by R6. (4) R6 rail and sheet assume Ves (template text 'Vesna Dragan', 'The Thief' and 'Ves' hard-coded). ASSET GAPS: 18 skill/chrome icons are missing (Lale 3 skills; Marlo, Tally and Tomo 3 skills + 2 chrome each); only Ves's 5 exist, and only in the UI store. The Implants board icons carry pre-rework names that don't match the bible's chrome. The note/document item kind has only the generic CLUE icon. The roll-result display on tokens and the crew rail for non-rolling players has no design. Station, Crew, Codex and GM tabs are undesigned; the NPC card's Codex button is a no-op. NO ASSET NEEDED: the nat-1 red crack and insult, explosions and all six roll scenes are procedural canvas; the stacked logo is pure text (Michroma + Jost); the HP/Entropy ring is SVG. The optional poster-logo PNG is 75f47cb7d0b52697a19f26032d590663 in the UI store. FONTS: Michroma, Hanken Grotesk, Jost 200, VT323, Doto 800, Silkscreen and Archivo (wdth 75) via Google Fonts. Canvas scenes must wait for document.fonts.load before painting, and R6 repaints at 400/1200/2500 ms. The insult table includes profanity ('WHAT THE FUCK WAS THAT?' and others), so Peter may want to review it. Later maps will also need the Posters black-hole GIF (Maps id 05f47e3b259733e45bdbc3e7ac3bdea4, 1.1 MB), skewed into a window on the Promenade, Executive, Secure, Bot bays and Terminal boards. Nothing in the repo or any artifact was modified; only two test assets were saved into the scratchpad."
+}

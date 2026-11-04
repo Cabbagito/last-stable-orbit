@@ -1,0 +1,63 @@
+# NPCs that can stand on a map. mood and note show on the NPC card for everyone who can see the token.
+# gm_note is only ever sent to the GM. color is the token ring: crew pink, the fixer's people red,
+# Dax amber, ISCO's side white-violet, ordinary residents dusk grey.
+
+- id: dax
+  name: Old Dax
+  role: Barkeep
+  portrait: portraits/dax.gif
+  color: "#f2b544"
+  mood: Watching the door
+  note: Keeps one table nobody sits at.
+  gm_note: His family has kept the founder's table and the bar for 300 years. Holds the stockroom door in session 4.
+
+- id: fixer
+  name: The fixer
+  role: Fixer
+  portrait: portraits/fixer.gif
+  color: "#ff5a4a"
+  mood: Patient
+  note: Asked nicely.
+  gm_note: "Uploaded man in a chassis. Thinks a rich client hired him; the client is ISCO. Final boss at the lift: 7 health, d20, Very hard to hit."
+
+- id: cleaner-14
+  name: Cleaner Unit 14
+  role: Cleaner, ISCO
+  portrait: portraits/cleaner-14.gif
+  color: "#c9bcff"
+  mood: Delighted
+  note: Its eyes slide away once a loop.
+  gm_note: "No cameras in the bar, but Unit 14 is always somewhere near the crew's table. ISCO's eyes."
+
+- id: slot-regular
+  name: Slot regular
+  role: Resident
+  portrait: portraits/slot-regular.gif
+  color: "#c9bcff"
+  mood: Winning
+  note: Has never lost.
+
+- id: happy-resident
+  name: Happy resident
+  role: Resident
+  portrait: portraits/happy-resident.gif
+  color: "#a9a2bc"
+  mood: Happy
+  note: Very happy.
+
+- id: service-droid
+  name: Service droid
+  role: Staff, ISCO
+  portrait: portraits/service-droid.gif
+  color: "#c9bcff"
+  mood: Helpful
+  note: Will bring you anything.
+
+- id: hired-gun
+  name: Hired gun
+  role: Muscle
+  portrait: portraits/hired-gun.gif
+  color: "#ff5a4a"
+  mood: Bored
+  note: Paid by the job.
+  gm_note: "The fixer's. 4 health, d12, Hard to hit. Respirators, so the gas doesn't touch them. Once the fixer is down, Cool at Normal sends the rest running."

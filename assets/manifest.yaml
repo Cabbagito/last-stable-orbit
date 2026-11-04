@@ -1,0 +1,575 @@
+# Last Stable Orbit - Milestone 1 art assets
+# Generated from claude.ai artifact asset stores; one entry per file.
+stores:
+  MAPS: https://claude.ai/artifact/7esdM3p2PBtgpppj1bDoXV
+  PORTRAITS: https://claude.ai/artifact/Y2sm7h6zcsYAcQNxqqAUVd
+  ICONS: https://claude.ai/artifact/Hi3fgpcXR84e5cy2y7jNBs
+  UI: https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff
+assets:
+  - path: maps/event-horizon/base-open.png
+    store: MAPS
+    asset_id: "6d77cc9b170e9047c637ce4ba8bc1e31"
+    sha256: "d333e0b8bc72f95f8dfbf81c60db5d3ed49ed8ecd786058737032b062ffc1d58"
+    bytes: 185775
+    width: 1280
+    height: 720
+  - path: maps/event-horizon/glow-open.png
+    store: MAPS
+    asset_id: "72fa38d907ef0dbd4cc9e97644c937c0"
+    sha256: "c14dd288f47693ff10b0807016610cdf91caa254c6601699a31808eac4687cba"
+    bytes: 46007
+    width: 1280
+    height: 720
+  - path: maps/event-horizon/base-after.png
+    store: MAPS
+    asset_id: "4965f74fff3c969d0d7a453b7646a840"
+    sha256: "38c5ccdeed50457728ab12a027471e590a08647e74650f778e50b323fca5349d"
+    bytes: 181077
+    width: 1280
+    height: 720
+  - path: maps/event-horizon/glow-after.png
+    store: MAPS
+    asset_id: "08030bf4cec8312f65df0ee9b9526b72"
+    sha256: "b6cf064df724cc33c442bfdc978988a3284f46dd91c5275bccb92709258abf5a"
+    bytes: 17278
+    width: 1280
+    height: 720
+  - path: maps/event-horizon/base-stand.png
+    store: UI
+    asset_id: "0e0ed6a073a45188da837896c4315330"
+    sha256: "5815f1f4d947a3724c08e474023aa514bd022d832d502e650910db971bbd7447"
+    bytes: 176041
+    width: 1280
+    height: 720
+  - path: maps/event-horizon/glow-stand.png
+    store: MAPS
+    asset_id: "982bcd859cd286b4917817ed33fefee8"
+    sha256: "19e976f0a288016e7404dc1d4ab0f46b0b77f41bdb47c4cd5ba11acea7952d3e"
+    bytes: 34914
+    width: 1280
+    height: 720
+  - path: maps/event-horizon/patch-box.png
+    store: MAPS
+    asset_id: "58636de4d3b67ffca61852a1eb015fa6"
+    sha256: "47e76b6d5e8bec0bf6efd46d46f517f7557a320539d6aec148d8c4db7e82e649"
+    bytes: 4588
+    width: 1280
+    height: 720
+  - path: maps/event-horizon/patch-hatch.png
+    store: MAPS
+    asset_id: "c59a7cd8acef218de240cee99e81b854"
+    sha256: "3fbf99ca31e9a86cb9595fee7aa988f6590aa64c46e5e9b89253dbea536ef09a"
+    bytes: 14486
+    width: 1280
+    height: 720
+  - path: maps/event-horizon/gas-1.png
+    store: MAPS
+    asset_id: "bbd777f48fa50c407056f2bc4890d8d2"
+    sha256: "7f477c80bb5c94842d10efdc2e267773a1e057766584b2a9cf5a7f0b8cae24d6"
+    bytes: 21923
+    width: 1280
+    height: 720
+  - path: maps/event-horizon/gas-2.png
+    store: MAPS
+    asset_id: "81b446fbd6a0d90989fcb7c33e90fb17"
+    sha256: "01991f42e888130a31065d38de40422e04254a44db29180db6cf369e7f82e213"
+    bytes: 38806
+    width: 1280
+    height: 720
+  - path: maps/event-horizon/gas-3.png
+    store: MAPS
+    asset_id: "bfae8b7f77913378ff544a34f534377a"
+    sha256: "6927bdb68054b464067a9a64bef890258fce0974448bc12b15cc292aed33c34a"
+    bytes: 48655
+    width: 1280
+    height: 720
+  - path: portraits/lale.gif
+    store: PORTRAITS
+    asset_id: "5256eee66c5ddc27ba8488eb7ab0f6bc"
+    sha256: "8ca46a6f792b8e4b8bb13dea106630c1f91acca0e408c7d2c50fa3881f1dbcf0"
+    bytes: 134952
+    width: 96
+    height: 96
+  - path: portraits/marlo.gif
+    store: PORTRAITS
+    asset_id: "6d95a903857c355bb0b3e86bcce84d74"
+    sha256: "ff8f20f811b0acbe02cd55855f45c6767c6bb028c096aa7c51e851488751d1b5"
+    bytes: 41838
+    width: 96
+    height: 96
+  - path: portraits/tally.gif
+    store: PORTRAITS
+    asset_id: "4c0eba89fed930f70b67556207fb41e8"
+    sha256: "ad4c7993a1e5954d9305c6d23dd5f0ee9f0657e35d10ecc5b6cce04f63f045a3"
+    bytes: 60881
+    width: 96
+    height: 96
+  - path: portraits/ves.gif
+    store: UI
+    asset_id: "e6071441b882bfcc677068003d8bb15d"
+    sha256: "2413a762ac2e814002157eee73984695e6751307d4897f21861da93c53b8eac0"
+    bytes: 124381
+    width: 96
+    height: 96
+  - path: portraits/tomo.gif
+    store: PORTRAITS
+    asset_id: "78d811e2b134ebf012671f17ee37365d"
+    sha256: "1eb85bd8454db10b1aa98b36b0d1365e835b8f8dbb13800f6a42258b18623cf6"
+    bytes: 115762
+    width: 96
+    height: 96
+  - path: portraits/dax.gif
+    store: PORTRAITS
+    asset_id: "b9b9c5821d2c5f7758f85831fa5952a8"
+    sha256: "ba785967fe49df8f5cf9a056052fc6111570e86bd2e388267e56197cce59b56c"
+    bytes: 44819
+    width: 96
+    height: 96
+  - path: portraits/fixer.gif
+    store: PORTRAITS
+    asset_id: "6c4506cf8b7745cde7aa63d1ba14268c"
+    sha256: "668ae484f8c0fbdec9e5570b95d1a22fe05b0fdf581a34046cca097ad3dbe9dd"
+    bytes: 44674
+    width: 96
+    height: 96
+  - path: portraits/slot-regular.gif
+    store: PORTRAITS
+    asset_id: "51f224219211073385bbe06f53ba92e1"
+    sha256: "beb164e2e1bddb8e8f18885bd98896ecc0a52456be3ee7aae4f4f292986bdc92"
+    bytes: 55123
+    width: 96
+    height: 96
+  - path: portraits/cleaner-14.gif
+    store: PORTRAITS
+    asset_id: "e065b6cc803bfdab881c69144ecf5f93"
+    sha256: "3e43db4c8d4c83e76ebf426f962e9c1657a69a57da59152ebe79dadd8d2d3a4d"
+    bytes: 41774
+    width: 96
+    height: 96
+  - path: portraits/happy-resident.gif
+    store: PORTRAITS
+    asset_id: "1e2284cd197d16c050c7da970872b06c"
+    sha256: "4ac5067dfa77840ea03b86e055beba81b0ace2b1ab9783eea1245cde80fe546d"
+    bytes: 130175
+    width: 96
+    height: 96
+  - path: portraits/service-droid.gif
+    store: PORTRAITS
+    asset_id: "61802dca8d5aadf50bb690899f9bc62a"
+    sha256: "65d5acf26b74c313cc8d1589aef32470a2739a0700d02ea00a6c5e89d77614d6"
+    bytes: 29684
+    width: 96
+    height: 96
+  - path: portraits/hired-gun.gif
+    store: PORTRAITS
+    asset_id: "69b890b22fc69dfadfbdaace5cfe5830"
+    sha256: "a4622ec36b167da4a929925d2940ec847f9bd691b46b2ffcbdc529dae46adc48"
+    bytes: 40167
+    width: 96
+    height: 96
+  - path: icons/stats/body.png
+    store: ICONS
+    asset_id: "4e11ef2d2ff1effda9a8adae24eaafb1"
+    sha256: "7b6d5547fbcfaf9a7f0cb078d779b2f1acc1c793251291557d8ceb930faf16c1"
+    bytes: 1239
+    width: 48
+    height: 48
+  - path: icons/stats/reflex.png
+    store: ICONS
+    asset_id: "9891bbfe6ce0a8704e5b8cb8c991aa72"
+    sha256: "2e5e863e344e4170bbefb50007d1cb10fa4140a363bb4a903c2f1c8daff5eefc"
+    bytes: 559
+    width: 48
+    height: 48
+  - path: icons/stats/tech.png
+    store: ICONS
+    asset_id: "c443e48177ee9c0755ea3f8ef0a670ad"
+    sha256: "828e947c45c14647a0b668fee182a0b9e2f51048ef6fc519fa27ef7d818e407f"
+    bytes: 1260
+    width: 48
+    height: 48
+  - path: icons/stats/intel.png
+    store: ICONS
+    asset_id: "2cbafb8283097452be35c194589cd271"
+    sha256: "1a143f771fb0fe9475111df207aaa41551001e13318df6424ffe06f8f7b31ccd"
+    bytes: 1181
+    width: 48
+    height: 48
+  - path: icons/stats/cool.png
+    store: ICONS
+    asset_id: "04e947f32be196125faafa0b3c29dbb0"
+    sha256: "d3e85e91c13d9665ff46db8459fd12377750d6cd174318c7c939ee4b151c5657"
+    bytes: 892
+    width: 48
+    height: 48
+  - path: icons/stats/empathy.png
+    store: ICONS
+    asset_id: "dbee64bf3a857658f07e9762d9519a63"
+    sha256: "78be1f94662bfda6f14bda23006c4f248ade709738bc763f9abe0ee47d1f77ff"
+    bytes: 1017
+    width: 48
+    height: 48
+  - path: icons/dice/body-d4.png
+    store: ICONS
+    asset_id: "353e5bbf7fd9fe21b14561aa845b27fb"
+    sha256: "b3bbb0cd67e323aaff4ac30b8c2b96e94c2d929b23d7fbc2afafde8f2339dac0"
+    bytes: 584
+    width: 48
+    height: 48
+  - path: icons/dice/body-d6.png
+    store: ICONS
+    asset_id: "17a4faaf78ca8a2936ca50088d310b30"
+    sha256: "2b6204c95cf78476a70142671dd9b0e6b43a23d02b1858b873268636646bf2c6"
+    bytes: 603
+    width: 48
+    height: 48
+  - path: icons/dice/body-d8.png
+    store: ICONS
+    asset_id: "49f933853aa12c09d609181270e91831"
+    sha256: "128ef3e2a49889326a007923e4d03fd87c2c6b8d7359dba40ca3ba2b20bcf59e"
+    bytes: 680
+    width: 48
+    height: 48
+  - path: icons/dice/body-d10.png
+    store: ICONS
+    asset_id: "7b2a685f860a995db8fd98f9a8eb3809"
+    sha256: "5f5dde0d1ce773276af873e56a603c79b61cda4bb520fbd9a11668579862f956"
+    bytes: 676
+    width: 48
+    height: 48
+  - path: icons/dice/body-d12.png
+    store: ICONS
+    asset_id: "4587dcc0b6ffe9ab05da3c37bf4f96dd"
+    sha256: "51e555190a9f5c557db1e1d4aad0f9e5c6a304dfa40c905997820c005fc515ff"
+    bytes: 816
+    width: 48
+    height: 48
+  - path: icons/dice/body-d20.png
+    store: ICONS
+    asset_id: "9d6c96b9bd82e26a94d98508687c3d3a"
+    sha256: "8e864a5fa2e5be508c53efb34a8d6f7ee76dd5ae8528f785af697e7909dc5cea"
+    bytes: 861
+    width: 48
+    height: 48
+  - path: icons/dice/reflex-d4.png
+    store: ICONS
+    asset_id: "5e5d2e36fb4963fe2c21c212b561d36e"
+    sha256: "249ab8e9baa43ad9a03f6a25cda3de89b205ca783c937683e377dce721668810"
+    bytes: 580
+    width: 48
+    height: 48
+  - path: icons/dice/reflex-d6.png
+    store: ICONS
+    asset_id: "a79e9b783c82647dc249392bdb02cb0c"
+    sha256: "f4325d36a2d7c3940335a77c643ff68287db45b58681c56f4f7248c0a61feb0a"
+    bytes: 608
+    width: 48
+    height: 48
+  - path: icons/dice/reflex-d8.png
+    store: ICONS
+    asset_id: "6639dfb4ca0473021a44109094cea96f"
+    sha256: "383a7b1050b863bb63222d5238b5aee356bc3a9813a1d7988f6c196489fdb6d0"
+    bytes: 677
+    width: 48
+    height: 48
+  - path: icons/dice/reflex-d10.png
+    store: ICONS
+    asset_id: "a1b288bd12c8e13380ce11f3f0e88d4c"
+    sha256: "dea3d98efca3072cc64a0af68f333fe7ad6fb85744e650fbe3fb3b48cb25def1"
+    bytes: 666
+    width: 48
+    height: 48
+  - path: icons/dice/reflex-d12.png
+    store: ICONS
+    asset_id: "2368a85667e0107f9c70df9acf4250eb"
+    sha256: "4d89512f2ea9e139e0ac72de2d3a79254d401c4bf56eaec1091eda94b4b62a2f"
+    bytes: 813
+    width: 48
+    height: 48
+  - path: icons/dice/reflex-d20.png
+    store: ICONS
+    asset_id: "1c991641b525370388352ee29a12711e"
+    sha256: "0a61fa1caa2308633fc76072509175e842817333e55af962c5c3c8b8bfa16686"
+    bytes: 858
+    width: 48
+    height: 48
+  - path: icons/dice/tech-d4.png
+    store: ICONS
+    asset_id: "8cd782648550b1819cbe74cc6e964b81"
+    sha256: "4e049a760772c4022d3dfc74856696c1636ddacec944f7fff36a3f2064fe936c"
+    bytes: 573
+    width: 48
+    height: 48
+  - path: icons/dice/tech-d6.png
+    store: ICONS
+    asset_id: "44f4e97e2936eb9205d6fcfa96ba7e9d"
+    sha256: "0eedc6ddf1dd00756948c6b6406d39e3365d07d2cdd636643205163f1ecb6a97"
+    bytes: 594
+    width: 48
+    height: 48
+  - path: icons/dice/tech-d8.png
+    store: ICONS
+    asset_id: "72c83a6e4586b705cf96361225be3ba5"
+    sha256: "00326b72e13a6e117aab3661c1ffdc96b7426a2bd9e34cd613cbe5342006136e"
+    bytes: 666
+    width: 48
+    height: 48
+  - path: icons/dice/tech-d10.png
+    store: ICONS
+    asset_id: "450255f60691c89ca817ba11aec06b8c"
+    sha256: "67effacacb6c0338e561135b98c29a6311eed3a409572f83261c3cf112c65fa3"
+    bytes: 675
+    width: 48
+    height: 48
+  - path: icons/dice/tech-d12.png
+    store: ICONS
+    asset_id: "05946c1b0b0715bbee2947268089ee57"
+    sha256: "72ae6f3d6acebbf1a397c1500e30f2de18be3840017614826096676564cfbd1d"
+    bytes: 809
+    width: 48
+    height: 48
+  - path: icons/dice/tech-d20.png
+    store: ICONS
+    asset_id: "9770ab367ba4b6c7a04f15fd8facc9f5"
+    sha256: "f44b2845b33256b608b8d3ac59b697b98b0ca020f68b60a129c09bfbe101023d"
+    bytes: 846
+    width: 48
+    height: 48
+  - path: icons/dice/intel-d4.png
+    store: ICONS
+    asset_id: "1cb3b3e2421cf2f11431d33bd497f766"
+    sha256: "2418f79880762c8a23d504e80b40cf8a84eed689c2d62b8eb823503bfa044ecf"
+    bytes: 580
+    width: 48
+    height: 48
+  - path: icons/dice/intel-d6.png
+    store: ICONS
+    asset_id: "507a3b3e179563e180d193c987867f64"
+    sha256: "1ea2f3b9587de56b8b1da3fbf461cc5ae22405ca6abefe30d3c424782d6a224c"
+    bytes: 605
+    width: 48
+    height: 48
+  - path: icons/dice/intel-d8.png
+    store: ICONS
+    asset_id: "466fe089461bf780ec9c34437402273d"
+    sha256: "f8f2128ac13b495bc675221930aeba39e9432a24195396f24e4399acc99d6a5f"
+    bytes: 681
+    width: 48
+    height: 48
+  - path: icons/dice/intel-d10.png
+    store: ICONS
+    asset_id: "baa58960ecfe446f2b565c0172a03445"
+    sha256: "378b177118245d0e3ce8db04d37f96f6ebee1e037417b55caf0a6ac63806779a"
+    bytes: 671
+    width: 48
+    height: 48
+  - path: icons/dice/intel-d12.png
+    store: ICONS
+    asset_id: "3e0f35a6b7005e2c1fd7649a9cf5b831"
+    sha256: "92518b7dc0170cc3e904c91050a5dca8ce70cc88f47e472be5386d8b95570694"
+    bytes: 815
+    width: 48
+    height: 48
+  - path: icons/dice/intel-d20.png
+    store: ICONS
+    asset_id: "528867f8f3ef627b2823df9576c47a40"
+    sha256: "381d00c8a867e48140217644bf7dd6a88f97173f2e3b081421c1543c5b83b85a"
+    bytes: 854
+    width: 48
+    height: 48
+  - path: icons/dice/cool-d4.png
+    store: ICONS
+    asset_id: "b0d722b3b5e50860f9432bf78e84e735"
+    sha256: "784d7bda5715ebdf7032a62e9ff84293f722d831d7126d115561ce0f0a276920"
+    bytes: 579
+    width: 48
+    height: 48
+  - path: icons/dice/cool-d6.png
+    store: ICONS
+    asset_id: "e4869cf1241987640df5d119e7657412"
+    sha256: "fdac5a455e2f82c6450af31ebc438d97d977395c822376191e752f1c707d964d"
+    bytes: 602
+    width: 48
+    height: 48
+  - path: icons/dice/cool-d8.png
+    store: ICONS
+    asset_id: "287340603b686cdcb0a35a8455b90b25"
+    sha256: "1b666ec8fb498f6e99c214f0f9ec7c52822b62c08a298cff8d9a0b22aab795d8"
+    bytes: 675
+    width: 48
+    height: 48
+  - path: icons/dice/cool-d10.png
+    store: ICONS
+    asset_id: "e512567839b3d8e9812bb5f7969eaae5"
+    sha256: "546f114f2338c47e943097c475052d1fb10d426854c2f57c492386c1d8466137"
+    bytes: 668
+    width: 48
+    height: 48
+  - path: icons/dice/cool-d12.png
+    store: ICONS
+    asset_id: "041d0bf2e89914bf6618b7f28dc438c8"
+    sha256: "baa4daba4db3f0ea4e58bc4306e2e185d492034d42a8c74b9b71455d74dfe098"
+    bytes: 811
+    width: 48
+    height: 48
+  - path: icons/dice/cool-d20.png
+    store: ICONS
+    asset_id: "8486a92248bbd8aebacfaa2ce49a73dd"
+    sha256: "695b70ea2d7af9c97225c95c4da0762d4feb8c4337fe4b056ea5c315384922e9"
+    bytes: 848
+    width: 48
+    height: 48
+  - path: icons/dice/empathy-d4.png
+    store: ICONS
+    asset_id: "241dd9050fc768cc7c7accf70992b5bb"
+    sha256: "cb3e39516762ce13e3bedbc4ac3c55e81fed625bef8a331c7bcc847fba17744f"
+    bytes: 580
+    width: 48
+    height: 48
+  - path: icons/dice/empathy-d6.png
+    store: ICONS
+    asset_id: "5996113ed2f8a2179f089378ad2e660b"
+    sha256: "7a22a4842126d81a57d35f15c8ac0c8e53d88100f38ab7588c8a3a4b6926a484"
+    bytes: 605
+    width: 48
+    height: 48
+  - path: icons/dice/empathy-d8.png
+    store: ICONS
+    asset_id: "851857463d993f654e789e968746f658"
+    sha256: "42a37fba73eb6395375330e7ef74e4811bd323c8f15721ec4162904259fb4272"
+    bytes: 682
+    width: 48
+    height: 48
+  - path: icons/dice/empathy-d10.png
+    store: ICONS
+    asset_id: "663583993a93f5a4dbba3a2abcf6674b"
+    sha256: "a00d7921b0ee7d339465c72386c6e14b546f379aa43c95fd728b9a6fcbf7c84a"
+    bytes: 674
+    width: 48
+    height: 48
+  - path: icons/dice/empathy-d12.png
+    store: ICONS
+    asset_id: "75cbaaa105979fb11002f98ec612e491"
+    sha256: "195c87944da2d741f8a3bc76e8c4c48f295c71ee572a2900c2faf7ea405cea27"
+    bytes: 815
+    width: 48
+    height: 48
+  - path: icons/dice/empathy-d20.png
+    store: ICONS
+    asset_id: "aca72226992ec5f55e395adef23b58d1"
+    sha256: "6e2b6fbca219ed601e5bc68b5a21bd64d7a02fcb9959c2b87ddda8332d43c4c9"
+    bytes: 854
+    width: 48
+    height: 48
+  - path: icons/items/sidearm.png
+    store: ICONS
+    asset_id: "c7a9d5b6ad52f454af2248bc98cc72ed"
+    sha256: "3f782849765ef25fcfae4c3968d6bb1e5faba57f67b76426bf82c6df79913e2e"
+    bytes: 795
+    width: 48
+    height: 48
+  - path: icons/items/splice-kit.png
+    store: ICONS
+    asset_id: "624ba83b18f3dce2046bb80c9eb5f369"
+    sha256: "493e51182cf6d8039aa210d6e97f3f7092aae234bdc9996d6ba008c15f849089"
+    bytes: 851
+    width: 48
+    height: 48
+  - path: icons/items/credits.png
+    store: ICONS
+    asset_id: "345c318da5fa39d204c6c0aedc9bf057"
+    sha256: "468a46bc5b645d05d300e3da24f9fccd5c75d5b073557890a1b7b145fa95f322"
+    bytes: 958
+    width: 48
+    height: 48
+  - path: icons/items/access-chit.png
+    store: ICONS
+    asset_id: "f61d0ff4c00bbf2a8f84aa2a74cc8186"
+    sha256: "ac469e28f7388f41b4d051874c222af168f0b9f864ac48342534eee699c4a446"
+    bytes: 691
+    width: 48
+    height: 48
+  - path: icons/items/note.png
+    store: ICONS
+    asset_id: "2702d4d8d535dfb3d159e6f6b283506a"
+    sha256: "c7b64583ed73cd53ff981f12caf36909fa783131cc0c24197f85d422cb36e1b1"
+    bytes: 800
+    width: 48
+    height: 48
+  - path: icons/list/ves-vents.png
+    store: UI
+    asset_id: "5987e17ffcf3c2dc9df8431c49057b5a"
+    sha256: "0a90c17e6c8da00304443ed6f82b7e9d52065b3d3eef552728c0b455d898cd93"
+    bytes: 909
+    width: 48
+    height: 48
+  - path: icons/list/ves-nobody.png
+    store: UI
+    asset_id: "44fc57b486fd7ae5940105ffbf9a3b0e"
+    sha256: "62c122203a7672f009133517382b5efe91b1e911333a6afdf85c49dfe7e77cbd"
+    bytes: 1188
+    width: 48
+    height: 48
+  - path: icons/list/ves-tomo-no.png
+    store: UI
+    asset_id: "b35e102084d52c7f1d101adda71356e2"
+    sha256: "e79caac725ce228f6b46130605963e6a7cadcce29a972f848607833a706a94cc"
+    bytes: 1234
+    width: 48
+    height: 48
+  - path: icons/list/ves-silent-legs.png
+    store: UI
+    asset_id: "212739529d8a97b82d1957f97edaef9d"
+    sha256: "53497ba2bf2b4396c41e098d449feb7fe0543935b053a9ec5146e3839f910c64"
+    bytes: 1104
+    width: 48
+    height: 48
+  - path: icons/list/ves-cone-eye.png
+    store: UI
+    asset_id: "5ddd0a329467fe83c0a7711ecf9a2529"
+    sha256: "7122779dc27912b6ff50be35cad94b0aa03936d8ed3e629b142893984983e217"
+    bytes: 1373
+    width: 48
+    height: 48
+  - path: icons/list/implant-optic.png
+    store: ICONS
+    asset_id: "d2cb4292b6c6da98904a5fc19694201a"
+    sha256: "044165dd766773b0311265e7024090c8375bb1df3bdf4bd5a7eed42c4a63ca50"
+    bytes: 1289
+    width: 48
+    height: 48
+  - path: icons/list/implant-port.png
+    store: ICONS
+    asset_id: "d373b388a21c1d24bf4c25f81078e3e1"
+    sha256: "71e61eb9673a5aa570a14e01ef86e210245114debb6bc23ca9718d1677519290"
+    bytes: 1412
+    width: 48
+    height: 48
+  - path: icons/list/implant-grip.png
+    store: ICONS
+    asset_id: "13f21d18295b5c7476406bd747e95ef0"
+    sha256: "c09d252cd4c2a388860e45f3ac4b5a0411b2110f106f5e17e8fcc0b6c81cfea7"
+    bytes: 1044
+    width: 48
+    height: 48
+  - path: icons/list/implant-arm.png
+    store: ICONS
+    asset_id: "c29123aef72877d3c7f5310e04545ef2"
+    sha256: "a3ce8398b99f2d9bd0cad9e8fd3f93e2abc828dca9d2be4d091795e277a6fabe"
+    bytes: 1357
+    width: 48
+    height: 48
+  - path: icons/vitals/hp.png
+    store: ICONS
+    asset_id: "e9e30d5688bf5b2a2d6d58e2345df578"
+    sha256: "93bfe9c2a8da2dc391ea0ac8bc1286c5e2126dcb8803b5904ef35e753912f825"
+    bytes: 1510
+    width: 48
+    height: 48
+  - path: icons/vitals/entropy.png
+    store: ICONS
+    asset_id: "77bd57bb5d07a5b4c7e42315431b13b6"
+    sha256: "d929b0ccc248713e0771bec7fc4f04cba61461e864e7939f6ddead8a6c0ce928"
+    bytes: 989
+    width: 48
+    height: 48

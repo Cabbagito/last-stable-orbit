@@ -1,0 +1,376 @@
+{
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-03T12:10:00Z"
+ },
+ "title": "LSO — Portraits",
+ "launch": {
+  "view": "canvas"
+ },
+ "pages": [],
+ "boards": {
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 560,
+   "h": 648,
+   "title": "A · Last Call"
+  },
+  "LowLight.dc.html": {
+   "x": 640,
+   "y": 0,
+   "w": 560,
+   "h": 648,
+   "title": "B · Low Light"
+  },
+  "Sodium.dc.html": {
+   "x": 1280,
+   "y": 0,
+   "w": 560,
+   "h": 648,
+   "title": "C · Sodium"
+  },
+  "Bolt.dc.html": {
+   "x": 0,
+   "y": 1060,
+   "w": 560,
+   "h": 648,
+   "title": "BOLT-7 · Last Call"
+  },
+  "Dax.dc.html": {
+   "x": 640,
+   "y": 1060,
+   "w": 560,
+   "h": 648,
+   "title": "Old Dax · Last Call"
+  },
+  "StaticLight.dc.html": {
+   "x": 0,
+   "y": 2068,
+   "w": 560,
+   "h": 648,
+   "title": "Static · pink"
+  },
+  "BoltLight.dc.html": {
+   "x": 640,
+   "y": 2068,
+   "w": 560,
+   "h": 648,
+   "title": "BOLT-7 · cyan"
+  },
+  "DaxLight.dc.html": {
+   "x": 1280,
+   "y": 2068,
+   "w": 560,
+   "h": 648,
+   "title": "Old Dax · amber"
+  },
+  "Upload.dc.html": {
+   "x": 0,
+   "y": 3076,
+   "w": 560,
+   "h": 648,
+   "title": "The Fixer · red"
+  },
+  "Isco.dc.html": {
+   "x": 640,
+   "y": 3076,
+   "w": 560,
+   "h": 648,
+   "title": "ISCO · white-violet"
+  },
+  "Gumshoe.dc.html": {
+   "x": 1280,
+   "y": 3076,
+   "w": 560,
+   "h": 648,
+   "title": "Gumshoe · indigo"
+  },
+  "IscoAccretion.dc.html": {
+   "x": 0,
+   "y": 4084,
+   "w": 560,
+   "h": 648,
+   "title": "ISCO 1 · Accretion"
+  },
+  "IscoFaces.dc.html": {
+   "x": 640,
+   "y": 4084,
+   "w": 560,
+   "h": 648,
+   "title": "ISCO 2 · Many Faces"
+  },
+  "IscoPorcelain.dc.html": {
+   "x": 1280,
+   "y": 4084,
+   "w": 560,
+   "h": 648,
+   "title": "ISCO 3 · Porcelain"
+  },
+  "IscoSigil.dc.html": {
+   "x": 0,
+   "y": 5092,
+   "w": 560,
+   "h": 648,
+   "title": "ISCO 4 · Sigil"
+  },
+  "IscoVoice.dc.html": {
+   "x": 640,
+   "y": 5092,
+   "w": 560,
+   "h": 648,
+   "title": "ISCO 5 · Voice"
+  },
+  "IscoSwarm.dc.html": {
+   "x": 1280,
+   "y": 5092,
+   "w": 560,
+   "h": 648,
+   "title": "ISCO 6 · Swarm"
+  },
+  "Lale.dc.html": {
+   "x": 0,
+   "y": 6100,
+   "w": 560,
+   "h": 648,
+   "title": "Lale · crew"
+  },
+  "Marlo.dc.html": {
+   "x": 640,
+   "y": 6100,
+   "w": 560,
+   "h": 648,
+   "title": "Marlo · crew"
+  },
+  "Tally.dc.html": {
+   "x": 1280,
+   "y": 6100,
+   "w": 560,
+   "h": 648,
+   "title": "Tally · crew"
+  },
+  "Ves.dc.html": {
+   "x": 1920,
+   "y": 6100,
+   "w": 560,
+   "h": 648,
+   "title": "Ves · crew"
+  },
+  "Tomo.dc.html": {
+   "x": 2560,
+   "y": 6100,
+   "w": 560,
+   "h": 648,
+   "title": "Tomo · crew"
+  },
+  "Cast.dc.html": {
+   "x": 0,
+   "y": 7108,
+   "w": 1320,
+   "h": 360,
+   "title": "The set, with the Fixer"
+  },
+  "Guard.dc.html": {
+   "x": 0,
+   "y": 7940,
+   "w": 560,
+   "h": 648,
+   "title": "Security guard · the company"
+  },
+  "Gun.dc.html": {
+   "x": 640,
+   "y": 7940,
+   "w": 560,
+   "h": 648,
+   "title": "Hired gun · the fixer"
+  },
+  "Cleaner.dc.html": {
+   "x": 1280,
+   "y": 7940,
+   "w": 560,
+   "h": 648,
+   "title": "Cleaner Unit 14 · ISCO"
+  },
+  "Spider.dc.html": {
+   "x": 1920,
+   "y": 7940,
+   "w": 720,
+   "h": 808,
+   "title": "Spider mech · the company"
+  },
+  "Concierge.dc.html": {
+   "x": 0,
+   "y": 9220,
+   "w": 560,
+   "h": 648,
+   "title": "The Concierge · white-violet"
+  },
+  "Scientist.dc.html": {
+   "x": 640,
+   "y": 9220,
+   "w": 560,
+   "h": 648,
+   "title": "The scientist · desk lamp"
+  },
+  "Cleaners.dc.html": {
+   "x": 1280,
+   "y": 9220,
+   "w": 1320,
+   "h": 256,
+   "title": "Cleaner bots, prime numbers only"
+  },
+  "MuralBoth.dc.html": {
+   "x": 0,
+   "y": 10340,
+   "w": 680,
+   "h": 476,
+   "title": "Mural · Ilija and Nada"
+  },
+  "MuralIlija.dc.html": {
+   "x": 760,
+   "y": 10340,
+   "w": 392,
+   "h": 600,
+   "title": "Mural · Ilija"
+  },
+  "NadaPhoto.dc.html": {
+   "x": 1232,
+   "y": 10340,
+   "w": 464,
+   "h": 600,
+   "title": "Nada's photo and item icon"
+  },
+  "Extras.dc.html": {
+   "x": 0,
+   "y": 11420,
+   "w": 1328,
+   "h": 880,
+   "title": "Background people"
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "LowLight.dc.html",
+  "Sodium.dc.html",
+  "Bolt.dc.html",
+  "Dax.dc.html",
+  "StaticLight.dc.html",
+  "BoltLight.dc.html",
+  "DaxLight.dc.html",
+  "Upload.dc.html",
+  "Isco.dc.html",
+  "Gumshoe.dc.html",
+  "IscoAccretion.dc.html",
+  "IscoFaces.dc.html",
+  "IscoPorcelain.dc.html",
+  "IscoSigil.dc.html",
+  "IscoVoice.dc.html",
+  "IscoSwarm.dc.html",
+  "Lale.dc.html",
+  "Marlo.dc.html",
+  "Tally.dc.html",
+  "Ves.dc.html",
+  "Tomo.dc.html",
+  "Cast.dc.html",
+  "Guard.dc.html",
+  "Gun.dc.html",
+  "Cleaner.dc.html",
+  "Spider.dc.html",
+  "Concierge.dc.html",
+  "Scientist.dc.html",
+  "Cleaners.dc.html",
+  "MuralBoth.dc.html",
+  "MuralIlija.dc.html",
+  "NadaPhoto.dc.html",
+  "Extras.dc.html"
+ ],
+ "notes": {
+  "row1": {
+   "kind": "title1",
+   "x": 0,
+   "y": -300,
+   "maxW": 1840,
+   "text": "Static Kovač, three ways"
+  },
+  "row2": {
+   "kind": "title1",
+   "x": 0,
+   "y": 790,
+   "maxW": 1840,
+   "text": "Two more in the strongest style"
+  },
+  "row3": {
+   "kind": "title1",
+   "x": 0,
+   "y": 1828,
+   "maxW": 1840,
+   "text": "Last Call, one light per character"
+  },
+  "row4": {
+   "kind": "title1",
+   "x": 0,
+   "y": 2836,
+   "maxW": 1840,
+   "text": "Three new characters"
+  },
+  "row5": {
+   "kind": "title1",
+   "x": 0,
+   "y": 3844,
+   "maxW": 1840,
+   "text": "ISCO, three more tries"
+  },
+  "row6": {
+   "kind": "title1",
+   "x": 0,
+   "y": 4852,
+   "maxW": 1840,
+   "text": "ISCO, no face"
+  },
+  "pick": {
+   "x": 1280,
+   "y": 1060,
+   "w": 560,
+   "size": "m",
+   "fill": "pink",
+   "text": "My pick: A, Last Call.\n\nIt is the only one that still reads as a face at chip size. Its hand-picked colour ramps also carry over cleanly: BOLT-7 and Old Dax came out of the same method and sit together as a set.\n\nB has the best pose and mood, but it leans on a prop and the face goes muddy below 64 px.\n\nC has the best light, but the faces turn soft and mask-like, and the dithered haze shimmers in motion. Its lighting could work for big story moments, such as a reveal or the finale."
+  },
+  "row7": {
+   "kind": "title1",
+   "x": 0,
+   "y": 5860,
+   "maxW": 3120,
+   "text": "The crew"
+  },
+  "row8": {
+   "kind": "title1",
+   "x": 0,
+   "y": 7700,
+   "maxW": 2640,
+   "text": "Enemies and robots, one look per faction"
+  },
+  "row9": {
+   "kind": "title1",
+   "x": 0,
+   "y": 8980,
+   "maxW": 2600,
+   "text": "The Concierge, the scientist, and more cleaners"
+  },
+  "row10": {
+   "kind": "title1",
+   "x": 0,
+   "y": 10100,
+   "maxW": 1696,
+   "text": "Ilija and Nada, as things in the world"
+  },
+  "row11": {
+   "kind": "title1",
+   "x": 0,
+   "y": 11180,
+   "maxW": 1328,
+   "text": "Background people, from one kit"
+  }
+ },
+ "designSystems": []
+}

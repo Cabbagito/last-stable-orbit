@@ -1,0 +1,26 @@
+# The Event Horizon, from the Maps canvas (board "Main"). Layout and style are locked.
+# Art is 1280x720, drawn at 2x. World coordinates use the shared isometric formula:
+#   proj(X,Y,Z) = [((X-Y)*30 + ox)*2, ((X+Y)*15 - Z*36 + oy)*2]   with origin (ox, oy)
+id: event-horizon
+name: The Event Horizon
+subtitle: Deck 2, the Promenade
+description: >-
+  The Event Horizon seen from above at an angle: a long bar with amber shelves under a neon sign,
+  four white slot machines in a nook, round tables, red leather booths, a gold mural of a man and his
+  daughter over an old round table behind a brass rail, a door to the street, and a stockroom with kegs.
+display: [2560, 1440]
+origin: [536, 201]
+moods:
+  - {id: open, label: Open, base: maps/event-horizon/base-open.png, glow: maps/event-horizon/glow-open.png}
+  - {id: after, label: After hours, base: maps/event-horizon/base-after.png, glow: maps/event-horizon/glow-after.png}
+  - {id: stand, label: Last stand, base: maps/event-horizon/base-stand.png, glow: maps/event-horizon/glow-stand.png}
+switches:
+  - {id: seals_box, label: "Seal's box", type: bool, moods: [after]}
+  - {id: hatch, label: Hatch, type: bool, moods: [stand]}
+  - {id: gas, label: Gas, type: level, max: 3, moods: [stand]}
+overlays:  # drawn in this order: patches over the base, gas over the glow
+  - {id: box-open, src: maps/event-horizon/patch-box.png, layer: patch, mood: after, switch: seals_box, value: 1}
+  - {id: hatch-open, src: maps/event-horizon/patch-hatch.png, layer: patch, mood: stand, switch: hatch, value: 1}
+  - {id: gas-1, src: maps/event-horizon/gas-1.png, layer: gas, mood: stand, switch: gas, value: 1}
+  - {id: gas-2, src: maps/event-horizon/gas-2.png, layer: gas, mood: stand, switch: gas, value: 2}
+  - {id: gas-3, src: maps/event-horizon/gas-3.png, layer: gas, mood: stand, switch: gas, value: 3}

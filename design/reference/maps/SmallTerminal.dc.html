@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Terminal room</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+.e-map{position:absolute;left:0;top:0;width:1900px;height:1690px;display:block;pointer-events:none;user-select:none;image-rendering:pixelated;transition:opacity .9s ease}
+.e-glow{position:absolute;left:0;top:0;width:1900px;height:1690px;pointer-events:none;mix-blend-mode:screen;transition:opacity .9s ease}
+.e-hum{display:block;width:1900px;height:1690px;user-select:none}
+.e-tok{position:absolute;width:64px;height:100px;margin:-94px 0 0 -32px;background:none;border:0;padding:0;cursor:grab;font:inherit;transform-origin:32px 94px}
+.e-key{font-family:'Silkscreen',monospace;font-size:11px;color:#ece8f2;background:#14121a;border:1px solid #3a3446;padding:0 12px;height:44px;min-width:44px;cursor:pointer}
+.e-key:hover{background:#221e2a}
+</style>
+</helmet>
+<div style="position: relative; width: 100%; height: 900px; overflow: hidden; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
+<div onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onUp}}" onWheel="{{onWheel}}" style="position: absolute; inset: 0; cursor: {{cursor}}; touch-action: none;">
+<div style="position: absolute; left: 0; top: 0; width: 1900px; height: 1690px; isolation: isolate; transform-origin: 0 0; transform: {{worldTransform}};">
+<div role="img" aria-label="The Terminal room seen from above at an angle: a dark ribbed room whose floor is glass over the black hole, with huge clamps under the glass and the terminal on a dais in the middle. An enormous face inside a prism ring looms over the back corner, and a wall screen shows the station feed."></div>
+<sc-for list="{{bases}}" as="b" hint-placeholder-count="2">
+<img class="e-map" src="{{b.src}}" alt="" draggable="false" style="opacity: {{b.op}};">
+</sc-for>
+<div class="e-glow" style="opacity: {{glow_out}};"><img class="e-hum" src="/_blob/80f292b3b4020842f10a6899efee2e82" alt="" draggable="false"></div>
+<div class="e-glow" style="opacity: {{glow_in}};"><img class="e-hum" src="/_blob/a3adcdcd8a6ab33c68291a3cfaf6d8ca" alt="" draggable="false"></div>
+<img src="/_blob/d71a9765839e411c5f5bbabd2cb73296" alt="" draggable="false" style="position: absolute; left: 424px; top: 40px; width: 960px; height: 960px; max-width: none; image-rendering: pixelated; mix-blend-mode: screen; clip-path: circle(45.5% at 50.6% 43%); opacity: {{faceOp}}; pointer-events: none; transition: opacity .9s ease;">
+<div style="position: absolute; left: 1425px; top: 774px; width: 348px; height: 201px; box-sizing: border-box; padding: 9px 11px; overflow: hidden; transform-origin: 0 0; transform: matrix(1, .5, 0, 1, 0, 0); font-family: 'Silkscreen', monospace; font-size: 12px; line-height: 19px; color: #cfc4ff; pointer-events: none;">
+<div style="color: #ffffff;">STATION FEED</div>
+<div>HERE {{crew}} MIN / UP TOP {{station}} MIN</div>
+<sc-for list="{{feedLines}}" as="f" hint-placeholder-count="5">
+<div style="color: {{f.col}};">{{f.t}}</div>
+</sc-for>
+</div>
+<sc-for list="{{toks}}" as="t" hint-placeholder-count="5">
+<button type="button" class="e-tok" onPointerDown="{{t.down}}" onClick="{{t.select}}" aria-label="{{t.name}}" style="left: {{t.x}}px; top: {{t.y}}px; transform: scale({{t.scale}}); z-index: {{t.z}};">
+<span style="position: absolute; left: 50%; bottom: 0; width: 40px; height: 20px; margin-left: -20px; border-radius: 50%; box-sizing: border-box; border: 2px solid {{t.col}}; background: rgba(0,0,0,.35);"></span>
+<span style="position: absolute; left: 50%; bottom: 10px; width: 2px; height: 34px; margin-left: -1px; background: {{t.col}};"></span>
+<span style="position: absolute; left: 4px; top: 0; width: 56px; height: 56px; border-radius: 50%; overflow: hidden; background: #09080c; box-shadow: 0 0 0 2px {{t.col}}, 0 3px 8px rgba(0,0,0,.7);">
+<img src="{{t.img}}" alt="" draggable="false" style="position: absolute; left: -7px; top: -1px; width: 70px; height: 70px; max-width: none; pointer-events: none;">
+</span>
+<sc-if value="{{t.showName}}" hint-placeholder-val="{{ false }}">
+<span style="position: absolute; left: 66px; top: 20px; font-family: 'Silkscreen', monospace; font-size: 10px; color: #ffffff; background: rgba(5,6,8,.88); padding: 3px 7px; white-space: nowrap;">{{t.NAME}}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="position: absolute; left: 12px; top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ffffff; background: rgba(5,6,8,.88); padding: 0 12px; height: 44px; display: flex; align-items: center;">THE TERMINAL ROOM</div>
+<button type="button" class="e-key" onClick="{{zoomOut}}" aria-label="Zoom out">-</button>
+<button type="button" class="e-key" onClick="{{zoomIn}}" aria-label="Zoom in">+</button>
+<button type="button" class="e-key" onClick="{{fit}}">FIT</button>
+<button type="button" class="e-key" onClick="{{toggleNames}}">NAMES</button>
+<sc-for list="{{moodBtns}}" as="b" hint-placeholder-count="2">
+<button type="button" class="e-key" onClick="{{b.pick}}" style="background: {{b.bg}}; color: {{b.fg}};">{{b.label}}</button>
+</sc-for>
+<button type="button" class="e-key" onClick="{{addMin}}">+1 MIN</button>
+<button type="button" class="e-key" onClick="{{addFeed}}">FEED +</button>
+<button type="button" class="e-key" onClick="{{resetFeed}}">RESET</button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  state = { px: 221, py: 6, zoom: 0.525, pos: {}, drag: null, tokDrag: null, sel: null, names: false, mood: 'out', crewMin: 0, feed: 0 };
+
+  proj(X, Y, Z) { return [((X - Y) * 30 + 430) * 2, ((X + Y) * 15 - Z * 36 + 380) * 2]; }
+
+  defs() {
+    return [
+      { id: 'lale', name: 'Lale', img: '/_blob/bf086769fdeeb5815c8bb26655c27de8', col: '#ff4fa3', at: [8.0, 8.8, 0] },
+      { id: 'marlo', name: 'Marlo', img: '/_blob/89e77d4081ac45a581d0deab2125331d', col: '#ff4fa3', at: [5.4, 9.0, 0] },
+      { id: 'tally', name: 'Tally', img: '/_blob/33e082d9f196e64d462f147828f1070c', col: '#ff4fa3', at: [10.6, 8.6, 0] },
+      { id: 'ves', name: 'Ves', img: '/_blob/8935375f70d3e50fdacbe2628025b6e0', col: '#ff4fa3', at: [3.6, 3.2, 0] },
+      { id: 'tomo', name: 'Tomo', img: '/_blob/0516ced15d3d4704cb408bc93a529fef', col: '#ff4fa3', at: [11.5, 11.6, 0] }
+    ];
+  }
+
+  zoomAt(z, cx, cy) {
+    const st = this.state;
+    const nz = Math.min(3, Math.max(.2, z));
+    const k = nz / st.zoom;
+    this.setState({ zoom: nz, px: cx - (cx - st.px) * k, py: cy - (cy - st.py) * k });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const scale = Math.min(1.8, Math.max(.8, .8 / st.zoom));
+    const toks = this.defs().map((d) => {
+      const home = this.proj(d.at[0], d.at[1], d.at[2]);
+      const p = st.pos[d.id] || { x: home[0], y: home[1] };
+      return {
+        name: d.name, NAME: d.name.toUpperCase(), img: d.img, col: d.col, x: p.x, y: p.y, z: Math.round(p.y),
+        scale: scale, showName: st.names || st.sel === d.id,
+        down: (e) => { e.stopPropagation(); this.dragged = false; this.setState({ tokDrag: { id: d.id, sx: e.clientX, sy: e.clientY, ox: p.x, oy: p.y } }); },
+        select: () => { if (!this.dragged) this.setState({ sel: st.sel === d.id ? null : d.id }); }
+      };
+    });
+    const ids = ['out', 'in'];
+    const src = { out: '/_blob/75144b680620a0b51d467acfc0e4373c', in: '/_blob/cd21c7c40b9c70de685dc56f5940ada7' };
+    const labels = { out: 'SEAL OUT', in: 'SEAL IN' };
+    const FEED = ['CLEANERS FREEZE MID-WIPE', 'SLOTS START LOSING', 'DOCK 7 QUEUE PASSES 11:00', 'SATISFACTION FALLS FROM 99.97%', 'PATIENCE STARTS ITS ENGINES'];
+    return {
+      toks,
+      bases: ids.map((m) => ({ src: src[m], op: st.mood === m ? 1 : 0 })),
+      glow_out: st.mood === 'out' ? 1 : 0, glow_in: st.mood === 'in' ? 1 : 0,
+      moodBtns: ids.map((m) => ({ label: labels[m], bg: st.mood === m ? '#ff4fa3' : '#14121a', fg: st.mood === m ? '#09080c' : '#ece8f2', pick: () => this.setState({ mood: m }) })),
+      faceOp: st.mood === 'in' ? 1 : .68,
+      crew: st.crewMin, station: Math.round(st.crewMin * 32) / 10,
+      feedLines: FEED.slice(0, st.feed).map((t, i) => ({ t, col: i === st.feed - 1 ? '#ffffff' : '#8a80c8' })),
+      addMin: () => this.setState({ crewMin: st.crewMin + 1 }),
+      addFeed: () => this.setState({ feed: Math.min(FEED.length, st.feed + 1) }),
+      resetFeed: () => this.setState({ feed: 0, crewMin: 0 }),
+      worldTransform: 'translate(' + st.px + 'px, ' + st.py + 'px) scale(' + st.zoom + ')',
+      cursor: st.drag ? 'grabbing' : 'grab',
+      onDown: (e) => { this.setState({ drag: { x: e.clientX, y: e.clientY, px: st.px, py: st.py } }); },
+      onMove: (e) => {
+        const td = this.state.tokDrag;
+        if (td) {
+          const z = this.state.zoom;
+          const dx = (e.clientX - td.sx) / z, dy = (e.clientY - td.sy) / z;
+          if (Math.abs(dx) + Math.abs(dy) > 3) this.dragged = true;
+          const pos = Object.assign({}, this.state.pos);
+          pos[td.id] = { x: Math.round(td.ox + dx), y: Math.round(td.oy + dy) };
+          this.setState({ pos });
+          return;
+        }
+        const d = this.state.drag;
+        if (!d) return;
+        this.setState({ px: d.px + e.clientX - d.x, py: d.py + e.clientY - d.y });
+      },
+      onUp: () => { if (this.state.drag || this.state.tokDrag) this.setState({ drag: null, tokDrag: null }); },
+      onWheel: (e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        this.zoomAt(this.state.zoom * Math.exp(-e.deltaY * .0015), e.clientX - r.left, e.clientY - r.top);
+      },
+      zoomIn: () => this.zoomAt(st.zoom * 1.3, 720, 450),
+      zoomOut: () => this.zoomAt(st.zoom / 1.3, 720, 450),
+      fit: () => this.setState({ px: 221, py: 6, zoom: 0.525 }),
+      toggleNames: () => this.setState({ names: !st.names })
+    };
+  }
+}
+</script>
+</body>
+</html>

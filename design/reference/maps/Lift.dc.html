@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Lift station</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+.e-map{position:absolute;left:0;top:0;width:3520px;height:2040px;display:block;pointer-events:none;user-select:none;image-rendering:pixelated;transition:opacity .9s ease}
+.e-glow{position:absolute;left:0;top:0;width:3520px;height:2040px;pointer-events:none;mix-blend-mode:screen;transition:opacity .9s ease}
+.e-hum{display:block;width:3520px;height:2040px;user-select:none}
+.e-beat{display:block;width:3520px;height:2040px;user-select:none;animation:e-beat 1.7s ease-in-out infinite}
+@keyframes e-beat{0%,100%{opacity:1}50%{opacity:.35}}
+.e-tok{position:absolute;width:64px;height:100px;margin:-94px 0 0 -32px;background:none;border:0;padding:0;cursor:grab;font:inherit;transform-origin:32px 94px}
+.e-key{font-family:'Silkscreen',monospace;font-size:11px;color:#ece8f2;background:#14121a;border:1px solid #3a3446;padding:0 12px;height:44px;min-width:44px;cursor:pointer}
+.e-key:hover{background:#221e2a}
+</style>
+</helmet>
+<div style="position: relative; width: 100%; height: 900px; overflow: hidden; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
+<div onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onUp}}" onWheel="{{onWheel}}" style="position: absolute; inset: 0; cursor: {{cursor}}; touch-action: none;">
+<div style="position: absolute; left: 0; top: 0; width: 3520px; height: 2040px; isolation: isolate; transform-origin: 0 0; transform: {{worldTransform}};">
+<div role="img" aria-label="The Lift station seen from above at an angle: an old wood passage and a small alcove with a founder's ring, a freight hall with crates, barriers and a loader, a blast door, and a dark platform whose floor is a huge glass panel with the black hole directly below it, lighting the room from underneath. Against the left wall, the crawler cab stands with its door open and its lights on."></div>
+<sc-for list="{{bases}}" as="b" hint-placeholder-count="2">
+<img class="e-map" src="{{b.src}}" alt="" draggable="false" style="opacity: {{b.op}};">
+</sc-for>
+<div class="e-glow" style="opacity: {{glowShut}};"><img class="e-hum" src="/_blob/cf39c4cef870849f73cbb9f314499e0f" alt="" draggable="false"></div>
+<div class="e-glow" style="opacity: {{glowOpen}};"><img class="e-hum" src="/_blob/e8d066cc1ef5cfc2dffbf5e70d76f214" alt="" draggable="false"></div>
+<sc-if value="{{showCams}}" hint-placeholder-val="{{ false }}">
+<svg viewBox="0 0 3520 2040" width="3520" height="2040" aria-hidden="true" style="position: absolute; left: 0; top: 0; pointer-events: none;">
+<sc-for list="{{cones}}" as="c" hint-placeholder-count="4">
+<polygon points="{{c.pts}}" fill="rgba(127,180,255,.2)" stroke="#7fb4ff" stroke-width="3"></polygon>
+</sc-for>
+</svg>
+</sc-if>
+<sc-for list="{{toks}}" as="t" hint-placeholder-count="15">
+<button type="button" class="e-tok" onPointerDown="{{t.down}}" onClick="{{t.select}}" aria-label="{{t.name}}" style="left: {{t.x}}px; top: {{t.y}}px; transform: scale({{t.scale}}); z-index: {{t.z}};">
+<span style="position: absolute; left: 50%; bottom: 0; width: 40px; height: 20px; margin-left: -20px; border-radius: 50%; box-sizing: border-box; border: 2px solid {{t.col}}; background: rgba(0,0,0,.35);"></span>
+<span style="position: absolute; left: 50%; bottom: 10px; width: 2px; height: 34px; margin-left: -1px; background: {{t.col}};"></span>
+<span style="position: absolute; left: 4px; top: 0; width: 56px; height: 56px; border-radius: 50%; overflow: hidden; background: #09080c; box-shadow: 0 0 0 2px {{t.col}}, 0 3px 8px rgba(0,0,0,.7);">
+<img src="{{t.img}}" alt="" draggable="false" style="position: absolute; left: {{t.il}}px; top: {{t.it}}px; width: {{t.iw}}px; height: {{t.iw}}px; max-width: none; pointer-events: none;">
+</span>
+<sc-if value="{{t.showName}}" hint-placeholder-val="{{ false }}">
+<span style="position: absolute; left: 66px; top: 20px; font-family: 'Silkscreen', monospace; font-size: 10px; color: #ffffff; background: rgba(5,6,8,.88); padding: 3px 7px; white-space: nowrap;">{{t.NAME}}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="position: absolute; left: 12px; top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ffffff; background: rgba(5,6,8,.88); padding: 0 12px; height: 44px; display: flex; align-items: center;">LIFT STATION</div>
+<button type="button" class="e-key" onClick="{{zoomOut}}" aria-label="Zoom out">-</button>
+<button type="button" class="e-key" onClick="{{zoomIn}}" aria-label="Zoom in">+</button>
+<button type="button" class="e-key" onClick="{{fit}}">FIT</button>
+<button type="button" class="e-key" onClick="{{toggleNames}}">NAMES</button>
+<button type="button" class="e-key" onClick="{{toggleCams}}">CAMERAS</button>
+<sc-for list="{{moodBtns}}" as="b" hint-placeholder-count="2">
+<button type="button" class="e-key" onClick="{{b.pick}}" style="background: {{b.bg}}; color: {{b.fg}};">{{b.label}}</button>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  state = { px: 7, py: 37, zoom: .405, pos: {}, drag: null, tokDrag: null, sel: null, names: false, cams: false, mood: 'shut' };
+
+  proj(X, Y, Z) { return [((X - Y) * 30 + 800) * 2, ((X + Y) * 15 - Z * 36 + 170) * 2]; }
+
+  defs() {
+    return [
+      { id: 'lale', name: 'Lale', img: '/_blob/bf086769fdeeb5815c8bb26655c27de8', col: '#ff4fa3', at: [9.2, 21.6, 0] },
+      { id: 'marlo', name: 'Marlo', img: '/_blob/89e77d4081ac45a581d0deab2125331d', col: '#ff4fa3', at: [10.6, 20.0, 0] },
+      { id: 'tally', name: 'Tally', img: '/_blob/33e082d9f196e64d462f147828f1070c', col: '#ff4fa3', at: [10.0, 24.2, 0] },
+      { id: 'ves', name: 'Ves', img: '/_blob/8935375f70d3e50fdacbe2628025b6e0', col: '#ff4fa3', at: [13.4, 18.8, 0] },
+      { id: 'tomo', name: 'Tomo', img: '/_blob/0516ced15d3d4704cb408bc93a529fef', col: '#ff4fa3', at: [14.7, 20.6, 0] },
+      { id: 'gun1', name: 'Hired gun', img: '/_blob/b973adbc5e5ed1657eb66ec462918892', col: '#ff5a4a', at: [24.8, 17.9, 0] },
+      { id: 'gun2', name: 'Hired gun', img: '/_blob/b973adbc5e5ed1657eb66ec462918892', col: '#ff5a4a', at: [26.4, 18.2, 0] },
+      { id: 'fixer', name: 'The fixer', img: '/_blob/2b1a067acd9401d34b3bf9c168b7e0cb', col: '#ff5a4a', at: [11.5, 7.0, 0] },
+      { id: 'gun3', name: 'Hired gun (spare)', img: '/_blob/b973adbc5e5ed1657eb66ec462918892', col: '#ff5a4a', at: [26.4, 7.4, 0] },
+      { id: 'gun4', name: 'Hired gun (spare)', img: '/_blob/b973adbc5e5ed1657eb66ec462918892', col: '#ff5a4a', at: [25.6, 2.6, 0] },
+      { id: 'cl1', name: 'Cleaner (extra)', img: '/_blob/2e2ccea94bad777dcf618a96955ecdaf', col: '#d8d0ff', at: [3.2, 2.6, 0] },
+      { id: 'cl2', name: 'Cleaner (extra)', img: '/_blob/2e2ccea94bad777dcf618a96955ecdaf', col: '#d8d0ff', at: [4.4, 12.8, 0] },
+      { id: 'cl3', name: 'Cleaner (extra)', img: '/_blob/2e2ccea94bad777dcf618a96955ecdaf', col: '#d8d0ff', at: [8.0, .7, 0] },
+      { id: 'dr1', name: 'Service droid (extra)', img: '/_blob/70eb1d72152cdc6852ad196fa2bc8ab9', col: '#d8d0ff', at: [24.5, 12.5, 0] },
+      { id: 'dr2', name: 'Service droid (extra)', img: '/_blob/70eb1d72152cdc6852ad196fa2bc8ab9', col: '#d8d0ff', at: [16.0, 24.6, 0] }
+    ];
+  }
+
+  cone(x, y, deg, spread, len, xa, xb, ya, yb) {
+    const pts = [[x, y]];
+    for (let i = 0; i <= 12; i++) {
+      const a = (deg - spread / 2 + spread * i / 12) * Math.PI / 180;
+      pts.push([Math.max(xa, Math.min(xb, x + len * Math.cos(a))), Math.max(ya, Math.min(yb, y + len * Math.sin(a)))]);
+    }
+    return { pts: pts.map((p) => this.proj(p[0], p[1], 0).join(',')).join(' ') };
+  }
+
+  zoomAt(z, cx, cy) {
+    const st = this.state;
+    const nz = Math.min(3, Math.max(.2, z));
+    const k = nz / st.zoom;
+    this.setState({ zoom: nz, px: cx - (cx - st.px) * k, py: cy - (cy - st.py) * k });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const scale = Math.min(1.8, Math.max(.8, .8 / st.zoom));
+    const toks = this.defs().map((d) => {
+      const home = this.proj(d.at[0], d.at[1], d.at[2]);
+      const p = st.pos[d.id] || { x: home[0], y: home[1] };
+      return {
+        name: d.name, NAME: d.name.toUpperCase(), img: d.img, col: d.col, x: p.x, y: p.y, z: Math.round(p.y),
+        scale: scale * (d.big || 1), il: d.il === undefined ? -7 : d.il, it: d.it === undefined ? -1 : d.it, iw: d.iw || 70, showName: st.names || st.sel === d.id,
+        down: (e) => { e.stopPropagation(); this.dragged = false; this.setState({ tokDrag: { id: d.id, sx: e.clientX, sy: e.clientY, ox: p.x, oy: p.y } }); },
+        select: () => { if (!this.dragged) this.setState({ sel: st.sel === d.id ? null : d.id }); }
+      };
+    });
+    const ids = ['shut', 'open'];
+    const src = { shut: '/_blob/32e181ffe538a454a2f6b5735af1a00c', open: '/_blob/d6fdf44bf23147b3b9b413e603a28c1d' };
+    const labels = { shut: 'DOOR SHUT', open: 'DOOR OPEN' };
+    return {
+      toks,
+      bases: ids.map((m) => ({ src: src[m], op: st.mood === m ? 1 : 0 })),
+      glowShut: st.mood === 'shut' ? 1 : 0, glowOpen: st.mood === 'open' ? 1 : 0,
+      moodBtns: ids.map((m) => ({ label: labels[m], bg: st.mood === m ? '#ff4fa3' : '#14121a', fg: st.mood === m ? '#09080c' : '#ece8f2', pick: () => this.setState({ mood: m }) })),
+      showCams: st.cams,
+      cones: [
+        this.cone(8, .5, 50, 70, 14, 0, 30, 0, 15),
+        this.cone(20, .5, 110, 70, 14, 0, 30, 0, 15),
+        this.cone(.5, 12.5, -25, 50, 13, 0, 30, 0, 15),
+        this.cone(22.35, 15.7, 110, 90, 11, 8, 30, 15, 26)
+      ],
+      worldTransform: 'translate(' + st.px + 'px, ' + st.py + 'px) scale(' + st.zoom + ')',
+      cursor: st.drag ? 'grabbing' : 'grab',
+      onDown: (e) => { this.setState({ drag: { x: e.clientX, y: e.clientY, px: st.px, py: st.py } }); },
+      onMove: (e) => {
+        const td = this.state.tokDrag;
+        if (td) {
+          const z = this.state.zoom;
+          const dx = (e.clientX - td.sx) / z, dy = (e.clientY - td.sy) / z;
+          if (Math.abs(dx) + Math.abs(dy) > 3) this.dragged = true;
+          const pos = Object.assign({}, this.state.pos);
+          pos[td.id] = { x: Math.round(td.ox + dx), y: Math.round(td.oy + dy) };
+          this.setState({ pos });
+          return;
+        }
+        const d = this.state.drag;
+        if (!d) return;
+        this.setState({ px: d.px + e.clientX - d.x, py: d.py + e.clientY - d.y });
+      },
+      onUp: () => { if (this.state.drag || this.state.tokDrag) this.setState({ drag: null, tokDrag: null }); },
+      onWheel: (e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        this.zoomAt(this.state.zoom * Math.exp(-e.deltaY * .0015), e.clientX - r.left, e.clientY - r.top);
+      },
+      zoomIn: () => this.zoomAt(st.zoom * 1.3, 720, 450),
+      zoomOut: () => this.zoomAt(st.zoom / 1.3, 720, 450),
+      fit: () => this.setState({ px: 7, py: 37, zoom: .405 }),
+      toggleNames: () => this.setState({ names: !st.names }),
+      toggleCams: () => this.setState({ cams: !st.cams })
+    };
+  }
+}
+</script>
+</body>
+</html>

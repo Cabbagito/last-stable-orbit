@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stat icons, glyphs</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#09080c}
+</style>
+</helmet>
+<div style="width: 940px; height: 600px; box-sizing: border-box; padding: 40px; display: flex; flex-direction: column; gap: 28px; background: #09080c; color: #ece8f2; font-family: 'Space Grotesk', system-ui, sans-serif;">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 20px;">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; align-items: flex-end; gap: 14px;">
+<div style="width: 112px; height: 112px; flex: none; display: flex; align-items: center; justify-content: center; background: #0b0a0f; border: 1px solid #221e2a; border-radius: 6px;">
+<img src="{{s.src}}" alt="{{s.name}} glyph" style="display: block; width: 96px; height: 96px; image-rendering: pixelated;">
+</div>
+<img src="{{s.src}}" alt="" style="display: block; width: 48px; height: 48px; image-rendering: pixelated;">
+<img src="{{s.src}}" alt="" style="display: block; width: 24px; height: 24px; image-rendering: pixelated;">
+</div>
+<div style="display: flex; align-items: baseline; gap: 10px;">
+<span style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ffffff;">{{s.name}}</span>
+<span style="font-size: 13px; color: #b8b1c9;">{{s.verb}}</span>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #a9a2bc;">ON THE SHEET · 24 PX</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="6">
+<div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: #141219; border: 1px solid #2a2633; border-radius: 6px;">
+<img src="{{s.src}}" alt="" style="display: block; width: 24px; height: 24px; flex: none; image-rendering: pixelated;">
+<span style="flex: 1; font-family: 'Silkscreen', monospace; font-size: 10px; color: #ece8f2;">{{s.name}}</span>
+<span style="font-family: 'VT323', monospace; font-size: 20px; color: {{s.color}};">{{s.die}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":940,"height":600}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      stats: [
+        { name: 'BODY', verb: 'Force it', die: 'd6', color: '#ff7a45', src: '/_blob/a8196f367af660cd9c3834eef3da05c5' },
+        { name: 'REFLEX', verb: 'Dodge it', die: 'd8', color: '#ffd23f', src: '/_blob/3e3dc1ef5220cd604c45468939dfa6a7' },
+        { name: 'TECH', verb: 'Hack it', die: 'd20', color: '#3ff0ff', src: '/_blob/e3aa16ea65ab048eeae8832c7630c784' },
+        { name: 'INTEL', verb: 'Solve it', die: 'd12', color: '#7aa8ff', src: '/_blob/2f7bbbb0c2db46416ebd2032ec6530b7' },
+        { name: 'COOL', verb: 'Fake it', die: 'd10', color: '#b46cff', src: '/_blob/7a320402f344be6072a6df3fb384d60f' },
+        { name: 'EMPATHY', verb: 'Read it', die: 'd4', color: '#ff4fa3', src: '/_blob/21237d932dcee1560eea799bebd01c48' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

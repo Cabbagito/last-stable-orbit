@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Lift station, what's where</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+</style>
+</helmet>
+<div style="position: relative; width: 1760px; height: 1360px; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
+<div style="position: relative; width: 1760px; height: 1020px;">
+<img src="/_blob/d6fdf44bf23147b3b9b413e603a28c1d" alt="The Lift station map with numbered markers" style="position: absolute; left: 0; top: 0; width: 1760px; height: 1020px; display: block; image-rendering: pixelated;">
+<sc-for list="{{pins}}" as="p" hint-placeholder-count="10">
+<div style="position: absolute; left: {{p.x}}px; top: {{p.y}}px; width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Silkscreen', monospace; font-size: 10px; background: {{p.bg}}; color: #000000; box-shadow: 0 0 0 2px #000000;">{{p.k}}</div>
+</sc-for>
+</div>
+<div style="box-sizing: border-box; height: 340px; padding: 18px 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; font-size: 15px; line-height: 1.35;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 13px; color: #ffffff;">FROM THE BIBLE AND OUR PLAN</div>
+<div>1 · Way in from the old founder-era passages</div>
+<div>2 · Blast door: 2 hired guns hold it, the first fight</div>
+<div>3 · Glass floor with the hole under it: the fixer waits on it, the final fight (your layout)</div>
+<div>4 · Crawler cab on the left wall behind him, door open and lit (your layout)</div>
+<div>One dark look, lit by the hole from below (your call)</div>
+<div>The switch is only the door: shut for the first fight, open for the fixer</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 13px; color: #ff6fb5;">MY ADDITIONS</div>
+<div>A · Freight hall: crates, barriers, loader, floor lanes</div>
+<div>B · Alcove for the quiet moment: bench, basin, supplies, founder's ring</div>
+<div>C · Old wood passage and arch into the hall</div>
+<div>D · Cover round the edges, off the glass: barriers, tanks, a console</div>
+<div>E · Seats, a panel and wall rails on the cab</div>
+<div>F · LIFT STATION on the wall</div>
+<div>Four cameras, cones on the CAMERAS switch. None in the old wood part</div>
+<div>Tokens: 7 of the 15 are extras (2 spare guns, 3 cleaners, 2 droids), to show the room</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1760,"height":1360}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const at = (X, Y, Z) => [(X - Y) * 30 + 800, (X + Y) * 15 - Z * 36 + 170];
+    const list = [
+      ['1', .1, 21.7, 3.0, 0], ['2', 25.5, 15, 4.5, 0], ['3', 18, 7, .05, 0], ['4', 3.6, 7.5, 3.3, 0],
+      ['A', 12.2, 23.2, 2.2, 1], ['B', 3.9, 17.5, .3, 1], ['C', 5.2, 21.8, .3, 1], ['D', 22.9, .6, 2.1, 1], ['E', 1.0, 5.4, 3.9, 1], ['F', 23, 0, 4.1, 1]
+    ];
+    return {
+      pins: list.map((p) => {
+        const a = at(p[1], p[2], p[3]);
+        return { k: p[0], x: a[0], y: a[1], bg: p[4] ? '#ff6fb5' : '#ffffff' };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

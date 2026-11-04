@@ -1,0 +1,29 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-03T14:55:00Z"
+  },
+  "title": "LSO \u2014 Rules",
+  "launch": {
+    "view": "focused",
+    "file": "Main.dc.html"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 2344,
+      "title": "CODEX \u00b7 How to play",
+      "expand": "fill",
+      "is_interactive": true
+    }
+  },
+  "order": [
+    "Main.dc.html"
+  ],
+  "notes": {},
+  "designSystems": []
+}

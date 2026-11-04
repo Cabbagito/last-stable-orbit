@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HP, Humanity and Entropy</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#09080c}
+</style>
+</helmet>
+<div style="width: 940px; height: 580px; box-sizing: border-box; padding: 40px; display: flex; flex-direction: column; gap: 28px; background: #09080c; color: #ece8f2; font-family: 'Space Grotesk', system-ui, sans-serif;">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 20px;">
+<sc-for list="{{vitals}}" as="v" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; align-items: flex-end; gap: 14px;">
+<div style="width: 112px; height: 112px; flex: none; display: flex; align-items: center; justify-content: center; background: #0b0a0f; border: 1px solid #221e2a; border-radius: 6px;">
+<img src="{{v.src}}" alt="{{v.name}} icon" style="display: block; width: 96px; height: 96px; image-rendering: pixelated;">
+</div>
+<img src="{{v.src}}" alt="" style="display: block; width: 48px; height: 48px; image-rendering: pixelated;">
+<img src="{{v.src}}" alt="" style="display: block; width: 24px; height: 24px;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px;">
+<span style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ffffff;">{{v.name}}</span>
+<span style="font-size: 13px; line-height: 1.35; color: #b8b1c9;">{{v.does}}</span>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #a9a2bc;">ON THE SHEET</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<sc-for list="{{vitals}}" as="v" hint-placeholder-count="3">
+<div role="img" aria-label="{{v.label}}" style="display: flex; align-items: center; gap: 12px; padding: 6px 12px 6px 8px; background: #141219; border: 1px solid #2a2633; border-radius: 6px;">
+<img src="{{v.src}}" alt="" style="display: block; width: 48px; height: 48px; flex: none; image-rendering: pixelated;">
+<span style="width: 110px; flex: none; font-family: 'Silkscreen', monospace; font-size: 11px; color: #ece8f2;">{{v.name}}</span>
+<div style="flex: 1; display: flex; gap: 4px;">
+<sc-for list="{{v.pips}}" as="p" hint-placeholder-count="6">
+<img src="{{p.src}}" alt="" style="display: block; width: 32px; height: 32px; image-rendering: pixelated;">
+</sc-for>
+</div>
+<span style="font-family: 'VT323', monospace; font-size: 24px; line-height: 1; color: {{v.color}};">{{v.count}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #a9a2bc;">PIPS AT 16 PX</div>
+<div style="display: flex; gap: 40px;">
+<sc-for list="{{vitals}}" as="v" hint-placeholder-count="3">
+<div style="display: flex; gap: 2px;">
+<sc-for list="{{v.pips}}" as="p" hint-placeholder-count="6">
+<img src="{{p.src}}" alt="" style="display: block; width: 16px; height: 16px; image-rendering: pixelated;">
+</sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":940,"height":580}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pips = (have, max, full, empty) => Array.from({ length: max }, (_, k) => ({ src: '/_blob/' + (k < have ? full : empty) }));
+    const vital = (name, does, src, have, max, full, empty, color) => ({
+      name, does, color,
+      src: '/_blob/' + src,
+      count: have + '/' + max,
+      label: name + ' ' + have + ' of ' + max,
+      pips: pips(have, max, full, empty)
+    });
+    return {
+      vitals: [
+        vital('HP', 'You have 6. It counts down. One light in the ring for each point.', 'e9e30d5688bf5b2a2d6d58e2345df578', 4, 6, 'be0340e9ff5140ac52a25b43e8ff5c8d', 'e95ffc4900e0867a401722eb7f677984', '#7dff9a'),
+        vital('HUMANITY', 'You have 4. Chrome costs it. A spent point turns from skin to chip.', '564ec454d85321a0baf5e7ad0f437d53', 3, 4, '1d3befb754fdbb041ee41e2a9f8196f5', 'c1f90f487ec9b0642c8908dd94febb24', '#ffd9b8'),
+        vital('ENTROPY', 'Start with 2, hold 6. Fail, take a downside or surprise ISCO to earn it.', '77bd57bb5d07a5b4c7e42315431b13b6', 2, 6, 'fe82833f614f61eb71b91a94387623ad', '6ec70f87bfd4c2221408fe1b637d6049', '#f2b544')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

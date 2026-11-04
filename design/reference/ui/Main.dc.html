@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SCENE, Quiet Ledger</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@500;800&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0d0d10}
+.ql a{color:#97948e;text-decoration:none}.ql a:hover{color:#ece8df}
+.ql button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.ql button:not(.ql-act){padding:0}
+.ql button:focus-visible,.ql a:focus-visible{outline:1px solid #ece8df;outline-offset:3px}
+.ql-die{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;min-height:44px}
+.ql-die svg{transition:transform .18s ease}
+.ql-die:hover svg{transform:translateY(-3px)}
+.ql-die:hover .ql-stroke{stroke:#ece8df}
+.ql-tok{position:absolute;display:flex;align-items:center;gap:9px;cursor:grab;white-space:nowrap;transform-origin:26px 26px}
+.ql .ql-line{display:flex;align-items:center;gap:12px;text-align:left;width:100%;border-top:1px solid #222226;min-height:44px;box-sizing:border-box}
+.ql-line:hover{color:#ffffff}
+.ql .ql-act{min-height:44px;padding:0 16px;border:1px solid #3a3a40;display:inline-flex;align-items:center;gap:8px;border-radius:2px}
+.ql .ql-act:hover{border-color:#97948e}
+.ql-act[disabled]{opacity:.4;cursor:default}
+.ql .ql-main{background:#ece8df;color:#0d0d10;border-color:#ece8df}
+@keyframes ql-shake{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate(-5px,3px) rotate(-1.5deg)}50%{transform:translate(4px,-4px) rotate(1deg)}75%{transform:translate(-3px,-2px) rotate(-.6deg)}}
+@keyframes ql-reel{0%{transform:translateY(-22px);opacity:.15}100%{transform:translateY(0);opacity:1}}
+@keyframes ql-flick{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes ql-land{0%{transform:scale(1.06);opacity:.3}100%{transform:scale(1);opacity:1}}
+@keyframes ql-beat{0%{transform:scale(.72);opacity:.8}100%{transform:scale(1.28);opacity:0}}
+.a-slam{animation:ql-shake .11s linear infinite}
+.a-reel{animation:ql-reel .07s linear infinite}
+.a-decrypt{animation:ql-flick .1s steps(2) infinite}
+.a-land{animation:ql-land .5s cubic-bezier(.2,.8,.2,1) both}
+.a-none{}
+.ql-ring{position:absolute;inset:0;border-radius:50%;border:1px solid #ece8df;animation:ql-beat 1s ease-out infinite;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.a-slam,.a-reel,.a-decrypt,.ql-ring{animation:none}}
+</style>
+</helmet>
+<div class="ql" style="--acc: {{accent}}; position: relative; width: 100%; min-height: 900px; box-sizing: border-box; background: #0d0d10; color: #ece8df; font-family: 'Instrument Sans', system-ui, sans-serif; font-size: 14px; line-height: 1.45; display: flex; flex-direction: column;">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 40px; padding: 20px 36px 18px;">
+<span style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 13px; letter-spacing: .42em; color: #ffffff;">ERGO</span>
+<nav aria-label="Sections" style="display: flex; flex-wrap: wrap; gap: 4px 26px; font-size: 14px;">
+<a href="#scene" aria-current="page" style="color: #ece8df; padding-bottom: 3px; box-shadow: 0 1px 0 {{accent}};">Scene</a>
+<a href="#station">Station</a>
+<a href="#crew">Crew</a>
+<a href="#comms">Comms <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: {{accent}};">2</span></a>
+<a href="#items">Items</a>
+<a href="#codex">Codex</a>
+</nav>
+<div style="margin-left: auto; display: flex; gap: 24px; font-family: 'Geist Mono', monospace; font-size: 12px; color: #97948e;">
+<span>Day 2</span><span>21:14</span><span>Core ×0.31</span>
+</div>
+<button type="button" class="ql-act" onClick="{{openRoll}}" style="min-width: 96px; justify-content: center;">
+<svg width="16" height="16" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,3 91,27 91,73 50,97 9,73 9,27" fill="none" stroke="currentColor" stroke-width="7"></polygon></svg>
+Roll
+</button>
+</header>
+
+<div style="flex: 1; display: flex; flex-wrap: wrap; min-height: 0;">
+
+<aside aria-label="Character sheet" style="flex: 1 1 330px; max-width: 360px; min-width: 0; height: 830px; overflow-y: auto; box-sizing: border-box; padding: 14px 32px 32px 36px; display: flex; flex-direction: column; gap: 26px; scrollbar-width: none; -webkit-mask-image: linear-gradient(180deg, #000 90%, transparent); mask-image: linear-gradient(180deg, #000 90%, transparent);">
+
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<img src="/_blob/213c48191ae973298de3923102fd6c36" alt="Static Kovač, head and shoulders" style="display: block; width: 92px; height: 92px; border-radius: 50%; image-rendering: pixelated; filter: grayscale(.82) contrast(1.06);">
+<div>
+<div style="font-size: 30px; line-height: 1.1; font-weight: 400; letter-spacing: -.012em; color: #ffffff;">Static Kovač</div>
+<div style="color: #97948e; margin-top: 4px;">Contractor. Human, from Tau Ceti IV.</div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px 14px; align-items: center;">
+<span style="color: #97948e;">Wounds</span>
+<div style="display: flex; gap: 6px;"><sc-for list="{{wounds}}" as="w" hint-placeholder-count="6"><span style="width: 9px; height: 9px; border-radius: 50%; box-sizing: border-box; border: 1px solid #6d6b67; background: {{w.bg}};"></span></sc-for></div>
+<span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #97948e;">2 of 6</span>
+<span style="color: #97948e;">Hope</span>
+<div style="display: flex; gap: 6px;"><sc-for list="{{hopes}}" as="h" hint-placeholder-count="5"><span style="width: 9px; height: 9px; border-radius: 50%; box-sizing: border-box; border: 1px solid {{h.bd}}; background: {{h.bg}};"></span></sc-for></div>
+<span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #97948e;">{{hope}} of 5</span>
+</div>
+
+<section aria-label="Stats">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 12px;">
+<sc-for list="{{sheetStats}}" as="s" hint-placeholder-count="6">
+<button type="button" class="ql-die" onClick="{{s.open}}" aria-label="Roll {{s.title}}, {{s.dieLabel}}">
+<span style="position: relative; display: block; width: 62px; height: 62px;">
+<svg viewBox="0 0 100 100" width="62" height="62" aria-hidden="true" style="display: block; overflow: visible;"><polygon class="ql-stroke" points="{{s.o}}" fill="#131316" stroke="#6d6b67" stroke-width="2"></polygon><path d="{{s.f}}" fill="none" stroke="#2e2e33" stroke-width="1.6"></path></svg>
+<span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Doto', monospace; font-weight: 800; font-size: 22px; color: #ffffff; padding-top: {{s.dy}}px;">{{s.sides}}</span>
+</span>
+<span style="line-height: 1.25;"><span style="display: block; color: #ece8df;">{{s.title}}</span><span style="display: block; font-size: 12.5px; color: #97948e;">{{s.verbT}}</span></span>
+</button>
+</sc-for>
+</div>
+</section>
+
+<section aria-label="Skills" style="display: flex; flex-direction: column; gap: 10px;">
+<div style="color: #97948e;">Skills step a die up</div>
+<sc-for list="{{skills}}" as="k" hint-placeholder-count="3">
+<div><div style="color: #ece8df;">{{k.name}}</div><div style="font-size: 12.5px; color: #97948e;">{{k.when}}</div></div>
+</sc-for>
+</section>
+
+<section aria-label="Chrome" style="display: flex; flex-direction: column; gap: 10px;">
+<div style="color: #97948e;">Chrome, Empathy cost</div>
+<sc-for list="{{chrome}}" as="c" hint-placeholder-count="3">
+<div style="display: flex; gap: 12px;"><div style="flex: 1; min-width: 0;"><div>{{c.name}}</div><div style="font-size: 12.5px; color: #97948e;">{{c.does}}</div></div><span style="font-family: 'Geist Mono', monospace; font-size: 13px;">{{c.cost}}</span></div>
+</sc-for>
+</section>
+
+<section aria-label="On hand" style="display: flex; flex-direction: column; gap: 6px;">
+<div style="color: #97948e; margin-bottom: 4px;">On hand</div>
+<sc-for list="{{items}}" as="i" hint-placeholder-count="4">
+<div style="display: flex; gap: 12px; align-items: baseline;"><span style="flex: 1; min-width: 0;">{{i.name}}</span><span style="font-size: 12.5px; color: #97948e;">{{i.kindT}}</span></div>
+</sc-for>
+</section>
+</aside>
+
+<section aria-label="Current location map" style="flex: 999 1 600px; min-width: 0; height: 830px; position: relative; overflow: hidden; background: #0b0b0e;">
+<div onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onUp}}" onWheel="{{onWheel}}" style="position: absolute; inset: 0; cursor: {{cursor}}; touch-action: none;">
+<div style="position: absolute; left: 0; top: 0; width: 1200px; height: 800px; transform-origin: 0 0; transform: {{worldTransform}};">
+<div style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 430px 150px at 480px 214px, rgba(255,79,163,.13), transparent 100%), radial-gradient(ellipse 240px 200px at 600px 790px, rgba(236,232,223,.07), transparent 100%), radial-gradient(circle 110px at 436px 386px, rgba(236,232,223,.04), transparent 100%), radial-gradient(circle 110px at 626px 386px, rgba(236,232,223,.04), transparent 100%), radial-gradient(circle 110px at 436px 586px, rgba(236,232,223,.04), transparent 100%), radial-gradient(circle 110px at 626px 586px, rgba(236,232,223,.04), transparent 100%);"></div>
+<svg viewBox="0 0 1200 800" width="1200" height="800" aria-hidden="true" style="position: absolute; inset: 0; display: block; pointer-events: none;">
+<g fill="#111114" stroke="#4c4c52" stroke-width="1">
+<path d="M500 766H36V36H1164V766H700" stroke="#8a8883" stroke-width="1.5" fill="none"></path>
+<path d="M500 766V790M700 766V790" stroke="#8a8883" stroke-width="1.5" fill="none"></path>
+<rect x="150" y="36" width="660" height="26"></rect>
+<rect x="146" y="132" width="668" height="66"></rect>
+<line x1="146" y1="198" x2="814" y2="198" stroke="{{accent}}"></line>
+<g><circle cx="200" cy="222" r="13"></circle><circle cx="280" cy="222" r="13"></circle><circle cx="360" cy="222" r="13"></circle><circle cx="440" cy="222" r="13"></circle><circle cx="520" cy="222" r="13"></circle><circle cx="600" cy="222" r="13"></circle><circle cx="680" cy="222" r="13"></circle><circle cx="760" cy="222" r="13"></circle></g>
+<g><rect x="36" y="250" width="60" height="76"></rect><rect x="36" y="360" width="60" height="76"></rect><rect x="36" y="470" width="60" height="76"></rect><rect x="36" y="580" width="60" height="76"></rect></g>
+<g><circle cx="436" cy="386" r="46"></circle><circle cx="626" cy="386" r="46"></circle><circle cx="436" cy="586" r="46"></circle><circle cx="626" cy="586" r="46"></circle></g>
+<g><rect x="884" y="200" width="250" height="26"></rect><rect x="914" y="238" width="190" height="52"></rect><rect x="884" y="302" width="250" height="26"></rect><rect x="884" y="380" width="250" height="26"></rect><rect x="914" y="418" width="190" height="52"></rect><rect x="884" y="482" width="250" height="26"></rect><rect x="884" y="560" width="250" height="26"></rect><rect x="914" y="598" width="190" height="52"></rect><rect x="884" y="662" width="250" height="26"></rect></g>
+<path d="M882 342H1164M882 522H1164" stroke="#2c2c31" fill="none"></path>
+</g>
+<g fill="#6d6b67" stroke="none"><path d="M240 318h1v9h-1zM236 322h9v1h-9zM240 558h1v9h-1zM236 562h9v1h-9zM780 318h1v9h-1zM776 322h9v1h-9zM780 478h1v9h-1zM776 482h9v1h-9z"></path></g>
+<g font-family="Geist Mono, monospace" font-size="11" fill="#8a8883" letter-spacing=".04em">
+<text x="480" y="172" text-anchor="middle">Bar</text>
+<text x="108" y="262">Slots.</text><text x="108" y="278">They never lose.</text>
+<text x="1009" y="190" text-anchor="middle">Booths</text>
+<text x="600" y="752" text-anchor="middle">Night Market</text>
+<text x="436" y="390" text-anchor="middle">1</text><text x="626" y="390" text-anchor="middle">2</text><text x="436" y="590" text-anchor="middle">3</text><text x="626" y="590" text-anchor="middle">4</text>
+</g>
+</svg>
+
+<button type="button" class="ql-tok" onClick="{{selKiosk}}" aria-label="Concierge kiosk" style="left: {{kx}}px; top: {{ky}}px; transform: translate(-26px, -26px) scale({{kscale}}); cursor: pointer;">
+<span style="display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; box-sizing: border-box; border-radius: 50%; border: 1px dashed {{kioskRing}}; background: #0d0d10;"><span style="width: 8px; height: 22px; border: 1px solid #ece8df;"></span></span>
+<span style="font-size: 13px; color: #ece8df; background: rgba(11,11,14,.8); padding: 1px 5px;">Concierge</span>
+</button>
+
+<sc-for list="{{toks}}" as="t" hint-placeholder-count="4">
+<button type="button" class="ql-tok" onPointerDown="{{t.down}}" onClick="{{t.select}}" aria-label="{{t.name}}" style="left: {{t.x}}px; top: {{t.y}}px; transform: translate(-26px, -26px) scale({{t.scale}}); z-index: {{t.z}};">
+<img src="{{t.img}}" alt="" draggable="false" style="display: block; width: 52px; height: 52px; box-sizing: border-box; border-radius: 50%; border: {{t.bw}} solid {{t.ring}}; image-rendering: pixelated; filter: grayscale(.82) contrast(1.06); pointer-events: none;">
+<span style="font-size: 13px; color: {{t.fg}}; background: rgba(11,11,14,.8); padding: 1px 5px;">{{t.name}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<div style="position: absolute; left: 24px; top: 14px; pointer-events: none;">
+<div style="font-size: 34px; line-height: 1.1; font-weight: 400; letter-spacing: -.012em; color: #ffffff;">The Event Horizon</div>
+<div style="display: flex; gap: 16px; margin-top: 6px; color: #97948e; pointer-events: auto;"><span>Deck 2, Promenade</span><a href="#station" style="color: #ece8df; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #4c4c52;">Station map</a></div>
+</div>
+
+<div style="position: absolute; right: 28px; bottom: 22px; display: flex; gap: 2px; align-items: center; font-family: 'Geist Mono', monospace; font-size: 13px; color: #97948e;">
+<span style="padding-right: 10px;">{{zoomPct}}</span>
+<button type="button" onClick="{{zoomOut}}" aria-label="Zoom out" style="width: 44px; height: 44px; color: #ece8df;">−</button>
+<button type="button" onClick="{{resetView}}" aria-label="Reset view" style="width: 44px; height: 44px; color: #ece8df;">○</button>
+<button type="button" onClick="{{zoomIn}}" aria-label="Zoom in" style="width: 44px; height: 44px; color: #ece8df;">+</button>
+</div>
+
+<sc-if value="{{hasSel}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 24px; bottom: 22px; width: 330px; box-sizing: border-box; padding: 18px 20px; background: #0d0d10; border: 1px solid #2e2e33; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; gap: 14px; align-items: flex-start;">
+<sc-if value="{{selHasImg}}" hint-placeholder-val="{{ true }}"><img src="{{sel.img}}" alt="" style="width: 56px; height: 56px; border-radius: 50%; image-rendering: pixelated; filter: grayscale(.82) contrast(1.06); flex: none;"></sc-if>
+<div style="flex: 1; min-width: 0;">
+<div style="font-size: 20px; line-height: 1.2; color: #ffffff;">{{sel.name}}</div>
+<div style="color: #97948e;">{{sel.role}}. {{moodT}}.</div>
+</div>
+<button type="button" onClick="{{clearSel}}" aria-label="Close" style="width: 32px; height: 32px; margin: -6px -8px 0 0; color: #97948e;">×</button>
+</div>
+<div>{{sel.note}}</div>
+<div style="display: flex; gap: 20px;"><a href="#comms" style="color: #ece8df; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #4c4c52; line-height: 32px;">Message</a><a href="#codex" style="color: #ece8df; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #4c4c52; line-height: 32px;">Codex entry</a></div>
+</div>
+</sc-if>
+</section>
+</div>
+
+<sc-if value="{{ovOpen}}" hint-placeholder-val="{{ false }}">
+<div role="dialog" aria-label="Roll" style="position: absolute; inset: 0; z-index: 90000; background: rgba(11,11,14,.985); display: flex; flex-direction: column; box-sizing: border-box; padding: 20px 36px 32px;">
+<div style="display: flex; align-items: center; gap: 24px; color: #97948e; min-height: 44px;">
+<span style="color: #ece8df;">Static Kovač</span>
+<span style="display: flex; align-items: center; gap: 8px;">Hope <span style="display: flex; gap: 5px;"><sc-for list="{{hopes}}" as="h" hint-placeholder-count="5"><span style="width: 8px; height: 8px; border-radius: 50%; box-sizing: border-box; border: 1px solid {{h.bd}}; background: {{h.bg}};"></span></sc-for></span></span>
+<button type="button" onClick="{{closeRoll}}" style="margin-left: auto; min-height: 44px; color: #ece8df;">Close</button>
+</div>
+
+<sc-if value="{{isPick}}" hint-placeholder-val="{{ true }}">
+<div style="flex: 1; width: 100%; max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; gap: 44px;">
+<div style="font-size: 44px; line-height: 1.1; font-weight: 400; letter-spacing: -.015em; color: #ffffff;">{{prompt}}</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(130px, 45%), 1fr)); gap: 24px 8px; align-items: end;">
+<sc-for list="{{pickDice}}" as="p" hint-placeholder-count="6">
+<button type="button" class="ql-die" onClick="{{p.pick}}" aria-pressed="{{p.on}}" style="gap: 12px;">
+<span style="position: relative; display: block; width: 116px; height: 116px; transform: translateY({{p.lift}}px); transition: transform .22s cubic-bezier(.2,.8,.2,1);">
+<svg viewBox="0 0 100 100" width="116" height="116" aria-hidden="true" style="display: block; overflow: visible;"><polygon points="{{p.o}}" fill="{{p.fill}}" stroke="{{p.stroke}}" stroke-width="1.4"></polygon><path d="{{p.f}}" fill="none" stroke="{{p.facet}}" stroke-width="1"></path></svg>
+<span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Doto', monospace; font-weight: 800; font-size: 40px; color: {{p.ink}}; padding-top: {{p.dy2}}px;">{{p.sides}}</span>
+</span>
+<span style="line-height: 1.3;"><span style="display: block; font-size: 16px; color: {{p.ink}};">{{p.verbT}}</span><span style="display: block; color: #97948e;">{{p.title}}</span></span>
+</button>
+</sc-for>
+</div>
+<div>
+<div style="color: #97948e; padding-bottom: 8px;">Add a skill if it fits. It steps the die up.</div>
+<sc-for list="{{pickLines}}" as="k" hint-placeholder-count="3">
+<button type="button" class="ql-line" onClick="{{k.toggle}}" aria-pressed="{{k.on}}">
+<span style="width: 9px; height: 9px; flex: none; align-self: center; border-radius: 50%; box-sizing: border-box; border: 1px solid {{k.bd}}; background: {{k.bg}};"></span>
+<span style="color: {{k.fg}}; font-size: 15px;">{{k.name}}</span>
+<span style="color: #97948e; margin-left: auto;">{{k.when}}</span>
+</button>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; border-top: 1px solid #222226; padding-top: 20px;">
+<span style="font-size: 18px; color: #ece8df;">{{willRoll}}</span>
+<button type="button" class="ql-act" onClick="{{doRoll}}" disabled="{{noPick}}" style="margin-left: auto; min-height: 52px; padding: 0 44px; font-size: 16px; font-weight: 500; background: {{accent}}; color: #150a10; border-color: {{accent}};">Roll</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isStage}}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1; width: 100%; max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 28px;">
+<div style="font-size: 20px; color: #ece8df;">{{cur.verbT}}. <span style="color: #97948e;">{{cur.title}}, {{curDie}}.</span></div>
+<div style="position: relative; width: 340px; height: 340px; flex: none;">
+<sc-if value="{{showRing}}" hint-placeholder-val="{{ false }}"><div class="ql-ring" aria-hidden="true"></div></sc-if>
+<svg viewBox="0 0 100 100" width="340" height="340" aria-hidden="true" class="{{stageCls}}" style="position: absolute; inset: 0; overflow: visible;"><polygon points="{{curShape.o}}" fill="#131316" stroke="{{dieStroke}}" stroke-width=".55"></polygon><path d="{{curShape.f}}" fill="none" stroke="#2a2a2f" stroke-width=".5"></path></svg>
+<div aria-live="polite" class="{{stageCls}}" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Doto', monospace; font-weight: 800; font-size: 128px; line-height: 1; color: #ffffff; filter: blur({{blur}}px);">{{shown}}</div>
+</div>
+<sc-if value="{{isRolling}}" hint-placeholder-val="{{ false }}"><div style="height: 148px; font-family: 'Geist Mono', monospace; font-size: 12px; color: #6d6b67;">{{noise}}</div></sc-if>
+<sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+<div style="width: 100%; display: flex; flex-direction: column; gap: 22px;">
+<div style="text-align: center; font-size: 15px; color: #97948e; min-height: 22px;">{{breakdown}}</div>
+<div style="position: relative; height: 44px; margin: 0 6px;">
+<div style="position: absolute; left: 0; right: 0; top: 10px; height: 1px; background: #3a3a40;"></div>
+<sc-for list="{{tiers}}" as="t" hint-placeholder-count="4">
+<div style="position: absolute; left: {{t.pos}}%; top: 4px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; color: {{t.fg}}; font-size: 12.5px; white-space: nowrap;"><span style="width: 1px; height: 13px; background: {{t.fg}};"></span><span>{{t.name}} {{t.n}}</span></div>
+</sc-for>
+<div style="position: absolute; left: {{markPos}}%; top: 5px; width: 11px; height: 11px; margin-left: -5px; border-radius: 50%; background: {{accent}}; transition: left .3s;"></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px;">
+<button type="button" class="ql-act" onClick="{{spendHope}}" disabled="{{noHope}}">Spend Hope, +1</button>
+<button type="button" class="ql-act" onClick="{{again}}">New roll</button>
+<button type="button" class="ql-act ql-main" onClick="{{closeRoll}}">Done</button>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","options":["#ff4fa3","#ff6fb5","#e0367f","#b46cff"],"default":"#ff4fa3"},"overlayPreview":{"editor":"enum","options":["closed","pick","result"],"default":"closed"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  state = {
+    zoom: 0.82, px: 38, py: 112, drag: null, tokDrag: null,
+    pos: { static: { x: 556, y: 486 }, bolt: { x: 178, y: 470 }, dax: { x: 480, y: 112 }, c14: { x: 524, y: 694 } },
+    sel: null, phase: 'closed', pick: null, skill: -1, roll: null, shown: '', noise: '', blur: 0, hope: 3, spent: 0
+  };
+
+  componentWillUnmount() { clearInterval(this.t); }
+
+  zMin() { return .5; }
+  zMax() { return 2.2; }
+  tokBase() { return .9; }
+  proj(x, y) { return [x, y]; }
+  unproj(dx, dy) { return [dx, dy]; }
+
+  decorate(v, c) {
+    const a = c.accent;
+    const DY = { d4: 12, d6: 0, d8: 0, d10: 0, d12: 2, d20: 4 };
+    v.sheetStats = v.sheetStats.map((s) => Object.assign(s, { sides: s.dieLabel.slice(1), dy: DY[s.dieLabel] }));
+    v.wounds = v.woundIdx.map((w) => ({ bg: w.on ? '#ece8df' : 'transparent' }));
+    v.hopes = v.hopeIdx.map((h) => ({ bg: h.on ? a : 'transparent', bd: h.on ? a : '#6d6b67' }));
+    v.toks = v.tokens.map((t) => Object.assign(t, {
+      ring: t.on ? a : (t.id === 'static' ? a : (t.crew ? '#ece8df' : '#55555a')),
+      bw: t.on ? '2px' : '1px',
+      fg: t.on ? '#ffffff' : (t.crew ? '#ece8df' : '#b5b2ab')
+    }));
+    v.kioskRing = v.kioskOn ? a : '#8a8883';
+    const M = { YOU: 'That is you', CREW: 'With you', FRIENDLY: 'Friendly', BUSY: 'Busy', 'DELIGHTED TO HELP': 'Delighted to help' };
+    v.moodT = M[v.sel.mood] || '';
+    v.pickDice = v.pickStats.map((p) => Object.assign(p, {
+      sides: p.dieLabel.slice(1), dy2: DY[p.dieLabel] * 2,
+      lift: p.on ? -10 : 0,
+      stroke: p.on ? a : '#6d6b67', fill: p.on ? '#17141a' : '#121215', facet: p.on ? '#5a2a42' : '#2a2a2f',
+      ink: p.on || !v.hasPick ? '#ffffff' : '#b5b2ab'
+    }));
+    v.pickLines = v.pickSkills.map((k) => Object.assign(k, { bg: k.on ? a : 'transparent', bd: k.on ? a : '#6d6b67', fg: k.on ? '#ffffff' : '#ece8df' }));
+    v.prompt = v.hasPick ? v.pickedVerb + '.' : 'What are you doing?';
+    v.willRoll = v.hasPick ? 'You will roll ' + v.effDie + ' for ' + v.pickedTitle + '.' : 'Pick a die.';
+    v.dieStroke = c.done ? (c.exploded ? a : '#ece8df') : '#6d6b67';
+    if (c.roll) {
+      const parts = c.roll.rolls.map((r, i) => (i ? 'then ' : '') + r);
+      let s = c.roll.rolls.length > 1 ? 'Exploded. ' + parts.join(', ') + '.' : 'Rolled ' + c.roll.rolls[0] + '.';
+      if (c.roll.bonus) s += ' Skill +' + c.roll.bonus + '.';
+      if (v.spent) s += ' Hope +' + v.spent + '.';
+      s += v.bestName ? ' Clears ' + v.bestName + '.' : ' Below Easy.';
+      v.breakdown = s;
+    } else { v.breakdown = ''; }
+    v.tiers = v.tiers.map((t) => Object.assign(t, { fg: t.met ? '#ece8df' : '#8a8883' }));
+    return v;
+  }
+
+
+  stats() {
+    return [
+      { name: 'BODY', title: 'Body', die: 6, color: '#ff8a55', glow: 'rgba(255,122,69,.34)', icon: '/_blob/ab5542af3a6f3778560c4d079a5eedf2', verb: 'FORCE IT', verbT: 'Force it', mode: 'slam' },
+      { name: 'REFLEX', title: 'Reflex', die: 8, color: '#ffd166', glow: 'rgba(255,210,63,.28)', icon: '/_blob/b859f95b3bb63536427ebee0099d3411', verb: 'DODGE IT', verbT: 'Dodge it', mode: 'reel' },
+      { name: 'TECH', title: 'Tech', die: 20, color: '#5ff2ff', glow: 'rgba(63,240,255,.3)', icon: '/_blob/58cdb020e382f0b55acc2d7729ad26d8', verb: 'HACK IT', verbT: 'Hack it', mode: 'decrypt' },
+      { name: 'INTEL', title: 'Intel', die: 12, color: '#9dbdff', glow: 'rgba(122,168,255,.3)', icon: '/_blob/884b6974e45c14875f8d76368ffe80d3', verb: 'SOLVE IT', verbT: 'Solve it', mode: 'solve' },
+      { name: 'COOL', title: 'Cool', die: 10, color: '#c79bff', glow: 'rgba(180,108,255,.32)', icon: '/_blob/5c46989605ebeb1dae4f2a93e6c9bf78', verb: 'FAKE IT', verbT: 'Fake it', mode: 'fade' },
+      { name: 'EMPATHY', title: 'Empathy', die: 4, color: '#ff7dbc', glow: 'rgba(255,79,163,.32)', icon: '/_blob/d258ec57892bf54c385051baf8bc093a', verb: 'READ IT', verbT: 'Read it', mode: 'pulse' }
+    ];
+  }
+
+  // real polyhedral outlines, so a die is a shape and not the text "d20"
+  dieShape(sides) {
+    const S = {
+      4: { o: '50,9 93,84 7,84', f: 'M50 9L50 58M7 84L50 58M93 84L50 58' },
+      6: { o: '14,14 86,14 86,86 14,86', f: 'M24 24L76 24L76 76L24 76Z' },
+      8: { o: '50,5 91,50 50,95 9,50', f: 'M9 50L91 50M50 5L34 50M50 5L66 50M50 95L34 50M50 95L66 50' },
+      10: { o: '50,5 93,44 50,95 7,44', f: 'M7 44L50 60L93 44M50 60L50 95M50 5L30 40L50 60L70 40L50 5' },
+      12: { o: '50,4 94,36 77,90 23,90 6,36', f: 'M50 24L72 41L64 70L36 70L28 41ZM50 4L50 24M94 36L72 41M77 90L64 70M23 90L36 70M6 36L28 41' },
+      20: { o: '50,3 91,27 91,73 50,97 9,73 9,27', f: 'M50 27L74 67L26 67ZM50 3L50 27M91 27L50 27M9 27L50 27M91 27L74 67M9 27L26 67M91 73L74 67M9 73L26 67M50 97L74 67M50 97L26 67' }
+    };
+    return S[sides] || S[20];
+  }
+
+  effective(stat, skill) {
+    const steps = [4, 6, 8, 10, 12, 20];
+    const i = steps.indexOf(stat.die);
+    if (skill < 0) return { sides: stat.die, bonus: 0 };
+    if (i === steps.length - 1) return { sides: stat.die, bonus: 2 };
+    return { sides: steps[i + 1], bonus: 0 };
+  }
+
+  startRoll() {
+    const stat = this.stats().find((s) => s.name === this.state.pick) || (this.props.overlayPreview === 'pick' ? this.stats()[2] : null);
+    if (!stat) return;
+    const eff = this.effective(stat, this.state.skill);
+    const rolls = [];
+    let r, guard = 0;
+    do { r = 1 + Math.floor(Math.random() * eff.sides); rolls.push(r); guard++; } while (r === eff.sides && guard < 6);
+    const total = rolls.reduce((a, b) => a + b, 0) + eff.bonus;
+    const finalStr = String(total);
+    const cfg = { slam: [40, 24], reel: [34, 36], decrypt: [45, 30], solve: [50, 28], fade: [50, 26], pulse: [110, 12] }[stat.mode];
+    const glyphs = stat.mode === 'solve' ? '∑∫π√∆λθ∞≈±' : '#%&@?!01ABCDEF/<>*';
+    let tick = 0;
+    clearInterval(this.t);
+    this.setState({ phase: 'rolling', pick: stat.name, roll: { stat: stat.name, sides: eff.sides, bonus: eff.bonus, rolls, total }, spent: 0, shown: '··', blur: stat.mode === 'fade' ? 14 : 0 });
+    this.t = setInterval(() => {
+      tick++;
+      const N = cfg[1];
+      let s;
+      if (stat.mode === 'decrypt' || stat.mode === 'solve') {
+        s = finalStr.split('').map((ch, i) => (tick > N * (0.55 + 0.35 * (i + 1) / finalStr.length) ? ch : glyphs[Math.floor(Math.random() * glyphs.length)])).join('');
+      } else if (stat.mode === 'fade') {
+        s = finalStr;
+      } else {
+        s = String(1 + Math.floor(Math.random() * eff.sides));
+      }
+      let noise = '';
+      const hx = '0123456789abcdef';
+      for (let k = 0; k < 16; k++) noise += hx[Math.floor(Math.random() * 16)];
+      if (tick >= N) {
+        clearInterval(this.t);
+        this.setState({ phase: 'done', shown: finalStr, noise: '', blur: 0 });
+      } else {
+        this.setState({ shown: s, noise: stat.mode === 'pulse' ? '♥ · · ♥ · ·' : 'entropy 0x' + noise, blur: stat.mode === 'fade' ? Math.max(0, 14 * (1 - tick / N)) : 0 });
+      }
+    }, cfg[0]);
+  }
+
+  renderVals() {
+    const accent = this.props.accent ?? '#ff4fa3';
+    const st = this.state;
+    const S = this.stats();
+    const preview = this.props.overlayPreview ?? 'closed';
+    let phase = st.phase;
+    let pick = st.pick;
+    let roll = st.roll;
+    const untouched = st.phase === 'closed' && !this.opened;
+    if (untouched && preview === 'pick') { phase = 'pick'; pick = pick || 'TECH'; }
+    if (untouched && preview === 'result') { phase = 'done'; pick = 'TECH'; roll = { stat: 'TECH', sides: 20, bonus: 0, rolls: [20, 7], total: 27 }; }
+    const clampZ = (z) => Math.min(this.zMax(), Math.max(this.zMin(), z));
+    const dieLabel = (d) => 'd' + d;
+    const skills = [
+      { name: 'Talks to machines like dogs', when: 'Coaxing, calming or commanding a machine' },
+      { name: 'Owes money on three worlds', when: 'Dealing with fences, debts and crooks' },
+      { name: 'Never reads the manual', when: 'Improvising with tech you have never seen' }
+    ];
+    const picked = S.find((s) => s.name === pick);
+    const eff = picked ? this.effective(picked, st.skill) : null;
+    let summary = 'PICK A STAT';
+    if (picked) {
+      summary = picked.name + ' ' + dieLabel(picked.die);
+      if (st.skill >= 0) summary += eff.bonus ? ' +' + eff.bonus : ' → ' + dieLabel(eff.sides);
+    }
+    const cur = S.find((s) => s.name === (roll ? roll.stat : pick)) || S[2];
+    const done = phase === 'done';
+    const exploded = done && roll && roll.rolls.length > 1;
+    const modeCls = { slam: 'a-slam', reel: 'a-reel', decrypt: 'a-decrypt', solve: 'a-decrypt', fade: 'a-none', pulse: 'a-none' }[cur.mode];
+    const tokDefs = [
+      { id: 'static', name: 'Static', NAME: 'STATIC', img: '/_blob/213c48191ae973298de3923102fd6c36', crew: true, role: 'Crew, contractor', mood: 'YOU', note: 'Splice window opens at 22:00. Vault 3 is up the exec lift.' },
+      { id: 'bolt', name: 'BOLT-7', NAME: 'BOLT-7', img: '/_blob/2d33a2c80f68931a5ff6a69e3d792f5d', crew: true, role: 'Crew, machine mind', mood: 'CREW', note: 'Has been watching the slot machines for forty minutes. Says the payouts form a pattern.' },
+      { id: 'dax', name: 'Old Dax', NAME: 'OLD DAX', img: '/_blob/b19918c021ed3bc44c55462abb617643', crew: false, role: 'Barkeep', mood: 'FRIENDLY', note: 'Has run The Event Horizon for nineteen years. Swears the slots used to lose sometimes.' },
+      { id: 'c14', name: 'Cleaner Unit 14', NAME: 'CLEANER UNIT 14', img: '/_blob/951bc89c9f43d5bd45ce3864bfe44fd3', crew: false, role: 'Cleaner bot, station', mood: 'BUSY', note: 'Has cleaned table 3 every four minutes since you arrived. Table 3 is already clean.' }
+    ];
+    const kiosk = { id: 'kiosk', name: 'Concierge kiosk', NAME: 'CONCIERGE KIOSK', img: '', role: 'Station assistant', mood: 'DELIGHTED TO HELP', note: 'Station satisfaction is 99.97%. Would you like a recommendation?' };
+    const selDef = st.sel === 'kiosk' ? kiosk : tokDefs.find((t) => t.id === st.sel);
+    const tierDefs = [{ name: 'Easy', n: 4 }, { name: 'Normal', n: 7 }, { name: 'Hard', n: 10 }, { name: 'Heroic', n: 14 }];
+    const total = roll ? roll.total + st.spent : 0;
+    const best = tierDefs.filter((t) => total >= t.n).pop();
+    const scaleMax = 24;
+    const tscale = Math.min(1.9, Math.max(.8, this.tokBase() / st.zoom));
+    const kp = this.proj(791, 640);
+    const v = {
+      accent,
+      hope: st.hope,
+      hopeIdx: [0, 1, 2, 3, 4].map((i) => ({ on: i < st.hope })),
+      woundIdx: [0, 1, 2, 3, 4, 5].map((i) => ({ on: i < 2 })),
+      sheetStats: S.map((s) => {
+        const sh = this.dieShape(s.die);
+        return { name: s.name, title: s.title, verbT: s.verbT, verb: s.verb, icon: s.icon, color: s.color, dieLabel: dieLabel(s.die), o: sh.o, f: sh.f, open: () => { this.opened = true; this.setState({ phase: 'pick', pick: s.name, skill: -1 }); } };
+      }),
+      skills,
+      chrome: [
+        { name: 'Optic-9 cyber-eye', does: 'Thermal, zoom, reads faces', icon: '/_blob/884b6974e45c14875f8d76368ffe80d3', cost: '−1', costOn: true },
+        { name: 'Skull port', does: 'Direct jack into any terminal', icon: '/_blob/1f549e2b34b2ad546a6d60e52e386a7b', cost: '−1', costOn: true },
+        { name: 'Grip-servo hand', does: 'Crushes, holds, never shakes', icon: '/_blob/9f2e0485ff9731cbb50aa9dbe29fc2c2', cost: '0', costOn: false }
+      ],
+      items: [
+        { name: 'Splice kit', kind: 'TOOL', kindT: 'Tool', icon: '/_blob/47a76d144769357491ddb844cfaa3a4c' },
+        { name: 'EVAL_REPORT_v12', kind: 'CLUE', kindT: 'Clue', icon: '/_blob/58cdb020e382f0b55acc2d7729ad26d8' },
+        { name: 'Vault 3 access chit', kind: 'KEY', kindT: 'Key', icon: '/_blob/9ffcfac4df88652126b7c0d412972d6e' },
+        { name: '140 credits', kind: 'CASH', kindT: 'Cash', icon: '/_blob/635d7440ba836b9e46d2e1e80b2d1f66' }
+      ],
+      tokens: tokDefs.map((t) => {
+        const p = st.pos[t.id];
+        const on = st.sel === t.id;
+        const s = this.proj(p.x, p.y);
+        return {
+          id: t.id, name: t.name, NAME: t.NAME, img: t.img, crew: t.crew, on, x: s[0], y: s[1], scale: tscale, z: Math.round(s[1]),
+          down: (e) => { e.stopPropagation(); this.setState({ tokDrag: { id: t.id, sx: e.clientX, sy: e.clientY, ox: p.x, oy: p.y } }); },
+          select: () => { if (this.dragged) { this.dragged = false; return; } this.setState({ sel: t.id }); }
+        };
+      }),
+      kx: kp[0], ky: kp[1], kscale: tscale, kioskOn: st.sel === 'kiosk',
+      selKiosk: () => this.setState({ sel: 'kiosk' }),
+      hasSel: !!selDef,
+      sel: selDef ? Object.assign({}, selDef) : { name: '', NAME: '', role: '', mood: '', note: '', img: '' },
+      selHasImg: !!(selDef && selDef.img), selNoImg: !!(selDef && !selDef.img),
+      clearSel: () => this.setState({ sel: null }),
+      worldTransform: 'translate(' + st.px + 'px, ' + st.py + 'px) scale(' + st.zoom + ')',
+      zoomPct: Math.round(st.zoom * 100) + '%',
+      cursor: st.drag ? 'grabbing' : 'grab',
+      onDown: (e) => { if (e.target.closest && e.target.closest('button')) return; this.setState({ drag: { x: e.clientX, y: e.clientY, px: st.px, py: st.py } }); },
+      onMove: (e) => {
+        const td = this.state.tokDrag;
+        if (td) {
+          const z = this.state.zoom;
+          const d = this.unproj((e.clientX - td.sx) / z, (e.clientY - td.sy) / z);
+          if (Math.abs(d[0]) + Math.abs(d[1]) > 3) this.dragged = true;
+          const pos = Object.assign({}, this.state.pos);
+          pos[td.id] = { x: Math.round(td.ox + d[0]), y: Math.round(td.oy + d[1]) };
+          this.setState({ pos });
+          return;
+        }
+        const d = this.state.drag;
+        if (!d) return;
+        this.setState({ px: d.px + (e.clientX - d.x), py: d.py + (e.clientY - d.y) });
+      },
+      onUp: () => { if (this.state.drag || this.state.tokDrag) this.setState({ drag: null, tokDrag: null }); },
+      onWheel: (e) => { this.setState({ zoom: clampZ(this.state.zoom * (e.deltaY < 0 ? 1.1 : 0.9)) }); },
+      zoomIn: () => this.setState({ zoom: clampZ(st.zoom * 1.2) }),
+      zoomOut: () => this.setState({ zoom: clampZ(st.zoom / 1.2) }),
+      resetView: () => this.setState({ zoom: 0.82, px: 38, py: 112 }),
+      ovOpen: phase !== 'closed',
+      isPick: phase === 'pick',
+      isStage: phase === 'rolling' || phase === 'done',
+      isRolling: phase === 'rolling',
+      isDone: done,
+      openRoll: () => { this.opened = true; this.setState({ phase: 'pick', pick: null, skill: -1 }); },
+      closeRoll: () => { this.opened = true; clearInterval(this.t); this.setState({ phase: 'closed' }); },
+      again: () => { this.opened = true; this.setState({ phase: 'pick', skill: -1, pick: cur.name }); },
+      pickStats: S.map((s, i) => {
+        const on = s.name === pick;
+        const sh = this.dieShape(s.die);
+        return {
+          name: s.name, title: s.title, icon: s.icon, color: s.color, verb: s.verb, verbT: s.verbT, dieLabel: dieLabel(s.die), o: sh.o, f: sh.f, on, off: !on, idx: i,
+          pick: () => { this.opened = true; this.setState({ pick: s.name, phase: 'pick' }); }
+        };
+      }),
+      pickSkills: skills.map((k, i) => ({
+        name: k.name, when: k.when, on: st.skill === i, off: st.skill !== i,
+        toggle: () => { this.opened = true; this.setState({ skill: st.skill === i ? -1 : i, phase: 'pick', pick: pick }); }
+      })),
+      summary,
+      hasPick: !!picked,
+      noPick: !picked,
+      pickedTitle: picked ? picked.title : '',
+      pickedVerb: picked ? picked.verbT : '',
+      effDie: eff ? dieLabel(eff.sides) + (eff.bonus ? ' +' + eff.bonus : '') : '',
+      pickedIdx: picked ? S.indexOf(picked) : -1,
+      doRoll: () => { this.opened = true; if (!this.state.pick) this.state.pick = pick; this.startRoll(); },
+      cur,
+      curDie: roll ? dieLabel(roll.sides) + (roll.bonus ? ' +' + roll.bonus : '') : '',
+      curShape: this.dieShape(roll ? roll.sides : cur.die),
+      stageCls: phase === 'rolling' ? modeCls : 'a-land',
+      showRing: phase === 'rolling' && cur.mode === 'pulse',
+      blur: phase === 'rolling' ? st.blur : 0,
+      shown: done && roll ? String(total) : st.shown,
+      noise: phase === 'rolling' ? st.noise : '',
+      exploded,
+      chips: roll ? roll.rolls.map((val, i) => {
+        const sh = this.dieShape(roll.sides);
+        return { v: val, star: val === roll.sides, plain: val !== roll.sides, plus: i > 0, label: val === roll.sides ? val + '★' : String(val), o: sh.o, f: sh.f };
+      }) : [],
+      hasBonus: !!(roll && roll.bonus), bonus: roll ? roll.bonus : 0,
+      hasSpent: st.spent > 0, spent: st.spent,
+      total,
+      tiers: tierDefs.map((t) => ({ name: t.name, NAME: t.name.toUpperCase(), n: t.n, met: total >= t.n, unmet: total < t.n, best: best === t, pos: (t.n / scaleMax * 100) })),
+      bestName: best ? best.name : '',
+      bestNAME: best ? best.name.toUpperCase() : 'BELOW EASY',
+      markPos: Math.min(100, total / scaleMax * 100),
+      noHope: st.hope <= 0,
+      spendHope: () => { if (this.state.hope > 0) { this.opened = true; this.setState({ hope: this.state.hope - 1, spent: this.state.spent + 1, phase: 'done', roll: roll, pick: pick }); } }
+    };
+    return this.decorate(v, { st, cur, phase, done, exploded, roll, picked, accent });
+  }
+}
+
+</script>
+</body>
+</html>

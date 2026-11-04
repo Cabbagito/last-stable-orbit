@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Event Horizon, what's where</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 1060px; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
+<div style="position: relative; width: 1440px; height: 810px;">
+<img src="/_blob/6d77cc9b170e9047c637ce4ba8bc1e31" alt="The Event Horizon map with numbered markers" style="position: absolute; left: 0; top: 0; width: 1440px; height: 810px; display: block; image-rendering: pixelated;">
+<sc-for list="{{pins}}" as="p" hint-placeholder-count="20">
+<div style="position: absolute; left: {{p.x}}px; top: {{p.y}}px; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Silkscreen', monospace; font-size: 11px; background: {{p.bg}}; color: {{p.fg}}; box-shadow: 0 0 0 2px #000000;">{{p.k}}</div>
+</sc-for>
+</div>
+<div style="box-sizing: border-box; height: 250px; padding: 20px 32px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 13px; color: #ffffff;">FROM YOUR LIST</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 20px; font-size: 14px; line-height: 1.35;">
+<div>1 · Bar counter</div>
+<div>2 · Dax's place behind it</div>
+<div>3 · Four slot machines</div>
+<div>4 · Round tables (five)</div>
+<div>5 · Booths (three)</div>
+<div>6 · Founder's table, under the mural</div>
+<div>7 · Door out to the Night Market</div>
+<div>8 · Vents (three floor grates, one wall grille)</div>
+<div>9 · Hidden exit: under the kegs, not drawn open yet</div>
+<div>No cameras: none drawn anywhere</div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 13px; color: #ff6fb5;">MY ADDITIONS</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 20px; font-size: 14px; line-height: 1.35;">
+<div>A · Stockroom (you said yes)</div>
+<div>B · The door Dax holds</div>
+<div>C · Brass rail and rope</div>
+<div>D · Two places always set</div>
+<div>E · Empty camera bracket, cut wires</div>
+<div>F · Sign's mark: black disc and ring</div>
+<div>G · Mural's blue and stars, round the corner</div>
+<div>H · Worn mat and stool for Dax</div>
+<div>J · Scuff marks by the kegs, the only tell</div>
+<div>K · Street lanterns outside the door</div>
+<div>L · Door leaves and doormat</div>
+<div>In the moods: chairs up, red strips, box lid</div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const at = (X, Y, Z) => [((X - Y) * 30 + 536) * 1.125, ((X + Y) * 15 - Z * 36 + 201) * 1.125];
+    const list = [
+      ['1', 10.2, 3.0, 1.1, 0], ['2', 11.6, 1.05, 0, 0], ['3', -2.1, 10.9, 2.6, 0], ['4', 10.7, 9.3, 1.5, 0], ['5', 16, 9.5, 1.1, 0],
+      ['6', 2.8, 3.7, 1.6, 0], ['7', 8, 13.1, .1, 0], ['8', 10.3, 11.9, 0, 0], ['8', 4.6, 11, 0, 0], ['8', 14.2, 5.3, 0, 0], ['8', 0, 8, .56, 0], ['9', 20.35, 1, 1.2, 0],
+      ['A', 20.3, 3.9, 0, 1], ['B', 18, 1.25, 2.55, 1], ['C', 5.42, 5.6, .9, 1], ['D', 3.72, 3.1, 1.2, 1], ['E', .2, 8, 3.8, 1], ['F', 7.08, 0, 3.2, 1], ['G', 3, 0, 2.6, 1],
+      ['H', 13.25, .98, 1.15, 1], ['J', 22, 1.9, 0, 1], ['K', 8, 15, 1.2, 1], ['L', 6.9, 12, 1.25, 1]
+    ];
+    return {
+      pins: list.map((p) => {
+        const a = at(p[1], p[2], p[3]);
+        return { k: p[0], x: a[0], y: a[1], bg: p[4] ? '#ff6fb5' : '#ffffff', fg: '#000000' };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

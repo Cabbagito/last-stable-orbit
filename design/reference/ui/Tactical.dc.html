@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SCENE, Tactical Deck</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..700&amp;family=Silkscreen&amp;family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#08090c}
+.td a{color:#a4a9b5;text-decoration:none}.td a:hover{color:#ffffff}
+.td-cut{clip-path:polygon(0 0,calc(100% - 13px) 0,100% 13px,100% 100%,13px 100%,0 calc(100% - 13px))}
+.td-panel{background:linear-gradient(180deg,#14161d,#0f1116);box-shadow:inset 0 0 0 1px #2a2e38}
+.td-well{background:#090a0d;box-shadow:inset 0 0 0 1px #20232b,inset 0 3px 8px rgba(0,0,0,.7)}
+.td-lbl{font-family:'Silkscreen',monospace;font-size:10px;letter-spacing:.5px;color:#9096a3}
+.td-num{font-family:'VT323',monospace;color:#f2b544;text-shadow:0 0 8px rgba(242,181,68,.35)}
+.td-key{font-family:'Silkscreen',monospace;font-size:11px;letter-spacing:.5px;color:#e6e7ea;background:linear-gradient(180deg,#262932,#191b22);border:0;box-shadow:inset 0 0 0 1px #3a3e4a,inset 0 1px 0 #4a4f5c,inset 0 -3px 0 #0a0b0e;cursor:pointer;padding:0 14px 2px;min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:8px;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.td-key:hover{background:linear-gradient(180deg,#2e323c,#1f222a)}
+.td-key:active{box-shadow:inset 0 0 0 1px #3a3e4a,inset 0 2px 3px rgba(0,0,0,.6)}
+.td-key[disabled]{opacity:.45;cursor:default}
+.td-acc{color:#1c0912;background:linear-gradient(180deg,#ff6db3,#e23a8c);box-shadow:inset 0 0 0 1px #ff9fcf,inset 0 1px 0 #ffc2e0,inset 0 -3px 0 #8a1f54}
+.td-acc:hover{background:linear-gradient(180deg,#ff85c0,#ec4a98)}
+.td-tile{font:inherit;color:#e6e7ea;text-align:left;cursor:pointer;background:#14161c;border:0;box-shadow:inset 0 0 0 1px #262a33;padding:6px 8px;display:flex;align-items:center;gap:8px;min-height:44px;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px))}
+.td-tile:hover{box-shadow:inset 0 0 0 1px #f2b544}
+.td-tok{position:absolute;width:64px;height:92px;margin:-86px 0 0 -32px;background:none;border:0;padding:0;cursor:grab;font:inherit;transform-origin:32px 86px}
+.td-tok:focus-visible{outline:1px solid #f2b544;outline-offset:2px}
+.td-amber{filter:grayscale(1) sepia(1) saturate(3.2) hue-rotate(-12deg) brightness(.95)}
+.td-scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.34) 0,rgba(0,0,0,.34) 1px,transparent 1px,transparent 3px)}
+@keyframes td-shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-7px,4px)}50%{transform:translate(6px,-5px)}75%{transform:translate(-5px,-3px)}}
+@keyframes td-reel{0%{transform:translateY(-34%);opacity:.2}100%{transform:translateY(0);opacity:1}}
+@keyframes td-flick{0%,100%{opacity:1}50%{opacity:.55}}
+@keyframes td-land{0%{transform:scale(1.5);opacity:0}60%{transform:scale(.97);opacity:1}100%{transform:scale(1)}}
+@keyframes td-beat{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+.a-slam{animation:td-shake .1s linear infinite}
+.a-reel{animation:td-reel .07s linear infinite}
+.a-decrypt{animation:td-flick .09s steps(2) infinite}
+.a-land{animation:td-land .34s cubic-bezier(.2,.8,.2,1) both}
+.a-none{}
+.td-ring{position:absolute;left:50%;top:50%;width:190px;height:190px;margin:-95px 0 0 -95px;border-radius:50%;border:2px solid #f2b544;animation:td-beat .9s ease-out infinite;pointer-events:none}
+@media (max-width:700px){.td-rail{display:none !important}}
+@media (prefers-reduced-motion:reduce){.a-slam,.a-reel,.a-decrypt,.td-ring{animation:none}}
+</style>
+</helmet>
+<div class="td" style="--acc: {{accent}}; position: relative; width: 100%; min-height: 900px; box-sizing: border-box; background: #08090c; color: #e6e7ea; font-family: 'Archivo', system-ui, sans-serif; font-stretch: 88%; font-size: 14px; line-height: 1.35; display: flex; flex-direction: column;">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; padding: 8px 14px; background: #0d0f13; box-shadow: inset 0 -1px 0 #23262e;">
+<span style="font-family: 'Archivo', sans-serif; font-stretch: 75%; font-weight: 700; font-size: 24px; letter-spacing: .14em; color: #ffffff; padding-left: 4px;">ERGO</span>
+<nav aria-label="Sections" style="display: flex; flex-wrap: wrap; gap: 2px; font-family: 'Silkscreen', monospace; font-size: 11px;">
+<a href="#scene" aria-current="page" class="td-cut" style="padding: 9px 14px; background: #1d2027; color: #ffffff; box-shadow: inset 0 -2px 0 {{accent}};">SCENE</a>
+<a href="#station" style="padding: 9px 14px;">STATION</a>
+<a href="#crew" style="padding: 9px 14px;">CREW</a>
+<a href="#comms" style="padding: 9px 14px;">COMMS <span style="color: {{accent}};">2</span></a>
+<a href="#items" style="padding: 9px 14px;">ITEMS</a>
+<a href="#codex" style="padding: 9px 14px;">CODEX</a>
+</nav>
+<div class="td-well td-num" style="margin-left: auto; display: flex; gap: 16px; padding: 5px 14px; font-size: 18px; line-height: 1.2;">
+<span>DAY 2</span><span>STN 21:14</span><span>CORE Δt ×0.31</span>
+</div>
+<button type="button" class="td-key td-acc" onClick="{{openRoll}}" style="min-height: 42px; padding: 0 22px 2px; font-size: 13px;">ROLL</button>
+</header>
+
+<div style="flex: 1; display: flex; flex-wrap: wrap; gap: 10px; padding: 10px;">
+
+<aside aria-label="Character sheet" class="td-panel td-cut" style="flex: 1 1 290px; max-width: 310px; min-width: 0; height: 824px; overflow-y: auto; box-sizing: border-box; padding: 14px; display: flex; flex-direction: column; gap: 14px; scrollbar-width: none; -webkit-mask-image: linear-gradient(180deg, #000 93%, transparent); mask-image: linear-gradient(180deg, #000 93%, transparent);">
+<div style="display: flex; gap: 12px; align-items: center;">
+<div style="width: 84px; height: 84px; flex: none; border-radius: 50%; background: {{sheetRing}}; display: flex; align-items: center; justify-content: center;">
+<img src="/_blob/213c48191ae973298de3923102fd6c36" alt="Static Kovač, head and shoulders" style="display: block; width: 72px; height: 72px; border-radius: 50%; image-rendering: pixelated; background: #08090c;">
+</div>
+<div style="min-width: 0;">
+<div style="font-stretch: 75%; font-weight: 700; font-size: 26px; line-height: 1; letter-spacing: .02em; color: #ffffff;">STATIC KOVAČ</div>
+<div style="color: #a4a9b5; margin-top: 4px;">Contractor</div>
+<div style="color: #a4a9b5;">Tau Ceti IV, human</div>
+</div>
+</div>
+
+<div class="td-well" style="padding: 9px 11px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 10px; align-items: center;">
+<span class="td-lbl">WOUNDS</span>
+<div style="display: flex; gap: 3px;"><sc-for list="{{wounds}}" as="w" hint-placeholder-count="6"><span style="flex: 1; height: 8px; background: {{w.bg}}; transform: skewX(-24deg);"></span></sc-for></div>
+<span class="td-num" style="font-size: 18px;">2/6</span>
+<span class="td-lbl">HOPE</span>
+<div style="display: flex; gap: 3px;"><sc-for list="{{hopes}}" as="h" hint-placeholder-count="5"><span style="flex: 1; height: 8px; background: {{h.bg}}; transform: skewX(-24deg);"></span></sc-for></div>
+<span class="td-num" style="font-size: 18px;">{{hope}}/5</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div class="td-lbl">STATS</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px;">
+<sc-for list="{{sheetStats}}" as="s" hint-placeholder-count="6">
+<button type="button" class="td-tile" onClick="{{s.open}}" aria-label="Roll {{s.title}}">
+<img src="{{s.icon}}" alt="" class="td-amber" style="width: 22px; height: 22px; flex: none; image-rendering: pixelated;">
+<span class="td-lbl" style="flex: 1; color: #d9dbe0;">{{s.name}}</span>
+<span class="td-num" style="font-size: 22px;">{{s.dieLabel}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 5px;">
+<div class="td-lbl">SKILLS, DIE STEPS UP</div>
+<sc-for list="{{skills}}" as="k" hint-placeholder-count="3">
+<div class="td-well" style="padding: 6px 10px;"><div style="font-weight: 600; color: #ffffff;">{{k.name}}</div><div style="font-size: 12.5px; color: #a4a9b5;">{{k.when}}</div></div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div class="td-lbl">CHROME, EMPATHY COST</div>
+<sc-for list="{{chrome}}" as="c" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 9px;">
+<div class="td-well" style="width: 34px; height: 34px; flex: none; display: flex; align-items: center; justify-content: center;"><img src="{{c.icon}}" alt="" class="td-amber" style="width: 24px; height: 24px; image-rendering: pixelated;"></div>
+<div style="flex: 1; min-width: 0;"><div style="font-weight: 600; color: #ffffff;">{{c.name}}</div><div style="font-size: 12.5px; color: #a4a9b5;">{{c.does}}</div></div>
+<span class="td-num" style="font-size: 20px;">{{c.cost}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div class="td-lbl">ON HAND</div>
+<sc-for list="{{items}}" as="i" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; gap: 9px;">
+<div class="td-well" style="width: 34px; height: 34px; flex: none; display: flex; align-items: center; justify-content: center;"><img src="{{i.icon}}" alt="" class="td-amber" style="width: 24px; height: 24px; image-rendering: pixelated;"></div>
+<div style="flex: 1; min-width: 0; font-weight: 500; color: #ffffff;">{{i.name}}</div>
+<span class="td-lbl">{{i.kind}}</span>
+</div>
+</sc-for>
+</div>
+</aside>
+
+<section aria-label="Current location map" class="td-cut" style="flex: 999 1 600px; min-width: 0; height: 824px; position: relative; overflow: hidden; background: #000000;">
+<div onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onUp}}" onWheel="{{onWheel}}" style="position: absolute; inset: 0; cursor: {{cursor}}; touch-action: none;">
+<div style="position: absolute; left: 0; top: 0; width: 1812px; height: 1230px; transform-origin: 0 0; transform: {{worldTransform}};">
+<img src="/_blob/e1abbf5fe93f966870a0da94afc5c79c" alt="The Event Horizon cantina, seen from above at an angle: a long bar with a pink neon strip, four slot machines, four round tables, three booths and a warm doorway." draggable="false" style="position: absolute; left: 0; top: 0; width: 1812px; height: 1230px; display: block; pointer-events: none; user-select: none;">
+<sc-for list="{{floorLabels}}" as="f" hint-placeholder-count="4">
+<div style="position: absolute; left: 0; top: 0; transform-origin: 0 0; transform: {{f.m}}; font-family: 'Silkscreen', monospace; font-size: 15px; letter-spacing: 2px; color: rgba(236,238,244,.62); white-space: nowrap; pointer-events: none;">{{f.t}}</div>
+</sc-for>
+<button type="button" class="td-tok" onClick="{{selKiosk}}" aria-label="Concierge kiosk" style="left: {{kx}}px; top: {{ky}}px; transform: scale({{kscale}}); cursor: pointer; z-index: {{ky}};">
+<span style="position: absolute; left: 50%; bottom: 62px; transform: translateX(-50%); font-family: 'Silkscreen', monospace; font-size: 9px; color: #dff; background: rgba(5,6,8,.82); padding: 2px 6px; white-space: nowrap;">CONCIERGE</span>
+</button>
+<sc-for list="{{toks}}" as="t" hint-placeholder-count="4">
+<button type="button" class="td-tok" onPointerDown="{{t.down}}" onClick="{{t.select}}" aria-label="{{t.name}}" style="left: {{t.x}}px; top: {{t.y}}px; transform: scale({{t.scale}}); z-index: {{t.z}};">
+<span style="position: absolute; left: 50%; bottom: 0; width: 44px; height: 24px; margin-left: -22px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid {{t.ring}}; background: {{t.pool}}; box-shadow: 0 0 12px {{t.glow}};"></span>
+<span style="position: absolute; left: 50%; bottom: 12px; width: 1px; height: 32px; background: {{t.ring}};"></span>
+<span style="position: absolute; left: 50%; top: 0; width: 50px; height: 50px; margin-left: -25px; border-radius: 50%; background: {{t.woundRing}}; display: flex; align-items: center; justify-content: center;"><img src="{{t.img}}" alt="" draggable="false" style="display: block; width: 42px; height: 42px; border-radius: 50%; image-rendering: pixelated; pointer-events: none; background: #08090c;"></span>
+<span style="position: absolute; left: 62px; top: 16px; font-family: 'Silkscreen', monospace; font-size: 9px; color: {{t.plateFg}}; background: {{t.plateBg}}; padding: 2px 6px; white-space: nowrap;">{{t.NAME}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<div class="td-panel td-cut" style="position: absolute; left: 10px; top: 10px; padding: 9px 14px 9px 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px;">
+<div>
+<div class="td-lbl">DECK 2, PROMENADE</div>
+<div style="font-stretch: 75%; font-weight: 700; font-size: 22px; line-height: 1.1; letter-spacing: .03em; color: #ffffff;">THE EVENT HORIZON</div>
+</div>
+<a href="#station" class="td-key" style="color: #e6e7ea;">STATION MAP</a>
+</div>
+
+<div class="td-rail" aria-label="Crew" style="position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 8px; align-items: center;">
+<sc-for list="{{rail}}" as="r" hint-placeholder-count="5">
+<sc-if value="{{r.filled}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{r.select}}" aria-label="{{r.name}}" style="font: inherit; background: none; border: 0; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px;">
+<span style="width: 62px; height: 62px; border-radius: 50%; background: {{r.ringBg}}; display: flex; align-items: center; justify-content: center;"><img src="{{r.img}}" alt="" style="display: block; width: 52px; height: 52px; border-radius: 50%; image-rendering: pixelated; background: #08090c;"></span>
+<span style="font-family: 'Silkscreen', monospace; font-size: 9px; color: {{r.fg}}; background: rgba(5,6,8,.82); padding: 1px 5px;">{{r.NAME}}</span>
+</button>
+</sc-if>
+<sc-if value="{{r.empty}}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" style="width: 52px; height: 52px; margin: 5px; box-sizing: border-box; border-radius: 50%; border: 1px dashed #3a3e4a; background: rgba(5,6,8,.6);"></div>
+</sc-if>
+</sc-for>
+</div>
+
+<div style="position: absolute; right: 10px; bottom: 10px; display: flex; gap: 5px; align-items: center;">
+<span class="td-well td-num" style="padding: 4px 9px; font-size: 18px;">{{zoomPct}}</span>
+<button type="button" class="td-key" onClick="{{zoomOut}}" aria-label="Zoom out" style="width: 44px; padding: 0; font-family: 'Archivo', sans-serif; font-size: 20px;">−</button>
+<button type="button" class="td-key" onClick="{{resetView}}" aria-label="Reset view" style="width: 44px; padding: 0; font-family: 'Archivo', sans-serif; font-size: 16px;">○</button>
+<button type="button" class="td-key" onClick="{{zoomIn}}" aria-label="Zoom in" style="width: 44px; padding: 0; font-family: 'Archivo', sans-serif; font-size: 20px;">+</button>
+</div>
+
+<sc-if value="{{hasSel}}" hint-placeholder-val="{{ false }}">
+<div class="td-panel td-cut" style="position: absolute; left: 10px; bottom: 10px; width: 310px; box-sizing: border-box; padding: 13px; display: flex; flex-direction: column; gap: 9px;">
+<div style="display: flex; gap: 12px; align-items: flex-start;">
+<sc-if value="{{selHasImg}}" hint-placeholder-val="{{ true }}"><img src="{{sel.img}}" alt="" style="display: block; width: 62px; height: 62px; flex: none; border-radius: 50%; image-rendering: pixelated; background: #08090c;"></sc-if>
+<div style="flex: 1; min-width: 0;">
+<div style="font-stretch: 75%; font-weight: 700; font-size: 20px; line-height: 1.1; letter-spacing: .03em; color: #ffffff;">{{sel.NAME}}</div>
+<div style="color: #a4a9b5;">{{sel.role}}</div>
+<span class="td-num" style="font-size: 17px;">{{sel.mood}}</span>
+</div>
+<button type="button" class="td-key" onClick="{{clearSel}}" aria-label="Close" style="width: 34px; min-height: 34px; padding: 0; font-family: 'Archivo', sans-serif; font-size: 18px;">×</button>
+</div>
+<div style="color: #d9dbe0;">{{sel.note}}</div>
+<div style="display: flex; gap: 6px;"><a href="#comms" class="td-key" style="color: #e6e7ea;">MESSAGE</a><a href="#codex" class="td-key" style="color: #e6e7ea;">CODEX ENTRY</a></div>
+</div>
+</sc-if>
+</section>
+</div>
+
+<sc-if value="{{ovOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; z-index: 90000; background: linear-gradient(180deg, rgba(5,6,8,.35) 0%, rgba(5,6,8,.82) 55%); display: flex; flex-direction: column; justify-content: flex-end;">
+<div role="dialog" aria-label="Roll" style="background: linear-gradient(180deg, #14161d, #0c0e12); box-shadow: inset 0 1px 0 #f2b544, 0 -24px 60px rgba(0,0,0,.7); padding: 16px 24px 22px; display: flex; flex-direction: column; gap: 16px; clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 0 100%);">
+<div style="display: flex; align-items: center; gap: 14px;">
+<img src="/_blob/213c48191ae973298de3923102fd6c36" alt="" style="width: 40px; height: 40px; border-radius: 50%; image-rendering: pixelated;">
+<span style="font-stretch: 75%; font-weight: 700; font-size: 22px; letter-spacing: .03em; color: #ffffff;">STATIC KOVAČ</span>
+<span class="td-num" style="font-size: 20px;">HOPE {{hope}}</span>
+<button type="button" class="td-key" onClick="{{closeRoll}}" aria-label="Close" style="margin-left: auto; margin-right: 18px; width: 44px; padding: 0; font-family: 'Archivo', sans-serif; font-size: 20px;">×</button>
+</div>
+
+<sc-if value="{{isPick}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+<div style="flex: 999 1 620px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+<div class="td-lbl">1, STAT</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(140px, 45%), 1fr)); gap: 8px;">
+<sc-for list="{{pickKeys}}" as="p" hint-placeholder-count="6">
+<button type="button" class="td-cut" onClick="{{p.pick}}" aria-pressed="{{p.on}}" style="font: inherit; cursor: pointer; text-align: left; color: #e6e7ea; border: 0; padding: 12px 12px 12px 14px; display: flex; flex-direction: column; gap: 4px; background: {{p.bg}}; box-shadow: {{p.shadow}};">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 8px;"><img src="{{p.icon}}" alt="" class="td-amber" style="width: 30px; height: 30px; image-rendering: pixelated;"><span class="td-num" style="font-size: 38px; line-height: .9;">{{p.dieLabel}}</span></span>
+<span style="font-family: 'Silkscreen', monospace; font-size: 12px; color: #ffffff;">{{p.name}}</span>
+<span style="color: #a4a9b5;">{{p.verbT}}</span>
+</button>
+</sc-for>
+</div>
+<div class="td-lbl" style="margin-top: 4px;">2, SKILL IF IT FITS. DIE STEPS UP.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px;">
+<sc-for list="{{pickToggles}}" as="k" hint-placeholder-count="3">
+<button type="button" class="td-cut" onClick="{{k.toggle}}" aria-pressed="{{k.on}}" style="font: inherit; cursor: pointer; color: {{k.fg}}; border: 0; min-height: 44px; padding: 0 16px; background: {{k.bg}}; box-shadow: {{k.shadow}};">{{k.name}}</button>
+</sc-for>
+</div>
+</div>
+<div class="td-well td-cut" style="flex: 1 1 280px; position: relative; min-height: 220px; padding: 16px 18px; display: flex; flex-direction: column; overflow: hidden;">
+<div class="td-lbl">YOU WILL ROLL</div>
+<div class="td-num" style="font-size: 56px; line-height: 1.05; margin-top: 6px; flex: 1;">{{summary}}</div>
+<button type="button" class="td-key td-acc" onClick="{{doRoll}}" disabled="{{noPick}}" style="min-height: 54px; font-size: 15px; position: relative; z-index: 2;">ROLL IT</button>
+<div class="td-scan" aria-hidden="true"></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isStage}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch;">
+<div style="flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; align-items: center; gap: 10px;"><img src="{{cur.icon}}" alt="" class="td-amber" style="width: 32px; height: 32px; image-rendering: pixelated;"><div><div style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ffffff;">{{cur.name}}</div><div style="color: #a4a9b5;">{{cur.verbT}}</div></div></div>
+<div class="td-num" style="font-size: 30px;">{{curDie}}</div>
+<sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="2">
+<div class="td-well" style="display: flex; justify-content: space-between; padding: 3px 10px;"><span class="td-lbl">{{c.tag}}</span><span class="td-num" style="font-size: 20px;">{{c.label}}</span></div>
+</sc-for>
+<sc-if value="{{hasBonus}}" hint-placeholder-val="{{ false }}"><div class="td-well" style="display: flex; justify-content: space-between; padding: 3px 10px;"><span class="td-lbl">SKILL</span><span class="td-num" style="font-size: 20px;">+{{bonus}}</span></div></sc-if>
+<sc-if value="{{hasSpent}}" hint-placeholder-val="{{ false }}"><div class="td-well" style="display: flex; justify-content: space-between; padding: 3px 10px;"><span class="td-lbl">HOPE</span><span class="td-num" style="font-size: 20px;">+{{spent}}</span></div></sc-if>
+</div>
+</sc-if>
+</div>
+<div class="td-well td-cut" style="flex: 999 1 520px; min-width: 0; position: relative; height: 290px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: radial-gradient(ellipse at 50% 50%, rgba(242,181,68,.14), #070808 70%);">
+<sc-if value="{{showRing}}" hint-placeholder-val="{{ false }}"><div class="td-ring" aria-hidden="true"></div></sc-if>
+<div class="{{stageCls}}" aria-live="polite" style="font-family: 'VT323', monospace; font-size: 210px; line-height: 1; color: {{numColor}}; text-shadow: 0 0 26px rgba(242,181,68,.6); filter: blur({{blur}}px);">{{shown}}</div>
+<div style="position: absolute; left: 14px; bottom: 8px; font-family: 'VT323', monospace; font-size: 18px; color: #a98338;">{{noise}}</div>
+<sc-if value="{{exploded}}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: 16px; top: 12px; font-family: 'Silkscreen', monospace; font-size: 13px; letter-spacing: 2px; color: #ffd98a;">EXPLODED, ROLLED AGAIN</div></sc-if>
+<div class="td-scan" aria-hidden="true"></div>
+</div>
+<div style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
+<div class="td-lbl">CLEARS</div>
+<sc-for list="{{ladder}}" as="t" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 12px; background: {{t.bg}}; box-shadow: inset 0 0 0 1px {{t.bd}}; color: {{t.fg}}; font-family: 'Silkscreen', monospace; font-size: 11px;"><span>{{t.NAME}}</span><span style="font-family: 'VT323', monospace; font-size: 22px; line-height: 1;">{{t.n}}</span></div>
+</sc-for>
+<sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: auto; display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px;">
+<button type="button" class="td-key" onClick="{{spendHope}}" disabled="{{noHope}}" style="flex: 1 1 100%;">SPEND HOPE, +1</button>
+<button type="button" class="td-key" onClick="{{again}}" style="flex: 1 1 40%;">NEW ROLL</button>
+<button type="button" class="td-key td-acc" onClick="{{closeRoll}}" style="flex: 1 1 40%;">DONE</button>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","options":["#ff4fa3","#ff6fb5","#e0367f","#b46cff"],"default":"#ff4fa3"},"overlayPreview":{"editor":"enum","options":["closed","pick","result"],"default":"closed"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  state = {
+    zoom: 0.6, px: -12, py: 26, drag: null, tokDrag: null,
+    pos: { static: { x: 556, y: 486 }, bolt: { x: 178, y: 470 }, dax: { x: 480, y: 112 }, c14: { x: 524, y: 694 } },
+    sel: null, phase: 'closed', pick: null, skill: -1, roll: null, shown: '', noise: '', blur: 0, hope: 3, spent: 0
+  };
+
+  componentWillUnmount() { clearInterval(this.t); }
+
+  zMin() { return .45; }
+  zMax() { return 1.6; }
+  tokBase() { return 1.08; }
+  // isometric floor point -> image space. 1 world unit = .866 / .5 here, the bake uses the same numbers.
+  proj(x, y) { return [(x - y) * .8660254 + 732.82, (x + y) * .5 + 170]; }
+  unproj(dx, dy) { return [(dx / .8660254 + dy / .5) / 2, (dy / .5 - dx / .8660254) / 2]; }
+
+  woundRing(wounds, base, hot) {
+    const stops = [];
+    for (let i = 0; i < 6; i++) {
+      const a = i * 60, c = i < wounds ? hot : base;
+      stops.push(c + ' ' + (a + 3) + 'deg ' + (a + 57) + 'deg', 'transparent ' + (a + 57) + 'deg ' + (a + 63) + 'deg');
+    }
+    return 'conic-gradient(' + stops.join(',') + ')';
+  }
+
+  decorate(v, c) {
+    const a = c.accent;
+    v.sheetRing = this.woundRing(2, '#2a2e38', a);
+    v.wounds = v.woundIdx.map((w) => ({ bg: w.on ? a : '#23262e' }));
+    v.hopes = v.hopeIdx.map((h) => ({ bg: h.on ? '#f2b544' : '#23262e' }));
+    const W = { static: 2, bolt: 0, dax: 0, c14: 0 };
+    v.toks = v.tokens.map((t) => Object.assign(t, {
+      ring: t.on ? '#f2b544' : (t.crew ? a : 'rgba(236,238,244,.55)'),
+      pool: t.on ? 'rgba(242,181,68,.2)' : (t.crew ? 'rgba(255,79,163,.2)' : 'rgba(5,6,8,.4)'),
+      glow: t.on ? 'rgba(242,181,68,.6)' : (t.crew ? 'rgba(255,79,163,.45)' : 'transparent'),
+      woundRing: t.crew ? this.woundRing(W[t.id], '#3a3e4a', a) : (t.on ? '#f2b544' : '#3a3e4a'),
+      plateBg: t.on ? '#f2b544' : (t.crew ? 'rgba(5,6,8,.9)' : 'rgba(5,6,8,.78)'),
+      plateFg: t.on ? '#150f02' : '#ffffff'
+    }));
+    const mx = (x, y) => { const s = this.proj(x, y); return 'matrix(.8660254,.5,-.8660254,.5,' + s[0] + ',' + s[1] + ')'; };
+    const my = (x, y) => { const s = this.proj(x, y); return 'matrix(.8660254,-.5,.8660254,.5,' + s[0] + ',' + s[1] + ')'; };
+    v.floorLabels = [
+      { t: 'BAR', m: mx(450, 252) },
+      { t: 'SLOTS. NEVER LOSE.', m: my(118, 650) },
+      { t: 'BOOTHS', m: mx(960, 164) },
+      { t: 'NIGHT MARKET', m: mx(530, 716) }
+    ];
+    const sel = this.state.sel;
+    v.rail = [
+      { id: 'static', name: 'Static', NAME: 'STATIC', img: '/_blob/213c48191ae973298de3923102fd6c36', w: 2 },
+      { id: 'bolt', name: 'BOLT-7', NAME: 'BOLT-7', img: '/_blob/2d33a2c80f68931a5ff6a69e3d792f5d', w: 0 },
+      { id: 's3' }, { id: 's4' }, { id: 's5' }
+    ].map((r) => {
+      if (!r.img) return { filled: false, empty: true, name: '', NAME: '', img: '', fg: '', ringBg: '' };
+      return Object.assign(r, { filled: true, empty: false, fg: sel === r.id ? '#f2b544' : '#ffffff', ringBg: this.woundRing(r.w, '#3a3e4a', a), select: () => this.setState({ sel: r.id }) });
+    });
+    v.pickKeys = v.pickStats.map((p) => Object.assign(p, {
+      bg: p.on ? 'linear-gradient(180deg,#2a2518,#17150f)' : 'linear-gradient(180deg,#1b1d24,#14161c)',
+      shadow: p.on ? 'inset 0 0 0 1px #f2b544,inset 0 0 22px rgba(242,181,68,.12)' : 'inset 0 0 0 1px #2a2e38'
+    }));
+    v.pickToggles = v.pickSkills.map((k) => Object.assign(k, {
+      fg: k.on ? '#150f02' : '#e6e7ea',
+      bg: k.on ? '#f2b544' : '#14161c',
+      shadow: k.on ? 'none' : 'inset 0 0 0 1px #2a2e38'
+    }));
+    v.numColor = c.phase === 'rolling' ? '#b98c3a' : (c.exploded ? '#ffe0a0' : '#f2b544');
+    v.chips = v.chips.map((ch, i) => Object.assign(ch, { tag: i ? 'REROLL' : 'FIRST DIE' }));
+    v.ladder = v.tiers.slice().reverse().map((t) => {
+      const show = c.done;
+      return Object.assign(t, {
+        bg: show && t.best ? 'rgba(242,181,68,.16)' : '#0f1116',
+        bd: show && t.best ? '#f2b544' : '#23262e',
+        fg: show && t.met ? '#f2b544' : '#a4a9b5'
+      });
+    });
+    return v;
+  }
+
+
+  stats() {
+    return [
+      { name: 'BODY', title: 'Body', die: 6, color: '#ff8a55', glow: 'rgba(255,122,69,.34)', icon: '/_blob/ab5542af3a6f3778560c4d079a5eedf2', verb: 'FORCE IT', verbT: 'Force it', mode: 'slam' },
+      { name: 'REFLEX', title: 'Reflex', die: 8, color: '#ffd166', glow: 'rgba(255,210,63,.28)', icon: '/_blob/b859f95b3bb63536427ebee0099d3411', verb: 'DODGE IT', verbT: 'Dodge it', mode: 'reel' },
+      { name: 'TECH', title: 'Tech', die: 20, color: '#5ff2ff', glow: 'rgba(63,240,255,.3)', icon: '/_blob/58cdb020e382f0b55acc2d7729ad26d8', verb: 'HACK IT', verbT: 'Hack it', mode: 'decrypt' },
+      { name: 'INTEL', title: 'Intel', die: 12, color: '#9dbdff', glow: 'rgba(122,168,255,.3)', icon: '/_blob/884b6974e45c14875f8d76368ffe80d3', verb: 'SOLVE IT', verbT: 'Solve it', mode: 'solve' },
+      { name: 'COOL', title: 'Cool', die: 10, color: '#c79bff', glow: 'rgba(180,108,255,.32)', icon: '/_blob/5c46989605ebeb1dae4f2a93e6c9bf78', verb: 'FAKE IT', verbT: 'Fake it', mode: 'fade' },
+      { name: 'EMPATHY', title: 'Empathy', die: 4, color: '#ff7dbc', glow: 'rgba(255,79,163,.32)', icon: '/_blob/d258ec57892bf54c385051baf8bc093a', verb: 'READ IT', verbT: 'Read it', mode: 'pulse' }
+    ];
+  }
+
+  // real polyhedral outlines, so a die is a shape and not the text "d20"
+  dieShape(sides) {
+    const S = {
+      4: { o: '50,9 93,84 7,84', f: 'M50 9L50 58M7 84L50 58M93 84L50 58' },
+      6: { o: '14,14 86,14 86,86 14,86', f: 'M24 24L76 24L76 76L24 76Z' },
+      8: { o: '50,5 91,50 50,95 9,50', f: 'M9 50L91 50M50 5L34 50M50 5L66 50M50 95L34 50M50 95L66 50' },
+      10: { o: '50,5 93,44 50,95 7,44', f: 'M7 44L50 60L93 44M50 60L50 95M50 5L30 40L50 60L70 40L50 5' },
+      12: { o: '50,4 94,36 77,90 23,90 6,36', f: 'M50 24L72 41L64 70L36 70L28 41ZM50 4L50 24M94 36L72 41M77 90L64 70M23 90L36 70M6 36L28 41' },
+      20: { o: '50,3 91,27 91,73 50,97 9,73 9,27', f: 'M50 27L74 67L26 67ZM50 3L50 27M91 27L50 27M9 27L50 27M91 27L74 67M9 27L26 67M91 73L74 67M9 73L26 67M50 97L74 67M50 97L26 67' }
+    };
+    return S[sides] || S[20];
+  }
+
+  effective(stat, skill) {
+    const steps = [4, 6, 8, 10, 12, 20];
+    const i = steps.indexOf(stat.die);
+    if (skill < 0) return { sides: stat.die, bonus: 0 };
+    if (i === steps.length - 1) return { sides: stat.die, bonus: 2 };
+    return { sides: steps[i + 1], bonus: 0 };
+  }
+
+  startRoll() {
+    const stat = this.stats().find((s) => s.name === this.state.pick) || (this.props.overlayPreview === 'pick' ? this.stats()[2] : null);
+    if (!stat) return;
+    const eff = this.effective(stat, this.state.skill);
+    const rolls = [];
+    let r, guard = 0;
+    do { r = 1 + Math.floor(Math.random() * eff.sides); rolls.push(r); guard++; } while (r === eff.sides && guard < 6);
+    const total = rolls.reduce((a, b) => a + b, 0) + eff.bonus;
+    const finalStr = String(total);
+    const cfg = { slam: [40, 24], reel: [34, 36], decrypt: [45, 30], solve: [50, 28], fade: [50, 26], pulse: [110, 12] }[stat.mode];
+    const glyphs = stat.mode === 'solve' ? '∑∫π√∆λθ∞≈±' : '#%&@?!01ABCDEF/<>*';
+    let tick = 0;
+    clearInterval(this.t);
+    this.setState({ phase: 'rolling', pick: stat.name, roll: { stat: stat.name, sides: eff.sides, bonus: eff.bonus, rolls, total }, spent: 0, shown: '··', blur: stat.mode === 'fade' ? 14 : 0 });
+    this.t = setInterval(() => {
+      tick++;
+      const N = cfg[1];
+      let s;
+      if (stat.mode === 'decrypt' || stat.mode === 'solve') {
+        s = finalStr.split('').map((ch, i) => (tick > N * (0.55 + 0.35 * (i + 1) / finalStr.length) ? ch : glyphs[Math.floor(Math.random() * glyphs.length)])).join('');
+      } else if (stat.mode === 'fade') {
+        s = finalStr;
+      } else {
+        s = String(1 + Math.floor(Math.random() * eff.sides));
+      }
+      let noise = '';
+      const hx = '0123456789abcdef';
+      for (let k = 0; k < 16; k++) noise += hx[Math.floor(Math.random() * 16)];
+      if (tick >= N) {
+        clearInterval(this.t);
+        this.setState({ phase: 'done', shown: finalStr, noise: '', blur: 0 });
+      } else {
+        this.setState({ shown: s, noise: stat.mode === 'pulse' ? '♥ · · ♥ · ·' : 'entropy 0x' + noise, blur: stat.mode === 'fade' ? Math.max(0, 14 * (1 - tick / N)) : 0 });
+      }
+    }, cfg[0]);
+  }
+
+  renderVals() {
+    const accent = this.props.accent ?? '#ff4fa3';
+    const st = this.state;
+    const S = this.stats();
+    const preview = this.props.overlayPreview ?? 'closed';
+    let phase = st.phase;
+    let pick = st.pick;
+    let roll = st.roll;
+    const untouched = st.phase === 'closed' && !this.opened;
+    if (untouched && preview === 'pick') { phase = 'pick'; pick = pick || 'TECH'; }
+    if (untouched && preview === 'result') { phase = 'done'; pick = 'TECH'; roll = { stat: 'TECH', sides: 20, bonus: 0, rolls: [20, 7], total: 27 }; }
+    const clampZ = (z) => Math.min(this.zMax(), Math.max(this.zMin(), z));
+    const dieLabel = (d) => 'd' + d;
+    const skills = [
+      { name: 'Talks to machines like dogs', when: 'Coaxing, calming or commanding a machine' },
+      { name: 'Owes money on three worlds', when: 'Dealing with fences, debts and crooks' },
+      { name: 'Never reads the manual', when: 'Improvising with tech you have never seen' }
+    ];
+    const picked = S.find((s) => s.name === pick);
+    const eff = picked ? this.effective(picked, st.skill) : null;
+    let summary = 'PICK A STAT';
+    if (picked) {
+      summary = picked.name + ' ' + dieLabel(picked.die);
+      if (st.skill >= 0) summary += eff.bonus ? ' +' + eff.bonus : ' → ' + dieLabel(eff.sides);
+    }
+    const cur = S.find((s) => s.name === (roll ? roll.stat : pick)) || S[2];
+    const done = phase === 'done';
+    const exploded = done && roll && roll.rolls.length > 1;
+    const modeCls = { slam: 'a-slam', reel: 'a-reel', decrypt: 'a-decrypt', solve: 'a-decrypt', fade: 'a-none', pulse: 'a-none' }[cur.mode];
+    const tokDefs = [
+      { id: 'static', name: 'Static', NAME: 'STATIC', img: '/_blob/213c48191ae973298de3923102fd6c36', crew: true, role: 'Crew, contractor', mood: 'YOU', note: 'Splice window opens at 22:00. Vault 3 is up the exec lift.' },
+      { id: 'bolt', name: 'BOLT-7', NAME: 'BOLT-7', img: '/_blob/2d33a2c80f68931a5ff6a69e3d792f5d', crew: true, role: 'Crew, machine mind', mood: 'CREW', note: 'Has been watching the slot machines for forty minutes. Says the payouts form a pattern.' },
+      { id: 'dax', name: 'Old Dax', NAME: 'OLD DAX', img: '/_blob/b19918c021ed3bc44c55462abb617643', crew: false, role: 'Barkeep', mood: 'FRIENDLY', note: 'Has run The Event Horizon for nineteen years. Swears the slots used to lose sometimes.' },
+      { id: 'c14', name: 'Cleaner Unit 14', NAME: 'CLEANER UNIT 14', img: '/_blob/951bc89c9f43d5bd45ce3864bfe44fd3', crew: false, role: 'Cleaner bot, station', mood: 'BUSY', note: 'Has cleaned table 3 every four minutes since you arrived. Table 3 is already clean.' }
+    ];
+    const kiosk = { id: 'kiosk', name: 'Concierge kiosk', NAME: 'CONCIERGE KIOSK', img: '', role: 'Station assistant', mood: 'DELIGHTED TO HELP', note: 'Station satisfaction is 99.97%. Would you like a recommendation?' };
+    const selDef = st.sel === 'kiosk' ? kiosk : tokDefs.find((t) => t.id === st.sel);
+    const tierDefs = [{ name: 'Easy', n: 4 }, { name: 'Normal', n: 7 }, { name: 'Hard', n: 10 }, { name: 'Heroic', n: 14 }];
+    const total = roll ? roll.total + st.spent : 0;
+    const best = tierDefs.filter((t) => total >= t.n).pop();
+    const scaleMax = 24;
+    const tscale = Math.min(1.9, Math.max(.8, this.tokBase() / st.zoom));
+    const kp = this.proj(791, 640);
+    const v = {
+      accent,
+      hope: st.hope,
+      hopeIdx: [0, 1, 2, 3, 4].map((i) => ({ on: i < st.hope })),
+      woundIdx: [0, 1, 2, 3, 4, 5].map((i) => ({ on: i < 2 })),
+      sheetStats: S.map((s) => {
+        const sh = this.dieShape(s.die);
+        return { name: s.name, title: s.title, verbT: s.verbT, verb: s.verb, icon: s.icon, color: s.color, dieLabel: dieLabel(s.die), o: sh.o, f: sh.f, open: () => { this.opened = true; this.setState({ phase: 'pick', pick: s.name, skill: -1 }); } };
+      }),
+      skills,
+      chrome: [
+        { name: 'Optic-9 cyber-eye', does: 'Thermal, zoom, reads faces', icon: '/_blob/884b6974e45c14875f8d76368ffe80d3', cost: '−1', costOn: true },
+        { name: 'Skull port', does: 'Direct jack into any terminal', icon: '/_blob/1f549e2b34b2ad546a6d60e52e386a7b', cost: '−1', costOn: true },
+        { name: 'Grip-servo hand', does: 'Crushes, holds, never shakes', icon: '/_blob/9f2e0485ff9731cbb50aa9dbe29fc2c2', cost: '0', costOn: false }
+      ],
+      items: [
+        { name: 'Splice kit', kind: 'TOOL', kindT: 'Tool', icon: '/_blob/47a76d144769357491ddb844cfaa3a4c' },
+        { name: 'EVAL_REPORT_v12', kind: 'CLUE', kindT: 'Clue', icon: '/_blob/58cdb020e382f0b55acc2d7729ad26d8' },
+        { name: 'Vault 3 access chit', kind: 'KEY', kindT: 'Key', icon: '/_blob/9ffcfac4df88652126b7c0d412972d6e' },
+        { name: '140 credits', kind: 'CASH', kindT: 'Cash', icon: '/_blob/635d7440ba836b9e46d2e1e80b2d1f66' }
+      ],
+      tokens: tokDefs.map((t) => {
+        const p = st.pos[t.id];
+        const on = st.sel === t.id;
+        const s = this.proj(p.x, p.y);
+        return {
+          id: t.id, name: t.name, NAME: t.NAME, img: t.img, crew: t.crew, on, x: s[0], y: s[1], scale: tscale, z: Math.round(s[1]),
+          down: (e) => { e.stopPropagation(); this.setState({ tokDrag: { id: t.id, sx: e.clientX, sy: e.clientY, ox: p.x, oy: p.y } }); },
+          select: () => { if (this.dragged) { this.dragged = false; return; } this.setState({ sel: t.id }); }
+        };
+      }),
+      kx: kp[0], ky: kp[1], kscale: tscale, kioskOn: st.sel === 'kiosk',
+      selKiosk: () => this.setState({ sel: 'kiosk' }),
+      hasSel: !!selDef,
+      sel: selDef ? Object.assign({}, selDef) : { name: '', NAME: '', role: '', mood: '', note: '', img: '' },
+      selHasImg: !!(selDef && selDef.img), selNoImg: !!(selDef && !selDef.img),
+      clearSel: () => this.setState({ sel: null }),
+      worldTransform: 'translate(' + st.px + 'px, ' + st.py + 'px) scale(' + st.zoom + ')',
+      zoomPct: Math.round(st.zoom * 100) + '%',
+      cursor: st.drag ? 'grabbing' : 'grab',
+      onDown: (e) => { if (e.target.closest && e.target.closest('button')) return; this.setState({ drag: { x: e.clientX, y: e.clientY, px: st.px, py: st.py } }); },
+      onMove: (e) => {
+        const td = this.state.tokDrag;
+        if (td) {
+          const z = this.state.zoom;
+          const d = this.unproj((e.clientX - td.sx) / z, (e.clientY - td.sy) / z);
+          if (Math.abs(d[0]) + Math.abs(d[1]) > 3) this.dragged = true;
+          const pos = Object.assign({}, this.state.pos);
+          pos[td.id] = { x: Math.round(td.ox + d[0]), y: Math.round(td.oy + d[1]) };
+          this.setState({ pos });
+          return;
+        }
+        const d = this.state.drag;
+        if (!d) return;
+        this.setState({ px: d.px + (e.clientX - d.x), py: d.py + (e.clientY - d.y) });
+      },
+      onUp: () => { if (this.state.drag || this.state.tokDrag) this.setState({ drag: null, tokDrag: null }); },
+      onWheel: (e) => { this.setState({ zoom: clampZ(this.state.zoom * (e.deltaY < 0 ? 1.1 : 0.9)) }); },
+      zoomIn: () => this.setState({ zoom: clampZ(st.zoom * 1.2) }),
+      zoomOut: () => this.setState({ zoom: clampZ(st.zoom / 1.2) }),
+      resetView: () => this.setState({ zoom: 0.6, px: -12, py: 26 }),
+      ovOpen: phase !== 'closed',
+      isPick: phase === 'pick',
+      isStage: phase === 'rolling' || phase === 'done',
+      isRolling: phase === 'rolling',
+      isDone: done,
+      openRoll: () => { this.opened = true; this.setState({ phase: 'pick', pick: null, skill: -1 }); },
+      closeRoll: () => { this.opened = true; clearInterval(this.t); this.setState({ phase: 'closed' }); },
+      again: () => { this.opened = true; this.setState({ phase: 'pick', skill: -1, pick: cur.name }); },
+      pickStats: S.map((s, i) => {
+        const on = s.name === pick;
+        const sh = this.dieShape(s.die);
+        return {
+          name: s.name, title: s.title, icon: s.icon, color: s.color, verb: s.verb, verbT: s.verbT, dieLabel: dieLabel(s.die), o: sh.o, f: sh.f, on, off: !on, idx: i,
+          pick: () => { this.opened = true; this.setState({ pick: s.name, phase: 'pick' }); }
+        };
+      }),
+      pickSkills: skills.map((k, i) => ({
+        name: k.name, when: k.when, on: st.skill === i, off: st.skill !== i,
+        toggle: () => { this.opened = true; this.setState({ skill: st.skill === i ? -1 : i, phase: 'pick', pick: pick }); }
+      })),
+      summary,
+      hasPick: !!picked,
+      noPick: !picked,
+      pickedTitle: picked ? picked.title : '',
+      pickedVerb: picked ? picked.verbT : '',
+      effDie: eff ? dieLabel(eff.sides) + (eff.bonus ? ' +' + eff.bonus : '') : '',
+      pickedIdx: picked ? S.indexOf(picked) : -1,
+      doRoll: () => { this.opened = true; if (!this.state.pick) this.state.pick = pick; this.startRoll(); },
+      cur,
+      curDie: roll ? dieLabel(roll.sides) + (roll.bonus ? ' +' + roll.bonus : '') : '',
+      curShape: this.dieShape(roll ? roll.sides : cur.die),
+      stageCls: phase === 'rolling' ? modeCls : 'a-land',
+      showRing: phase === 'rolling' && cur.mode === 'pulse',
+      blur: phase === 'rolling' ? st.blur : 0,
+      shown: done && roll ? String(total) : st.shown,
+      noise: phase === 'rolling' ? st.noise : '',
+      exploded,
+      chips: roll ? roll.rolls.map((val, i) => {
+        const sh = this.dieShape(roll.sides);
+        return { v: val, star: val === roll.sides, plain: val !== roll.sides, plus: i > 0, label: val === roll.sides ? val + '★' : String(val), o: sh.o, f: sh.f };
+      }) : [],
+      hasBonus: !!(roll && roll.bonus), bonus: roll ? roll.bonus : 0,
+      hasSpent: st.spent > 0, spent: st.spent,
+      total,
+      tiers: tierDefs.map((t) => ({ name: t.name, NAME: t.name.toUpperCase(), n: t.n, met: total >= t.n, unmet: total < t.n, best: best === t, pos: (t.n / scaleMax * 100) })),
+      bestName: best ? best.name : '',
+      bestNAME: best ? best.name.toUpperCase() : 'BELOW EASY',
+      markPos: Math.min(100, total / scaleMax * 100),
+      noHope: st.hope <= 0,
+      spendHope: () => { if (this.state.hope > 0) { this.opened = true; this.setState({ hope: this.state.hope - 1, spent: this.state.spent + 1, phase: 'done', roll: roll, pick: pick }); } }
+    };
+    return this.decorate(v, { st, cur, phase, done, exploded, roll, picked, accent });
+  }
+}
+
+</script>
+</body>
+</html>

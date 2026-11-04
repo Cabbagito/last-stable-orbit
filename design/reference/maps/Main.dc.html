@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Event Horizon</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+.m-map{position:absolute;left:0;top:0;width:2560px;height:1440px;display:block;pointer-events:none;user-select:none;image-rendering:pixelated;transition:opacity .7s ease}
+.m-glow{position:absolute;left:0;top:0;width:2560px;height:1440px;pointer-events:none;mix-blend-mode:screen;transition:opacity .7s ease}
+.m-hum{display:block;width:2560px;height:1440px;user-select:none;animation:m-hum 7s linear infinite}
+.m-gas{transition:opacity 2.4s ease}
+@keyframes m-hum{0%,100%{opacity:1}38%{opacity:1}38.6%{opacity:.62}39.2%{opacity:.96}40%{opacity:.74}40.8%{opacity:1}76%{opacity:.9}84%{opacity:1}}
+.m-tok{position:absolute;width:64px;height:100px;margin:-94px 0 0 -32px;background:none;border:0;padding:0;cursor:grab;font:inherit;transform-origin:32px 94px}
+.m-key{font-family:'Silkscreen',monospace;font-size:11px;color:#ece8f2;background:#14121a;border:1px solid #3a3446;padding:0 12px;height:44px;min-width:44px;cursor:pointer}
+.m-key:hover{background:#221e2a}
+</style>
+</helmet>
+<div style="position: relative; width: 100%; height: 900px; overflow: hidden; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
+<div onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onUp}}" onWheel="{{onWheel}}" style="position: absolute; inset: 0; cursor: {{cursor}}; touch-action: none;">
+<div style="position: absolute; left: 0; top: 0; width: 2560px; height: 1440px; isolation: isolate; transform-origin: 0 0; transform: {{worldTransform}};">
+<div role="img" aria-label="The Event Horizon seen from above at an angle: a long bar with amber shelves of bottles under a neon sign, four white slot machines in a nook, round tables, red leather booths, a gold mural of a man and his daughter over an old round table behind a brass rail, a door to the street with lanterns, and a stockroom with kegs."></div>
+<sc-for list="{{bases}}" as="b" hint-placeholder-count="3">
+<img class="m-map" src="{{b.src}}" alt="" draggable="false" style="opacity: {{b.op}};">
+</sc-for>
+<sc-for list="{{patches}}" as="b" hint-placeholder-count="2">
+<img class="m-map" src="{{b.src}}" alt="" draggable="false" style="opacity: {{b.op}};">
+</sc-for>
+<sc-for list="{{glows}}" as="b" hint-placeholder-count="3">
+<div class="m-glow" style="opacity: {{b.op}};"><img class="m-hum" src="{{b.src}}" alt="" draggable="false"></div>
+</sc-for>
+<sc-for list="{{gases}}" as="b" hint-placeholder-count="3">
+<img class="m-map m-gas" src="{{b.src}}" alt="" draggable="false" style="opacity: {{b.op}};"></sc-for>
+<sc-for list="{{toks}}" as="t" hint-placeholder-count="16">
+<button type="button" class="m-tok" onPointerDown="{{t.down}}" onClick="{{t.select}}" aria-label="{{t.name}}" style="left: {{t.x}}px; top: {{t.y}}px; transform: scale({{t.scale}}); z-index: {{t.z}};">
+<span style="position: absolute; left: 50%; bottom: 0; width: 40px; height: 20px; margin-left: -20px; border-radius: 50%; box-sizing: border-box; border: 2px solid {{t.col}}; background: rgba(0,0,0,.35);"></span>
+<span style="position: absolute; left: 50%; bottom: 10px; width: 2px; height: 34px; margin-left: -1px; background: {{t.col}};"></span>
+<span style="position: absolute; left: 4px; top: 0; width: 56px; height: 56px; border-radius: 50%; overflow: hidden; background: #09080c; box-shadow: 0 0 0 2px {{t.col}}, 0 3px 8px rgba(0,0,0,.7);">
+<img src="{{t.img}}" alt="" draggable="false" style="position: absolute; left: -7px; top: -1px; width: 70px; height: 70px; max-width: none; pointer-events: none;">
+</span>
+<sc-if value="{{t.showName}}" hint-placeholder-val="{{ false }}">
+<span style="position: absolute; left: 66px; top: 20px; font-family: 'Silkscreen', monospace; font-size: 10px; color: #ffffff; background: rgba(5,6,8,.88); padding: 3px 7px; white-space: nowrap;">{{t.NAME}}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="position: absolute; left: 12px; top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ffffff; background: rgba(5,6,8,.88); padding: 0 12px; height: 44px; display: flex; align-items: center;">THE EVENT HORIZON</div>
+<button type="button" class="m-key" onClick="{{zoomOut}}" aria-label="Zoom out">-</button>
+<button type="button" class="m-key" onClick="{{zoomIn}}" aria-label="Zoom in">+</button>
+<button type="button" class="m-key" onClick="{{fit}}">FIT</button>
+<button type="button" class="m-key" onClick="{{toggleNames}}">NAMES</button>
+<sc-for list="{{moodBtns}}" as="b" hint-placeholder-count="3">
+<button type="button" class="m-key" onClick="{{b.pick}}" style="background: {{b.bg}}; color: {{b.fg}};">{{b.label}}</button>
+</sc-for>
+<sc-if value="{{isAfter}}" hint-placeholder-val="{{ false }}">
+<button type="button" class="m-key" onClick="{{toggleBox}}" style="background: {{boxBg}}; color: {{boxFg}};">SEAL'S BOX</button>
+</sc-if>
+<sc-if value="{{isStand}}" hint-placeholder-val="{{ false }}">
+<button type="button" class="m-key" onClick="{{toggleHatch}}" style="background: {{hatchBg}}; color: {{hatchFg}};">HATCH</button>
+<button type="button" class="m-key" onClick="{{nextGas}}">GAS {{gas}}</button>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  state = { px: 0, py: 45, zoom: .5625, pos: {}, drag: null, tokDrag: null, sel: null, names: false, mood: 'open', box: false, hatch: false, gas: 0 };
+
+  proj(X, Y, Z) { return [((X - Y) * 30 + 536) * 2, ((X + Y) * 15 - Z * 36 + 201) * 2]; }
+
+  defs() {
+    const S = 2.8, T = 3.7, D = .24, R = 1.62;
+    const seat = (a) => [S + R * Math.cos(a * Math.PI / 180), T + R * Math.sin(a * Math.PI / 180), D];
+    return [
+      { id: 'fixer', name: 'The fixer', img: '/_blob/2b1a067acd9401d34b3bf9c168b7e0cb', col: '#ff5a4a', at: seat(-30) },
+      { id: 'lale', name: 'Lale', img: '/_blob/bf086769fdeeb5815c8bb26655c27de8', col: '#ff4fa3', at: seat(30) },
+      { id: 'marlo', name: 'Marlo', img: '/_blob/89e77d4081ac45a581d0deab2125331d', col: '#ff4fa3', at: seat(90) },
+      { id: 'tally', name: 'Tally', img: '/_blob/33e082d9f196e64d462f147828f1070c', col: '#ff4fa3', at: seat(150) },
+      { id: 'ves', name: 'Ves', img: '/_blob/8935375f70d3e50fdacbe2628025b6e0', col: '#ff4fa3', at: seat(210) },
+      { id: 'tomo', name: 'Tomo', img: '/_blob/0516ced15d3d4704cb408bc93a529fef', col: '#ff4fa3', at: seat(270) },
+      { id: 'dax', name: 'Old Dax', img: '/_blob/3e7fe7dfb7f468fe7a215011e890951f', col: '#f2b544', at: [11.6, 1.05, 0] },
+      { id: 'c14', name: 'Cleaner Unit 14', img: '/_blob/2e2ccea94bad777dcf618a96955ecdaf', col: '#c9bcff', at: [6.3, 5.4, 0] },
+      { id: 'regular', name: 'Slot regular', img: '/_blob/4bf44a35c33e7cea71fdc61e08de68b2', col: '#c9bcff', at: [-.86, 10.35, 0] },
+      { id: 'resident', name: 'Happy resident', img: '/_blob/5322e3c4d1540b2c913df44d8910c780', col: '#8f88a3', at: [12.1, 7.3, 0] },
+      { id: 'vendor', name: 'Night Market vendor', img: '/_blob/4623f7851bb0115bdb1c7fb5a7fa17d8', col: '#8f88a3', at: [16.2, 8.9, 0] },
+      { id: 'clerk', name: 'Dock 7 clerk', img: '/_blob/94537b20b4eb11a4cff4b2a05191b270', col: '#8f88a3', at: [9.4, 3.95, 0] },
+      { id: 'droid', name: 'Service droid', img: '/_blob/70eb1d72152cdc6852ad196fa2bc8ab9', col: '#c9bcff', at: [9.6, 7.9, 0] },
+      { id: 'steward', name: 'Patience steward', img: '/_blob/3d54725d392d8fdae4742a4c0925b98b', col: '#8f88a3', at: [14.1, 3.95, 0] },
+      { id: 'nurse', name: 'Med Bay nurse', img: '/_blob/080fd1ed3d22da65e7f18a9214ade791', col: '#c9bcff', at: [6.9, 11.2, 0] },
+      { id: 'gun', name: 'Hired gun', img: '/_blob/b973adbc5e5ed1657eb66ec462918892', col: '#ff5a4a', at: [16.2, 11.1, 0] }
+    ];
+  }
+
+  zoomAt(z, cx, cy) {
+    const st = this.state;
+    const nz = Math.min(3, Math.max(.4, z));
+    const k = nz / st.zoom;
+    this.setState({ zoom: nz, px: cx - (cx - st.px) * k, py: cy - (cy - st.py) * k });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const scale = Math.min(1.35, Math.max(.8, .8 / st.zoom));
+    const toks = this.defs().map((d) => {
+      const home = this.proj(d.at[0], d.at[1], d.at[2]);
+      const p = st.pos[d.id] || { x: home[0], y: home[1] };
+      return {
+        name: d.name, NAME: d.name.toUpperCase(), img: d.img, col: d.col, x: p.x, y: p.y, z: Math.round(p.y),
+        scale: scale, showName: st.names || st.sel === d.id,
+        down: (e) => { e.stopPropagation(); this.dragged = false; this.setState({ tokDrag: { id: d.id, sx: e.clientX, sy: e.clientY, ox: p.x, oy: p.y } }); },
+        select: () => { if (!this.dragged) this.setState({ sel: st.sel === d.id ? null : d.id }); }
+      };
+    });
+    const on = (c) => (c ? 1 : 0);
+    const IMG = {
+      open: ['/_blob/6d77cc9b170e9047c637ce4ba8bc1e31', '/_blob/72fa38d907ef0dbd4cc9e97644c937c0'],
+      after: ['/_blob/4965f74fff3c969d0d7a453b7646a840', '/_blob/08030bf4cec8312f65df0ee9b9526b72'],
+      stand: ['/_blob/9038079d83e956367552ca9d61f0a19f', '/_blob/982bcd859cd286b4917817ed33fefee8']
+    };
+    const ids = ['open', 'after', 'stand'];
+    const labels = { open: 'OPEN', after: 'AFTER HOURS', stand: 'LAST STAND' };
+    const lit = (c) => (c ? ['#ff4fa3', '#09080c'] : ['#14121a', '#ece8f2']);
+    const gasSrc = ['/_blob/bbd777f48fa50c407056f2bc4890d8d2', '/_blob/81b446fbd6a0d90989fcb7c33e90fb17', '/_blob/bfae8b7f77913378ff544a34f534377a'];
+    return {
+      toks,
+      bases: ids.map((m) => ({ src: IMG[m][0], op: on(st.mood === m) })),
+      glows: ids.map((m) => ({ src: IMG[m][1], op: on(st.mood === m) })),
+      patches: [
+        { src: '/_blob/58636de4d3b67ffca61852a1eb015fa6', op: on(st.mood === 'after' && st.box) },
+        { src: '/_blob/c59a7cd8acef218de240cee99e81b854', op: on(st.mood === 'stand' && st.hatch) }
+      ],
+      gases: gasSrc.map((src, i) => ({ src, op: on(st.mood === 'stand' && st.gas === i + 1) })),
+      moodBtns: ids.map((m) => ({ label: labels[m], bg: lit(st.mood === m)[0], fg: lit(st.mood === m)[1], pick: () => this.setState({ mood: m }) })),
+      isAfter: st.mood === 'after', isStand: st.mood === 'stand', gas: st.gas,
+      boxBg: lit(st.box)[0], boxFg: lit(st.box)[1], hatchBg: lit(st.hatch)[0], hatchFg: lit(st.hatch)[1],
+      toggleBox: () => this.setState({ box: !st.box }),
+      toggleHatch: () => this.setState({ hatch: !st.hatch }),
+      nextGas: () => this.setState({ gas: (st.gas + 1) % 4 }),
+      worldTransform: 'translate(' + st.px + 'px, ' + st.py + 'px) scale(' + st.zoom + ')',
+      cursor: st.drag ? 'grabbing' : 'grab',
+      onDown: (e) => { this.setState({ drag: { x: e.clientX, y: e.clientY, px: st.px, py: st.py } }); },
+      onMove: (e) => {
+        const td = this.state.tokDrag;
+        if (td) {
+          const z = this.state.zoom;
+          const dx = (e.clientX - td.sx) / z, dy = (e.clientY - td.sy) / z;
+          if (Math.abs(dx) + Math.abs(dy) > 3) this.dragged = true;
+          const pos = Object.assign({}, this.state.pos);
+          pos[td.id] = { x: Math.round(td.ox + dx), y: Math.round(td.oy + dy) };
+          this.setState({ pos });
+          return;
+        }
+        const d = this.state.drag;
+        if (!d) return;
+        this.setState({ px: d.px + e.clientX - d.x, py: d.py + e.clientY - d.y });
+      },
+      onUp: () => { if (this.state.drag || this.state.tokDrag) this.setState({ drag: null, tokDrag: null }); },
+      onWheel: (e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        this.zoomAt(this.state.zoom * Math.exp(-e.deltaY * .0015), e.clientX - r.left, e.clientY - r.top);
+      },
+      zoomIn: () => this.zoomAt(st.zoom * 1.3, 720, 450),
+      zoomOut: () => this.zoomAt(st.zoom / 1.3, 720, 450),
+      fit: () => this.setState({ px: 0, py: 45, zoom: .5625 }),
+      toggleNames: () => this.setState({ names: !st.names })
+    };
+  }
+}
+</script>
+</body>
+</html>

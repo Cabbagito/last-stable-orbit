@@ -1,0 +1,200 @@
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { proj, unproj } from '../lib/proj'
+import { plainRing, ring } from '../lib/ring'
+import { send, useGame } from '../store/game'
+import type { MapView as MapDef, TokenView, Vec3 } from '../types'
+import { RingPortrait } from '../shell/RingPortrait'
+
+interface Cam {
+  px: number
+  py: number
+  zoom: number
+}
+
+type Gesture =
+  | { kind: 'pan'; sx: number; sy: number; px: number; py: number; moved: boolean; pressed: string | null }
+  | { kind: 'tok'; token: string; sx: number; sy: number; ox: number; oy: number; z: number; moved: boolean; last: number; at: Vec3 }
+
+const ZMIN = 0.3
+const ZMAX = 3
+const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
+const DRAG_HZ = 50 // ms between live drag frames
+
+/** One isometric map: art layers per mood and switch, tokens on top, pan / zoom / drag. */
+export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenView[]; canMove: (t: TokenView) => boolean }) {
+  const box = useRef<HTMLDivElement>(null)
+  const [size, setSize] = useState<[number, number]>([0, 0])
+  const [cam, setCam] = useState<Cam | null>(null)
+  const fittedFor = useRef<string | null>(null)
+  const gesture = useRef<Gesture | null>(null)
+  const remote = useGame((s) => s.remote)
+  const local = useGame((s) => s.local)
+  const selected = useGame((s) => s.selected)
+  const select = useGame((s) => s.select)
+  const setLocal = useGame((s) => s.setLocal)
+  const crewList = useGame((s) => s.view?.crew)
+  const [W, H] = map.display
+
+  useLayoutEffect(() => {
+    const el = box.current
+    if (!el) return
+    const ro = new ResizeObserver(([e]) => setSize([e.contentRect.width, e.contentRect.height]))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  const fit = useCallback(() => {
+    const [w, h] = size
+    if (!w || !h) return
+    const zoom = clamp(Math.min(w / W, h / H), ZMIN, ZMAX)
+    setCam({ zoom, px: (w - W * zoom) / 2, py: (h - H * zoom) / 2 })
+  }, [size, W, H])
+
+  useEffect(() => {
+    if (size[0] && fittedFor.current !== map.id) {
+      fittedFor.current = map.id
+      fit()
+    }
+  }, [size, map.id, fit])
+
+  const zoomAt = (z: number, cx: number, cy: number) =>
+    setCam((c) => {
+      if (!c) return c
+      const nz = clamp(z, ZMIN, ZMAX)
+      const k = nz / c.zoom
+      return { zoom: nz, px: cx - (cx - c.px) * k, py: cy - (cy - c.py) * k }
+    })
+
+  const where = (t: TokenView): Vec3 => {
+    if (local?.token === t.id) return local.at
+    const r = remote[t.id]
+    return r ? r.at : t.at
+  }
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0 || !cam) return
+    box.current?.setPointerCapture(e.pointerId)
+    gesture.current = { kind: 'pan', sx: e.clientX, sy: e.clientY, px: cam.px, py: cam.py, moved: false, pressed: null }
+  }
+
+  const onTokenDown = (e: React.PointerEvent, t: TokenView) => {
+    if (e.button !== 0 || !cam) return
+    e.stopPropagation()
+    box.current?.setPointerCapture(e.pointerId)
+    if (canMove(t)) {
+      const at = where(t)
+      const [ox, oy] = proj(map.origin, at)
+      gesture.current = { kind: 'tok', token: t.id, sx: e.clientX, sy: e.clientY, ox, oy, z: at[2], moved: false, last: 0, at }
+    } else {
+      gesture.current = { kind: 'pan', sx: e.clientX, sy: e.clientY, px: cam.px, py: cam.py, moved: false, pressed: t.id }
+    }
+  }
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    const g = gesture.current
+    if (!g || !cam) return
+    const dx = e.clientX - g.sx
+    const dy = e.clientY - g.sy
+    if (!g.moved && Math.abs(dx) + Math.abs(dy) <= 3) return
+    g.moved = true
+    if (g.kind === 'pan') {
+      setCam({ ...cam, px: g.px + dx, py: g.py + dy })
+      return
+    }
+    const at = unproj(map.origin, [g.ox + dx / cam.zoom, g.oy + dy / cam.zoom], g.z)
+    g.at = at
+    setLocal({ token: g.token, at })
+    const now = performance.now()
+    if (now - g.last >= DRAG_HZ) {
+      g.last = now
+      useGame.getState().socket?.drag(g.token, at)
+    }
+  }
+
+  const onPointerUp = () => {
+    const g = gesture.current
+    gesture.current = null
+    if (!g) return
+    if (g.kind === 'tok') {
+      if (g.moved) {
+        const token = g.token
+        send('token.move', { token, at: g.at }).then(() => {
+          if (useGame.getState().local?.token === token) setLocal(null)
+        })
+      } else {
+        select(selected === g.token ? null : g.token)
+      }
+      return
+    }
+    if (!g.moved) select(g.pressed && selected !== g.pressed ? g.pressed : null)
+  }
+
+  const scale = cam ? clamp(0.8 / cam.zoom, 0.6, 1.8) : 1
+  const shown = (o: { mood: string; switch: string; value: number }) =>
+    map.mood === o.mood && (map.values[o.switch] ?? 0) === o.value ? 1 : 0
+  return (
+    <div
+      ref={box}
+      className="app-mapbox"
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
+      onWheel={(e) => {
+        const r = e.currentTarget.getBoundingClientRect()
+        if (cam) zoomAt(cam.zoom * Math.exp(-e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top)
+      }}
+      onDoubleClick={fit}
+    >
+      {cam && (
+        <div
+          className="app-world"
+          style={{ width: W, height: H, transform: `translate(${cam.px}px, ${cam.py}px) scale(${cam.zoom})` }}
+        >
+          <div role="img" aria-label={map.description} />
+          {map.moods.map((m) => (
+            <img key={m.id} className="r3-map" src={m.base} alt="" draggable={false} style={{ width: W, height: H, opacity: map.mood === m.id ? 1 : 0 }} />
+          ))}
+          {map.overlays
+            .filter((o) => o.layer === 'patch')
+            .map((o) => (
+              <img key={o.id} className="r3-map" src={o.src} alt="" draggable={false} style={{ width: W, height: H, opacity: shown(o) }} />
+            ))}
+          {map.moods.map((m) =>
+            m.glow ? (
+              <div key={m.id} className="r3-glow" style={{ width: W, height: H, opacity: map.mood === m.id ? 1 : 0 }}>
+                <img className="r3-hum" src={m.glow} alt="" draggable={false} style={{ width: W, height: H }} />
+              </div>
+            ) : null,
+          )}
+          {map.overlays
+            .filter((o) => o.layer === 'gas')
+            .map((o) => (
+              <img key={o.id} className="r3-map app-gas" src={o.src} alt="" draggable={false} style={{ width: W, height: H, opacity: shown(o) }} />
+            ))}
+          {tokens.map((t) => {
+            const [x, y] = proj(map.origin, where(t))
+            const on = selected === t.id
+            const foot = on ? '#ffffff' : t.color
+            const crew = t.kind === 'crew' ? crewList?.find((c) => c.id === t.ref) : undefined
+            const r = crew ? ring(crew.hp, crew.entropy, 64, 9) : plainRing(t.color, 64, 5)
+            return (
+              <button
+                key={t.id}
+                type="button"
+                className={'r3-tok' + (t.hidden ? ' app-hiddentok' : '') + (canMove(t) ? '' : ' app-fixedtok')}
+                aria-label={t.name + (t.hidden ? ' (hidden from players)' : '')}
+                onPointerDown={(e) => onTokenDown(e, t)}
+                style={{ left: x, top: y, transform: `scale(${scale})`, zIndex: Math.round(y) }}
+              >
+                <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${foot}`, background: 'rgba(0,0,0,.35)' }} />
+                <span style={{ position: 'absolute', left: '50%', bottom: 8, width: 1.5, height: 36, marginLeft: -0.75, background: foot }} />
+                <RingPortrait src={t.portrait} ring={r} size={64} style={{ position: 'absolute', left: 0, top: 0 }} />
+              </button>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}

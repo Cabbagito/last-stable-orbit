@@ -1,0 +1,20 @@
+# A second arrangement, mostly for testing preset loading: the bar after hours, crew on their feet.
+id: bar-after-hours
+name: The bar after hours
+party_map: event-horizon
+maps:
+  event-horizon: {mood: after, switches: {seals_box: 0}}
+tokens:
+  - {kind: crew, ref: ves, map: event-horizon, at: [9.7, 6.2, 0]}
+  - {kind: crew, ref: tomo, map: event-horizon, at: [9.4, 3.9, 0]}
+  - {kind: crew, ref: lale, map: event-horizon, at: [8.2, 8.7, 0]}
+  - {kind: crew, ref: marlo, map: event-horizon, at: [11.7, 8.9, 0]}
+  - {kind: crew, ref: tally, map: event-horizon, at: [11.9, 4.4, 0]}
+  - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
+  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0], hidden: true}
+inventory:
+  lale: [credits]
+  marlo: [sidearm, credits]
+  tally: [credits]
+  ves: [sidearm, splice-kit, credits]
+  tomo: [credits]

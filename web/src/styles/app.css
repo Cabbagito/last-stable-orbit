@@ -1,0 +1,283 @@
+/* App additions on top of the R6 stylesheet (meridian.css). Same language: black, hairlines, radius 0, Michroma labels. */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  overscroll-behavior: none;
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.app-wait,
+.app-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dim);
+}
+.app-placeholder {
+  justify-content: flex-start;
+  padding: 0 32px;
+}
+
+/* header right side */
+.app-headright {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.app-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Michroma', sans-serif;
+  font-size: 7.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.app-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5ee08c;
+}
+.app-status.connecting .app-dot,
+.app-status.offline .app-dot {
+  background: #f2b544;
+  animation: app-blink 1s steps(2) infinite;
+}
+.app-status.offline {
+  color: #f2b544;
+}
+@keyframes app-blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+.app-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--dim);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+}
+.app-link:hover {
+  color: #fff;
+}
+
+/* map */
+.app-mapsec {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  background: #000;
+}
+.app-mapbox {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.app-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  isolation: isolate;
+  transform-origin: 0 0;
+}
+.app-gas {
+  transition: opacity 2.4s ease;
+}
+.app-hiddentok {
+  opacity: 0.4;
+}
+.app-mapbox:active {
+  cursor: grabbing;
+}
+.app-fixedtok {
+  cursor: pointer;
+}
+.app-place {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  pointer-events: none;
+}
+.app-rail {
+  position: absolute;
+  right: 16px;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  z-index: 4;
+}
+.app-railbtn {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.app-card {
+  position: absolute;
+  right: 100px;
+  top: 8px;
+  width: 290px;
+  background: #000;
+  box-shadow: 0 0 0 1px #1e2024;
+  box-sizing: border-box;
+  padding: 14px;
+  z-index: 5;
+}
+.app-gmnote {
+  margin: -4px 0 12px;
+  padding-left: 10px;
+  border-left: 2px solid #f2b544;
+  color: #d9c08a;
+  font-style: italic;
+  line-height: 1.3;
+}
+.app-warn {
+  color: #f2b544;
+  margin-top: 4px;
+}
+
+/* sheet rows with no icon yet */
+.app-noicon {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Michroma', sans-serif;
+  font-size: 5.5px;
+  letter-spacing: 0.12em;
+  color: #5e626a;
+}
+
+/* GM column */
+.app-gm {
+  gap: 16px;
+}
+.app-gm section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.app-gmrow {
+  gap: 8px;
+  min-height: 44px;
+}
+.app-gmname {
+  flex: 1;
+  min-width: 0;
+}
+.app-grow {
+  flex: 1;
+  min-width: 0;
+}
+.app-dim {
+  color: var(--dim);
+}
+.app-btnrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.r4-btn.app-small {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+.r4-btn.app-sq {
+  min-height: 28px;
+  min-width: 28px;
+  padding: 0;
+}
+.r4-btn.app-toggle.on {
+  border-color: var(--accent);
+  background: var(--chipon);
+  color: #fff;
+}
+.app-inline {
+  margin-right: 4px;
+}
+.app-stepper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.app-num {
+  width: 16px;
+  text-align: center;
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  color: #fff;
+}
+.app-select {
+  background: #000;
+  color: var(--ink);
+  border: 1px solid var(--btnline);
+  border-radius: 0;
+  min-height: 32px;
+  padding: 0 8px;
+  font: inherit;
+  font-size: 13px;
+}
+.app-error {
+  color: #ff5b4d;
+  font-size: 13px;
+}
+
+/* login */
+.app-login {
+  align-items: center;
+  justify-content: center;
+}
+.app-loginbox {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 300px;
+}
+.app-loginbox .r5-lstack {
+  margin-bottom: 28px;
+}
+.app-input {
+  background: #000;
+  border: 0;
+  border-bottom: 1px solid var(--btnline);
+  color: #fff;
+  font-family: 'VT323', monospace;
+  font-size: 28px;
+  letter-spacing: 0.08em;
+  padding: 6px 0;
+  outline: none;
+}
+.app-input:focus {
+  border-bottom-color: var(--accent);
+}

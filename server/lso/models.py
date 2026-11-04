@@ -1,0 +1,182 @@
+"""Content (read-only YAML) and game state models."""
+
+from __future__ import annotations
+
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
+STATS = ("body", "reflex", "tech", "intel", "cool", "empathy")
+DIE_SIDES = (4, 6, 8, 10, 12, 20)
+HP_MAX = 6
+ENTROPY_MAX = 6
+
+Vec3 = tuple[float, float, float]
+
+
+class Strict(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+# ---------------------------------------------------------------- content
+
+
+class ListEntry(Strict):
+    """A skill or a piece of chrome. Both sit in one list and use the same one-per-roll pick."""
+
+    name: str
+    kind: Literal["skill", "chrome"]
+    downside: str | None = None
+    icon: str | None = None  # path under assets/, or None for a text-only row
+
+
+class Character(Strict):
+    id: str
+    name: str  # full name, on the sheet
+    short: str  # rail and token name
+    role: str  # "The Thief"
+    portrait: str
+    color: str = "#ff4fa3"
+    stats: dict[str, int]
+    entries: list[ListEntry] = Field(default_factory=list, alias="list")  # YAML key: list
+
+    @field_validator("stats")
+    @classmethod
+    def _six_dice(cls, v: dict[str, int]) -> dict[str, int]:
+        if set(v) != set(STATS):
+            raise ValueError(f"stats must have exactly {', '.join(STATS)}")
+        bad = {k: d for k, d in v.items() if d not in DIE_SIDES}
+        if bad:
+            raise ValueError(f"stat dice must be one of {DIE_SIDES}: {bad}")
+        return {k: v[k] for k in STATS}
+
+
+class Npc(Strict):
+    id: str
+    name: str
+    role: str = ""
+    portrait: str
+    color: str = "#8f88a3"
+    mood: str = ""
+    note: str = ""
+    gm_note: str = ""  # never sent to players
+
+
+class Item(Strict):
+    id: str
+    name: str
+    icon: str
+    kind: Literal["gear", "weapon", "tool", "cash", "key", "note"] = "gear"
+
+
+class Mood(Strict):
+    id: str
+    label: str
+    base: str
+    glow: str | None = None
+
+
+class Switch(Strict):
+    id: str
+    label: str
+    type: Literal["bool", "level"] = "bool"
+    max: int = 1
+    moods: list[str] = []  # moods it applies to; empty = all
+
+
+class Overlay(Strict):
+    """A full-frame layer shown when the map is in `mood` and switch `switch` equals `value`."""
+
+    id: str
+    src: str
+    layer: Literal["patch", "gas"] = "patch"
+    mood: str
+    switch: str
+    value: int = 1
+
+
+class MapDef(Strict):
+    id: str
+    name: str
+    subtitle: str = ""
+    description: str = ""  # alt text for the map art
+    display: tuple[int, int]  # world div size in px (art drawn at 2x)
+    origin: tuple[float, float]  # proj(X,Y,Z) = [((X-Y)*30+ox)*2, ((X+Y)*15 - Z*36 + oy)*2]
+    moods: list[Mood]
+    switches: list[Switch] = []
+    overlays: list[Overlay] = []
+
+    @model_validator(mode="after")
+    def _refs(self) -> "MapDef":
+        mood_ids = {m.id for m in self.moods}
+        sw = {s.id: s for s in self.switches}
+        for s in self.switches:
+            if unknown := set(s.moods) - mood_ids:
+                raise ValueError(f"switch {s.id} names unknown moods {unknown}")
+        for o in self.overlays:
+            if o.mood not in mood_ids:
+                raise ValueError(f"overlay {o.id} names unknown mood {o.mood}")
+            if o.switch not in sw:
+                raise ValueError(f"overlay {o.id} names unknown switch {o.switch}")
+        return self
+
+    def switch(self, switch_id: str) -> Switch | None:
+        return next((s for s in self.switches if s.id == switch_id), None)
+
+
+class PresetToken(Strict):
+    id: str | None = None
+    kind: Literal["crew", "npc"]
+    ref: str
+    map: str
+    at: Vec3
+    hidden: bool = False
+
+
+class MapState(Strict):
+    mood: str
+    switches: dict[str, int] = {}
+
+
+class Vitals(Strict):
+    hp: int = HP_MAX
+    entropy: int = 2
+
+
+class Preset(Strict):
+    """A whole-table arrangement the GM can load: positions, moods, vitals, inventories."""
+
+    id: str
+    name: str
+    default: bool = False
+    party_map: str
+    maps: dict[str, MapState] = {}
+    tokens: list[PresetToken] = []
+    vitals: dict[str, Vitals] = {}  # missing crew get HP 6, Entropy 2
+    inventory: dict[str, list[str]] = {}  # holder -> item ids
+
+
+# ---------------------------------------------------------------- state
+
+
+class TokenState(Strict):
+    kind: Literal["crew", "npc"]
+    ref: str
+    map: str
+    at: Vec3
+    hidden: bool = False
+
+
+class InvEntry(Strict):
+    uid: str
+    item: str
+
+
+class GameState(Strict):
+    seq: int = 0  # seq of the last applied event
+    party_map: str = ""  # where viewers without a token on a map look
+    maps: dict[str, MapState] = {}
+    tokens: dict[str, TokenState] = {}
+    vitals: dict[str, Vitals] = {}
+    inventory: dict[str, list[InvEntry]] = {}
+    rolls: list[dict] = Field(default_factory=list)  # filled in by Milestone 2

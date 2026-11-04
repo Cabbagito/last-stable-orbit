@@ -1,0 +1,798 @@
+{
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-03T12:30:00+01:00"
+ },
+ "title": "LSO \u2014 UI direction",
+ "launch": {
+  "view": "canvas",
+  "page": "round6"
+ },
+ "pages": [
+  {
+   "id": "round6",
+   "name": "Round 6"
+  },
+  {
+   "id": "round5",
+   "name": "Round 5"
+  },
+  {
+   "id": "round4",
+   "name": "Round 4"
+  },
+  {
+   "id": "round3",
+   "name": "Round 3"
+  },
+  {
+   "id": "current",
+   "name": "Current"
+  },
+  {
+   "id": "archive",
+   "name": "Archive"
+  }
+ ],
+ "boards": {
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "A \u00b7 SCENE",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "archive"
+  },
+  "APick.dc.html": {
+   "x": 1520,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "A \u00b7 Roll: choosing",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "archive"
+  },
+  "AResult.dc.html": {
+   "x": 3040,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "A \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "archive"
+  },
+  "Tactical.dc.html": {
+   "x": 0,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "B \u00b7 SCENE",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "archive"
+  },
+  "BPick.dc.html": {
+   "x": 1520,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "B \u00b7 Roll: choosing",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "archive"
+  },
+  "BResult.dc.html": {
+   "x": 3040,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "B \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "archive"
+  },
+  "LowLight.dc.html": {
+   "x": 0,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "C \u00b7 SCENE",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "archive"
+  },
+  "CPick.dc.html": {
+   "x": 1520,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "C \u00b7 Roll: choosing",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "archive"
+  },
+  "CResult.dc.html": {
+   "x": 3040,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "C \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "archive"
+  },
+  "Round2.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "B2 \u00b7 SCENE, neon",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "current"
+  },
+  "R2Pick.dc.html": {
+   "x": 1520,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "B2 \u00b7 Roll: spotlight picker",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "current"
+  },
+  "R2Result.dc.html": {
+   "x": 3040,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "B2 \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "current"
+  },
+  "RollScenes.dc.html": {
+   "x": 0,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "B2 \u00b7 All six roll scenes, looping",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "current"
+  },
+  "R2After.dc.html": {
+   "x": 1520,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "B2 \u00b7 SCENE, after hours",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "current"
+  },
+  "R2Blackout.dc.html": {
+   "x": 3040,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "B2 \u00b7 SCENE, blackout",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "current"
+  },
+  "R2EventsStill.dc.html": {
+   "x": 0,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "B3 \u00b7 Roll events, one of each",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "current"
+  },
+  "R2Events.dc.html": {
+   "x": 1520,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "B3 \u00b7 Roll events, looping as others see them",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "current"
+  },
+  "R2Gate.dc.html": {
+   "x": 3040,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "B3 \u00b7 Explosion, waiting for the press",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "current"
+  },
+  "R2Nat1.dc.html": {
+   "x": 4560,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "B3 \u00b7 Natural 1",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "current"
+  },
+  "GMRoll.dc.html": {
+   "x": 6080,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "B3 \u00b7 GM tab, hidden roll",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "current"
+  },
+  "R3A.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "A \u00b7 SCENE",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round3"
+  },
+  "R3APick.dc.html": {
+   "x": 1520,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "A \u00b7 Roll: picker",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round3"
+  },
+  "R3AResult.dc.html": {
+   "x": 3040,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "A \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round3"
+  },
+  "R3B.dc.html": {
+   "x": 0,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "B \u00b7 SCENE",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round3"
+  },
+  "R3BPick.dc.html": {
+   "x": 1520,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "B \u00b7 Roll: picker",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round3"
+  },
+  "R3BResult.dc.html": {
+   "x": 3040,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "B \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round3"
+  },
+  "R3C.dc.html": {
+   "x": 0,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "C \u00b7 SCENE",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round3"
+  },
+  "R3CPick.dc.html": {
+   "x": 1520,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "C \u00b7 Roll: picker",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round3"
+  },
+  "R3CResult.dc.html": {
+   "x": 3040,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "C \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round3"
+  },
+  "R3BSheet.dc.html": {
+   "x": 4560,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "B \u00b7 Sheet open",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round3"
+  },
+  "R4A.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "A2 \u00b7 SCENE",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4APick.dc.html": {
+   "x": 1520,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "A2 \u00b7 Roll: picker",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4AResult.dc.html": {
+   "x": 3040,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "A2 \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S1.dc.html": {
+   "x": 0,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "S1 \u00b7 SCENE",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S1Pick.dc.html": {
+   "x": 1520,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "S1 \u00b7 Roll: picker",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S1Result.dc.html": {
+   "x": 3040,
+   "y": 1300,
+   "w": 1440,
+   "h": 900,
+   "title": "S1 \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S2.dc.html": {
+   "x": 0,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "S2 \u00b7 SCENE",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S2Pick.dc.html": {
+   "x": 1520,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "S2 \u00b7 Roll: picker",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S2Result.dc.html": {
+   "x": 3040,
+   "y": 2600,
+   "w": 1440,
+   "h": 900,
+   "title": "S2 \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S3.dc.html": {
+   "x": 0,
+   "y": 3900,
+   "w": 1440,
+   "h": 900,
+   "title": "S3 \u00b7 SCENE",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S3Pick.dc.html": {
+   "x": 1520,
+   "y": 3900,
+   "w": 1440,
+   "h": 900,
+   "title": "S3 \u00b7 Roll: picker",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S3Result.dc.html": {
+   "x": 3040,
+   "y": 3900,
+   "w": 1440,
+   "h": 900,
+   "title": "S3 \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S4.dc.html": {
+   "x": 0,
+   "y": 5200,
+   "w": 1440,
+   "h": 900,
+   "title": "S4 \u00b7 SCENE",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S4Pick.dc.html": {
+   "x": 1520,
+   "y": 5200,
+   "w": 1440,
+   "h": 900,
+   "title": "S4 \u00b7 Roll: picker",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4S4Result.dc.html": {
+   "x": 3040,
+   "y": 5200,
+   "w": 1440,
+   "h": 900,
+   "title": "S4 \u00b7 Roll: result",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "round4"
+  },
+  "R4Rings.dc.html": {
+   "x": 4560,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "Ring options",
+   "expand": "fill",
+   "page": "round4"
+  },
+  "R5M1.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "M1 \u00b7 Ruled, skills as rows",
+   "expand": "fill",
+   "page": "round5",
+   "is_interactive": true
+  },
+  "R5M2.dc.html": {
+   "x": 1520,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "M2 \u00b7 Tiles, skills under their icons",
+   "expand": "fill",
+   "page": "round5",
+   "is_interactive": true
+  },
+  "R5M3.dc.html": {
+   "x": 3040,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "M3 \u00b7 Strip, skills under the map",
+   "expand": "fill",
+   "page": "round5",
+   "is_interactive": true
+  },
+  "R5M4.dc.html": {
+   "x": 0,
+   "y": 1040,
+   "w": 1440,
+   "h": 900,
+   "title": "M4 \u00b7 Floating, icons only and a full map",
+   "expand": "fill",
+   "page": "round5",
+   "is_interactive": true
+  },
+  "R5M5.dc.html": {
+   "x": 1520,
+   "y": 1040,
+   "w": 1440,
+   "h": 900,
+   "title": "M5 \u00b7 Orbit, stats around the portrait",
+   "expand": "fill",
+   "page": "round5",
+   "is_interactive": true
+  },
+  "R5Pick.dc.html": {
+   "x": 3040,
+   "y": 1040,
+   "w": 1440,
+   "h": 900,
+   "title": "Roll: picker",
+   "expand": "fill",
+   "page": "round5",
+   "is_interactive": true
+  },
+  "R5Result.dc.html": {
+   "x": 0,
+   "y": 2080,
+   "w": 1440,
+   "h": 900,
+   "title": "Roll: result",
+   "expand": "fill",
+   "page": "round5",
+   "is_interactive": true
+  },
+  "R5Logos.dc.html": {
+   "x": 1520,
+   "y": 2080,
+   "w": 1440,
+   "h": 900,
+   "title": "Logo options",
+   "expand": "fill",
+   "page": "round5"
+  },
+  "R6.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "Scene",
+   "expand": "fill",
+   "page": "round6",
+   "is_interactive": true
+  },
+  "R6Pick.dc.html": {
+   "x": 1520,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "Roll: picker",
+   "expand": "fill",
+   "page": "round6",
+   "is_interactive": true
+  },
+  "R6Result.dc.html": {
+   "x": 3040,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "Roll: result",
+   "expand": "fill",
+   "page": "round6",
+   "is_interactive": true
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "APick.dc.html",
+  "AResult.dc.html",
+  "Tactical.dc.html",
+  "BPick.dc.html",
+  "BResult.dc.html",
+  "LowLight.dc.html",
+  "CPick.dc.html",
+  "CResult.dc.html",
+  "Round2.dc.html",
+  "R2Pick.dc.html",
+  "R2Result.dc.html",
+  "RollScenes.dc.html",
+  "R2After.dc.html",
+  "R2Blackout.dc.html",
+  "R2EventsStill.dc.html",
+  "R2Events.dc.html",
+  "R2Gate.dc.html",
+  "R2Nat1.dc.html",
+  "GMRoll.dc.html",
+  "R3A.dc.html",
+  "R3APick.dc.html",
+  "R3AResult.dc.html",
+  "R3B.dc.html",
+  "R3BPick.dc.html",
+  "R3BResult.dc.html",
+  "R3C.dc.html",
+  "R3CPick.dc.html",
+  "R3CResult.dc.html",
+  "R3BSheet.dc.html",
+  "R4A.dc.html",
+  "R4APick.dc.html",
+  "R4AResult.dc.html",
+  "R4S1.dc.html",
+  "R4S1Pick.dc.html",
+  "R4S1Result.dc.html",
+  "R4S2.dc.html",
+  "R4S2Pick.dc.html",
+  "R4S2Result.dc.html",
+  "R4S3.dc.html",
+  "R4S3Pick.dc.html",
+  "R4S3Result.dc.html",
+  "R4S4.dc.html",
+  "R4S4Pick.dc.html",
+  "R4S4Result.dc.html",
+  "R4Rings.dc.html",
+  "R5M1.dc.html",
+  "R5M2.dc.html",
+  "R5M3.dc.html",
+  "R5M4.dc.html",
+  "R5M5.dc.html",
+  "R5Pick.dc.html",
+  "R5Result.dc.html",
+  "R5Logos.dc.html",
+  "R6.dc.html",
+  "R6Pick.dc.html",
+  "R6Result.dc.html"
+ ],
+ "notes": {
+  "rowA": {
+   "kind": "title1",
+   "x": 0,
+   "y": -260,
+   "text": "A \u00b7 Quiet Ledger",
+   "maxW": 4480,
+   "page": "archive"
+  },
+  "rowB": {
+   "kind": "title1",
+   "x": 0,
+   "y": 1040,
+   "text": "B \u00b7 Tactical Deck",
+   "maxW": 4480,
+   "page": "archive"
+  },
+  "rowC": {
+   "kind": "title1",
+   "x": 0,
+   "y": 2340,
+   "text": "C \u00b7 Low Light",
+   "maxW": 4480,
+   "page": "archive"
+  },
+  "rowB2": {
+   "kind": "title1",
+   "x": 0,
+   "y": -260,
+   "text": "B2 \u00b7 Tactical, round 2",
+   "maxW": 4480,
+   "page": "current"
+  },
+  "rowB2b": {
+   "kind": "title1",
+   "x": 0,
+   "y": 1040,
+   "text": "B2 \u00b7 Roll scenes and lighting moods",
+   "maxW": 4480,
+   "page": "current"
+  },
+  "rowB3": {
+   "kind": "title1",
+   "x": 0,
+   "y": 2340,
+   "text": "B3 \u00b7 Roll events and explosions",
+   "maxW": 7520,
+   "page": "current"
+  },
+  "r3A": {
+   "kind": "title1",
+   "x": 0,
+   "y": -260,
+   "text": "A \u00b7 Quiet Panel",
+   "maxW": 4480,
+   "page": "round3"
+  },
+  "r3B": {
+   "kind": "title1",
+   "x": 0,
+   "y": 1040,
+   "text": "B \u00b7 Hi-Bit HUD",
+   "maxW": 4480,
+   "page": "round3"
+  },
+  "r3C": {
+   "kind": "title1",
+   "x": 0,
+   "y": 2340,
+   "text": "C \u00b7 Station Issue",
+   "maxW": 4480,
+   "page": "round3"
+  },
+  "r4A2": {
+   "kind": "title1",
+   "x": 0,
+   "y": -260,
+   "text": "A2 \u00b7 Consolidated",
+   "maxW": 4480,
+   "page": "round4"
+  },
+  "r4S1": {
+   "kind": "title1",
+   "x": 0,
+   "y": 1040,
+   "text": "S1 \u00b7 Mission",
+   "maxW": 4480,
+   "page": "round4"
+  },
+  "r4S2": {
+   "kind": "title1",
+   "x": 0,
+   "y": 2340,
+   "text": "S2 \u00b7 Folio",
+   "maxW": 4480,
+   "page": "round4"
+  },
+  "r4S3": {
+   "kind": "title1",
+   "x": 0,
+   "y": 3640,
+   "text": "S3 \u00b7 Glass",
+   "maxW": 4480,
+   "page": "round4"
+  },
+  "r4S4": {
+   "kind": "title1",
+   "x": 0,
+   "y": 4940,
+   "text": "S4 \u00b7 Meridian",
+   "maxW": 4480,
+   "page": "round4"
+  },
+  "r5": {
+   "kind": "title1",
+   "x": 0,
+   "y": -260,
+   "text": "Round 5 \u00b7 Meridian, five sheet layouts",
+   "maxW": 4480,
+   "page": "round5"
+  },
+  "r6": {
+   "kind": "title1",
+   "x": 0,
+   "y": -260,
+   "text": "Round 6 \u00b7 Meridian, ruled",
+   "maxW": 4480,
+   "page": "round6"
+  }
+ },
+ "designSystems": []
+}

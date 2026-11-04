@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Promenade</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+.p-map{position:absolute;left:0;top:0;width:3600px;height:2160px;display:block;pointer-events:none;user-select:none;image-rendering:pixelated;transition:opacity .9s ease}
+.p-glow{position:absolute;left:0;top:0;width:3600px;height:2160px;pointer-events:none;mix-blend-mode:screen;transition:opacity .9s ease}
+.p-hum{display:block;width:3600px;height:2160px;user-select:none;animation:p-hum 9s linear infinite}
+@keyframes p-hum{0%,100%{opacity:1}52%{opacity:1}52.6%{opacity:.7}53.2%{opacity:1}80%{opacity:.92}88%{opacity:1}}
+.p-tok{position:absolute;width:64px;height:100px;margin:-94px 0 0 -32px;background:none;border:0;padding:0;cursor:grab;font:inherit;transform-origin:32px 94px}
+.p-key{font-family:'Silkscreen',monospace;font-size:11px;color:#ece8f2;background:#14121a;border:1px solid #3a3446;padding:0 12px;height:44px;min-width:44px;cursor:pointer}
+.p-key:hover{background:#221e2a}
+</style>
+</helmet>
+<div style="position: relative; width: 100%; height: 900px; overflow: hidden; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
+<div onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onUp}}" onWheel="{{onWheel}}" style="position: absolute; inset: 0; cursor: {{cursor}}; touch-action: none;">
+<div style="position: absolute; left: 0; top: 0; width: 3600px; height: 2160px; isolation: isolate; transform-origin: 0 0; transform: {{worldTransform}};">
+<img class="p-map" src="/_blob/d62c5c6f8446d388be75ae2020339e00" alt="" draggable="false">
+<img class="p-map" src="/_blob/ce23081f90adf7185bd95a41f54fe3f8" style="opacity: {{calmOp}};" alt="The Promenade seen from above at an angle, a long street: Dock 7 in spotless white with queue rails and an 11:00 board, a plaza with a gold mural of Ilija and a huge window on the black hole, the Concierge's desk and the company's blue lift, the Night Market with striped awnings and strings of amber and teal lanterns, a too-clean side alley, the bar's warm door, a hazard-striped service door and the white Med Bay." draggable="false">
+<div style="position: absolute; left: 0; top: 0; width: 403px; height: 224px; overflow: hidden; transform-origin: 0 0; transform: matrix(1, .5, 0, 1, 1664.4, 584.4); pointer-events: none;">
+<img src="/_blob/05f47e3b259733e45bdbc3e7ac3bdea4" alt="" draggable="false" style="position: absolute; left: 20px; top: -68px; width: 360px; height: 360px; max-width: none; filter: brightness(1.2);">
+</div>
+<div class="p-glow" style="opacity: {{huntOp}};"><img class="p-hum" src="/_blob/d4dcf1ded073240be5bafdda61a8a512" alt="" draggable="false"></div>
+<div class="p-glow" style="opacity: {{calmOp}};"><img class="p-hum" src="/_blob/acb361f744fd41f72a136ccf0f77fb5c" alt="" draggable="false"></div>
+<sc-if value="{{showCams}}" hint-placeholder-val="{{ false }}">
+<svg viewBox="0 0 3600 2160" width="3600" height="2160" aria-hidden="true" style="position: absolute; left: 0; top: 0; pointer-events: none;">
+<sc-for list="{{cones}}" as="c" hint-placeholder-count="6">
+<polygon points="{{c.pts}}" fill="rgba(201,188,255,.2)" stroke="#c9bcff" stroke-width="3"></polygon>
+</sc-for>
+</svg>
+</sc-if>
+<sc-for list="{{toks}}" as="t" hint-placeholder-count="15">
+<button type="button" class="p-tok" onPointerDown="{{t.down}}" onClick="{{t.select}}" aria-label="{{t.name}}" style="left: {{t.x}}px; top: {{t.y}}px; transform: scale({{t.scale}}); z-index: {{t.z}};">
+<span style="position: absolute; left: 50%; bottom: 0; width: 40px; height: 20px; margin-left: -20px; border-radius: 50%; box-sizing: border-box; border: 2px solid {{t.col}}; background: rgba(0,0,0,.35);"></span>
+<span style="position: absolute; left: 50%; bottom: 10px; width: 2px; height: 34px; margin-left: -1px; background: {{t.col}};"></span>
+<span style="position: absolute; left: 4px; top: 0; width: 56px; height: 56px; border-radius: 50%; overflow: hidden; background: #09080c; box-shadow: 0 0 0 2px {{t.col}}, 0 3px 8px rgba(0,0,0,.7);">
+<img src="{{t.img}}" alt="" draggable="false" style="position: absolute; left: -7px; top: -1px; width: 70px; height: 70px; max-width: none; pointer-events: none;">
+</span>
+<sc-if value="{{t.showName}}" hint-placeholder-val="{{ false }}">
+<span style="position: absolute; left: 66px; top: 20px; font-family: 'Silkscreen', monospace; font-size: 10px; color: #ffffff; background: rgba(5,6,8,.88); padding: 3px 7px; white-space: nowrap;">{{t.NAME}}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="position: absolute; left: 12px; top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ffffff; background: rgba(5,6,8,.88); padding: 0 12px; height: 44px; display: flex; align-items: center;">THE PROMENADE</div>
+<button type="button" class="p-key" onClick="{{zoomOut}}" aria-label="Zoom out">-</button>
+<button type="button" class="p-key" onClick="{{zoomIn}}" aria-label="Zoom in">+</button>
+<button type="button" class="p-key" onClick="{{fit}}">FIT</button>
+<button type="button" class="p-key" onClick="{{toggleNames}}">NAMES</button>
+<button type="button" class="p-key" onClick="{{toggleCams}}">CAMERAS</button>
+<sc-for list="{{moodBtns}}" as="b" hint-placeholder-count="2">
+<button type="button" class="p-key" onClick="{{b.pick}}" style="background: {{b.bg}}; color: {{b.fg}};">{{b.label}}</button>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  state = { px: 0, py: 18, zoom: .4, pos: {}, drag: null, tokDrag: null, sel: null, names: false, cams: false, mood: 'calm' };
+
+  proj(X, Y, Z) { return [((X - Y) * 30 + 360) * 2, ((X + Y) * 15 - Z * 36 + 190) * 2]; }
+
+  defs() {
+    return [
+      { id: 'lale', name: 'Lale', img: '/_blob/bf086769fdeeb5815c8bb26655c27de8', col: '#ff4fa3', at: [18.2, 2.2, 0] },
+      { id: 'marlo', name: 'Marlo', img: '/_blob/89e77d4081ac45a581d0deab2125331d', col: '#ff4fa3', at: [30.2, 4.8, 0] },
+      { id: 'tally', name: 'Tally', img: '/_blob/33e082d9f196e64d462f147828f1070c', col: '#ff4fa3', at: [33.0, 3.3, 0] },
+      { id: 'ves', name: 'Ves', img: '/_blob/8935375f70d3e50fdacbe2628025b6e0', col: '#ff4fa3', at: [32.2, 12.6, 0] },
+      { id: 'tomo', name: 'Tomo', img: '/_blob/0516ced15d3d4704cb408bc93a529fef', col: '#ff4fa3', at: [28.1, 2.75, 0] },
+      { id: 'fixer', name: 'The fixer', img: '/_blob/2b1a067acd9401d34b3bf9c168b7e0cb', col: '#ff5a4a', at: [38, 3.4, 0] },
+      { id: 'clerk', name: 'Dock 7 clerk', img: '/_blob/94537b20b4eb11a4cff4b2a05191b270', col: '#c9bcff', at: [.75, 2.0, 0] },
+      { id: 'concierge', name: 'The Concierge', img: '/_blob/bfca2f48c37172c299902ee6ff19dd59', col: '#c9bcff', at: [14, 5.8, 0] },
+      { id: 'steward', name: 'Patience steward', img: '/_blob/3d54725d392d8fdae4742a4c0925b98b', col: '#8f88a3', at: [1.0, 4.2, 0] },
+      { id: 'droid', name: 'Service droid', img: '/_blob/70eb1d72152cdc6852ad196fa2bc8ab9', col: '#c9bcff', at: [12.6, 8.2, 0] },
+      { id: 'resident', name: 'Happy resident', img: '/_blob/5322e3c4d1540b2c913df44d8910c780', col: '#8f88a3', at: [20.4, 2.3, 0] },
+      { id: 'vendor', name: 'Night Market vendor', img: '/_blob/4623f7851bb0115bdb1c7fb5a7fa17d8', col: '#8f88a3', at: [28.4, 7.2, 0] },
+      { id: 'cleaner', name: 'Cleaner bot', img: '/_blob/2e2ccea94bad777dcf618a96955ecdaf', col: '#c9bcff', at: [31.0, 9.3, 0] },
+      { id: 'nurse', name: 'Med Bay nurse', img: '/_blob/080fd1ed3d22da65e7f18a9214ade791', col: '#c9bcff', at: [44.8, 1.9, 0] },
+      { id: 'guard', name: 'Security guard', img: '/_blob/36b29690d64affe9bd079bf11f5d6b63', col: '#7fb4ff', at: [25.9, 2.9, 0] }
+    ];
+  }
+
+  cone(x, y, deg, spread, len) {
+    const pts = [[x, y]];
+    for (let i = 0; i <= 6; i++) {
+      const a = (deg - spread / 2 + spread * i / 6) * Math.PI / 180;
+      pts.push([Math.max(0, Math.min(47, x + len * Math.cos(a))), Math.max(0, Math.min(10, y + len * Math.sin(a)))]);
+    }
+    return { pts: pts.map((p) => this.proj(p[0], p[1], 0).join(',')).join(' ') };
+  }
+
+  zoomAt(z, cx, cy) {
+    const st = this.state;
+    const nz = Math.min(3, Math.max(.3, z));
+    const k = nz / st.zoom;
+    this.setState({ zoom: nz, px: cx - (cx - st.px) * k, py: cy - (cy - st.py) * k });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const scale = Math.min(1.35, Math.max(.8, .8 / st.zoom));
+    const toks = this.defs().map((d) => {
+      const home = this.proj(d.at[0], d.at[1], d.at[2]);
+      const p = st.pos[d.id] || { x: home[0], y: home[1] };
+      return {
+        name: d.name, NAME: d.name.toUpperCase(), img: d.img, col: d.col, x: p.x, y: p.y, z: Math.round(p.y),
+        scale: scale, showName: st.names || st.sel === d.id,
+        down: (e) => { e.stopPropagation(); this.dragged = false; this.setState({ tokDrag: { id: d.id, sx: e.clientX, sy: e.clientY, ox: p.x, oy: p.y } }); },
+        select: () => { if (!this.dragged) this.setState({ sel: st.sel === d.id ? null : d.id }); }
+      };
+    });
+    return {
+      toks,
+      showCams: st.cams,
+      cones: st.mood === 'hunted'
+        ? [this.cone(.3, 1, 42, 78, 13), this.cone(10.9, .3, 100, 96, 11), this.cone(22.7, .3, 104, 96, 12), this.cone(34.4, .3, 112, 96, 13), this.cone(41.6, .3, 84, 96, 12), this.cone(46.8, .3, 128, 78, 12)]
+        : [this.cone(.3, 1, 38, 52, 10), this.cone(10.9, .3, 112, 52, 8.5), this.cone(22.7, .3, 112, 52, 9.5), this.cone(34.4, .3, 118, 44, 9.5), this.cone(41.6, .3, 72, 50, 9.5), this.cone(46.8, .3, 132, 44, 9)],
+      calmOp: st.mood === 'calm' ? 1 : 0,
+      huntOp: st.mood === 'hunted' ? 1 : 0,
+      moodBtns: [['calm', 'CALM'], ['hunted', 'HUNTED']].map((m) => ({ label: m[1], bg: st.mood === m[0] ? '#ff4fa3' : '#14121a', fg: st.mood === m[0] ? '#09080c' : '#ece8f2', pick: () => this.setState({ mood: m[0] }) })),
+      worldTransform: 'translate(' + st.px + 'px, ' + st.py + 'px) scale(' + st.zoom + ')',
+      cursor: st.drag ? 'grabbing' : 'grab',
+      onDown: (e) => { this.setState({ drag: { x: e.clientX, y: e.clientY, px: st.px, py: st.py } }); },
+      onMove: (e) => {
+        const td = this.state.tokDrag;
+        if (td) {
+          const z = this.state.zoom;
+          const dx = (e.clientX - td.sx) / z, dy = (e.clientY - td.sy) / z;
+          if (Math.abs(dx) + Math.abs(dy) > 3) this.dragged = true;
+          const pos = Object.assign({}, this.state.pos);
+          pos[td.id] = { x: Math.round(td.ox + dx), y: Math.round(td.oy + dy) };
+          this.setState({ pos });
+          return;
+        }
+        const d = this.state.drag;
+        if (!d) return;
+        this.setState({ px: d.px + e.clientX - d.x, py: d.py + e.clientY - d.y });
+      },
+      onUp: () => { if (this.state.drag || this.state.tokDrag) this.setState({ drag: null, tokDrag: null }); },
+      onWheel: (e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        this.zoomAt(this.state.zoom * Math.exp(-e.deltaY * .0015), e.clientX - r.left, e.clientY - r.top);
+      },
+      zoomIn: () => this.zoomAt(st.zoom * 1.3, 720, 450),
+      zoomOut: () => this.zoomAt(st.zoom / 1.3, 720, 450),
+      fit: () => this.setState({ px: 0, py: 18, zoom: .4 }),
+      toggleNames: () => this.setState({ names: !st.names }),
+      toggleCams: () => this.setState({ cams: !st.cams })
+    };
+  }
+}
+</script>
+</body>
+</html>

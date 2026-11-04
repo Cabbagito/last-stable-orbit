@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SCENE, Hi-Bit HUD</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+15&amp;family=Jersey+25&amp;family=Silkscreen&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+.r3-map{position:absolute;left:0;top:0;width:2560px;height:1440px;display:block;pointer-events:none;user-select:none;image-rendering:pixelated;transition:opacity .7s ease}
+.r3-glow{position:absolute;left:0;top:0;width:2560px;height:1440px;pointer-events:none;mix-blend-mode:screen;transition:opacity .7s ease}
+.r3-hum{display:block;width:2560px;height:1440px;user-select:none;animation:r3-hum 7s linear infinite}
+@keyframes r3-hum{0%,100%{opacity:1}38%{opacity:1}38.6%{opacity:.62}39.2%{opacity:.96}40%{opacity:.74}40.8%{opacity:1}76%{opacity:.9}84%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.r3-hum{animation:none}}
+.r3-tok{position:absolute;width:64px;height:100px;margin:-94px 0 0 -32px;background:none;border:0;padding:0;cursor:grab;font:inherit;transform-origin:32px 94px}
+.r3-px{image-rendering:pixelated;display:block}
+button{font:inherit;color:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid #ffffff;outline-offset:2px}
+.b-panel{border:12px solid transparent;border-image:url(/_blob/cab44487103a55fadc1892984a58fb2e) 6 fill / 12px / 0 stretch;image-rendering:pixelated;box-sizing:border-box}
+.b-soft{border:12px solid transparent;border-image:url(/_blob/102b68c2cf9fe9c7bbef86718046f747) 6 fill / 12px / 0 stretch;image-rendering:pixelated;box-sizing:border-box}
+.b-key{border:12px solid transparent;border-image:url(/_blob/f3c72110b85aeec7cc4dc1e5a4f589bd) 6 fill / 12px / 0 stretch;image-rendering:pixelated;box-sizing:border-box;background:none;padding:0;cursor:pointer;min-height:44px}
+.b-key:hover{filter:brightness(1.3)}.b-key:disabled{filter:brightness(.6);cursor:default}
+.b-pink{border:12px solid transparent;border-image:url(/_blob/f6867e15cb113428f91e61f3cfe51061) 6 fill / 12px / 0 stretch;image-rendering:pixelated;box-sizing:border-box;background:none;padding:0;cursor:pointer}
+.b-pink:hover{filter:brightness(1.15)}.b-pink:disabled{filter:saturate(.2) brightness(.6);cursor:default}
+.b-chip-off{border:12px solid transparent;border-image:url(/_blob/f3c72110b85aeec7cc4dc1e5a4f589bd) 6 fill / 12px / 0 stretch;image-rendering:pixelated;background:none;padding:0 4px;cursor:pointer;color:#d8d1e6;font-size:22px;min-height:44px}
+.b-chip-on{border:12px solid transparent;border-image:url(/_blob/87000640a803889658ee6c7c02604b37) 6 fill / 12px / 0 stretch;image-rendering:pixelated;background:none;padding:0 4px;cursor:pointer;color:#ffffff;font-size:22px;min-height:44px}
+.b-hp36{background-image:url(/_blob/222824d6f712149f09755f0d1c0193f1);image-rendering:pixelated}.b-en36{background-image:url(/_blob/662f21e16736f4a07624ed81a503b6ba);image-rendering:pixelated}
+.b-hp64{background-image:url(/_blob/11a0ca33fbb2cb9a1ce79b3f41e40f44);image-rendering:pixelated}.b-en64{background-image:url(/_blob/9352108a2c97482ae8bfaf05a0662704);image-rendering:pixelated}
+.b-spot-body{background-image:url(/_blob/3a78606855cd995100e0d8071a383694)}.b-spot-reflex{background-image:url(/_blob/71ba3c829529a9b8da68d8416cdc2bc6)}.b-spot-tech{background-image:url(/_blob/08932a1690ce8b8cdefdd897c339e908)}.b-spot-intel{background-image:url(/_blob/63c63b641e12684c8849a34cbd0fd35f)}.b-spot-cool{background-image:url(/_blob/75575772afef90657bfd1cbb4bdf3496)}.b-spot-empathy{background-image:url(/_blob/cd53d4e48bdf00022f15c5ad6da1252f)}
+.b-h{font-family:'Jersey 25','Jersey 15',monospace;color:#fff}
+.b-lbl{font-family:'Silkscreen',monospace;font-size:10px;color:#d8d1e6}
+.b-txt{font-family:'Silkscreen',monospace;font-size:11px;color:#ece6f6;padding:0 4px}
+.b-veil{background:rgba(4,3,8,.93)}
+.b-junk{font-family:'Jersey 25',monospace;font-size:64px;white-space:nowrap}
+</style>
+</helmet>
+<div style="position: relative; height: 100vh; min-height: 760px; box-sizing: border-box; background: #000000; color: #ece6f6; font-family: 'Jersey 15', monospace; font-size: 22px; line-height: 1.05; overflow: hidden;">
+<section aria-label="Current location map" style="position: absolute; inset: 0; overflow: hidden;">
+<div onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onUp}}" onWheel="{{onWheel}}" style="position: absolute; inset: 0; cursor: {{cursor}}; touch-action: none;">
+<div style="position: absolute; left: 0; top: 0; width: 2560px; height: 1440px; isolation: isolate; transform-origin: 0 0; transform: {{worldTransform}};">
+<div role="img" aria-label="The Event Horizon seen from above at an angle: a long bar under a neon sign, four white slot machines, round tables, red booths, a gold mural over an old round table behind a brass rail, a door to the street and a stockroom."></div>
+<sc-for list="{{bases}}" as="b" hint-placeholder-count="3"><img class="r3-map" src="{{b.src}}" alt="" draggable="false" style="opacity: {{b.op}};"></sc-for>
+<sc-for list="{{glows}}" as="b" hint-placeholder-count="3"><div class="r3-glow" style="opacity: {{b.op}};"><img class="r3-hum" src="{{b.src}}" alt="" draggable="false"></div></sc-for>
+<sc-for list="{{toks}}" as="t" hint-placeholder-count="11">
+<button type="button" class="r3-tok" onPointerDown="{{t.down}}" onClick="{{t.select}}" aria-label="{{t.name}}" style="left: {{t.x}}px; top: {{t.y}}px; transform: scale({{t.scale}}); z-index: {{t.z}};">
+<span style="position: absolute; left: 50%; bottom: 0; width: 40px; height: 20px; margin-left: -20px; border-radius: 50%; box-sizing: border-box; border: 2px solid {{t.foot}}; background: rgba(0,0,0,.35);"></span>
+<span style="position: absolute; left: 50%; bottom: 10px; width: 2px; height: 34px; margin-left: -1px; background: {{t.foot}};"></span>
+<span style="position: absolute; left: 0; top: 0; width: 64px; height: 64px;">
+<sc-if value="{{t.crew}}" hint-placeholder-val="{{ true }}"><img src="{{t.img}}" alt="" draggable="false" style="position: absolute; left: 12px; top: 12px; width: 40px; height: 40px; border-radius: 50%; background: #000; pointer-events: none;"><span class="b-hp36" style="position: absolute; left: 0px; top: 0px; width: 64px; height: 64px; background-size: 448px 64px; background-position: {{t.hp64}}px 0;"></span><span class="b-en36" style="position: absolute; left: 0px; top: 0px; width: 64px; height: 64px; background-size: 448px 64px; background-position: {{t.en64}}px 0;"></span></sc-if>
+<sc-if value="{{t.isNpc}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; inset: 2px; border-radius: 50%; background: #040308; box-shadow: 0 0 0 3px #040308, 0 0 0 5px {{t.col}};"></span><img src="{{t.img}}" alt="" draggable="false" style="position: absolute; left: 3px; top: 3px; width: 58px; height: 58px; border-radius: 50%; background: #000; pointer-events: none;"></sc-if>
+</span>
+</button>
+</sc-for>
+</div>
+</div>
+</section>
+<header style="position: absolute; left: 10px; top: 10px; display: flex; align-items: center; gap: 8px; pointer-events: none;">
+<div class="b-panel" style="display: flex; align-items: center; gap: 12px; height: 48px; pointer-events: auto;"><span class="b-h" style="font-size: 30px; letter-spacing: .06em; line-height: 1;">ERGO</span>
+<nav aria-label="Sections" style="display: flex; gap: 2px; font-family: 'Silkscreen', monospace; font-size: 11px;">
+<a href="#scene" aria-current="page" style="color: #ff7dbb; text-decoration: none; padding: 4px 7px;">SCENE</a><a href="#station" style="color: #d8d1e6; text-decoration: none; padding: 4px 7px;">STATION</a><a href="#crew" style="color: #d8d1e6; text-decoration: none; padding: 4px 7px;">CREW</a><a href="#comms" style="color: #d8d1e6; text-decoration: none; padding: 4px 7px;">COMMS</a><a href="#items" style="color: #d8d1e6; text-decoration: none; padding: 4px 7px;">ITEMS</a><a href="#codex" style="color: #d8d1e6; text-decoration: none; padding: 4px 7px;">CODEX</a>
+</nav></div>
+</header>
+<div style="position: absolute; right: 110px; top: 10px; display: flex; gap: 8px;">
+<div class="b-panel" role="img" aria-label="ISCO compute 3 of 12" style="display: flex; align-items: center; gap: 8px; height: 48px;"><span class="b-lbl" style="color: #c9bcff;">ISCO</span><span style="display: flex; gap: 2px;"><sc-for list="{{meter}}" as="m" hint-placeholder-count="12"><span style="width: 8px; height: 14px; background: {{m.c}};"></span></sc-for></span></div>
+<div class="b-panel" style="display: flex; align-items: center; height: 48px;"><span class="b-h" style="font-size: 26px; color: #d8d1e6; line-height: 1;">DAY 2 21:14</span></div>
+</div>
+<nav aria-label="Crew" style="position: absolute; right: 12px; top: 10px; display: flex; flex-direction: column; gap: 4px; align-items: center;">
+<sc-for list="{{crew}}" as="c" hint-placeholder-count="5">
+<button type="button" onClick="{{c.select}}" aria-label="{{c.label}}" style="background: none; border: 0; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center;">
+<span style="position: relative; display: block; width: 72px; height: 72px;"><img src="{{c.img}}" alt="" style="position: absolute; left: 14px; top: 14px; width: 44px; height: 44px; border-radius: 50%;"><span class="b-hp36" style="position: absolute; inset: 0; background-size: 504px 72px; background-position: {{c.hp72}}px 0;"></span><span class="b-en36" style="position: absolute; inset: 0; background-size: 504px 72px; background-position: {{c.en72}}px 0;"></span></span>
+<span class="b-lbl" style="color: {{c.fg}}; background: #040308; padding: 1px 5px;">{{c.NAME}}</span>
+</button>
+</sc-for>
+</nav>
+<sc-if value="{{hasSel}}" hint-placeholder-val="{{ false }}">
+<aside aria-label="{{sel.name}}" class="b-panel" style="position: absolute; right: 110px; top: 66px; width: 300px; z-index: 6; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; gap: 12px; align-items: center;"><img src="{{sel.img}}" alt="" class="r3-px" style="width: 96px; height: 96px; flex: none; box-shadow: 0 0 0 2px #040308, 0 0 0 4px {{sel.col}};"><div style="min-width: 0;"><div class="b-h" style="font-size: 30px; line-height: 1;">{{sel.name}}</div><div style="color: #b4aacb;">{{sel.role}}</div></div></div>
+<div style="line-height: 1.05;"><span style="color: #b4aacb;">{{sel.mood}}.</span> {{sel.note}}</div>
+<div style="display: flex; gap: 6px;"><button type="button" class="b-key b-txt">MESSAGE</button><button type="button" class="b-key b-txt">CODEX</button><button type="button" class="b-key b-txt" onClick="{{closeCard}}" style="margin-left: auto;">X</button></div>
+</aside></sc-if>
+<div class="b-panel" style="position: absolute; left: 10px; bottom: 158px; pointer-events: none;"><div class="b-h" style="font-size: 34px; line-height: .95;">THE EVENT HORIZON</div><div style="color: #b4aacb;">Deck 2, the Promenade</div></div>
+<div class="b-panel" aria-label="Recent rolls" style="position: absolute; right: 12px; bottom: 90px; display: flex; flex-direction: column; gap: 2px; align-items: flex-end;"><sc-for list="{{feed}}" as="f" hint-placeholder-count="3"><span><span style="color: #b4aacb;">{{f.who}} {{f.stat}}</span> <span style="color: {{f.col}};">{{f.num}}</span></span></sc-for></div>
+<div style="position: absolute; right: 12px; bottom: 12px; display: flex; gap: 4px;"><button type="button" class="b-key b-txt" onClick="{{zoomOut}}" aria-label="Zoom out" style="width: 52px; height: 60px;">-</button><button type="button" class="b-key b-txt" onClick="{{fit}}" style="height: 60px;">FIT</button><button type="button" class="b-key b-txt" onClick="{{zoomIn}}" aria-label="Zoom in" style="width: 52px; height: 60px;">+</button></div>
+<sc-if value="{{drawer}}" hint-placeholder-val="{{ false }}">
+<aside aria-label="Character sheet" class="b-panel" style="position: absolute; left: 10px; top: 70px; bottom: 158px; width: 390px; z-index: 6; display: flex; flex-direction: column; gap: 10px; overflow: hidden;">
+<div class="b-h" style="font-size: 34px; line-height: .9;">VESNA DRAGAN</div>
+<div style="color: #b4aacb; margin-top: -8px;">The Thief. Late 40s, married to Tomo.</div>
+<section aria-label="Skills and chrome" style="display: flex; flex-direction: column; gap: 8px;"><sc-for list="{{list}}" as="k" hint-placeholder-count="5"><div><div style="color: #ffffff;">{{k.name}}</div><div style="color: #b4aacb; font-size: 19px;">{{k.sub}}</div></div></sc-for></section>
+<section aria-label="On hand" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; margin-top: auto;"><sc-for list="{{items}}" as="i" hint-placeholder-count="4"><div style="display: flex; align-items: center; gap: 6px;"><img src="{{i.src}}" alt="" class="r3-px" style="width: 48px; height: 48px;"><span style="font-size: 20px;">{{i.name}}</span></div></sc-for></section>
+</aside></sc-if>
+<div style="position: absolute; left: 10px; bottom: 10px; display: flex; align-items: flex-end; gap: 6px;">
+<div role="img" aria-label="Ves. HP {{me.hp}} of 6, Entropy {{me.en}} of 6" style="position: relative; width: 128px; height: 128px; flex: none;">
+<img src="{{me.img}}" alt="" style="position: absolute; left: 20px; top: 20px; width: 88px; height: 88px; border-radius: 50%; background: #000;">
+<span class="b-hp64" style="position: absolute; inset: 0; background-size: 896px 128px; background-position: {{me.hp128}}px 0;"></span><span class="b-en64" style="position: absolute; inset: 0; background-size: 896px 128px; background-position: {{me.en128}}px 0;"></span>
+</div>
+<div class="b-panel" style="display: flex; align-items: center; gap: 8px; height: 104px; padding: 0 2px;">
+<div style="width: 98px; display: flex; flex-direction: column; gap: 3px;"><div class="b-h" style="font-size: 30px; line-height: .9;">VES</div><span style="color: #5ee08c; line-height: 1;">HP {{me.hp}}/6</span><span style="color: #f2b544; line-height: 1;">ENT {{me.en}}/6</span></div>
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="6">
+<button type="button" class="b-key" onClick="{{s.open}}" aria-label="Roll {{s.title}}, {{s.dieLabel}}" style="width: 124px; height: 84px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;"><span style="display: flex;"><img src="{{s.icon}}" alt="" class="r3-px" style="width: 48px; height: 48px;"><img src="{{s.src}}" alt="" class="r3-px" style="width: 48px; height: 48px;"></span><span class="b-lbl" style="font-size: 9px; line-height: 1;">{{s.name}}</span></button>
+</sc-for>
+<button type="button" class="b-key b-txt" onClick="{{toggleDrawer}}" style="height: 84px; width: 72px;">{{drawerLabel}}</button>
+<button type="button" class="b-pink b-h" onClick="{{openRoll}}" style="height: 84px; width: 96px; font-size: 32px; color: #1a0612;">ROLL</button>
+</div>
+</div>
+<sc-if value="{{isOpen}}" hint-placeholder-val="{{ false }}">
+<div role="dialog" aria-label="Roll" class="b-veil" style="position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; overflow: hidden;">
+<button type="button" class="b-key b-txt" onClick="{{close}}" style="position: absolute; right: 20px; top: 16px;">CLOSE</button>
+<div class="b-panel" style="position: absolute; left: 20px; top: 16px; display: flex; gap: 8px; align-items: center;"><img src="{{enIcon}}" alt="" class="r3-px" style="width: 48px; height: 48px;"><span class="b-h" style="font-size: 30px; color: #f2b544;">{{entN}}/6</span></div>
+<sc-if value="{{isPick}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; align-items: flex-end; justify-content: center; gap: 28px; height: 400px;">
+<sc-for list="{{pickStats}}" as="s" hint-placeholder-count="6">
+<button type="button" onClick="{{s.pick}}" aria-label="{{s.aria}}" style="position: relative; background: none; border: 0; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 160px;">
+<sc-if value="{{s.on}}" hint-placeholder-val="{{ false }}"><span class="r3-px b-spot-{{s.spot}}" style="position: absolute; left: 50%; bottom: 30px; width: 300px; height: 420px; margin-left: -150px; background-size: 300px 420px; pointer-events: none;"></span></sc-if>
+<img src="{{s.src}}" alt="" class="r3-px" style="position: relative; width: {{s.size}}px; height: {{s.size}}px;">
+<img src="{{s.icon}}" alt="" class="r3-px" style="position: relative; width: 48px; height: 48px;">
+<span class="b-lbl" style="position: relative; color: {{s.fg}};">{{s.name}}</span>
+</button>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 1000px;">
+<sc-for list="{{pickSkills}}" as="k" hint-placeholder-count="5"><button type="button" class="b-chip-{{k.cls}}" onClick="{{k.toggle}}">{{k.name}}</button></sc-for>
+</div>
+<div style="display: flex; align-items: center; gap: 18px;"><span class="b-h" style="font-size: 32px; min-width: 170px; text-align: right;">{{summary}}</span><button type="button" class="b-pink b-h" onClick="{{rollIt}}" disabled="{{rollOff}}" style="font-size: 34px; color: #1a0612; height: 60px; padding-inline: 38px;">ROLL IT</button></div>
+</sc-if>
+<sc-if value="{{isRolling}}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; justify-content: center; gap: 18px; white-space: nowrap;"><span class="b-junk" style="color: {{curCol}};">{{junkL}}</span><span class="b-h" style="font-size: 200px; line-height: 1;">{{flick}}</span><span class="b-junk" style="color: {{curCol}};">{{junkR}}</span></div></sc-if>
+<sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{notNat1}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; align-items: center; gap: 8px;"><img src="{{curIcon}}" alt="" class="r3-px" style="width: 96px; height: 96px;"><img src="{{curDie}}" alt="" class="r3-px" style="width: 96px; height: 96px;"></div>
+<div class="b-h" style="font-size: 280px; line-height: .75; color: #ffffff; text-shadow: 8px 8px 0 {{curCol}};">{{total}}</div>
+<div style="color: #b4aacb; min-height: 24px;">{{rollsTxt}}</div>
+<div style="display: flex; gap: 6px;"><sc-for list="{{ladder}}" as="r" hint-placeholder-count="5"><div style="width: 132px; display: flex; flex-direction: column; gap: 6px; color: {{r.fg}};"><span style="height: 8px; background: {{r.c}}; box-shadow: 0 0 0 2px #040308;"></span><span>{{r.name}} {{r.v}}</span></div></sc-for></div>
+<div style="display: flex; gap: 8px;"><button type="button" class="b-key b-txt" onClick="{{push}}" disabled="{{pushOff}}">{{pushLabel}}</button><button type="button" class="b-key b-txt" onClick="{{close}}">BACK TO THE MAP</button></div>
+</sc-if>
+<sc-if value="{{nat1}}" hint-placeholder-val="{{ false }}"><div class="b-h" style="font-size: 110px; color: #ff5a4a; text-shadow: 6px 6px 0 #3d0d0d;">OH YOU FUCKED UP.</div><button type="button" class="b-key b-txt" onClick="{{close}}">YEAH. OKAY.</button></sc-if>
+</sc-if>
+</div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":null},"mood":{"editor":"enum","options":["open","after","stand"],"default":"open","section":"Bar"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  state = { px: 0, py: 2, zoom: 0.5625, pos: {}, drag: null, tokDrag: null, sel: null, phase: 'closed', pick: null, skill: -1, total: 0, rolls: [], pushes: 0, ent: 3, tick: 0, drawer: false, nat1: false, die: 0 };
+
+  componentDidMount() {
+    const v = this.props.view;
+    if (v === 'pick') this.setState({ phase: 'pick', pick: 'TECH', skill: 0 });
+    if (v === 'result') this.setState({ phase: 'done', pick: 'TECH', skill: 0, total: 9, rolls: [9], die: 12 });
+    if (v === 'sheet') this.setState({ drawer: true });
+    if (v === 'card') this.setState({ sel: 'dax' });
+  }
+  componentWillUnmount() { clearInterval(this.iv); }
+
+  proj(X, Y, Z) { return [((X - Y) * 30 + 536) * 2, ((X + Y) * 15 - Z * 36 + 201) * 2]; }
+  seg(n, v, on, off) {
+    const g = 7, w = 360 / n, p = [];
+    for (let i = 0; i < n; i++) {
+      const a = i * w, c = i < v ? on : off;
+      p.push('transparent ' + a + 'deg ' + (a + g / 2) + 'deg', c + ' ' + (a + g / 2) + 'deg ' + (a + w - g / 2) + 'deg', 'transparent ' + (a + w - g / 2) + 'deg ' + (a + w) + 'deg');
+    }
+    return 'conic-gradient(' + p.join(',') + ')';
+  }
+  people() {
+    const ISCO = '#c9bcff', DUSK = '#a9a2bc';
+    return [
+      { id: 'ves', name: 'Ves', full: 'Vesna "Ves" Dragan', role: 'The Thief', img: '/_blob/e6071441b882bfcc677068003d8bb15d', crew: true, me: true, hp: 4, en: 3, col: '#ff4fa3', at: [9.7, 6.2, 0], mood: 'Counting exits', note: 'That is you.' },
+      { id: 'tomo', name: 'Tomo', full: 'Tomo Dragan', role: 'The Bruiser', img: '/_blob/dc1a093262f3347a48b05362bace7b6e', crew: true, hp: 3, en: 2, col: '#ff4fa3', at: [9.4, 3.9, 0], mood: 'Hungry', note: 'Bakes when he worries.' },
+      { id: 'lale', name: 'Lale', full: 'Dr. Lale Osei', role: 'The Doctor', img: '/_blob/46800f055cd6c0e10837bb4ae6df661e', crew: true, hp: 6, en: 2, col: '#ff4fa3', at: [8.2, 8.7, 0], mood: 'Listening', note: 'People tell her things.' },
+      { id: 'marlo', name: 'Marlo', full: 'Marlo Quill', role: 'The Face', img: '/_blob/35097f28e94ec04b3d9a0d76ffb3be93', crew: true, hp: 5, en: 3, col: '#ff4fa3', at: [11.7, 8.9, 0], mood: 'Charming', note: 'Owes someone.' },
+      { id: 'tally', name: 'Tally', full: 'Tally', role: 'The Hacker', img: '/_blob/8b2742d12aa2b84b941c77912fb08e77', crew: true, hp: 6, en: 1, col: '#ff4fa3', at: [11.9, 4.4, 0], mood: 'Taking notes', note: 'Used to audit slot machines.' },
+      { id: 'dax', name: 'Old Dax', role: 'Barkeep', img: '/_blob/3019026dbad6747ba98eba12032f431e', col: '#f2b544', at: [11.6, 1.05, 0], mood: 'Watching the door', note: 'Keeps one table nobody sits at.' },
+      { id: 'fixer', name: 'The fixer', role: 'Your client', img: '/_blob/112776eab026804ed6afaf6ae62d971f', col: '#ff5a4a', at: [16.85, 8.05, 0], mood: 'Patient', note: 'Asked nicely.' },
+      { id: 'c14', name: 'Cleaner Unit 14', role: 'Cleaner, ISCO', img: '/_blob/910ec99eac0fba46e493cb0ddf4c2dc4', col: ISCO, at: [3.35, 9.55, 0], mood: 'Delighted', note: 'Its eyes slide away once a loop.' },
+      { id: 'regular', name: 'Slot regular', role: 'Resident', img: '/_blob/2913081280d4d441b556fc50dd13750f', col: ISCO, at: [-.86, 10.35, 0], mood: 'Winning', note: 'Has never lost.' },
+      { id: 'resident', name: 'Happy resident', role: 'Resident', img: '/_blob/9547f658f907d28dc2ddc5b01047921b', col: DUSK, at: [11.35, 11.55, 0], mood: 'Happy', note: 'Very happy.' },
+      { id: 'droid', name: 'Service droid', role: 'Staff, ISCO', img: '/_blob/5b8e42ff7ec5b93fbba654c103b7eca4', col: ISCO, at: [5.35, 6.55, 0], mood: 'Helpful', note: 'Will bring you anything.' }
+    ];
+  }
+  zoomAt(z, cx, cy) {
+    const st = this.state;
+    const nz = Math.min(3, Math.max(.3, z));
+    const k = nz / st.zoom;
+    this.setState({ zoom: nz, px: cx - (cx - st.px) * k, py: cy - (cy - st.py) * k });
+  }
+  doRoll(eff) {
+    clearInterval(this.iv);
+    const r = (d) => 1 + Math.floor(Math.random() * d);
+    const rolls = [r(eff.die)];
+    const nat1 = rolls[0] === 1;
+    while (rolls[rolls.length - 1] === eff.die && rolls.length < 6) rolls.push(r(eff.die));
+    const total = rolls.reduce((a, b) => a + b, 0) + eff.bonus;
+    this.setState({ phase: 'rolling', tick: 0, rolls, total, nat1, die: eff.die, pushes: 0 });
+    let t = 0;
+    this.iv = setInterval(() => {
+      t += 1;
+      if (t > 22) { clearInterval(this.iv); this.setState({ phase: 'done' }); } else this.setState({ tick: t });
+    }, 70);
+  }
+  renderVals() {
+    const st = this.state;
+    const scale = Math.min(1.8, Math.max(.6, .8 / st.zoom));
+    const P = this.people();
+    const off = '#2a2636';
+    const HP = '#5ee08c', EN = '#f2b544';
+    const deco = (d) => {
+      const me = d.id === 'ves';
+      const en = me ? st.ent : (d.en || 0), hp = d.hp || 0;
+      return Object.assign({}, d, {
+        NAME: d.name.toUpperCase(), en, hp, isNpc: !d.crew,
+        hpC: this.seg(6, hp, HP, off), enC: this.seg(6, en, EN, off),
+        hp64: -64 * hp, en64: -64 * en, hp72: -72 * hp, en72: -72 * en, hp128: -128 * hp, en128: -128 * en
+      });
+    };
+    const toks = P.map((d0) => {
+      const d = deco(d0);
+      const home = this.proj(d.at[0], d.at[1], d.at[2]);
+      const p = st.pos[d.id] || { x: home[0], y: home[1] };
+      return Object.assign(d, {
+        x: p.x, y: p.y, z: Math.round(p.y), scale, showName: true,
+        foot: st.sel === d.id ? '#ffffff' : d.col,
+        plate: st.sel === d.id ? '#ffffff' : 'rgba(0,0,0,.82)', plateFg: st.sel === d.id ? '#000000' : '#ffffff',
+        down: (e) => { e.stopPropagation(); this.dragged = false; this.setState({ tokDrag: { id: d.id, sx: e.clientX, sy: e.clientY, ox: p.x, oy: p.y } }); },
+        select: () => { if (!this.dragged) this.setState({ sel: this.state.sel === d.id ? null : d.id }); }
+      });
+    });
+    const me = deco(P[0]);
+    const crew = ['lale', 'marlo', 'tally', 'ves', 'tomo'].map((id) => {
+      const d = deco(P.find((x) => x.id === id));
+      return Object.assign(d, { label: d.name + ', HP ' + d.hp + ' of 6, Entropy ' + d.en + ' of 6', fg: d.me ? '#ff7dbb' : '#ffffff', select: () => this.setState({ sel: this.state.sel === id ? null : id }) });
+    });
+    const S = [
+      { name: 'BODY', title: 'Body', low: 'body', die: 4, icon: '/_blob/933eb2595dd2d975433d9f200fcbcb75', dice: { 4: '/_blob/dc3c946d78128b4f168caf41f16b03aa', 6: '/_blob/d98726799ef02c19ace8993b17780525' }, col: '#ef7d4a' },
+      { name: 'REFLEX', title: 'Reflex', low: 'reflex', die: 20, icon: '/_blob/6e46704e0e227474778d11dbb3cfd2e7', dice: { 20: '/_blob/42d52e57d700145acb45e2ab97a8144a' }, col: '#f2c048' },
+      { name: 'TECH', title: 'Tech', low: 'tech', die: 10, icon: '/_blob/e1f2d9c83b351a0b30bdc0c35137a79d', dice: { 10: '/_blob/a243dd0eee6ed5a8c76004da73572686', 12: '/_blob/2443a7588603cc2105eb208f24833fe2' }, col: '#46d6f0' },
+      { name: 'INTEL', title: 'Intel', low: 'intel', die: 8, icon: '/_blob/6d2b1a91cb409d16d06896c8d06193ea', dice: { 8: '/_blob/f66fc6484c624de289c8f0e38aa04fe0', 10: '/_blob/96893374dc00556186cf996010f5b617' }, col: '#6f93ff' },
+      { name: 'COOL', title: 'Cool', low: 'cool', die: 12, icon: '/_blob/7c98b50b9224dad80c17b4b5379fdf7f', dice: { 12: '/_blob/40b7b126eabfd38f050862ceb2d4a235', 20: '/_blob/28b098d3134248ba90785f534e5f07fe' }, col: '#a06cff' },
+      { name: 'EMPATHY', title: 'Empathy', low: 'empathy', die: 6, icon: '/_blob/b0902dd9bed0eede4f0850c38709f914', dice: { 6: '/_blob/a2e4580ad154aab81b3e09726684b3b0', 8: '/_blob/19f8160ccb2143083ce49dc7da7122f1' }, col: '#ff5fb0' }
+    ];
+    const STEP = [4, 6, 8, 10, 12, 20];
+    const eff = (s, sk) => (sk < 0 ? { die: s.die, bonus: 0 } : (s.die === 20 ? { die: 20, bonus: 2 } : { die: STEP[STEP.indexOf(s.die) + 1], bonus: 0 }));
+    const list = [
+      { name: 'Been in worse vents', sub: 'Can\'t leave a lock alone' },
+      { name: 'Nobody looks at the small woman', sub: 'Holds grudges' },
+      { name: 'Tomo, no', sub: 'Always has to fix him' },
+      { name: 'Silent legs', sub: 'Chrome' },
+      { name: 'Camera-cone eye', sub: 'Chrome' }
+    ];
+    const cur = S.find((s) => s.name === st.pick) || null;
+    const E = cur ? eff(cur, st.skill) : null;
+    const L = Math.max(0, 22 - st.tick);
+    const G = '#%&$*@/\\+=<>~^';
+    const junk = (n, seed) => { let o = ''; for (let i = 0; i < n; i++) o += G[(i * 7 + seed * 3 + st.tick * 5) % G.length]; return o; };
+    const flick = st.tick < 19 ? 1 + ((st.tick * 7) % (st.die || 6)) : st.total;
+    const push = st.pushes;
+    const exploded = st.rolls.length > 1;
+    const sel = st.sel ? toks.find((t) => t.id === st.sel) : null;
+    const on = (c) => (c ? 1 : 0);
+    const mood = this.props.mood || 'open';
+    const IMG = { open: ['/_blob/47158da971c4f2937f3d16de862f5f9e', '/_blob/e4e226280eefc41fbdd8d2ada6c8fff8'], after: ['/_blob/5a7a4e099f6e204725bdd4ca4a5414ec', '/_blob/e23283b74b088ee5958af3cc8779f38d'], stand: ['/_blob/0e0ed6a073a45188da837896c4315330', '/_blob/7f451c4434b3bc8a6fc6d52fd5eaa792'] };
+    const moods = ['open', 'after', 'stand'];
+    const shown = st.total + push * (exploded ? 2 : 1);
+    return {
+      toks, me, crew, sel, hasSel: !!sel,
+      bases: moods.map((m) => ({ src: IMG[m][0], op: on(mood === m) })),
+      glows: moods.map((m) => ({ src: IMG[m][1], op: on(mood === m) })),
+      stats: S.map((s) => ({ name: s.name, title: s.title, icon: s.icon, col: s.col, dieLabel: 'd' + s.die, src: s.dice[s.die], open: () => this.setState({ phase: 'pick', pick: s.name, skill: -1 }) })),
+      list,
+      items: [
+        { name: 'Sidearm', src: '/_blob/8bab6a616422fb90957f3cc377678d64' },
+        { name: 'Splice kit', src: '/_blob/20cb902dfe7bbd92e89f4e173d1380ad' },
+        { name: '140 credits', src: '/_blob/0ba6b37ee2b31f94c94529ebcf9ec1f2' },
+        { name: 'Vault 3 chit', src: '/_blob/fe82c5d936a26b4de8d90f27595cd9b1' }
+      ],
+      hpIcon: '/_blob/a5d35f8405090cf3aef69c21322c814d', enIcon: '/_blob/d7661b291ae170367ad0a15e93cfa635', entN: st.ent,
+      meter: Array.from({ length: 12 }, (_, i) => ({ on: i < 3, off: i >= 3, c: i < 3 ? '#c9bcff' : '#2a2436' })),
+      feed: [
+        { who: 'Tally', stat: 'Tech', num: 14, col: '#46d6f0', img: '/_blob/8b2742d12aa2b84b941c77912fb08e77' },
+        { who: 'Marlo', stat: 'Cool', num: 9, col: '#a06cff', img: '/_blob/35097f28e94ec04b3d9a0d76ffb3be93' },
+        { who: 'Tomo', stat: 'Body', num: 2, col: '#ef7d4a', img: '/_blob/dc1a093262f3347a48b05362bace7b6e' }
+      ],
+      zoomPct: Math.round(st.zoom * 200) + '%',
+      worldTransform: 'translate(' + st.px + 'px, ' + st.py + 'px) scale(' + st.zoom + ')',
+      cursor: st.drag ? 'grabbing' : 'grab',
+      onDown: (e) => { this.setState({ drag: { x: e.clientX, y: e.clientY, px: st.px, py: st.py } }); },
+      onMove: (e) => {
+        const td = this.state.tokDrag;
+        if (td) {
+          const z = this.state.zoom;
+          const dx = (e.clientX - td.sx) / z, dy = (e.clientY - td.sy) / z;
+          if (Math.abs(dx) + Math.abs(dy) > 3) this.dragged = true;
+          const pos = Object.assign({}, this.state.pos);
+          pos[td.id] = { x: Math.round(td.ox + dx), y: Math.round(td.oy + dy) };
+          this.setState({ pos });
+          return;
+        }
+        const d = this.state.drag;
+        if (!d) return;
+        this.setState({ px: d.px + e.clientX - d.x, py: d.py + e.clientY - d.y });
+      },
+      onUp: () => { if (this.state.drag || this.state.tokDrag) this.setState({ drag: null, tokDrag: null }); },
+      onWheel: (e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        this.zoomAt(this.state.zoom * Math.exp(-e.deltaY * .0015), e.clientX - r.left, e.clientY - r.top);
+      },
+      zoomIn: () => this.zoomAt(st.zoom * 1.3, 720, 400),
+      zoomOut: () => this.zoomAt(st.zoom / 1.3, 720, 400),
+      fit: () => this.setState({ px: 0, py: 2, zoom: 0.5625 }),
+      closeCard: () => this.setState({ sel: null }),
+      toggleDrawer: () => this.setState({ drawer: !st.drawer }),
+      drawer: st.drawer, drawerLabel: st.drawer ? 'CLOSE' : 'SHEET',
+      openRoll: () => this.setState({ phase: 'pick', pick: null, skill: -1 }),
+      close: () => { clearInterval(this.iv); this.setState({ phase: 'closed' }); },
+      isOpen: st.phase !== 'closed', isPick: st.phase === 'pick', isRolling: st.phase === 'rolling', isDone: st.phase === 'done',
+      pickStats: S.map((s) => {
+        const isOn = s.name === st.pick;
+        const e = isOn ? eff(s, st.skill) : { die: s.die };
+        return {
+          name: s.name, title: s.title, aria: s.title + ', d' + e.die, icon: s.icon, col: s.col, on: isOn, off: !isOn, src: s.dice[e.die], size: isOn ? 144 : 96, label: 'd' + e.die,
+          fg: isOn ? '#ffffff' : '#b4aacb', cls: isOn ? 'on' : 'off', spot: s.low,
+          pick: () => this.setState({ pick: s.name })
+        };
+      }),
+      pickSkills: list.map((k, i) => ({ name: k.name, on: st.skill === i, off: st.skill !== i, fg: st.skill === i ? '#ffffff' : '#b4aacb', bar: st.skill === i ? '#ff4fa3' : 'transparent', cls: st.skill === i ? 'on' : 'off', toggle: () => this.setState({ skill: st.skill === i ? -1 : i }) })),
+      hasPick: !!cur, noPick: !cur,
+      summary: cur ? cur.title + ', d' + E.die + (E.bonus ? ' +' + E.bonus : '') : 'Pick a stat',
+      curCol: cur ? cur.col : '#ffffff', curIcon: cur ? cur.icon : '', curTitle: cur ? cur.title : '', curName: cur ? cur.name : '',
+      curDie: cur ? cur.dice[E.die] : '', curDieLabel: E ? 'd' + E.die : '',
+      rollIt: () => { if (cur) this.doRoll(E); },
+      rollOff: !cur,
+      junkL: junk(Math.min(L, 22), 1), junkR: junk(Math.min(L, 22), 4), flick,
+      total: shown, nat1: st.phase === 'done' && st.nat1, notNat1: !(st.phase === 'done' && st.nat1), exploded,
+      rollsTxt: exploded ? st.rolls.join(' + ') + (push ? ' + ' + push * 2 : '') : (push ? st.rolls[0] + ' + ' + push : ''),
+      ladder: [['Easy', 3], ['Normal', 5], ['Hard', 7], ['Very hard', 9], ['Heroic', 11]].map(([n, v]) => {
+        const met = shown >= v;
+        return { name: n, v, met, c: met ? (cur ? cur.col : '#fff') : '#2a2436', fg: met ? '#ffffff' : '#b4aacb', op: met ? 1 : .45 };
+      }),
+      push: () => { if (st.ent > 0 && st.pushes < 2) this.setState({ ent: st.ent - 1, pushes: st.pushes + 1 }); },
+      pushOff: st.ent <= 0 || st.pushes >= 2,
+      pushLabel: 'Push, +' + (exploded ? 2 : 1) + ' for 1 Entropy',
+      pushCount: st.ent
+    };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-11-03T14:10:00Z"},
+  "title": "LSO — Icons",
+  "launch": {"view": "canvas"},
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {"x": 0, "y": 0, "w": 940, "h": 640, "title": "Stats · A Objects"},
+    "Glyphs.dc.html": {"x": 1020, "y": 0, "w": 940, "h": 600, "title": "Stats · B Glyphs"},
+    "Implants.dc.html": {"x": 0, "y": 960, "w": 640, "h": 480, "title": "Implants · A Objects"},
+    "Items.dc.html": {"x": 720, "y": 960, "w": 940, "h": 480, "title": "Items · A Objects"},
+    "Dice.dc.html": {"x": 0, "y": 1560, "w": 940, "h": 680, "title": "Dice · every stat colour"},
+    "Vitals.dc.html": {"x": 1020, "y": 1560, "w": 940, "h": 580, "title": "HP, Humanity, Entropy"}
+  },
+  "order": ["Main.dc.html", "Glyphs.dc.html", "Implants.dc.html", "Items.dc.html", "Dice.dc.html", "Vitals.dc.html"],
+  "notes": {
+    "row1": {"kind": "title1", "x": 0, "y": -300, "maxW": 1960, "text": "Stat icons, two ways"},
+    "row2": {"kind": "title1", "x": 0, "y": 720, "maxW": 1660, "text": "Implants and items"},
+    "pick": {"x": 2040, "y": 0, "w": 460, "size": "m", "fill": "pink", "text": "Picked: A Objects.\n\nThey hold up best at 48 px and larger, so the sheet row now shows them at that size. At 24 px the shades, lens and chip get muddy."}
+  },
+  "designSystems": []
+}

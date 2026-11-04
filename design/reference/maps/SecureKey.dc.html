@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Secure floor, what's where</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+</style>
+</helmet>
+<div style="position: relative; width: 1460px; height: 1250px; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
+<div style="position: relative; width: 1460px; height: 890px;">
+<img src="/_blob/78dd28e91dbae05fda50336e7943eb51" alt="The Secure floor map with numbered markers" style="position: absolute; left: 0; top: 0; width: 1460px; height: 890px; display: block; image-rendering: pixelated;">
+<sc-for list="{{pins}}" as="p" hint-placeholder-count="16">
+<div style="position: absolute; left: {{p.x}}px; top: {{p.y}}px; width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Silkscreen', monospace; font-size: 10px; background: {{p.bg}}; color: #000000; box-shadow: 0 0 0 2px #000000;">{{p.k}}</div>
+</sc-for>
+</div>
+<div style="box-sizing: border-box; height: 360px; padding: 18px 32px; display: grid; grid-template-columns: 2fr 3fr; gap: 32px;">
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.35;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 13px; color: #ffffff;">FROM THE BIBLE AND OUR PLAN</div>
+<div>1 · Vault door, treated like a shrine, ring on the door</div>
+<div>2 · Probe, locked in one lit case</div>
+<div>3 · Mech hall, where the fight happens</div>
+<div>4 · Guarded door from deck 8</div>
+<div>5 · Vent, your OK: comes out behind the cradle, off camera</div>
+<div>Alert, your call: vault door resealed with a bolted steel plate, hazard stripes and SEALED across it</div>
+<div>No white-violet: ISCO has no systems up here</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.35;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 13px; color: #ff6fb5;">MY ADDITIONS</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 20px;">
+<div>A · Checkpoint: booth, bag scanner, bench</div>
+<div>B · Scanner arch, with two cameras on it</div>
+<div>C · Guard room: bunks, lockers, table, gun rack</div>
+<div>D · Mech's cradle: the mech is a token on it</div>
+<div>E · Cover: crates, barriers, two stub columns</div>
+<div>F · Old wood floor, runner and founder's ring</div>
+<div>G · Flowers, candles and a brass rope rail</div>
+<div>H · Hand plate on the door, for Lale</div>
+<div>I · Systems panel beside the door, for Tally</div>
+<div>J · Caged racks of confiscated gear</div>
+<div>K · SECURE on the wall, DECK 8 on the floor</div>
+<div>Four cameras, cones on the CAMERAS switch</div>
+<div>In Alert: flowers gone, tape across the rail, cradle arms thrown back, red screens</div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1460,"height":1250}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const at = (X, Y, Z) => [(X - Y) * 30 + 640, (X + Y) * 15 - Z * 36 + 150];
+    const list = [
+      ['1', 17.5, .3, 3.0, 0], ['2', 1.4, 1.4, 2.0, 0], ['3', 17, 11, .9, 0], ['4', 17.5, 20, .7, 0], ['5', 25.65, .1, 1.7, 0],
+      ['A', 22.5, 17, 2.9, 1], ['B', 15.9, 15, 3.0, 1], ['C', 4.8, 14.3, 1.4, 1], ['D', 23.6, 2.25, .8, 1], ['E', 21.3, 10.4, 1.5, 1],
+      ['F', 15.2, 2.2, .4, 1], ['G', 14.45, .6, 1.4, 1], ['H', 19.0, .3, 1.9, 1], ['I', 20.65, .1, 2.4, 1], ['J', 6, 0, 2.9, 1], ['K', 12, 0, 3.55, 1]
+    ];
+    return {
+      pins: list.map((p) => {
+        const a = at(p[1], p[2], p[3]);
+        return { k: p[0], x: a[0], y: a[1], bg: p[4] ? '#ff6fb5' : '#ffffff' };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

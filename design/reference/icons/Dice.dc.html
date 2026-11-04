@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dice icons</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#09080c}
+</style>
+</helmet>
+<div style="width: 940px; height: 680px; box-sizing: border-box; padding: 40px; display: flex; flex-direction: column; gap: 28px; background: #09080c; color: #ece8f2; font-family: 'Space Grotesk', system-ui, sans-serif;">
+<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px;">
+<sc-for list="{{dice}}" as="d" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="width: 112px; height: 112px; display: flex; align-items: center; justify-content: center; background: #0b0a0f; border: 1px solid #221e2a; border-radius: 6px;">
+<img src="{{d.big}}" alt="{{d.name}}" style="display: block; width: 96px; height: 96px; image-rendering: pixelated;">
+</div>
+<div style="display: flex; align-items: flex-end; gap: 12px;">
+<img src="{{d.big}}" alt="" style="display: block; width: 48px; height: 48px; image-rendering: pixelated;">
+<img src="{{d.small}}" alt="" style="display: block; width: 28px; height: 28px; image-rendering: pixelated;">
+</div>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+<div style="display: flex; align-items: center; gap: 12px;">
+<span style="width: 80px; flex: none; font-family: 'Silkscreen', monospace; font-size: 11px; color: #ece8f2;">{{r.name}}</span>
+<div style="display: flex; gap: 14px;">
+<sc-for list="{{r.dice}}" as="c" hint-placeholder-count="6">
+<img src="{{c.src}}" alt="" style="display: block; width: 48px; height: 48px; image-rendering: pixelated;">
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":940,"height":680}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const row = (name, ids) => ({ name, dice: ids.map((id) => ({ src: '/_blob/' + id })) });
+    return {
+      dice: [
+        { name: 'd4', big: '/_blob/241dd9050fc768cc7c7accf70992b5bb', small: '/_blob/85d0bde94ad1f4e2fc8a3b0cfb0a3cb7' },
+        { name: 'd6', big: '/_blob/17a4faaf78ca8a2936ca50088d310b30', small: '/_blob/285bd7a3e6c8112e1d966b8903c0fcb6' },
+        { name: 'd8', big: '/_blob/6639dfb4ca0473021a44109094cea96f', small: '/_blob/678325d5b44ef03b8a5133ff74b80b1b' },
+        { name: 'd10', big: '/_blob/e512567839b3d8e9812bb5f7969eaae5', small: '/_blob/17fc8445b6fffdb63f8ac68bdf91ece2' },
+        { name: 'd12', big: '/_blob/3e0f35a6b7005e2c1fd7649a9cf5b831', small: '/_blob/9bbd312fbccbec60073d5f9bb7260c48' },
+        { name: 'd20', big: '/_blob/9770ab367ba4b6c7a04f15fd8facc9f5', small: '/_blob/c9890f27d683ca05c3e93db6a32707a5' }
+      ],
+      rows: [
+        row('BODY', ['353e5bbf7fd9fe21b14561aa845b27fb', '17a4faaf78ca8a2936ca50088d310b30', '49f933853aa12c09d609181270e91831', '7b2a685f860a995db8fd98f9a8eb3809', '4587dcc0b6ffe9ab05da3c37bf4f96dd', '9d6c96b9bd82e26a94d98508687c3d3a']),
+        row('REFLEX', ['5e5d2e36fb4963fe2c21c212b561d36e', 'a79e9b783c82647dc249392bdb02cb0c', '6639dfb4ca0473021a44109094cea96f', 'a1b288bd12c8e13380ce11f3f0e88d4c', '2368a85667e0107f9c70df9acf4250eb', '1c991641b525370388352ee29a12711e']),
+        row('TECH', ['8cd782648550b1819cbe74cc6e964b81', '44f4e97e2936eb9205d6fcfa96ba7e9d', '72c83a6e4586b705cf96361225be3ba5', '450255f60691c89ca817ba11aec06b8c', '05946c1b0b0715bbee2947268089ee57', '9770ab367ba4b6c7a04f15fd8facc9f5']),
+        row('INTEL', ['1cb3b3e2421cf2f11431d33bd497f766', '507a3b3e179563e180d193c987867f64', '466fe089461bf780ec9c34437402273d', 'baa58960ecfe446f2b565c0172a03445', '3e0f35a6b7005e2c1fd7649a9cf5b831', '528867f8f3ef627b2823df9576c47a40']),
+        row('COOL', ['b0d722b3b5e50860f9432bf78e84e735', 'e4869cf1241987640df5d119e7657412', '287340603b686cdcb0a35a8455b90b25', 'e512567839b3d8e9812bb5f7969eaae5', '041d0bf2e89914bf6618b7f28dc438c8', '8486a92248bbd8aebacfaa2ce49a73dd']),
+        row('EMPATHY', ['241dd9050fc768cc7c7accf70992b5bb', '5996113ed2f8a2179f089378ad2e660b', '851857463d993f654e789e968746f658', '663583993a93f5a4dbba3a2abcf6674b', '75cbaaa105979fb11002f98ec612e491', 'aca72226992ec5f55e395adef23b58d1'])
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

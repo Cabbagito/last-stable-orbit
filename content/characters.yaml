@@ -1,0 +1,67 @@
+# The five premade crew, from the Campaign Bible ("The five").
+# stats: the die for each stat. Every line costs 16 points (d4 0, d6 1, d8 2, d10 3, d12 4, d20 6).
+# list: skills and chrome share one list (one pick per roll). icon: a file under assets/, or leave it out
+# for a text-only row until the icon is drawn on the Icons canvas.
+
+- id: lale
+  name: Dr. Lale Osei
+  short: Lale
+  role: The Doctor
+  portrait: portraits/lale.gif
+  stats: {body: 6, reflex: 6, tech: 8, intel: 12, cool: 8, empathy: 20}
+  list:
+    - {kind: skill, name: Has seen worse, downside: Can't walk past anyone hurt.}
+    - {kind: skill, name: Everyone tells me things, downside: "Keeps secrets, even when she shouldn't."}
+    - {kind: skill, name: Steady hands, downside: Never carries a weapon.}
+
+- id: marlo
+  name: Marlo Quill
+  short: Marlo
+  role: The Face
+  portrait: portraits/marlo.gif
+  stats: {body: 4, reflex: 8, tech: 6, intel: 10, cool: 20, empathy: 12}
+  list:
+    - {kind: skill, name: I know a man who knows you, downside: Has burned someone on every world.}
+    - {kind: skill, name: Born for this suit, downside: Can't resist an audience.}
+    - {kind: skill, name: "Sorry, wrong room", downside: Runs when it gets real.}
+    - {kind: chrome, name: Voice mod}
+    - {kind: chrome, name: Face-shaping}
+
+- id: tally
+  name: Tally
+  short: Tally
+  role: The Hacker
+  portrait: portraits/tally.gif
+  stats: {body: 10, reflex: 10, tech: 20, intel: 12, cool: 4, empathy: 4}
+  list:
+    - {kind: skill, name: Talks to machines like dogs, downside: Gets attached.}
+    - {kind: skill, name: "Has read the manual, all of them", downside: Explains at the worst moment.}
+    - {kind: skill, name: "Statistically, no", downside: Says the true thing aloud.}
+    - {kind: chrome, name: Tool fingers, icon: icons/list/implant-grip.png}
+    - {kind: chrome, name: Universal port, icon: icons/list/implant-port.png}
+
+- id: ves
+  name: Vesna Dragan
+  short: Ves
+  role: The Thief
+  portrait: portraits/ves.gif
+  stats: {body: 4, reflex: 20, tech: 10, intel: 8, cool: 12, empathy: 6}
+  list:
+    - {kind: skill, name: Been in worse vents, downside: Can't leave a lock alone., icon: icons/list/ves-vents.png}
+    - {kind: skill, name: Nobody looks at the small woman, downside: Holds grudges., icon: icons/list/ves-nobody.png}
+    - {kind: skill, name: "Tomo, no", downside: Always has to fix him., icon: icons/list/ves-tomo-no.png}
+    - {kind: chrome, name: Silent legs, icon: icons/list/ves-silent-legs.png}
+    - {kind: chrome, name: Camera-cone eye, icon: icons/list/ves-cone-eye.png}
+
+- id: tomo
+  name: Tomo Dragan
+  short: Tomo
+  role: The Bruiser
+  portrait: portraits/tomo.gif
+  stats: {body: 20, reflex: 8, tech: 6, intel: 6, cool: 8, empathy: 12}
+  list:
+    - {kind: skill, name: Please don't make me, downside: Apologizes after.}
+    - {kind: skill, name: People just tell me things, downside: Feeds everyone at bad times.}
+    - {kind: skill, name: Carried worse, downside: Can't leave anyone.}
+    - {kind: chrome, name: Steel forearm, icon: icons/list/implant-arm.png}
+    - {kind: chrome, name: Dermal plating}

@@ -1,0 +1,98 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-03T20:10:00Z"
+  },
+  "title": "LSO — Posters",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 720,
+      "h": 1280,
+      "title": "A · The Cable"
+    },
+    "Welcome.dc.html": {
+      "x": 800,
+      "y": 0,
+      "w": 720,
+      "h": 1280,
+      "title": "B · Welcome to Ergo"
+    },
+    "PosterClean.dc.html": {
+      "x": 1600,
+      "y": 0,
+      "w": 720,
+      "h": 1280,
+      "title": "A · Hole and title"
+    },
+    "BlackHole.dc.html": {
+      "x": 2400,
+      "y": 0,
+      "w": 720,
+      "h": 720,
+      "title": "The black hole, smooth"
+    },
+    "PixelHole.dc.html": {
+      "x": 3200,
+      "y": 0,
+      "w": 720,
+      "h": 720,
+      "title": "The black hole, pixel"
+    },
+    "StationSpindle.dc.html": {
+      "x": 0,
+      "y": 1640,
+      "w": 720,
+      "h": 800,
+      "title": "Spindle"
+    },
+    "StationReel.dc.html": {
+      "x": 800,
+      "y": 1640,
+      "w": 720,
+      "h": 800,
+      "title": "Reel"
+    },
+    "StationHalo.dc.html": {
+      "x": 1600,
+      "y": 1640,
+      "w": 720,
+      "h": 800,
+      "title": "Halo"
+    },
+    "StationReliquary.dc.html": {
+      "x": 2400,
+      "y": 1640,
+      "w": 720,
+      "h": 800,
+      "title": "Reliquary · chosen"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Welcome.dc.html",
+    "PosterClean.dc.html",
+    "BlackHole.dc.html",
+    "PixelHole.dc.html",
+    "StationSpindle.dc.html",
+    "StationReel.dc.html",
+    "StationHalo.dc.html",
+    "StationReliquary.dc.html"
+  ],
+  "notes": {
+    "row2": {
+      "kind": "title1",
+      "x": 0,
+      "y": 1400,
+      "maxW": 3120,
+      "text": "Ergo, first sketches"
+    }
+  },
+  "designSystems": []
+}

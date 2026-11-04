@@ -1,0 +1,28 @@
+# Loaded into an empty database, and from the GM panel at any time.
+# The crew and the fixer sit at the founder's table under the mural (seat() on the Maps board:
+# centre 2.8, 3.7, radius 1.62, Z 0.24). Other NPCs wait in the GM roster, unplaced.
+id: session-1
+name: "Session 1: the pitch at the bar"
+default: true
+party_map: event-horizon
+maps:
+  event-horizon: {mood: open}
+tokens:
+  - {kind: npc, ref: fixer, map: event-horizon, at: [4.203, 2.89, 0.24]}
+  - {kind: crew, ref: lale, map: event-horizon, at: [4.203, 4.51, 0.24]}
+  - {kind: crew, ref: marlo, map: event-horizon, at: [2.8, 5.32, 0.24]}
+  - {kind: crew, ref: tally, map: event-horizon, at: [1.397, 4.51, 0.24]}
+  - {kind: crew, ref: ves, map: event-horizon, at: [1.397, 2.89, 0.24]}
+  - {kind: crew, ref: tomo, map: event-horizon, at: [2.8, 2.08, 0.24]}
+  - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
+  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [6.3, 5.4, 0]}
+  - {kind: npc, ref: slot-regular, map: event-horizon, at: [-0.86, 10.35, 0]}
+  - {kind: npc, ref: happy-resident, map: event-horizon, at: [12.1, 7.3, 0]}
+  - {kind: npc, ref: service-droid, map: event-horizon, at: [9.6, 7.9, 0]}
+# Every crew member starts at HP 6, Entropy 2 unless listed under vitals.
+inventory:  # placeholders until Peter sets the real starting kit
+  lale: [credits]
+  marlo: [sidearm, credits]
+  tally: [credits]
+  ves: [sidearm, splice-kit, credits]
+  tomo: [credits]

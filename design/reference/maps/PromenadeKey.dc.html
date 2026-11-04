@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Promenade, what's where</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 1130px; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
+<div style="position: relative; width: 1440px; height: 864px;">
+<img src="/_blob/ce23081f90adf7185bd95a41f54fe3f8" alt="The Promenade map with numbered markers" style="position: absolute; left: 0; top: 0; width: 1440px; height: 864px; display: block; image-rendering: pixelated;">
+<sc-for list="{{pins}}" as="p" hint-placeholder-count="20">
+<div style="position: absolute; left: {{p.x}}px; top: {{p.y}}px; width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Silkscreen', monospace; font-size: 10px; background: {{p.bg}}; color: #000000; box-shadow: 0 0 0 2px #000000;">{{p.k}}</div>
+</sc-for>
+</div>
+<div style="box-sizing: border-box; height: 266px; padding: 18px 32px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 13px; color: #ffffff;">FROM THE BIBLE</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 20px; font-size: 14px; line-height: 1.35;">
+<div>1 · Dock 7, with the queue and the 11:00 board</div>
+<div>2 · Gangway to the Patience</div>
+<div>3 · The clerk's desk</div>
+<div>4 · Mural of Ilija</div>
+<div>5 · The Concierge's info desk</div>
+<div>6 · Night Market: noodles</div>
+<div>7 · Night Market: chrome clinic</div>
+<div>8 · Night Market: knock-off implants</div>
+<div>9 · The bar's door and lanterns</div>
+<div>10 · Med Bay, with 99.97% over the door</div>
+<div>Cameras: six, cones on the CAMERAS switch</div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 13px; color: #ff6fb5;">MY ADDITIONS</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 20px; font-size: 14px; line-height: 1.35;">
+<div>A · Window on the black hole, moving</div>
+<div>B · Company lift to the executive decks</div>
+<div>C · Guard post, where ISCO's reach stops</div>
+<div>D · Clean alley with a charging dock</div>
+<div>E · Service door down to Maintenance</div>
+<div>F · The bar's small sign outside</div>
+<div>G · Founder's ring set into the plaza floor</div>
+<div>H · Plastic plants and the ring bench</div>
+<div>J · Second market cart, crates, benches</div>
+<div>K · Vending machine beside the bar</div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1130}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const at = (X, Y, Z) => [((X - Y) * 30 + 360) * .8, ((X + Y) * 15 - Z * 36 + 190) * .8];
+    const list = [
+      ['1', 6.3, 4.9, 1.0, 0], ['2', 0, 5, 1.6, 0], ['3', 1.7, 2.0, 1.5, 0], ['4', 13.3, 0, 2.2, 0], ['5', 14, 6.3, 1.5, 0],
+      ['6', 28.2, 1.9, 1.5, 0], ['7', 32.9, 1.1, 1.3, 0], ['8', 28, 8.2, 1.5, 0], ['9', 38, .2, 1.3, 0], ['10', 45.1, .2, 1.6, 0],
+      ['A', 19.1, 0, 2.2, 1], ['B', 24.4, .2, 1.6, 1], ['C', 26.4, 1.5, 1.4, 1], ['D', 32.2, 12.8, 0, 1], ['E', 42.5, .1, 1.2, 1], ['F', 38, 0, 3.75, 1],
+      ['G', 19, 6, 0, 1], ['H', 42.6, 6.6, 2.1, 1], ['J', 35.2, 8.2, 1.5, 1], ['K', 35.5, .5, 2.2, 1]
+    ];
+    return {
+      pins: list.map((p) => {
+        const a = at(p[1], p[2], p[3]);
+        return { k: p[0], x: a[0], y: a[1], bg: p[4] ? '#ff6fb5' : '#ffffff' };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

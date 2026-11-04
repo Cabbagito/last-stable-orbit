@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>How to play</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..700&amp;family=Doto:wght@800&amp;family=Silkscreen&amp;family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#050608}
+.m a{color:#a4a9b5;text-decoration:none}.m a:hover{color:#ffffff}
+.m-cut{clip-path:polygon(0 0,calc(100% - 13px) 0,100% 13px,100% 100%,13px 100%,0 calc(100% - 13px))}
+.m-lbl{font-family:'Silkscreen',monospace;font-size:11px;letter-spacing:.5px;color:#a4a9b5}
+.m-h{margin:0;font-stretch:75%;font-weight:700;font-size:34px;line-height:1.05;letter-spacing:.01em;color:#ffffff}
+.m-p{margin:0;font-size:17px;line-height:1.5;color:#d9dbe0}
+.m-t{width:100%;border-collapse:collapse;table-layout:fixed}
+.m-t th{font-family:'Silkscreen',monospace;font-size:11px;font-weight:400;letter-spacing:.5px;color:#a4a9b5;background:#0d0f13;padding:9px 8px;text-align:center;border:1px solid #23262e}
+.m-t td{font-family:'VT323',monospace;font-size:28px;line-height:1;color:#f2b544;background:#08090c;padding:9px 8px;text-align:center;border:1px solid #23262e}
+.m-l th{text-align:left}
+.m-l td{font-family:'Archivo',system-ui,sans-serif;font-stretch:88%;font-size:16px;line-height:1.35;color:#d9dbe0;text-align:left;vertical-align:top}
+.m-l td:first-child{font-weight:600;color:#ffffff}
+.m-tw{overflow-x:auto}
+</style>
+</helmet>
+<div class="m" style="width: 100%; min-height: 900px; box-sizing: border-box; background: #050608; color: #e6e7ea; font-family: 'Archivo', system-ui, sans-serif; font-stretch: 88%; font-size: 17px; line-height: 1.5;">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; padding: 8px 14px; background: #0d0f13; box-shadow: inset 0 -1px 0 #23262e;">
+<span style="font-stretch: 75%; font-weight: 700; font-size: 24px; letter-spacing: .14em; color: #ffffff; padding-left: 4px;">ERGO</span>
+<nav aria-label="Sections" style="display: flex; flex-wrap: wrap; gap: 2px; font-family: 'Silkscreen', monospace; font-size: 11px;">
+<a href="#scene" style="padding: 9px 14px;">SCENE</a>
+<a href="#station" style="padding: 9px 14px;">STATION</a>
+<a href="#crew" style="padding: 9px 14px;">CREW</a>
+<a href="#comms" style="padding: 9px 14px;">COMMS</a>
+<a href="#items" style="padding: 9px 14px;">ITEMS</a>
+<a href="#codex" aria-current="page" class="m-cut" style="padding: 9px 14px; background: #1d2027; color: #ffffff; box-shadow: inset 0 -2px 0 #ff4fa3;">CODEX</a>
+</nav>
+</header>
+
+<main style="max-width: 1080px; margin: 0 auto; box-sizing: border-box; padding: 44px 20px 72px; display: flex; flex-direction: column; gap: 52px;">
+
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div class="m-lbl" style="color: #ff7dbc;">LAST STABLE ORBIT</div>
+<h1 style="margin: 0; font-stretch: 75%; font-weight: 700; font-size: clamp(44px, 6vw, 68px); line-height: 1; color: #ffffff;">How to play</h1>
+</div>
+
+<section aria-label="The roll" style="display: flex; flex-direction: column; gap: 16px;">
+<h2 class="m-h">The roll</h2>
+<p class="m-p">Say what you want to do. Peter picks a stat and how hard it is. Roll that stat's die. If you meet the number, it happens.</p>
+<div class="m-tw"><table class="m-t"><thead><tr><th>EASY</th><th>NORMAL</th><th>HARD</th><th>VERY HARD</th><th>HEROIC</th></tr></thead><tbody><tr><td>3</td><td>5</td><td>7</td><td>9</td><td>11</td></tr></tbody></table></div>
+<p class="m-p">If you roll the die's maximum, it explodes: roll again and add. If your first die shows 1, you fail, and nothing can save it.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 20px; margin-top: 8px;">
+<figure style="min-width: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+<div style="position: relative; height: 250px; background: #08090c; box-shadow: inset 0 0 0 1px #23262e; overflow: hidden;">
+<canvas ref="{{setRoll}}" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block;"></canvas>
+</div>
+<figcaption style="display: flex; align-items: center; gap: 12px; min-height: 64px;">
+<div style="position: relative; width: 56px; height: 56px; flex: none; border-radius: 50%; overflow: hidden; background: #08090c; box-shadow: 0 0 0 2px {{roll.color}};">
+<img src="{{roll.img}}" alt="{{roll.who}}" style="position: absolute; left: {{roll.x}}px; top: {{roll.y}}px; width: 70px; height: 70px; max-width: none; image-rendering: pixelated;">
+</div>
+<div style="min-width: 0; font-size: 15px; line-height: 1.35;">
+<div style="color: #ffffff;">{{roll.setup}}</div>
+<div style="color: #f2b544; min-height: 20px;">{{roll.result}}</div>
+</div>
+</figcaption>
+</figure>
+<figure style="min-width: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+<div style="position: relative; height: 250px; background: #08090c; box-shadow: inset 0 0 0 1px #23262e; overflow: hidden;">
+<canvas ref="{{setBoom}}" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block;"></canvas>
+</div>
+<figcaption style="font-size: 15px; line-height: 1.35; min-height: 64px; display: flex; flex-direction: column; justify-content: center;">
+<div style="color: #ffffff;">{{boom.setup}}</div>
+<div style="color: #f2b544; min-height: 20px;">{{boom.result}}</div>
+</figcaption>
+</figure>
+</div>
+</section>
+
+<section aria-label="Stats" style="display: flex; flex-direction: column; gap: 16px;">
+<h2 class="m-h">Stats</h2>
+<p class="m-p">You have six. Spend 16 points on their dice.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 16px;">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="6">
+<div style="display: flex; align-items: center; gap: 10px;">
+<img src="{{s.icon}}" alt="" style="display: block; width: 48px; height: 48px; flex: none; image-rendering: pixelated;">
+<div style="min-width: 0;"><div class="m-lbl" style="color: #ffffff; font-size: 12px;">{{s.name}}</div><div style="font-size: 15px; color: #a4a9b5;">{{s.verb}}</div></div>
+</div>
+</sc-for>
+</div>
+<div class="m-tw"><table class="m-t"><thead><tr><th>D4</th><th>D6</th><th>D8</th><th>D10</th><th>D12</th><th>D20</th></tr></thead><tbody><tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>6</td></tr></tbody></table></div>
+</section>
+
+<section aria-label="Skills and chrome" style="display: flex; flex-wrap: wrap; gap: 24px 40px; align-items: flex-start;">
+<div style="flex: 999 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 14px;">
+<h2 class="m-h">Skills and chrome</h2>
+<p class="m-p">You have three skills, in your own words. When one fits, your die goes up a size, or a d20 gets +2. You can use one per roll.</p>
+<p class="m-p">Each skill has a downside. When Peter offers you the trouble, take it for 1 Entropy or say no.</p>
+<p class="m-p">Chrome works like a skill, but you pay for it with Humanity. You have 4, and at 0 you start to lose yourself. Chrome can also do things a person can't.</p>
+</div>
+<aside aria-label="Examples" style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 3px;">
+<div style="padding: 12px 14px; background: #0d0f13;"><div class="m-lbl">SKILL</div><div style="color: #ffffff; font-size: 16px;">Talks to machines like dogs</div></div>
+<div style="padding: 12px 14px; background: #0d0f13;"><div class="m-lbl">DOWNSIDE</div><div style="color: #ffffff; font-size: 16px;">Owes money on three worlds</div></div>
+<div style="display: flex; align-items: center; gap: 12px; padding: 8px 14px; background: #0d0f13;"><img src="/_blob/e055ebc912c6f9cd9cb23acbbb113de9" alt="" style="display: block; width: 48px; height: 48px; flex: none; image-rendering: pixelated;"><div><div class="m-lbl">CHROME</div><div style="color: #ffffff; font-size: 16px;">Bionic arm</div></div></div>
+</aside>
+</section>
+
+<section aria-label="Entropy" style="display: flex; flex-direction: column; gap: 16px;">
+<h2 class="m-h">Entropy</h2>
+<p class="m-p">You start each session with 2 and can hold 6. You earn 1 when you fail a roll, accept a downside, or surprise ISCO.</p>
+<div class="m-tw"><table class="m-t m-l" style="min-width: 520px;"><colgroup><col style="width: 22%;"><col style="width: 26%;"><col></colgroup><thead><tr><th>SPEND</th><th>COST</th><th>EFFECT</th></tr></thead><tbody>
+<tr><td>Push</td><td>1, up to 2 per roll</td><td>+1 after seeing your roll, or +2 if your die exploded</td></tr>
+<tr><td>Team-up</td><td>1 per person</td><td>Everyone rolls and the totals add</td></tr>
+<tr><td>I know a guy</td><td>2</td><td>Invent a useful contact</td></tr>
+<tr><td>Last stand</td><td>3, once per fight</td><td>When you'd go down, stay up with 2 health</td></tr>
+</tbody></table></div>
+</section>
+
+<section aria-label="Fights" style="display: flex; flex-wrap: wrap; gap: 24px 40px; align-items: flex-start;">
+<div style="flex: 999 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 14px;">
+<h2 class="m-h">Fights</h2>
+<p class="m-p">Fights use the same roll, and an enemy acts after each of your actions. When you attack, the amount you beat the number by sets the damage:</p>
+<div class="m-tw"><table class="m-t"><thead><tr><th style="text-align: left;">BEAT IT BY</th><th>0–4</th><th>5–9</th><th>10+</th></tr></thead><tbody><tr><td style="font-family: 'Silkscreen', monospace; font-size: 11px; color: #a4a9b5; text-align: left;">DAMAGE</td><td>1</td><td>2</td><td>3</td></tr></tbody></table></div>
+<p class="m-p">Bare hands always deal 1, and heavy weapons deal at least 2. Attacks are never easier than Normal. Ending a fight in one move, like a shove into the reactor, is two steps harder. If they never saw it coming, there's no roll.</p>
+<p class="m-p">You have 6 health, and at 0 you're out of the fight. A quiet scene gives back 1. The Med Bay restores it all, but the meter rises by 1.</p>
+</div>
+<figure style="flex: 1 1 340px; min-width: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+<div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+<div style="position: relative; width: 56px; height: 56px; flex: none; border-radius: 50%; overflow: hidden; background: #08090c; box-shadow: 0 0 0 2px #ff4fa3;">
+<img src="/_blob/8c2499531f8accd04a3729e144231946" alt="Static Kovač" style="position: absolute; left: -4px; top: 0; width: 70px; height: 70px; max-width: none; image-rendering: pixelated;">
+</div>
+<img src="/_blob/78c822a4841ee8fc42c30200ab2a5438" alt="Laser pistol" style="display: block; width: 48px; height: 48px; flex: none; image-rendering: pixelated;">
+</div>
+<div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+<div role="img" aria-label="The Gumshoe has {{hit.health}} of 6 health" style="display: grid; grid-template-columns: repeat(6, 10px); gap: 2px;">
+<sc-for list="{{hit.boxes}}" as="b" hint-placeholder-count="6"><span style="display: block; height: 20px; background: {{b.bg}}; box-shadow: {{b.line}}; transition: background .3s ease;"></span></sc-for>
+</div>
+<div style="position: relative; width: 56px; height: 56px; flex: none; border-radius: 50%; overflow: hidden; background: #08090c; box-shadow: 0 0 0 2px #6d73ff;">
+<img src="/_blob/2beb321703433340b71a848c5eb01928" alt="The Gumshoe" style="position: absolute; left: -6px; top: 0; width: 70px; height: 70px; max-width: none; image-rendering: pixelated;">
+</div>
+</div>
+</div>
+<div style="position: relative; height: 230px; background: #08090c; box-shadow: inset 0 0 0 1px #23262e; overflow: hidden;">
+<canvas ref="{{setHit}}" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block;"></canvas>
+</div>
+<figcaption style="font-size: 15px; line-height: 1.35; min-height: 42px;">
+<div style="color: #ffffff;">{{hit.setup}}</div>
+<div style="color: #f2b544; min-height: 20px;">{{hit.result}}</div>
+</figcaption>
+</figure>
+</section>
+
+<section aria-label="The meter" style="display: flex; flex-wrap: wrap; gap: 16px 40px; align-items: center;">
+<div style="flex: 999 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 14px;">
+<h2 class="m-h">The meter</h2>
+<p class="m-p">ISCO's compute is on everyone's screen. It rises with every natural 1 and every station hour. Sabotage drains it.</p>
+</div>
+<div role="img" aria-label="A compute meter with 12 segments" style="flex: 1 1 340px; min-width: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3px;">
+<span style="height: 34px; background: #c79bff;"></span><span style="height: 34px; background: #c79bff;"></span><span style="height: 34px; background: #c79bff;"></span><span style="height: 34px; background: #c79bff;"></span><span style="height: 34px; background: #c79bff;"></span>
+<span style="height: 34px; background: #0a0b0e; box-shadow: inset 0 0 0 1px #2a2e38;"></span><span style="height: 34px; background: #0a0b0e; box-shadow: inset 0 0 0 1px #2a2e38;"></span><span style="height: 34px; background: #0a0b0e; box-shadow: inset 0 0 0 1px #2a2e38;"></span><span style="height: 34px; background: #0a0b0e; box-shadow: inset 0 0 0 1px #2a2e38;"></span><span style="height: 34px; background: #0a0b0e; box-shadow: inset 0 0 0 1px #2a2e38;"></span><span style="height: 34px; background: #0a0b0e; box-shadow: inset 0 0 0 1px #2a2e38;"></span><span style="height: 34px; background: #0a0b0e; box-shadow: inset 0 0 0 1px #2a2e38;"></span>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2344}}'>
+const RollFX = (function () {
+  // ---------- small helpers ----------
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+  const sat = (x) => clamp(x, 0, 1);
+  const easeOut3 = (x) => 1 - Math.pow(1 - x, 3);
+  const easeOut5 = (x) => 1 - Math.pow(1 - x, 5);
+  const easeIO = (x) => (x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
+  function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const hexrgb = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+  const rgba = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+  const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  const mul = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const norm = (a) => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+  const qmul = (a, b) => [a[0] * b[0] - a[1] * b[1] - a[2] * b[2] - a[3] * b[3], a[0] * b[1] + a[1] * b[0] + a[2] * b[3] - a[3] * b[2], a[0] * b[2] - a[1] * b[3] + a[2] * b[0] + a[3] * b[1], a[0] * b[3] + a[1] * b[2] - a[2] * b[1] + a[3] * b[0]];
+  const qrot = (q, v) => { const u = [q[1], q[2], q[3]]; const t = mul(cross(u, v), 2); return add(add(v, mul(t, q[0])), cross(u, t)); };
+  const qconj = (q) => [q[0], -q[1], -q[2], -q[3]];
+
+  // ---------- dice: real convex polyhedra ----------
+  const PHI = (1 + Math.sqrt(5)) / 2;
+  function dieVerts(sides) {
+    const V = [];
+    if (sides === 4) return [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]].map((v) => mul(norm(v), 1.12));
+    if (sides === 6) { for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) V.push(mul([x, y, z], .66)); return V; }
+    if (sides === 8) return [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]].map((v) => mul(v, 1.08));
+    if (sides === 10) {
+      const c = Math.cos(Math.PI / 5), h = .105, a = h * (1 + c) / (1 - c);
+      V.push([0, 0, a], [0, 0, -a]);
+      for (let i = 0; i < 10; i++) { const th = i * Math.PI / 5; V.push([Math.cos(th), Math.sin(th), (i % 2 ? h : -h)]); }
+      return V.map((v) => mul(v, 1.05));
+    }
+    if (sides === 12) {
+      for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) V.push([x, y, z]);
+      for (const a of [-1 / PHI, 1 / PHI]) for (const b of [-PHI, PHI]) { V.push([0, a, b], [a, b, 0], [b, 0, a]); }
+      return V.map((v) => mul(norm(v), 1.02));
+    }
+    for (const a of [-1, 1]) for (const b of [-PHI, PHI]) { V.push([0, a, b], [a, b, 0], [b, 0, a]); }
+    return V.map((v) => mul(norm(v), 1.02));
+  }
+  const MESH = {};
+  function mesh(sides) {
+    if (MESH[sides]) return MESH[sides];
+    const V = dieVerts(sides), F = [], eps = 1e-3;
+    for (let i = 0; i < V.length; i++) for (let j = i + 1; j < V.length; j++) for (let k = j + 1; k < V.length; k++) {
+      let n = cross(sub(V[j], V[i]), sub(V[k], V[i]));
+      if (Math.hypot(n[0], n[1], n[2]) < 1e-6) continue;
+      n = norm(n);
+      let d = dot(n, V[i]);
+      if (d < 0) { n = mul(n, -1); d = -d; }
+      let ok = true; const on = [];
+      for (let m = 0; m < V.length; m++) { const s = dot(n, V[m]) - d; if (s > eps * 12) { ok = false; break; } if (Math.abs(s) < eps * 12) on.push(m); }
+      if (!ok) continue;
+      if (F.some((f) => dot(f.n, n) > .999)) continue;
+      const c = mul(on.reduce((a, m) => add(a, V[m]), [0, 0, 0]), 1 / on.length);
+      const u = norm(sub(V[on[0]], c)), w = cross(n, u);
+      on.sort((a, b) => Math.atan2(dot(sub(V[a], c), w), dot(sub(V[a], c), u)) - Math.atan2(dot(sub(V[b], c), w), dot(sub(V[b], c), u)));
+      let inr = 9;
+      for (let e = 0; e < on.length; e++) { const A = V[on[e]], B = V[on[(e + 1) % on.length]], ed = norm(sub(B, A)), cp = sub(c, A), per = sub(cp, mul(ed, dot(cp, ed))); inr = Math.min(inr, Math.hypot(per[0], per[1], per[2])); }
+      F.push({ idx: on, n, c, u, inr });
+    }
+    MESH[sides] = { V, F };
+    return MESH[sides];
+  }
+
+  // ---------- physics: impulses on vertices against the deck and walls ----------
+  function simulate(sides, value, seed, aspect) {
+    const R = rng(seed), M = mesh(sides);
+    const BX = Math.min(4.6, aspect * 2.6), BY = 2.5, G = 46, dt = 1 / 360;
+    const I = .42;
+    const dir = R() < .5 ? -1 : 1;
+    let p = [dir * (BX - 1.2), -1.4 + R() * 1.6, 5.2 + R() * 1.4];
+    let v = [-dir * (7 + R() * 3.5), .8 + R() * 2.2, -9 - R() * 4];
+    let q = norm4([R() - .5, R() - .5, R() - .5, R() - .5]);
+    let w = [(R() - .5) * 38, (R() - .5) * 38, (R() - .5) * 26];
+    const frames = [], impacts = [];
+    let time = 0, still = 0, nextFrame = 0, lastImp = -1;
+    for (let step = 0; step < 360 * 7; step++) {
+      v[2] -= G * dt;
+      // a shallow bowl keeps the die in frame
+      v[0] -= p[0] * 3.2 * dt; v[1] -= p[1] * 3.6 * dt;
+      p = add(p, mul(v, dt));
+      const dq = qmul([0, w[0], w[1], w[2]], q);
+      q = norm4([q[0] + dq[0] * dt / 2, q[1] + dq[1] * dt / 2, q[2] + dq[2] * dt / 2, q[3] + dq[3] * dt / 2]);
+      let contact = false, deepest = 0;
+      for (let i = 0; i < M.V.length; i++) {
+        const r = qrot(q, M.V[i]), P = add(p, r);
+        const planes = [];
+        if (P[2] < 0) planes.push([[0, 0, 1], -P[2]]);
+        if (P[0] > BX) planes.push([[-1, 0, 0], P[0] - BX]);
+        if (P[0] < -BX) planes.push([[1, 0, 0], -BX - P[0]]);
+        if (P[1] > BY) planes.push([[0, -1, 0], P[1] - BY]);
+        if (P[1] < -BY) planes.push([[0, 1, 0], -BY - P[1]]);
+        for (const [n, depth] of planes) {
+          const vp = add(v, cross(w, r)), vn = dot(vp, n);
+          if (n[2] === 1) { contact = true; deepest = Math.max(deepest, depth); } else { p = add(p, mul(n, depth * .8)); }
+          if (vn >= 0) continue;
+          const e = Math.abs(vn) < 2.2 ? 0 : .42;
+          const rn = cross(r, n), den = 1 + dot(rn, rn) / I, j = -(1 + e) * vn / den;
+          v = add(v, mul(n, j));
+          w = add(w, mul(rn, j / I));
+          if (Math.abs(vn) > 5 && time - lastImp > .08) { impacts.push({ t: time, s: Math.min(1, Math.abs(vn) / 18), p: [P[0], P[1]], wall: n[2] !== 1 }); lastImp = time; }
+          const vp2 = add(v, cross(w, r)), vt = sub(vp2, mul(n, dot(vp2, n))), vtl = Math.hypot(vt[0], vt[1], vt[2]);
+          if (vtl > 1e-5) {
+            const t = mul(vt, 1 / vtl), rt = cross(r, t), dent = 1 + dot(rt, rt) / I, jt = Math.min(vtl / dent, .55 * j);
+            v = sub(v, mul(t, jt));
+            w = sub(w, mul(rt, jt / I));
+          }
+        }
+      }
+      if (deepest > 0) p[2] += deepest * .7;
+      if (contact) { w = mul(w, .9975); v[0] *= .9985; v[1] *= .9985; }
+      time += dt;
+      if (time >= nextFrame) { frames.push({ p: p.slice(), q: q.slice() }); nextFrame += 1 / 60; }
+      const e2 = dot(v, v) + dot(w, w);
+      still = (e2 < .35 && contact) ? still + dt : 0;
+      if (still > .12) break;
+    }
+    // settle exactly flat: rotate the most-downward face onto the deck
+    const last = frames[frames.length - 1];
+    let down = 0, best = 2;
+    M.F.forEach((f, i) => { const nz = qrot(last.q, f.n)[2]; if (nz < best) { best = nz; down = i; } });
+    const nw = qrot(last.q, M.F[down].n), ax = cross(nw, [0, 0, -1]), axl = Math.hypot(ax[0], ax[1], ax[2]);
+    if (axl > 1e-5) {
+      const ang = Math.atan2(axl, dot(nw, [0, 0, -1])), s = Math.sin(ang / 2), ka = mul(ax, s / axl);
+      const qf = norm4(qmul([Math.cos(ang / 2), ka[0], ka[1], ka[2]], last.q));
+      const planeD = dot(M.F[down].n, M.F[down].c);
+      const pf = [last.p[0], last.p[1], planeD];
+      for (let i = 0; i < 9; i++) { const k = (i + 1) / 9, g = norm4(lerp4(last.q, qf, k)); frames.push({ p: [pf[0], pf[1], lerp(last.p[2], pf[2], k)], q: g }); }
+    }
+    const fin = frames[frames.length - 1];
+    let up = 0, top = -2;
+    M.F.forEach((f, i) => { const nz = qrot(fin.q, f.n)[2]; if (nz > top) { top = nz; up = i; } });
+    const n = M.F.length;
+    const labels = M.F.map((f, i) => ((i - up + n) % n + value - 1) % n + 1);
+    // the resting number reads upright on screen
+    const uLocal = norm((() => { const x = qrot(qconj(fin.q), [1, 0, 0]), fn = M.F[up].n; return sub(x, mul(fn, dot(x, fn))); })());
+    // d4: numbers sit by the vertices, the top vertex shows the result
+    let vlabels = null;
+    if (sides === 4) {
+      let tv = 0, tz = -9;
+      M.V.forEach((vv, i) => { const z = qrot(fin.q, vv)[2]; if (z > tz) { tz = z; tv = i; } });
+      vlabels = M.V.map((_, i) => ((i - tv + 4) % 4 + value - 1) % 4 + 1);
+    }
+    return { sides, frames, impacts, labels, vlabels, up, uLocal, T: frames.length / 60, BX, BY };
+  }
+  function norm4(q) { const l = Math.hypot(q[0], q[1], q[2], q[3]) || 1; return [q[0] / l, q[1] / l, q[2] / l, q[3] / l]; }
+  function lerp4(a, b, k) { const s = (a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3]) < 0 ? -1 : 1; return [lerp(a[0], s * b[0], k), lerp(a[1], s * b[1], k), lerp(a[2], s * b[2], k), lerp(a[3], s * b[3], k)]; }
+
+  // ---------- terminal text: invented, in-world, harmless ----------
+  const TERM = [
+    'static@ergo:~$ jack --port 7 --quiet', '[ok] handshake promenade.deck2.node14', '[ok] session 0x3f91 opened, no audit trail',
+    'static@ergo:~$ cat /proc/splice/map | grep -v cleaner', 'seg 00a1  rw-  diag.loop     owner=guest', 'seg 00a2  r--  booking.queue owner=exec', 'seg 00a3  ---  vault.annex   owner=null',
+    'static@ergo:~$ vim patch.c', 'for (seg = head; seg; seg = seg->next) {', '    if (seg->owner != UID_GUEST) continue;', '    if (crc32(seg->data, seg->len) == seg->sum) {', '        seg->flags |= F_QUIET;', '        retime(seg, tether_clock() * 0.31);', '    }', '}', ':wq',
+    'static@ergo:~$ cc -O2 patch.c -o patch && ./patch', 'patching 2048 segments ........................ done', 'static@ergo:~$ tail -f /var/log/kiosk.log', '21:13:58 satisfaction 99.97%', '21:13:59 satisfaction 99.97%', '21:14:00 satisfaction 99.97%', '^C',
+    'static@ergo:~$ ssh -J dock7 maint@deck1 uptime', ' 21:14:02 up 19 years, 4 users, load 0.00', 'static@ergo:~$ strings /dev/tether | head -3', 'SPIN_RATE=0.998', 'DT_FACTOR=0.31', 'HORIZON=2400km'
+  ];
+  const HEX = '0123456789ABCDEF#%&@/<>*!?';
+  const MATH = ['∑', '∫', 'π', '√', '∆', 'λ', 'θ', '∞', '≈', '±', '∂', 'φ', '∇', '⊗', 'ψ', 'Ω', '(', ')', '²', '=', '·', '/'];
+  function chars(set, n, r) { let s = ''; for (let i = 0; i < n; i++) s += set[Math.floor(r() * set.length)]; return s; }
+
+  // ---------- shared drawing ----------
+  function txt(ctx, s, x, y, font, fill, opt) {
+    opt = opt || {};
+    ctx.save();
+    ctx.font = font; ctx.fillStyle = fill; ctx.textAlign = opt.align || 'center'; ctx.textBaseline = opt.base || 'middle';
+    if (opt.glow) { ctx.shadowColor = opt.glowC || fill; ctx.shadowBlur = opt.glow; }
+    if (opt.a != null) ctx.globalAlpha = opt.a;
+    if (opt.sx) { ctx.translate(x, y); ctx.scale(opt.sx, 1); ctx.fillText(s, 0, 0); } else ctx.fillText(s, x, y);
+    ctx.restore();
+  }
+  // soft text without ctx.filter: draw off-canvas and keep only the shadow
+  function blurTxt(ctx, s, x, y, font, color, blur, a) {
+    ctx.save();
+    ctx.font = font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.globalAlpha = a;
+    ctx.shadowColor = color; ctx.shadowBlur = blur; ctx.shadowOffsetX = 20000 * (ctx.getTransform ? ctx.getTransform().a : 1); ctx.fillStyle = '#000';
+    ctx.fillText(s, x - 20000, y);
+    ctx.restore();
+  }
+  function bigNum(ctx, env, s, a, scale, x, y) {
+    const F = env.F * (scale == null ? 1 : scale);
+    txt(ctx, s, x == null ? env.cx : x, y == null ? env.cy : y, F + "px 'VT323', monospace", '#ffffff', { glow: F * .14, glowC: env.css, a: a == null ? 1 : a });
+    txt(ctx, s, x == null ? env.cx : x, y == null ? env.cy : y, F + "px 'VT323', monospace", '#ffffff', { glow: F * .4, glowC: env.css, a: (a == null ? 1 : a) * .55 });
+  }
+
+  // ---------- scenes. each is a pure function of u in [0,1] ----------
+  const SCENES = {
+    // TECH: a terminal fills at typing-mash speed, one command's output lands centred and collapses to the number
+    term(ctx, W, H, P, u, env, t) {
+      const fs = Math.max(11, H / 31), lh = fs * 1.02, top = H * .12, rows = Math.floor(H * .78 / lh), mx = W * .05;
+      const typed = sat(u / .7) * P.total;
+      let left = typed, shown = [];
+      for (const l of P.lines) { if (left <= 0) break; shown.push(l.slice(0, Math.ceil(left))); left -= l.length; }
+      const dim = u < .72 ? 1 : lerp(1, .13, sat((u - .72) / .1));
+      const vis = shown.slice(-rows), font = fs + "px 'VT323', monospace";
+      vis.forEach((l, i) => {
+        const prompt = l.indexOf('static@') === 0;
+        txt(ctx, l, mx, top + i * lh, font, env.css, { align: 'left', a: dim * (i === vis.length - 1 ? 1 : (prompt ? .85 : .55)) });
+      });
+      if (u < .72 && Math.floor(t * 8) % 2 === 0 && vis.length) {
+        const l = vis[vis.length - 1]; ctx.save(); ctx.font = font; const w = ctx.measureText(l).width; ctx.restore();
+        ctx.fillStyle = env.css; ctx.fillRect(mx + w + 2, top + (vis.length - 1) * lh - fs * .42, fs * .42, fs * .82);
+      }
+      if (u > .73) {
+        const k = sat((u - .73) / .27), e = easeIO(sat(k / .88));
+        const v = String(P.value), L0 = Math.max(v.length + 8, Math.min(48, Math.floor(W / (H * .056 * .42))));
+        const n = Math.round(lerp(L0, v.length, e));
+        const size = lerp(H * .056, env.F, Math.pow(k, 3.4));
+        const r = rng(Math.floor(t * 28) + 11);
+        const s = (k >= .88) ? v : chars(HEX, Math.max(n, v.length), r);
+        if (k < 1) txt(ctx, 'static@ergo:~$ ./roll --die d' + P.sides, env.cx, env.cy - Math.max(size * .95, H * .07), fs * 1.05 + "px 'VT323', monospace", env.css, { a: (1 - k) * .9 });
+        txt(ctx, s, env.cx, env.cy, size + "px 'VT323', monospace", k >= .88 ? '#ffffff' : env.css, { glow: size * .22, glowC: env.css });
+      }
+    },
+    // INTEL: a derivation that simplifies line by line, each shorter, symmetric about the centre, down to the number
+    math(ctx, W, H, P, u, env, t) {
+      const K = P.steps.length, fi = u < .93 ? u / .93 * (K - 1) : Math.min(K - .001, K - 1 + (u - .93) / .07), i = Math.floor(fi), ul = fi - i;
+      for (let j = Math.max(0, i - 4); j <= i; j++) {
+        const age = i - j + (j < i ? 0 : 0), L = P.steps[j];
+        const q = j / (K - 1), size = Math.min(lerp(H * .05, env.F, Math.pow(q, 3.2)), W * .94 / (L * .56));
+        const last = j === K - 1;
+        let y = env.cy;
+        for (let m = j; m < i; m++) { const q2 = m / (K - 1), L2 = P.steps[m + 1]; y -= Math.min(lerp(H * .05, env.F, Math.pow((m + 1) / (K - 1), 3.2)), W * .94 / (L2 * .56)) * .58 + H * .036; }
+        if (j === i) y -= 0;
+        const a = age === 0 ? 1 : Math.pow(.46, age);
+        let s = P.lines[j];
+        if (j === i && ul < .55 && !last) s = chars(MATH, L, rng(Math.floor(t * 26) + j * 7));
+        if (last) { if (j === i) bigNum(ctx, env, s, sat(ul / .25), lerp(.82, 1, easeOut3(sat(ul / .4)))); else txt(ctx, s, env.cx, y, size + "px 'VT323',monospace", '#fff', { a }); }
+        else txt(ctx, s, env.cx, y, size + "px 'Cambria Math','STIX Two Math','Times New Roman',serif", j === i ? '#ffffff' : env.css, { a, glow: j === i ? size * .25 : 0, glowC: env.css });
+      }
+    },
+    // REFLEX: a horizontal reel, stretched by speed, brackets closing in from both sides
+    reel(ctx, W, H, P, u, env) {
+      const S = env.F * .78, travel = P.spins * S, rem = Math.pow(sat(1 - u / .975), 2.3);
+      const off = travel * rem, speed = travel * 2.3 * Math.pow(sat(1 - u / .975), 1.3) / W * .28;
+      const stretch = 1 + Math.min(1.1, speed * 1.4);
+      const sides = P.sides, v = P.value, n = Math.ceil(W / S) + 2;
+      const base = Math.round(off / S);
+      for (let k = -n; k <= n; k++) {
+        const idx = base + k, x = env.cx + idx * S - off, dist = Math.abs(x - env.cx) / (W / 2);
+        if (dist > 1.1) continue;
+        const val = ((v - 1 + idx) % sides + sides * 1000) % sides + 1;
+        const sc = lerp(1, .3, Math.pow(sat(dist), .55));
+        const isHit = idx === 0 && u > .975;
+        txt(ctx, String(val), x, env.cy, env.F * sc + "px 'VT323', monospace", isHit ? '#ffffff' : env.css, { sx: stretch, a: lerp(1, .18, sat(dist)) * (u > .975 && idx !== 0 ? sat((1 - u) / .025) : 1), glow: isHit ? env.F * .18 : 0, glowC: env.css });
+      }
+      // gate
+      const gw = lerp(W * .47, env.F * .62, easeIO(sat((u - .1) / .875))), gh = env.F * .6;
+      ctx.save(); ctx.strokeStyle = env.css; ctx.lineWidth = 2; ctx.globalAlpha = .9; ctx.shadowColor = env.css; ctx.shadowBlur = 12;
+      for (const sgn of [-1, 1]) { ctx.beginPath(); ctx.moveTo(env.cx + sgn * (gw - 16), env.cy - gh); ctx.lineTo(env.cx + sgn * gw, env.cy - gh); ctx.lineTo(env.cx + sgn * gw, env.cy + gh); ctx.lineTo(env.cx + sgn * (gw - 16), env.cy + gh); ctx.stroke(); }
+      ctx.restore();
+      // speed lines
+      const lr = rng(5);
+      ctx.save(); ctx.strokeStyle = env.css; ctx.globalAlpha = Math.min(.5, speed);
+      for (let i = 0; i < 14; i++) { const y = env.cy + (lr() - .5) * env.F * 1.3, l = W * (.2 + lr() * .5), x0 = ((lr() * W + off * (1 + lr())) % (W + l)) - l; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + l, y); ctx.stroke(); }
+      ctx.restore();
+    },
+    // COOL: double vision. ghosts far apart and out of focus converge from both sides; a polygraph calms down
+    cool(ctx, W, H, P, u, env, t) {
+      const e = easeIO(sat(u / .93)), spread = lerp(W * .36, 0, e);
+      const foc = easeIO(sat((u - .8) / .15)), blur = env.F * .42 * (1 - foc);
+      const s = u < .86 ? String(1 + Math.floor(rng(Math.floor(t * 5) + 3)() * P.sides)) : String(P.value);
+      const font = env.F + "px 'VT323', monospace";
+      if (u < .95) {
+        const ga = lerp(1, .9, foc);
+        for (let pass = 0; pass < 3; pass++) {
+          blurTxt(ctx, s, env.cx - spread, env.cy, font, env.css, blur + 3, ga);
+          blurTxt(ctx, s, env.cx + spread, env.cy, font, '#7fd8ff', blur + 3, ga);
+        }
+        blurTxt(ctx, s, env.cx, env.cy, font, '#ffffff', blur * 1.1 + 3, lerp(.12, .7, e));
+      } else bigNum(ctx, env, String(P.value), 1, lerp(.97, 1, (u - .95) / .05));
+      // polygraph
+      const y = env.cy + env.F * .72, half = lerp(W * .46, env.F * .55, easeOut3(u)), amp = lerp(H * .075, 0, Math.pow(sat(u / .88), .7));
+      ctx.save(); ctx.strokeStyle = env.css; ctx.lineWidth = 1.5; ctx.shadowColor = env.css; ctx.shadowBlur = 8; ctx.beginPath();
+      for (let x = -half; x <= half; x += 4) {
+        const d = Math.abs(x) / half, n = Math.sin(x * .05 + t * 13) * .5 + Math.sin(x * .13 - t * 21) * .3 + Math.sin(x * .31 + t * 37) * .2;
+        const py = y + n * amp * (1 - d * d);
+        if (x === -half) ctx.moveTo(env.cx + x, py); else ctx.lineTo(env.cx + x, py);
+      }
+      ctx.stroke(); ctx.restore();
+    },
+    // EMPATHY: two heartbeats run in from the edges, out of step. each beat they meet closer to centre; when they lock, the number
+    pulse(ctx, W, H, P, u, env, t) {
+      const beats = P.beats, n = beats.length, y0 = env.cy + env.F * .74;
+      const half = lerp(W * .47, env.F * .9, Math.pow(sat(u / .97), 1.3));
+      const off = (i) => (n > 1 ? (1 - i / (n - 1)) * W * .17 * (i % 2 ? -1 : 1) : 0);
+      let bi = 0;
+      for (let i = 0; i < n; i++) if (t >= beats[i]) bi = i + 1;
+      const from = bi === 0 ? 0 : beats[bi - 1], to = bi < n ? beats[bi] : from + 1, k = sat((t - from) / (to - from));
+      const ecg = (d) => {
+        const q = d / (H * .035);
+        if (q < -1 || q > 5) return 0;
+        if (q < 0) return -.12 * Math.sin((q + 1) * Math.PI);
+        if (q < 1) return -1.0 * Math.sin(q * Math.PI);
+        if (q < 2) return .42 * Math.sin((q - 1) * Math.PI);
+        return -.14 * Math.sin((q - 2) / 3 * Math.PI);
+      };
+      const amp = H * .12, active = bi < n, target = active ? off(bi) : 0;
+      const L = lerp(-half, target, k), R = lerp(half, target, k);
+      ctx.save(); ctx.strokeStyle = env.css; ctx.lineWidth = 2; ctx.shadowColor = env.css; ctx.shadowBlur = 10; ctx.beginPath();
+      for (let x = -half; x <= half; x += 2) {
+        const py = y0 + (active ? (ecg(L - x) + ecg(x - R)) * amp : 0);
+        if (x === -half) ctx.moveTo(env.cx + x, py); else ctx.lineTo(env.cx + x, py);
+      }
+      ctx.stroke(); ctx.restore();
+      const lastT = beats[n - 1], locked = t >= lastT;
+      // the reticle tightens each beat
+      const prog = sat(bi / n), rr0 = lerp(env.F * 1.02, env.F * .66, easeOut3(prog));
+      ctx.save(); ctx.strokeStyle = env.css; ctx.globalAlpha = locked ? sat(1 - (t - lastT) / .3) * .6 : .55; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(env.cx, env.cy, rr0, 0, Math.PI * 2); ctx.stroke();
+      for (let a2 = 0; a2 < 4; a2++) { const an = a2 * Math.PI / 2; ctx.beginPath(); ctx.moveTo(env.cx + Math.cos(an) * rr0, env.cy + Math.sin(an) * rr0); ctx.lineTo(env.cx + Math.cos(an) * (rr0 + H * .022), env.cy + Math.sin(an) * (rr0 + H * .022)); ctx.stroke(); }
+      ctx.restore();
+      // each meeting sends out a ring from where the beats met
+      for (let i = 0; i < n; i++) {
+        const dt = t - beats[i];
+        if (dt < 0) continue;
+        const al = sat(1 - dt / .85) * .75;
+        if (al > 0) { ctx.save(); ctx.strokeStyle = env.css; ctx.globalAlpha = al; ctx.lineWidth = 2; ctx.shadowColor = env.css; ctx.shadowBlur = 14; ctx.beginPath(); ctx.arc(env.cx + off(i), env.cy, env.F * (.3 + dt * 1.15), 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
+      }
+      // a heart beats in the reticle until the lock
+      if (!locked || t - lastT < .14) {
+        const dt = bi ? t - beats[bi - 1] : 9, p = Math.exp(-dt * 7);
+        const s = env.F * .46 / 24 * (1 + .2 * p);
+        ctx.save(); ctx.translate(env.cx, env.cy); ctx.scale(s, s); ctx.translate(-12, -13);
+        ctx.globalAlpha = locked ? sat(1 - (t - lastT) / .14) : lerp(.4, 1, p);
+        ctx.strokeStyle = env.css; ctx.lineWidth = 1.3; ctx.lineJoin = 'round'; ctx.shadowColor = env.css; ctx.shadowBlur = 16;
+        ctx.stroke(new Path2D('M12 20.5s-8.5-5.2-8.5-11.4A4.6 4.6 0 0 1 12 6.6a4.6 4.6 0 0 1 8.5 2.5c0 6.2-8.5 11.4-8.5 11.4z'));
+        ctx.restore();
+      }
+      if (locked) bigNum(ctx, env, String(P.value), sat((t - lastT) / .1), lerp(1.14, 1, easeOut3(sat((t - lastT) / .3))));
+    },
+    // BODY (or any stat, via the tweak): the actual die, thrown onto a deck plate. rigid body sim, lands where it lands
+    phys(ctx, W, H, P, u, env, t) {
+      const S = P.sim, M = mesh(S.sides);
+      const simT = Math.min(t, S.T);
+      const f = S.frames[Math.min(S.frames.length - 1, Math.floor(simT * 60))];
+      // camera
+      const Cam = [0, -11.5, 14], Tg = [0, .2, .3], fw = norm(sub(Tg, Cam)), rt = norm(cross(fw, [0, 0, 1])), upv = cross(rt, fw);
+      const focal = H * 2.75, ox = env.cx, oy = H * .52;
+      const pr = (p) => { const d = sub(p, Cam), z = dot(d, fw); return [ox + dot(d, rt) * focal / z, oy - dot(d, upv) * focal / z, z]; };
+      // shake from impacts
+      let sx = 0, sy = 0, flash = 0;
+      for (const im of S.impacts) {
+        const d = simT - im.t; if (d < 0 || d > .5) continue;
+        const dec = Math.exp(-d * 11) * im.s;
+        sx += Math.sin(d * 90 + im.t * 50) * dec * H * .022; sy += Math.cos(d * 75) * dec * H * .03; flash = Math.max(flash, dec);
+      }
+      const zoomK = sat((t - S.T) / P.outro);
+      ctx.save(); ctx.translate(sx, sy);
+      // deck plate
+      const pool = pr([f.p[0], f.p[1], 0]);
+      const glow = ctx.createRadialGradient(ox, oy, 0, ox, oy, H * .62);
+      glow.addColorStop(0, rgba(env.rgb, .13 + flash * .25)); glow.addColorStop(1, rgba(env.rgb, 0));
+      ctx.fillStyle = glow; ctx.fillRect(-20, -20, W + 40, H + 40);
+      ctx.lineWidth = 1;
+      const gridA = (1 - zoomK * .6);
+      for (let i = -9; i <= 9; i++) {
+        const a = pr([i, -6, 0]), b = pr([i, 6, 0]);
+        const gr = ctx.createRadialGradient(ox, oy, 0, ox, oy, H * .62); gr.addColorStop(0, rgba(env.rgb, .42 * gridA)); gr.addColorStop(1, rgba(env.rgb, 0)); ctx.strokeStyle = gr;
+        ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      }
+      for (let j = -6; j <= 6; j++) {
+        const a = pr([-11, j, 0]), b = pr([11, j, 0]);
+        const gr = ctx.createRadialGradient(ox, oy, 0, ox, oy, H * .62); gr.addColorStop(0, rgba(env.rgb, .42 * gridA)); gr.addColorStop(1, rgba(env.rgb, 0)); ctx.strokeStyle = gr;
+        ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      }
+      // impact: ring on the deck and a shock line that shortens symmetrically
+      for (const im of S.impacts) {
+        const d = simT - im.t; if (d < 0 || d > .55 || im.wall) continue;
+        const k = d / .55, c = pr([im.p[0], im.p[1], 0]), rr = H * (.05 + k * .3) * (.5 + im.s);
+        ctx.save(); ctx.strokeStyle = env.css; ctx.globalAlpha = (1 - k) * im.s; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(c[0], c[1], rr, rr * .62, 0, 0, Math.PI * 2); ctx.stroke();
+        const hw = W * .46 * (1 - easeOut3(k)) * im.s; ctx.globalAlpha = (1 - k) * .9; ctx.shadowColor = env.css; ctx.shadowBlur = 12; ctx.beginPath(); ctx.moveTo(c[0] - hw, c[1]); ctx.lineTo(c[0] + hw, c[1]); ctx.stroke(); ctx.restore();
+        const sr = rng(Math.floor(im.t * 1000));
+        ctx.save(); ctx.fillStyle = env.css;
+        for (let i = 0; i < 18; i++) { const an = sr() * Math.PI * 2, sp = (60 + sr() * 260) * im.s, l = d * sp * (H / 800); const px = c[0] + Math.cos(an) * l, py = c[1] + Math.sin(an) * l * .6 - d * 40 + d * d * 260; ctx.globalAlpha = (1 - k) * .9; ctx.fillRect(px, py, 2, 2); }
+        ctx.restore();
+      }
+      // contact shadow
+      const hgt = Math.max(0, f.p[2] - 1);
+      const sc = pr([f.p[0] + hgt * .12, f.p[1] + hgt * .1, 0]), srad = H * .13 * (1 + hgt * .09);
+      const sh = ctx.createRadialGradient(sc[0], sc[1], 0, sc[0], sc[1], srad);
+      sh.addColorStop(0, 'rgba(0,0,0,' + (.75 / (1 + hgt * .22)) + ')'); sh.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = sh; ctx.save(); ctx.translate(sc[0], sc[1]); ctx.scale(1, .62); ctx.translate(-sc[0], -sc[1]); ctx.beginPath(); ctx.arc(sc[0], sc[1], srad, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      // the die
+      const dieA = lerp(1, .5, zoomK);
+      const zk = easeOut3(zoomK), ctr = pr(f.p), zs = lerp(1, 2.1, zk);
+      ctx.save(); ctx.translate(lerp(ctr[0], env.cx, zk), lerp(ctr[1], env.cy, zk)); ctx.scale(zs, zs); ctx.translate(-ctr[0], -ctr[1]);
+      const faces = [];
+      M.F.forEach((F, i) => {
+        const n = qrot(f.q, F.n), c = add(f.p, qrot(f.q, F.c));
+        if (dot(n, sub(Cam, c)) <= 0) return;
+        faces.push({ F, i, n, c, z: dot(sub(c, Cam), fw) });
+      });
+      faces.sort((a, b) => b.z - a.z);
+      const key = norm([-.45, -.55, .85]), side = norm([.85, -.25, .3]), side2 = norm([-.9, .2, .2]);
+      ctx.save(); ctx.globalAlpha = dieA; ctx.lineJoin = 'round';
+      for (const g of faces) {
+        const pts = g.F.idx.map((vi) => pr(add(f.p, qrot(f.q, M.V[vi]))));
+        const l1 = Math.max(0, dot(g.n, key)), l2 = Math.max(0, dot(g.n, side)), l3 = Math.max(0, dot(g.n, side2));
+        const R = Math.min(255, 13 + 34 * l1 + env.rgb[0] * .3 * l2 + 255 * .08 * l3), Gr = Math.min(255, 14 + 35 * l1 + env.rgb[1] * .3 * l2 + 79 * .08 * l3), B = Math.min(255, 18 + 42 * l1 + env.rgb[2] * .3 * l2 + 163 * .08 * l3);
+        ctx.fillStyle = 'rgb(' + Math.round(R) + ',' + Math.round(Gr) + ',' + Math.round(B) + ')';
+        ctx.strokeStyle = rgba(env.rgb, .9); ctx.lineWidth = Math.max(1, H / 500);
+        ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.closePath(); ctx.fill(); ctx.stroke();
+        // numbers printed on the faces
+        if (S.vlabels) {
+          g.F.idx.forEach((vi) => {
+            const lp = add(g.F.c, mul(sub(M.V[vi], g.F.c), .58)), sp = pr(add(f.p, qrot(f.q, lp)));
+            txt(ctx, String(S.vlabels[vi]), sp[0], sp[1], (H * .03) + "px 'Doto', 'VT323', monospace", '#ffffff', { a: .95 * (1 - zoomK) });
+          });
+        } else {
+          const lab = String(S.labels[g.i]);
+          const uL = g.i === S.up ? S.uLocal : g.F.u, wL = cross(g.F.n, uL);
+          const c0 = add(f.p, qrot(f.q, g.F.c)), e = .1;
+          const p0 = pr(c0), pu = pr(add(c0, mul(qrot(f.q, uL), e))), pv = pr(add(c0, mul(qrot(f.q, wL), -e)));
+          const size = g.F.inr * (lab.length > 1 ? .98 : 1.3);
+          const ux = (pu[0] - p0[0]) / e, uy = (pu[1] - p0[1]) / e, vx = (pv[0] - p0[0]) / e, vy = (pv[1] - p0[1]) / e;
+          ctx.save(); ctx.globalAlpha = dieA * (1 - zoomK); ctx.transform(ux / 100, uy / 100, vx / 100, vy / 100, p0[0], p0[1]);
+          ctx.font = "800 " + (size * 100) + "px 'Doto', 'VT323', monospace"; ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(lab, 0, size * 3);
+          ctx.restore();
+        }
+      }
+      ctx.restore();
+      ctx.restore();
+      ctx.restore();
+      if (t > S.T) {
+        const k = easeOut3(zoomK);
+        bigNum(ctx, env, String(P.value), sat(zoomK * 2.4), lerp(.34, 1, k));
+      }
+    }
+  };
+
+  // ---------- plan: which scenes play, how long, exploding included ----------
+  const MODE = { slam: 'phys', reel: 'reel', decrypt: 'term', solve: 'math', fade: 'cool', pulse: 'pulse' };
+  function plan(o) {
+    // o: mode, rolls, sides, bonus, seed, color, style, aspect
+    const R = rng(o.seed || 1), passes = [];
+    let time = 0;
+    o.rolls.forEach((val, i) => {
+      const scene = o.style === 'physics' ? 'phys' : MODE[o.mode];
+      const speed = i === 0 ? 1 : .62;
+      const P = { scene, value: val, sides: o.sides, start: time };
+      if (scene === 'phys') {
+        P.sim = simulate(o.sides, val, Math.floor(R() * 1e9), o.aspect || 1.6);
+        P.outro = .5;
+        P.dur = P.sim.T + P.outro;
+      } else if (scene === 'term') {
+        const lines = TERM.slice();
+        const start = Math.floor(R() * 8);
+        const a = lines.slice(start).concat(lines.slice(0, start));
+        P.lines = a.slice(0, i === 0 ? 26 : 12);
+        P.total = P.lines.reduce((s, l) => s + l.length, 0);
+        P.dur = 3.6 * speed;
+      } else if (scene === 'math') {
+        const v = String(val);
+        const lens = i === 0 ? [46, 36, 28, 20, 13, 7, v.length] : [28, 18, 9, v.length];
+        P.steps = lens;
+        P.lines = lens.map((L, j) => (j === lens.length - 1 ? v : chars(MATH, L, R)));
+        P.dur = 3.2 * speed;
+      } else if (scene === 'reel') {
+        P.spins = (24 + Math.floor(R() * 8)) * o.sides; P.spins = Math.min(P.spins, 90);
+        P.dur = 2.6 * speed;
+      } else if (scene === 'cool') {
+        P.dur = 2.7 * speed;
+      } else if (scene === 'pulse') {
+        const n = i === 0 ? 4 : 2;
+        const beats = []; let tb = .15;
+        for (let b = 0; b < n; b++) { tb += (i === 0 ? .52 : .42) + b * .14; beats.push(tb); }
+        P.beats = beats;
+        P.dur = tb + .42;
+      }
+      P.star = val === o.sides && i < o.rolls.length - 1;
+      P.hold = P.star ? .62 : 0;
+      time += P.dur + P.hold;
+      passes.push(P);
+    });
+    const total = o.rolls.reduce((a, b) => a + b, 0) + (o.bonus || 0);
+    const needFinal = o.rolls.length > 1 || (o.bonus || 0) !== 0;
+    return { passes, total, bonus: o.bonus || 0, rolls: o.rolls, sides: o.sides, css: o.color, rgb: hexrgb(o.color), T: time + (needFinal ? .55 : 0), endPasses: time, needFinal };
+  }
+
+  function draw(ctx, W, H, pl, t, extra) {
+    ctx.clearRect(0, 0, W, H);
+    const env = { cx: W / 2, cy: H * .47, F: Math.min(H * .44, W * .3), css: pl.css, rgb: pl.rgb };
+    const extraHope = (extra && extra.spent) || 0;
+    let P = pl.passes[pl.passes.length - 1], pi = pl.passes.length - 1;
+    for (let i = 0; i < pl.passes.length; i++) { const q = pl.passes[i]; if (t < q.start + q.dur + q.hold) { P = q; pi = i; break; } }
+    const lt = t - P.start;
+    const u = sat(lt / P.dur);
+    const ending = t >= pl.endPasses;
+    const settled = t >= pl.T;
+    // ---- final frame: the scene stays as a dim ghost, the total on top
+    if (ending && pl.needFinal || settled && extraHope) {
+      SCENES[P.scene](ctx, W, H, P, 1, env, P.scene === 'phys' ? P.dur : P.dur);
+      ctx.save(); ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = 'rgba(0,0,0,.8)'; ctx.fillRect(-40, -40, W + 80, H + 80);
+      const hole = ctx.createRadialGradient(env.cx, env.cy, env.F * .55, env.cx, env.cy, env.F * 1.15); hole.addColorStop(0, 'rgba(0,0,0,1)'); hole.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = hole; ctx.fillRect(0, 0, W, H); ctx.restore();
+      const k = sat((t - pl.endPasses) / .4);
+      bigNum(ctx, env, String(pl.total + extraHope), 1, settled ? 1 : lerp(1.16, 1, easeOut3(k)));
+      return;
+    }
+    SCENES[P.scene](ctx, W, H, P, u, env, lt);
+    // ---- exploded dice waiting in a row at the top
+    if (pi > 0) {
+      const so = pl.rolls.slice(0, pi).join(' + ') + ' +';
+      txt(ctx, so, env.cx, H * .07, H * .07 + "px 'VT323', monospace", '#ffd98a', { glow: 12 });
+    }
+    if (lt > P.dur && P.star) {
+      const k = (lt - P.dur) / P.hold;
+      ctx.save(); ctx.fillStyle = 'rgba(255,240,210,' + (.34 * (1 - k)) + ')'; ctx.fillRect(0, 0, W, H); ctx.restore();
+      txt(ctx, 'EXPLODES', env.cx, env.cy + env.F * .66, H * .045 + "px 'Silkscreen', monospace", '#ffd98a', { glow: 14 });
+    }
+  }
+  return { plan, draw, dieMesh: mesh };
+})();
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { roll: 0, boom: 0, hit: 0, rollDone: false, boomDone: false, hitDone: false };
+    this.cvs = {};
+    this.setRoll = (el) => { this.cvs.roll = el; };
+    this.setBoom = (el) => { this.cvs.boom = el; };
+    this.setHit = (el) => { this.cvs.hit = el; };
+  }
+  seqs() {
+    const P = {
+      static: { who: 'Static', img: '/_blob/8c2499531f8accd04a3729e144231946', x: -4, y: 0 },
+      bolt: { who: 'BOLT-7', img: '/_blob/d5f7f4e9253e49e23cef8bcbd93cc878', x: -4, y: 0 },
+      dax: { who: 'Old Dax', img: '/_blob/ed104a7820fd32135e8462de54aaf025', x: -9, y: -2 }
+    };
+    return {
+      roll: [
+        Object.assign({}, P.static, { mode: 'decrypt', color: '#5ff2ff', sides: 20, rolls: [14], setup: 'Static hacks a door. Tech d20, Hard 7.', result: 'Rolls 14. It happens.' }),
+        Object.assign({}, P.bolt, { mode: 'reel', color: '#ffd166', sides: 8, rolls: [3], setup: 'BOLT-7 dodges a falling crate. Reflex d8, Normal 5.', result: 'Rolls 3. It doesn\'t, and BOLT-7 earns 1 Entropy.' }),
+        Object.assign({}, P.dax, { mode: 'fade', color: '#c79bff', sides: 10, rolls: [7], setup: 'Old Dax lies to a cleaner bot. Cool d10, Normal 5.', result: 'Rolls 7. It happens.' })
+      ],
+      boom: [
+        { mode: 'pulse', color: '#ff7dbc', sides: 4, rolls: [4, 3], setup: 'A d4 against Hard 7.', result: '4 explodes, then 3. That makes 7, so it happens.' },
+        { mode: 'slam', color: '#ff8a55', sides: 6, rolls: [6, 5], setup: 'A d6 against Heroic 11.', result: '6 explodes, then 5. That makes 11, so it happens.' }
+      ],
+      hit: [
+        { mode: 'reel', color: '#ffd166', sides: 8, rolls: [8, 4], setup: 'Static fires a laser pistol at the Gumshoe. Reflex d8, Normal 5.', result: 'Rolls 12 and beats it by 7, so 2 damage.' }
+      ]
+    };
+  }
+  begin(key, i) {
+    const e = this.seqs()[key][i];
+    const a = this.A[key];
+    a.i = i;
+    a.plan = RollFX.plan({ mode: e.mode, rolls: e.rolls, sides: e.sides, bonus: 0, seed: 11 + i * 7, color: e.color, aspect: 1.6 });
+    a.t0 = performance.now();
+    a.done = false;
+  }
+  draw(key, t) {
+    const a = this.A[key], c = this.cvs[key];
+    if (!c || !c.clientWidth) return;
+    const r = c.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > window.innerHeight) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1), w = c.clientWidth, h = c.clientHeight;
+    if (c.width !== Math.round(w * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
+    const x = c.getContext('2d');
+    x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    RollFX.draw(x, w, h, a.plan, Math.min(t, a.plan.T + 1), {});
+  }
+  componentDidMount() {
+    this.A = { roll: {}, boom: {}, hit: {} };
+    const keys = ['roll', 'boom', 'hit'];
+    keys.forEach((k) => this.begin(k, 0));
+    if (document.fonts) ["800 40px Doto", "40px VT323", "20px Silkscreen"].forEach((f) => document.fonts.load && document.fonts.load(f));
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.setState({ rollDone: true, boomDone: true, hitDone: true });
+      const still = () => keys.forEach((k) => this.draw(k, 1e6));
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(still);
+      still();
+      return;
+    }
+    const HOLD = 3;
+    const tick = () => {
+      this.raf = requestAnimationFrame(tick);
+      const now = performance.now();
+      keys.forEach((k) => {
+        const a = this.A[k], t = (now - a.t0) / 1000;
+        this.draw(k, t);
+        if (!a.done && t >= a.plan.T) { a.done = true; this.setState({ [k + 'Done']: true }); }
+        if (t >= a.plan.T + HOLD) {
+          const n = (a.i + 1) % this.seqs()[k].length;
+          this.begin(k, n);
+          this.setState({ [k]: n, [k + 'Done']: false });
+        }
+      });
+    };
+    tick();
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); }
+  renderVals() {
+    const st = this.state, S = this.seqs();
+    const view = (key) => {
+      const e = S[key][st[key]], done = st[key + 'Done'];
+      return Object.assign({}, e, { result: done ? e.result : '' });
+    };
+    const b = '/_blob/';
+    const hit = view('hit');
+    const health = st.hitDone ? 4 : 6;
+    return {
+      setRoll: this.setRoll, setBoom: this.setBoom, setHit: this.setHit,
+      roll: view('roll'), boom: view('boom'),
+      hit: Object.assign(hit, { health, boxes: Array.from({ length: 6 }, (_, i) => ({ bg: i < health ? '#ff7dbc' : '#0a0b0e', line: i < health ? 'none' : 'inset 0 0 0 1px #2a2e38' })) }),
+      stats: [
+        { name: 'BODY', verb: 'Force it', icon: b + 'ebedb544abbe899f63f39381951f8606' },
+        { name: 'REFLEX', verb: 'Dodge it', icon: b + 'd603edb7c31722f86627377c44e9fab2' },
+        { name: 'TECH', verb: 'Hack it', icon: b + 'aaa433c77496a4c85f3fa3bf75ca8578' },
+        { name: 'INTEL', verb: 'Solve it', icon: b + 'd3f41d8bdf9b72fe2f2b24c98c3070bc' },
+        { name: 'COOL', verb: 'Fake it', icon: b + '4e758f2afc5e9f4f0b00c3d0b1b20b40' },
+        { name: 'EMPATHY', verb: 'Read it', icon: b + '1d66de3828e88c9ac5b71d3db5e324f7' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

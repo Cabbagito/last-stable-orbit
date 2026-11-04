@@ -1,0 +1,176 @@
+{
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-03T21:30:00Z"
+ },
+ "title": "LSO \u2014 Maps",
+ "launch": {
+  "view": "canvas"
+ },
+ "pages": [],
+ "boards": {
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "The Event Horizon \u00b7 three moods \u00b7 16 tokens",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Key.dc.html": {
+   "x": 1520,
+   "y": 0,
+   "w": 1440,
+   "h": 1060,
+   "title": "The Event Horizon \u00b7 what's where"
+  },
+  "Promenade.dc.html": {
+   "x": 0,
+   "y": 1480,
+   "w": 1440,
+   "h": 900,
+   "title": "The Promenade \u00b7 Calm and Hunted \u00b7 15 tokens",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "PromenadeKey.dc.html": {
+   "x": 1520,
+   "y": 1480,
+   "w": 1440,
+   "h": 1130,
+   "title": "The Promenade \u00b7 what's where"
+  },
+  "Executive.dc.html": {
+   "x": 0,
+   "y": 3040,
+   "w": 1440,
+   "h": 900,
+   "title": "The Executive floors \u00b7 three moods \u00b7 15 tokens",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "ExecutiveKey.dc.html": {
+   "x": 1520,
+   "y": 3040,
+   "w": 1440,
+   "h": 1880,
+   "title": "The Executive floors \u00b7 what's where"
+  },
+  "Secure.dc.html": {
+   "x": 0,
+   "y": 5080,
+   "w": 1440,
+   "h": 900,
+   "title": "The Secure floor \u00b7 Quiet and Alert \u00b7 15 tokens",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "SecureKey.dc.html": {
+   "x": 1520,
+   "y": 5080,
+   "w": 1460,
+   "h": 1250,
+   "title": "The Secure floor \u00b7 what's where"
+  },
+  "Lift.dc.html": {
+   "x": 0,
+   "y": 6500,
+   "w": 1440,
+   "h": 900,
+   "title": "The Lift station \u00b7 door shut and open \u00b7 15 tokens",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "LiftKey.dc.html": {
+   "x": 1520,
+   "y": 6500,
+   "w": 1760,
+   "h": 1360,
+   "title": "The Lift station \u00b7 what's where"
+  },
+  "SmallVault.dc.html": {
+   "x": 0,
+   "y": 8060,
+   "w": 1440,
+   "h": 900,
+   "title": "The founder's vault",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "SmallTerminal.dc.html": {
+   "x": 1520,
+   "y": 8060,
+   "w": 1440,
+   "h": 900,
+   "title": "The Terminal room \u00b7 Seal out and in",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "SmallPatience.dc.html": {
+   "x": 3040,
+   "y": 8060,
+   "w": 1440,
+   "h": 900,
+   "title": "Patience",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "SmallBots.dc.html": {
+   "x": 0,
+   "y": 9040,
+   "w": 1440,
+   "h": 900,
+   "title": "The Bot bays",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "SmallCab.dc.html": {
+   "x": 1520,
+   "y": 9040,
+   "w": 1440,
+   "h": 900,
+   "title": "The Crawler cab \u00b7 top, halfway, bottom",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "SmallMed.dc.html": {
+   "x": 3040,
+   "y": 9040,
+   "w": 1440,
+   "h": 900,
+   "title": "The Med Bay",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "SmallKey.dc.html": {
+   "x": 0,
+   "y": 10020,
+   "w": 3000,
+   "h": 2060,
+   "title": "The small maps \u00b7 what's where"
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "Key.dc.html",
+  "Promenade.dc.html",
+  "PromenadeKey.dc.html",
+  "Executive.dc.html",
+  "ExecutiveKey.dc.html",
+  "Secure.dc.html",
+  "SecureKey.dc.html",
+  "Lift.dc.html",
+  "LiftKey.dc.html",
+  "SmallVault.dc.html",
+  "SmallTerminal.dc.html",
+  "SmallPatience.dc.html",
+  "SmallBots.dc.html",
+  "SmallCab.dc.html",
+  "SmallMed.dc.html",
+  "SmallKey.dc.html"
+ ],
+ "notes": {},
+ "designSystems": []
+}

@@ -1,0 +1,43 @@
+name: lso
+
+services:
+  # The real thing, as it will run on Railway: http://localhost:8070 (set LSO_PORT in .env to change it)
+  app:
+    build: .
+    ports: ["${LSO_PORT:-8070}:8000"]
+    env_file: .env
+    volumes: [lso-data:/data]
+    restart: unless-stopped
+
+  # Development (make dev): the API reloads on code and content changes...
+  api:
+    profiles: [dev]
+    build: { context: ., target: app }
+    command: >-
+      uvicorn --factory lso.main:app_factory --host 0.0.0.0 --port 8000 --workers 1 --ws-ping-interval 20
+      --reload --reload-dir /app/server/lso --reload-dir /app/content --reload-include *.yaml
+    env_file: .env
+    volumes:
+      - ./server/lso:/app/server/lso
+      - ./content:/app/content
+      - ./assets:/app/assets
+      - lso-dev-data:/data
+    ports: ["${LSO_DEV_API_PORT:-8071}:8000"]
+
+  # ...and the web app hot-reloads on http://localhost:5173
+  web:
+    profiles: [dev]
+    image: node:22-alpine
+    working_dir: /web
+    command: sh -c "npm ci --no-audit --no-fund --loglevel=error && npx vite --host 0.0.0.0"
+    environment: { VITE_API: "http://api:8000" }
+    volumes:
+      - ./web:/web
+      - lso-web-node-modules:/web/node_modules
+    ports: ["5173:5173"]
+    depends_on: [api]
+
+volumes:
+  lso-data: {}
+  lso-dev-data: {}
+  lso-web-node-modules: {}

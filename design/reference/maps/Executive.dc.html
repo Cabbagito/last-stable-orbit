@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Executive floors</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#000}
+.e-map{position:absolute;left:0;top:0;width:1680px;height:3760px;display:block;pointer-events:none;user-select:none;image-rendering:pixelated;transition:opacity .9s ease}
+.e-glow{position:absolute;left:0;top:0;width:1680px;height:3760px;pointer-events:none;mix-blend-mode:screen;transition:opacity .9s ease}
+.e-hum{display:block;width:1680px;height:3760px;user-select:none}
+.e-beat{display:block;width:1680px;height:3760px;user-select:none;animation:e-beat 1.7s ease-in-out infinite}
+@keyframes e-beat{0%,100%{opacity:1}50%{opacity:.35}}
+.e-tok{position:absolute;width:64px;height:100px;margin:-94px 0 0 -32px;background:none;border:0;padding:0;cursor:grab;font:inherit;transform-origin:32px 94px}
+.e-key{font-family:'Silkscreen',monospace;font-size:11px;color:#ece8f2;background:#14121a;border:1px solid #3a3446;padding:0 12px;height:44px;min-width:44px;cursor:pointer}
+.e-key:hover{background:#221e2a}
+</style>
+</helmet>
+<div style="position: relative; width: 100%; height: 900px; overflow: hidden; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
+<div onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onUp}}" onWheel="{{onWheel}}" style="position: absolute; inset: 0; cursor: {{cursor}}; touch-action: none;">
+<div style="position: absolute; left: 0; top: 0; width: 1680px; height: 3760px; isolation: isolate; transform-origin: 0 0; transform: {{worldTransform}};">
+<div role="img" aria-label="The Executive floors as a tower seen from above at an angle: four identical floors stacked straight up with gaps between them, from deck 6 at the bottom with rows of reviewers' desks, through deck 7 with glass-walled managers' offices and a scientist's room, deck 8 with a boardroom, a wall of green lights and a guarded door, to deck 9 at the top with an old wood study and a cryo pod. Main stairs in a steel tower and a vent duct with a hatch on each floor connect the floors."></div>
+<sc-for list="{{bases}}" as="b" hint-placeholder-count="3">
+<img class="e-map" src="{{b.src}}" alt="" draggable="false" style="opacity: {{b.op}};">
+</sc-for>
+<div class="e-glow" style="opacity: {{glowOffice}};"><img class="e-hum" src="/_blob/3470a4b828eb08660f0b624cae509f96" alt="" draggable="false"></div>
+<div class="e-glow" style="opacity: {{glowNight}};"><img class="e-hum" src="/_blob/9b34477bb0c45a8313b1b4735cb3225e" alt="" draggable="false"></div>
+<div class="e-glow" style="opacity: {{glowAlert}};"><img class="e-beat" src="/_blob/002a50feb29b3b3bac7b56771403021e" alt="" draggable="false"></div>
+<sc-if value="{{showCams}}" hint-placeholder-val="{{ false }}">
+<svg viewBox="0 0 1680 3760" width="1680" height="3760" aria-hidden="true" style="position: absolute; left: 0; top: 0; pointer-events: none;">
+<sc-for list="{{cones}}" as="c" hint-placeholder-count="6">
+<polygon points="{{c.pts}}" fill="rgba(127,180,255,.2)" stroke="#7fb4ff" stroke-width="3"></polygon>
+</sc-for>
+</svg>
+</sc-if>
+<sc-for list="{{toks}}" as="t" hint-placeholder-count="15">
+<button type="button" class="e-tok" onPointerDown="{{t.down}}" onClick="{{t.select}}" aria-label="{{t.name}}" style="left: {{t.x}}px; top: {{t.y}}px; transform: scale({{t.scale}}); z-index: {{t.z}};">
+<span style="position: absolute; left: 50%; bottom: 0; width: 40px; height: 20px; margin-left: -20px; border-radius: 50%; box-sizing: border-box; border: 2px solid {{t.col}}; background: rgba(0,0,0,.35);"></span>
+<span style="position: absolute; left: 50%; bottom: 10px; width: 2px; height: 34px; margin-left: -1px; background: {{t.col}};"></span>
+<span style="position: absolute; left: 4px; top: 0; width: 56px; height: 56px; border-radius: 50%; overflow: hidden; background: #09080c; box-shadow: 0 0 0 2px {{t.col}}, 0 3px 8px rgba(0,0,0,.7);">
+<img src="{{t.img}}" alt="" draggable="false" style="position: absolute; left: -7px; top: -1px; width: 70px; height: 70px; max-width: none; pointer-events: none;">
+</span>
+<sc-if value="{{t.showName}}" hint-placeholder-val="{{ false }}">
+<span style="position: absolute; left: 66px; top: 20px; font-family: 'Silkscreen', monospace; font-size: 10px; color: #ffffff; background: rgba(5,6,8,.88); padding: 3px 7px; white-space: nowrap;">{{t.NAME}}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="position: absolute; left: 12px; top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px;">
+<div style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #ffffff; background: rgba(5,6,8,.88); padding: 0 12px; height: 44px; display: flex; align-items: center;">EXECUTIVE FLOORS</div>
+<button type="button" class="e-key" onClick="{{zoomOut}}" aria-label="Zoom out">-</button>
+<button type="button" class="e-key" onClick="{{zoomIn}}" aria-label="Zoom in">+</button>
+<button type="button" class="e-key" onClick="{{fit}}">FIT</button>
+<button type="button" class="e-key" onClick="{{toggleNames}}">NAMES</button>
+<button type="button" class="e-key" onClick="{{toggleCams}}">CAMERAS</button>
+<sc-for list="{{deckBtns}}" as="b" hint-placeholder-count="4">
+<button type="button" class="e-key" onClick="{{b.pick}}">{{b.label}}</button>
+</sc-for>
+<sc-for list="{{moodBtns}}" as="b" hint-placeholder-count="3">
+<button type="button" class="e-key" onClick="{{b.pick}}" style="background: {{b.bg}}; color: {{b.fg}};">{{b.label}}</button>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  state = { px: 519, py: 1, zoom: .239, pos: {}, drag: null, tokDrag: null, sel: null, names: false, cams: false, mood: 'office' };
+
+  // k is the deck: 6 at the bottom, 9 at the top. Every floor is the same size, 450 art px apart.
+  proj(X, Y, Z, k) { return [((X - Y) * 30 + 360) * 2, ((X + Y) * 15 - Z * 36 + 150 + (9 - k) * 450) * 2]; }
+
+  defs() {
+    return [
+      { id: 'lale', name: 'Lale', img: '/_blob/bf086769fdeeb5815c8bb26655c27de8', col: '#ff4fa3', at: [9.5, 2.2, 0, 6] },
+      { id: 'marlo', name: 'Marlo', img: '/_blob/89e77d4081ac45a581d0deab2125331d', col: '#ff4fa3', at: [1.2, 5.4, 0, 7] },
+      { id: 'tally', name: 'Tally', img: '/_blob/33e082d9f196e64d462f147828f1070c', col: '#ff4fa3', at: [12.6, 2.2, 0, 6] },
+      { id: 'ves', name: 'Ves', img: '/_blob/8935375f70d3e50fdacbe2628025b6e0', col: '#ff4fa3', at: [1.2, 5.4, 0, 6] },
+      { id: 'tomo', name: 'Tomo', img: '/_blob/0516ced15d3d4704cb408bc93a529fef', col: '#ff4fa3', at: [4.6, 3.0, 0, 6] },
+      { id: 'fixer', name: 'The fixer', img: '/_blob/2b1a067acd9401d34b3bf9c168b7e0cb', col: '#ff5a4a', at: [9.0, 2.6, 0, 8] },
+      { id: 'scientist', name: 'The scientist', img: '/_blob/d70562f4767b41b6473f04231c9b8b5b', col: '#f2b544', at: [2.9, 1.75, 0, 7] },
+      { id: 'guard1', name: 'Security guard', img: '/_blob/36b29690d64affe9bd079bf11f5d6b63', col: '#7fb4ff', at: [7.0, 1.5, 0, 6] },
+      { id: 'guard2', name: 'Security guard', img: '/_blob/36b29690d64affe9bd079bf11f5d6b63', col: '#7fb4ff', at: [7.1, 1.4, 0, 8] },
+      { id: 'guard3', name: 'Security guard', img: '/_blob/36b29690d64affe9bd079bf11f5d6b63', col: '#7fb4ff', at: [10.6, 7.2, 0, 8] },
+      { id: 'oldman', name: 'The old man (stand-in)', img: '/_blob/3d54725d392d8fdae4742a4c0925b98b', col: '#8f88a3', at: [5.3, 3.7, 0, 9] },
+      { id: 'exec', name: 'Executive (stand-in)', img: '/_blob/94537b20b4eb11a4cff4b2a05191b270', col: '#8f88a3', at: [4.4, 5.6, 0, 8] },
+      { id: 'mgr', name: 'Manager (stand-in)', img: '/_blob/080fd1ed3d22da65e7f18a9214ade791', col: '#8f88a3', at: [8.9, 7.85, 0, 7] },
+      { id: 'rev1', name: 'Reviewer (stand-in)', img: '/_blob/5322e3c4d1540b2c913df44d8910c780', col: '#8f88a3', at: [4.6, 6.95, 0, 6] },
+      { id: 'rev2', name: 'Reviewer (stand-in)', img: '/_blob/4623f7851bb0115bdb1c7fb5a7fa17d8', col: '#8f88a3', at: [8.8, 4.95, 0, 6] }
+    ];
+  }
+
+  cone(x, y, k, deg, spread, len) {
+    const pts = [[x, y]];
+    for (let i = 0; i <= 12; i++) {
+      const a = (deg - spread / 2 + spread * i / 12) * Math.PI / 180;
+      pts.push([Math.max(0, Math.min(14, x + len * Math.cos(a))), Math.max(0, Math.min(10, y + len * Math.sin(a)))]);
+    }
+    return { pts: pts.map((p) => this.proj(p[0], p[1], 0, k).join(',')).join(' ') };
+  }
+
+  zoomAt(z, cx, cy) {
+    const st = this.state;
+    const nz = Math.min(3, Math.max(.2, z));
+    const k = nz / st.zoom;
+    this.setState({ zoom: nz, px: cx - (cx - st.px) * k, py: cy - (cy - st.py) * k });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const scale = Math.min(1.8, Math.max(.8, .8 / st.zoom));
+    const toks = this.defs().map((d) => {
+      const home = this.proj(d.at[0], d.at[1], d.at[2], d.at[3]);
+      const p = st.pos[d.id] || { x: home[0], y: home[1] };
+      return {
+        name: d.name, NAME: d.name.toUpperCase(), img: d.img, col: d.col, x: p.x, y: p.y, z: Math.round(p.y),
+        scale: scale, showName: st.names || st.sel === d.id,
+        down: (e) => { e.stopPropagation(); this.dragged = false; this.setState({ tokDrag: { id: d.id, sx: e.clientX, sy: e.clientY, ox: p.x, oy: p.y } }); },
+        select: () => { if (!this.dragged) this.setState({ sel: st.sel === d.id ? null : d.id }); }
+      };
+    });
+    const ids = ['office', 'night', 'alert'];
+    const src = { office: '/_blob/064450cbfb7574ef8c2309d94e42de36', night: '/_blob/e865157c597e4c208a29a860e6470b76', alert: '/_blob/5110994211bb4f831c4903426310ceb6' };
+    const labels = { office: 'OFFICE HOURS', night: 'NIGHT', alert: 'ALERT' };
+    return {
+      toks,
+      bases: ids.map((m) => ({ src: src[m], op: st.mood === m ? 1 : 0 })),
+      glowOffice: st.mood === 'office' ? 1 : 0, glowNight: st.mood === 'night' ? 1 : 0, glowAlert: st.mood === 'alert' ? 1 : 0,
+      moodBtns: ids.map((m) => ({ label: labels[m], bg: st.mood === m ? '#ff4fa3' : '#14121a', fg: st.mood === m ? '#09080c' : '#ece8f2', pick: () => this.setState({ mood: m }) })),
+      showCams: st.cams,
+      cones: [
+        this.cone(10.9, .3, 6, 90, 120, 12),
+        this.cone(.3, 7.4, 6, -15, 40, 12),
+        this.cone(11.2, .3, 7, 85, 110, 12),
+        this.cone(.3, 7.4, 7, -10, 40, 12),
+        this.cone(10.6, .3, 8, 90, 120, 12),
+        this.cone(.3, 6.9, 8, -30, 40, 12)
+      ],
+      deckBtns: [6, 7, 8, 9].map((k) => ({ label: 'DECK ' + k, pick: () => this.setState({ zoom: .82, px: 31, py: 470 - (294 + (9 - k) * 450) * 2 * .82 }) })),
+      worldTransform: 'translate(' + st.px + 'px, ' + st.py + 'px) scale(' + st.zoom + ')',
+      cursor: st.drag ? 'grabbing' : 'grab',
+      onDown: (e) => { this.setState({ drag: { x: e.clientX, y: e.clientY, px: st.px, py: st.py } }); },
+      onMove: (e) => {
+        const td = this.state.tokDrag;
+        if (td) {
+          const z = this.state.zoom;
+          const dx = (e.clientX - td.sx) / z, dy = (e.clientY - td.sy) / z;
+          if (Math.abs(dx) + Math.abs(dy) > 3) this.dragged = true;
+          const pos = Object.assign({}, this.state.pos);
+          pos[td.id] = { x: Math.round(td.ox + dx), y: Math.round(td.oy + dy) };
+          this.setState({ pos });
+          return;
+        }
+        const d = this.state.drag;
+        if (!d) return;
+        this.setState({ px: d.px + e.clientX - d.x, py: d.py + e.clientY - d.y });
+      },
+      onUp: () => { if (this.state.drag || this.state.tokDrag) this.setState({ drag: null, tokDrag: null }); },
+      onWheel: (e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        this.zoomAt(this.state.zoom * Math.exp(-e.deltaY * .0015), e.clientX - r.left, e.clientY - r.top);
+      },
+      zoomIn: () => this.zoomAt(st.zoom * 1.3, 720, 450),
+      zoomOut: () => this.zoomAt(st.zoom / 1.3, 720, 450),
+      fit: () => this.setState({ px: 519, py: 1, zoom: .239 }),
+      toggleNames: () => this.setState({ names: !st.names }),
+      toggleCams: () => this.setState({ cams: !st.cams })
+    };
+  }
+}
+</script>
+</body>
+</html>
