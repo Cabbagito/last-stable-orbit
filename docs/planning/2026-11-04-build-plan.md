@@ -9,7 +9,7 @@
 | Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
 | M4: GM tab | **Done** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Peter tried it and is happy. NPC dice are drafts for Peter to set |
-| Stage: the TV and cutscenes | **Next.** Its open questions are in the Stage section, after M4 |
+| Stage: the TV and cutscenes | **Next.** Planned, with Peter's answers, in the Stage section after M4. Start by drawing the laptops' black-hole screen on the UI canvas |
 | M5–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -319,12 +319,17 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - the TV page;
   - films starting at one shared moment on the screens that play them;
   - the table setting;
+  - the TV option on the login screen;
+  - what the laptops show during a film;
   - the GM tab's two sections.
-- **Open questions for Peter** (asked 2026-11-04):
-  1. **Order.** Stage before M5's maps? Session 1 needs both: the opening film ends on the *Patience* map, which comes with M5.
-  2. **How the TV logs in.** A button in the GM tab that opens a TV window on your laptop, to drag onto the TV as a second display? Or a TV option on the login screen, behind your passcode, for a separate device? Or both?
-  3. **Laptops during a film at the table with a TV:** fully black, as the doc recommends?
-  4. **Sound in this milestone:** only the films' own sound? The soundboard, the per-map ambience and roll sounds would then come later.
+- **Peter's answers (2026-11-04):**
+  1. **Stage comes first,** then M5.
+  2. **The TV logs in from the login screen,** with a TV option beside the crew. Peter drags that browser tab onto the TV as a second screen and goes full screen.
+     - Default taken: the TV option asks for the GM passcode. The TV may fetch films ahead of their cues, and a player who picked TV could dig an ending out of their browser. Peter can overrule this.
+  3. **Laptops during a film at the table aren't pure black.** They show something a player glances at, thinks "cool", and looks away from: Peter's idea is the spinning black hole.
+     - My proposal: small and dim in the middle of the black, turning slowly, drawn by the app in pixels; a faint "LOOK UP" could fade in once and go.
+     - Draw it on the UI canvas first, with a variant or two, before building it.
+  4. **Sound:** only the films' own baked-in sound in this milestone. The soundboard, per-map ambience and roll sounds come later.
 - **Known limits:** the online setup can be built now, but it can only be tested once the app is hosted (M7).
 
 ### M5: The other 10 maps · M · best ultracode fan-out
