@@ -12,6 +12,12 @@
   kind: weapon
   text: A compact stun pistol, legal on Ergo with a permit. It puts people down without killing them. Loud when it matters.
 
+- id: stun-rings
+  name: Stun rings
+  icon: icons/items/stun-rings.png
+  kind: weapon
+  text: Heavy signet rings that discharge on contact. They look like bad taste until they land, and they put people down without killing them. You have to be within reach.
+
 - id: splice-kit
   name: Splice kit
   icon: icons/items/splice-kit.png

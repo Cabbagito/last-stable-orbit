@@ -15,7 +15,7 @@
 | M7–M9 | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
-- **In the data now:** each character has three skills in one unlabelled list, with what each covers and a downside that happens every time a roll using it fails. The crew's guns are stun pistols. The skill icons come from the Icons canvas, board "Skills".
+- **In the data now:** each character has three skills in one unlabelled list, with what each covers and a downside that happens every time a roll using it fails. Ves carries a stun pistol and Marlo carries stun rings; both roll Reflex and put people down without killing them. The skill icons come from the Icons canvas, board "Skills".
 - **Built 2026-11-04** (fa0d7be):
   - health by character: Tomo 9, Tally 7, Lale 5, Marlo 5, Ves 4, with one ring segment per point. A saved game moves over once at boot: whoever was at the old full 6 is full again;
   - Burns, from the Burn animations canvas (https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg): the Burn row under the name, held for half a second, spends 2 Entropy and plays the character's film, on the TV or on every laptop when there's no TV. Ves picks between her two cuts. Tally's Recount also sits on his roll screen beside Push. Tomo's row pulses for 5 s after one of the others is hurt, Tally's after a die lands. Peter applies what a Burn does by hand;

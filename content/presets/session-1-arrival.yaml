@@ -36,7 +36,7 @@ tokens:
   - {kind: npc, ref: service-droid, map: event-horizon, at: [9.6, 7.9, 0]}
 inventory:  # DRAFT starting kit from the bible, for Peter to edit. Lale never carries a weapon.
   lale: [invitation, {item: credits, count: 140}]
-  marlo: [sidearm, invitation, {item: credits, count: 140}]
+  marlo: [stun-rings, invitation, {item: credits, count: 140}]
   tally: [tally-notebook, invitation, {item: credits, count: 140}]
   ves: [sidearm, splice-kit, invitation, {item: credits, count: 140}]
   tomo: [invitation, {item: credits, count: 140}]

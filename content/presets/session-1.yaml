@@ -26,7 +26,7 @@ tokens:
 # Every crew member starts at HP 6, Entropy 2 unless listed under vitals.
 inventory:  # DRAFT starting kit from the bible, for Peter to edit. Lale never carries a weapon.
   lale: [invitation, {item: credits, count: 140}]
-  marlo: [sidearm, invitation, {item: credits, count: 140}]
+  marlo: [stun-rings, invitation, {item: credits, count: 140}]
   tally: [tally-notebook, invitation, {item: credits, count: 140}]
   ves: [sidearm, splice-kit, invitation, {item: credits, count: 140}]
   tomo: [invitation, {item: credits, count: 140}]

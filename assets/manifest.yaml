@@ -470,6 +470,13 @@ assets:
     bytes: 795
     width: 48
     height: 48
+  - path: icons/items/stun-rings.png
+    store: ICONS
+    asset_id: "3eb68f76c43e63a8af104606a2b20866"
+    sha256: "6c3606f2d268e2988eaf70c8615ee4e3b2dc4f66893d26091082cbe8f391cd07"
+    bytes: 1758
+    width: 48
+    height: 48
   - path: icons/items/splice-kit.png
     store: ICONS
     asset_id: "624ba83b18f3dce2046bb80c9eb5f369"

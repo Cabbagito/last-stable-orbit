@@ -18,7 +18,7 @@ tokens:
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0], hidden: true}
 inventory:
   lale: [{item: credits, count: 120}]
-  marlo: [sidearm, {item: credits, count: 60}]
+  marlo: [stun-rings, {item: credits, count: 60}]
   tally: [tally-notebook, {item: credits, count: 140}]
   ves: [sidearm, splice-kit, {item: credits, count: 90}, maintenance-log]
   tomo: [{item: credits, count: 140}]
