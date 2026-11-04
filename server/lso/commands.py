@@ -325,6 +325,28 @@ def _cue_sets(state: GameState, content: Content, cue) -> Events:
     return events
 
 
+def _send_crew(state: GameState, content: Content, map_id: str) -> Events:
+    """The whole crew to a map's entrance (its `arrive` spots, in crew order), and it becomes the party's map.
+    A hidden crew token stays hidden. One that isn't on any map yet is placed."""
+    m = content.maps.get(map_id)
+    if not m:
+        raise _invalid("unknown map")
+    if not m.arrive:
+        raise _invalid(f"{m.name} has nowhere for the crew to arrive")
+    events: Events = []
+    for i, char in enumerate(content.characters):
+        at = list(m.arrive[i])
+        tid = next((tid for tid, t in state.tokens.items() if t.kind == "crew" and t.ref == char), None)
+        if tid is None:
+            tok = TokenState(kind="crew", ref=char, map=map_id, at=tuple(at))
+            events.append(("token.placed", {"token": char, "state": tok.model_dump()}))
+        else:
+            events.append(("token.sent", {"token": tid, "map": map_id, "at": at}))
+    if state.party_map != map_id:
+        events.append(("party.map_set", {"map": map_id}))
+    return events
+
+
 def sweep(state: GameState, now: float, online: set[str]) -> Events:
     """System housekeeping: rolls whose roller's screen stopped talking to us, and films that have ended."""
     events: Events = []
@@ -439,6 +461,9 @@ def handle(
         if (obj in state.maps[map_id].shown) == shown:
             return []
         return [("object.shown", {"map": map_id, "object": obj, "shown": shown})]
+
+    if kind == "gm.crew.send":
+        return _send_crew(state, content, _str(args, "map"))
 
     if kind == "gm.vitals.set":
         char = _str(args, "char")

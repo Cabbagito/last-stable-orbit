@@ -1,0 +1,36 @@
+# Patience, the cruise liner at Dock 7, from the Maps canvas (board "SmallPatience", key in "SmallKey").
+# Art is 740x490, drawn at 2x. The shared isometric formula, with origin (310, 130).
+id: patience
+name: Patience
+subtitle: The cruise liner, at Dock 7
+description: >-
+  The Patience seen from above at an angle: a cream corridor with three portholes showing the black hole, a
+  brass rail, a lounge with a red sofa and two round tables, a steward's desk and a gangway door marked Dock 7.
+display: [1480, 980]
+origin: [310, 130]
+order: 1
+hum: none
+moods:
+  - {id: docked, label: Docked, base: maps/patience/base.png, glow: maps/patience/glow.png}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: portholes
+    name: The portholes
+    at: [5.24, -0.96, 1.5]
+    closeup: [985, 300]
+    text: Three brass portholes, and the black hole in every one, turning slowly. The other passengers don't look out.
+  - id: steward-desk
+    name: The steward's desk
+    at: [9.92, 3.92, 0.8]
+    closeup: [985, 690]
+    text: A polished desk with a little brass lamp. A stack of satisfaction surveys waits on it, one per passenger, every box already ticked.
+# The Key board's "what's where" (the SmallKey board's Patience). Only the GM sees these.
+pins:
+  - {k: "1", label: Cream corridor and portholes, at: [5.24, -0.96, 1.5]}
+  - {k: "2", label: Gangway to Dock 7, at: [10.2, 9.0, 1.2]}
+  - {k: "3", label: The steward's desk, at: [9.92, 3.92, 0.8]}
+  - {k: A, label: Lounge tables, at: [2.68, 3.68, 0.6]}
+  - {k: B, label: Brass rail, at: [4.2, 1.5, 0.8]}
+  - {k: C, label: Sofa, at: [-0.34, 3.96, 0.5]}
+  - {k: D, label: The ship's name on the wall, at: [4.04, -1.56, 2]}
+# Where the crew land when you send them here: just inside the gangway, in crew order.
+arrive: [[10.0, 7.4, 0], [8.4, 7.8, 0], [11.8, 6.8, 0], [10.6, 6.0, 0], [9.0, 6.8, 0]]

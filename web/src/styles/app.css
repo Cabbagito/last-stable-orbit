@@ -681,3 +681,86 @@ body {
     animation: none;
   }
 }
+
+/* M5: more maps. The Promenade's glow flickers on its own 9 s loop, Patience's doesn't flicker (as on their boards). */
+.app-hum-street {
+  animation-name: app-hum-street;
+  animation-duration: 9s;
+}
+@keyframes app-hum-street {
+  0%, 100% { opacity: 1 }
+  52% { opacity: 1 }
+  52.6% { opacity: 0.7 }
+  53.2% { opacity: 1 }
+  80% { opacity: 0.92 }
+  88% { opacity: 1 }
+}
+.app-hum-none {
+  display: block;
+  user-select: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-hum-street { animation: none }
+}
+.app-decal {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  transform-origin: 0 0;
+  pointer-events: none;
+  transition: opacity 0.7s ease;
+}
+.app-decal img {
+  position: absolute;
+  max-width: none;
+  user-select: none;
+}
+.app-cones {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+.app-cones polygon {
+  fill: rgba(201, 188, 255, 0.2);
+  stroke: #c9bcff;
+  stroke-width: 3;
+}
+/* The Key board's pins, on the GM's map only: a number or letter in a small white disc, its label on hover. */
+.app-pin {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  color: #000;
+  box-shadow: 0 0 0 2px #000;
+  font: 10px/24px 'Silkscreen', monospace;
+  text-align: center;
+  cursor: help;
+  transform-origin: 12px 12px;
+}
+.app-pin:hover,
+.app-pin:focus-visible {
+  background: #fff;
+  outline: none;
+}
+.app-pin .app-tag {
+  font-family: var(--body);
+  text-align: left;
+}
+.app-pin { z-index: 1 }
+.app-pin .app-tag { display: none }
+.app-pin:hover { z-index: 3000 }
+.app-pin:hover .app-tag { display: block }
+.app-send {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-top: 6px;
+}

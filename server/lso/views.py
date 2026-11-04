@@ -10,7 +10,11 @@ Every frame a client receives is built here for that viewer. A player gets:
   roll that isn't theirs arrive only as they land on the roller's screen. Hidden GM rolls never.
 The GM gets everything, plus the NPC roster, the presets, the item catalogue and the cue list.
 
-The TV (the Stage seat) gets what a player gets with no seat: the party map, its visible tokens and revealed
+Each map also carries its decals and camera cones (everyone sees those). Only the GM gets its pins, the Key
+board's "what's where".
+
+The TV (the Stage seat) gets what a player gets with no seat: the party map (or, following one of the crew, the
+map they're on), its visible tokens and revealed
 objects, the crew's public sheets, and no pockets at all. It also gets each public roll's dice as it starts, as
 the roller's screen does, to play the same animation in its band; it shows each die as the roller's screen
 lands it. And it gets every film's file, to have them ready, because at the table only the TV plays films.
@@ -50,7 +54,7 @@ def _objects_view(state: GameState, d, ms, viewer: Viewer) -> list[dict]:
 def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer) -> dict:
     d = content.maps[map_id]
     ms = state.maps.get(map_id)
-    return {
+    out = {
         "id": d.id,
         "name": d.name,
         "subtitle": d.subtitle,
@@ -60,10 +64,18 @@ def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer) -
         "moods": [{"id": m.id, "label": m.label, "base": url(m.base), "glow": url(m.glow)} for m in d.moods],
         "switches": [s.model_dump() for s in d.switches],
         "overlays": [{**o.model_dump(), "src": url(o.src)} for o in d.overlays],
+        "decals": [{**x.model_dump(), "src": url(x.src)} for x in d.decals],
+        "hum": d.hum,
+        "order": d.order,  # frames go out with sorted keys, so the GM's lists sort by this
+        "cameras": {"switch": d.cameras.switch, "cones": [{"mood": c.mood, "pts": d.cameras.polygon(c)} for c in d.cameras.cones]} if d.cameras else None,
         "mood": ms.mood if ms else d.moods[0].id,
         "values": dict(ms.switches) if ms else {},
         "objects": _objects_view(state, d, ms, viewer),
     }
+    if viewer.is_gm:
+        out["pins"] = [p.model_dump() for p in d.pins]  # the Key board's "what's where", for the GM's eyes only
+        out["arrive"] = bool(d.arrive)
+    return out
 
 
 def _crew_view(content: Content, state: GameState) -> list[dict]:
@@ -176,10 +188,12 @@ def _rolls_view(state: GameState, viewer: Viewer, visible_tokens: set[str]) -> l
 
 
 def viewer_map(state: GameState, viewer: Viewer) -> str:
-    """Split party: a player looks at the map their own token stands on."""
-    if not viewer.is_gm:
+    """Split party: a player looks at the map their own token stands on. The TV, when it follows one of the crew,
+    looks at theirs."""
+    who = viewer.char if viewer.role == "player" else state.stage.follow if viewer.is_stage and state.stage.camera == "follow" else None
+    if who:
         for t in state.tokens.values():
-            if t.kind == "crew" and t.ref == viewer.char and not t.hidden:
+            if t.kind == "crew" and t.ref == who and not t.hidden:
                 return t.map
     return state.party_map
 

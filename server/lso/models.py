@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -127,6 +128,55 @@ class MapObject(Strict):
     codex: str | None = None
 
 
+class Decal(Strict):
+    """A small piece of art set into the map, such as the moving black hole in the Promenade's window. Drawn as the
+    board draws it: a clipped box of `box` px, placed by a CSS matrix, holding the image at `img` (left, top, w, h).
+    These are art framing in display px, not positions."""
+
+    id: str
+    src: str
+    box: tuple[float, float]
+    matrix: tuple[float, float, float, float, float, float]
+    img: tuple[float, float, float, float]
+    filter: str | None = None
+    moods: list[str] = []  # moods it shows in; empty = all
+
+
+class Cone(Strict):
+    """One camera's view on the floor: from `at` (world X, Y), facing `deg`, `spread` degrees wide, `reach` long."""
+
+    mood: str
+    at: tuple[float, float]
+    deg: float
+    spread: float
+    reach: float
+
+
+class Cameras(Strict):
+    """The cameras drawn on a map's walls. Their cones show while the bool switch `switch` is on, for everyone."""
+
+    switch: str
+    bounds: tuple[float, float, float, float]  # x0, y0, x1, y1: cones stop at the walls
+    cones: list[Cone]
+
+    def polygon(self, c: Cone) -> list[list[float]]:
+        """The cone as world X, Y points on the floor, the way the Maps boards draw it."""
+        x0, y0, x1, y1 = self.bounds
+        pts = [[c.at[0], c.at[1]]]
+        for i in range(7):
+            a = math.radians(c.deg - c.spread / 2 + c.spread * i / 6)
+            pts.append([round(max(x0, min(x1, c.at[0] + c.reach * math.cos(a))), 3), round(max(y0, min(y1, c.at[1] + c.reach * math.sin(a))), 3)])
+        return pts
+
+
+class Pin(Strict):
+    """A labelled point from the map's Key board ("what's where"). Only the GM sees pins."""
+
+    k: str  # the Key's number or letter
+    label: str
+    at: Vec3
+
+
 class MapDef(Strict):
     id: str
     name: str
@@ -134,10 +184,16 @@ class MapDef(Strict):
     description: str = ""  # alt text for the map art
     display: tuple[int, int]  # world div size in px (art drawn at 2x)
     origin: tuple[float, float]  # proj(X,Y,Z) = [((X-Y)*30+ox)*2, ((X+Y)*15 - Z*36 + oy)*2]
+    order: int = 100  # where it comes in the GM's lists: the order the story reaches it
+    hum: Literal["bar", "street", "none"] = "bar"  # how its glow flickers, as on its board
     moods: list[Mood]
     switches: list[Switch] = []
     overlays: list[Overlay] = []
+    decals: list[Decal] = []
+    cameras: Cameras | None = None
     objects: list[MapObject] = []
+    pins: list[Pin] = []
+    arrive: list[Vec3] = []  # where the crew land when the GM sends them here, in crew order
 
     @model_validator(mode="after")
     def _refs(self) -> "MapDef":
@@ -154,6 +210,16 @@ class MapDef(Strict):
                 raise ValueError(f"overlay {o.id} names unknown mood {o.mood}")
             if o.switch not in sw:
                 raise ValueError(f"overlay {o.id} names unknown switch {o.switch}")
+        for d in self.decals:
+            if unknown := set(d.moods) - mood_ids:
+                raise ValueError(f"decal {d.id} names unknown moods {unknown}")
+        if self.cameras:
+            s = sw.get(self.cameras.switch)
+            if not s or s.type != "bool":
+                raise ValueError(f"cameras need a bool switch {self.cameras.switch!r}")
+            for c in self.cameras.cones:
+                if c.mood not in mood_ids:
+                    raise ValueError(f"a camera cone names unknown mood {c.mood}")
         return self
 
     def switch(self, switch_id: str) -> Switch | None:

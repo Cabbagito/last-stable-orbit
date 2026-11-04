@@ -10,7 +10,7 @@
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
 | M4: GM tab | **Done** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Peter tried it and is happy. NPC dice are drafts for Peter to set |
 | Stage: the TV and cutscenes | **Done** 2026-11-04. Peter tried it: "looks good and works well". The TV logs in with one click, no passcode. See "How Stage turned out" |
-| M5: The other 10 maps | **Next** (recommended over M6). Open questions are in M5, under "Before M5" |
+| M5: The other 10 maps | **In progress.** Peter took the defaults (2026-11-04). The shared features, Patience and the Promenade (Calm and Hunted) are built, for Peter to check before the other eight. See "How M5 is going" |
 | M6–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -387,6 +387,26 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   4. **Pins only the GM sees:** each map's "what's where" from its Key board, as small labels on the GM's map.
   5. **Send the crew to a map:** the crew land in a small cluster at that map's entrance (from its Key board), and it becomes the party's map. The TV shows the party's map; on "Follow one" it follows that player to whatever map they're on.
   - Not a question: once Patience exists, the intro cue sets Patience behind its film. Before building, re-read the live Maps canvas in case it's newer than `design/reference/maps/`.
+- **How M5 is going** (2026-11-04; this wins over the bullets above):
+  - **Peter's answers:** the defaults, all five. Session 1's maps first, for Peter to check. No multi-agent workflow was asked for, so none ran.
+  - **The live Maps canvas** was newer in two boards: the small-map key, and the Terminal room, which now has three moods (empty, ISCO, Seal in). Both are copied into `design/reference/maps/`. Promenade, Patience and their keys were unchanged.
+  - **Built, shared by every map:**
+    - **Camera cones,** from each board's `cone()`: a map's `cameras` lists each cone per mood, clipped at the walls. They show for everyone (the TV too) while the map's Cameras switch is on. The presets turn it on.
+    - **Decals:** small art set into a map, placed by the board's CSS matrix. The first is the black hole moving in the Promenade's window (the board's 360 px GIF; it isn't a second mural).
+    - **The glow's flicker** follows each board: the bar's 7 s loop, the street's 9 s loop, none on Patience.
+    - **GM-only pins:** every Key board point, as a small numbered disc on the GM's map, with its label on hover. "What's where" in the mood bar hides them (remembered on that browser). Players and the TV never get them (leak test).
+    - **Send the crew:** "Send the crew here" in the GM column and in the GM tab's Maps. It asks twice, then the whole crew lands on the map's `arrive` spots (just inside its entrance, checked against the art), and it becomes the party's map. Hidden crew stay hidden.
+    - **The TV on "Follow one"** shows whatever map that player is on.
+    - **A saved game gains new maps at boot,** as a logged `map.added` event, with the default preset's settings for that map. Peter's live game needs no reset.
+    - **Story order:** maps carry `order`, so the GM's lists run Patience, the Promenade, the bar.
+    - **One mood:** a map with a single mood shows no mood buttons.
+  - **Patience:** one mood (Docked), 7 pins, 2 things to inspect (the portholes, the steward's desk), and the steward.
+  - **The Promenade:** Calm and Hunted, six cameras, 20 pins, 6 things to inspect (the 11:00 board, the mural of Ilija, the window, the founder's ring, the side alley, 99.97%). New NPCs: the Dock 7 clerk, the Concierge, a security guard (company blue), a Night Market vendor, a Med Bay nurse and a cleaner bot (Unit 14's portrait).
+  - **The bar** got its Key board's 23 pins and its arrive spots inside the street door.
+  - **New preset, "Session 1: arrival on the Patience":** the crew aboard, the steward, the Promenade's people in place, the bar waiting as in "the pitch at the bar", and the same pockets. `session-1` stays the default for an empty database. The intro cue now sets Patience behind its film.
+  - **Drafts for Peter:** the new things-to-inspect texts, the new NPCs' cards and dice, the pin labels, and every position.
+  - **Not done:** Patience's passengers (the board used other NPCs' portraits as stand-ins, so there's no passenger art). Moving a single crew member to another map (only the whole crew moves).
+  - **Next:** Peter checks Patience and the Promenade, then the other eight: the Executive floors (with the deck jump), the Secure floor, the Lift station, then the small maps.
 
 ### M6: Station and Codex tabs · M · the Codex is designed; the Station still needs its design session
 - **Goal:** the two remaining tabs, with no spoilers.

@@ -6,6 +6,7 @@ import { calloutsBy } from '../roll/callouts'
 import { gmRoll, gmRun, useGame } from '../store/game'
 import type { MapView, RosterNpc } from '../types'
 import { Cross, Diamond, Eye } from './parts'
+import { SendCrew, crewOn, mapList } from './SendCrew'
 
 const DICE = [4, 6, 8, 10, 12, 20]
 
@@ -70,7 +71,7 @@ export function GmScene({ map }: { map: MapView | undefined }) {
     }
   }
   const centre = map ? unproj(map.origin, [map.display[0] / 2, map.display[1] / 2], 0) : null
-  const maps = Object.values(view.maps)
+  const maps = mapList(view)
 
   return (
     <aside aria-label="Game master controls" className="r4-col r10-gm">
@@ -80,13 +81,18 @@ export function GmScene({ map }: { map: MapView | undefined }) {
       </div>
       {maps.length > 1 && map && (
         <select className="app-select" value={map.id} onChange={(e) => setGmMap(e.target.value)} aria-label="Map">
-          {maps.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.name}
-            </option>
-          ))}
+          {maps.map((m) => {
+            const n = crewOn(view, m.id)
+            return (
+              <option key={m.id} value={m.id}>
+                {m.name}
+                {n ? ` · ${n} crew` : ''}
+              </option>
+            )
+          })}
         </select>
       )}
+      {map && <SendCrew view={view} map={map} />}
       {gmError && (
         <div className="app-error" role="alert">
           {gmError}

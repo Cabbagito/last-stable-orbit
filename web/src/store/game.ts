@@ -21,6 +21,8 @@ interface GameStore {
   local: { token: string; at: Vec3 } | null
   selected: string | null
   gmMap: string | null
+  /** The GM's map shows the Key board's pins ("what's where"). Remembered on this browser. */
+  pins: boolean
   socket: GameSocket | null
   authLost: boolean
   dialog: Dialog | null
@@ -39,9 +41,19 @@ interface GameStore {
   select: (id: string | null) => void
   setLocal: (l: { token: string; at: Vec3 } | null) => void
   setGmMap: (m: string) => void
+  setPins: (on: boolean) => void
   openPick: (stat: StatKey, entry?: number) => void
   openRoll: (rollId: string, resume?: boolean) => void
   closeDialog: () => void
+}
+
+const PINS_KEY = 'lso.pins'
+function readPins() {
+  try {
+    return localStorage.getItem(PINS_KEY) !== '0'
+  } catch {
+    return true
+  }
 }
 
 const DRAG_TTL = 1500 // a relayed drag with no follow-up expires, so a dropped dragger can't freeze a token
@@ -88,6 +100,7 @@ export const useGame = create<GameStore>((set, get) => {
     local: null,
     selected: null,
     gmMap: null,
+    pins: readPins(),
     socket: null,
     authLost: false,
     dialog: null,
@@ -116,6 +129,14 @@ export const useGame = create<GameStore>((set, get) => {
     select: (selected) => set({ selected }),
     setLocal: (local) => set({ local }),
     setGmMap: (gmMap) => set({ gmMap }),
+    setPins: (pins) => {
+      try {
+        localStorage.setItem(PINS_KEY, pins ? '1' : '0')
+      } catch {
+        // private window or blocked storage: it just isn't remembered
+      }
+      set({ pins })
+    },
     openPick: (stat, entry = -1) => {
       if (!get().preview) set({ dialog: { kind: 'pick', stat, entry } })
     },

@@ -588,3 +588,94 @@ assets:
     bytes: 28757
     width: 480
     height: 270
+  - path: maps/promenade/base-calm.png
+    store: MAPS
+    asset_id: "ce23081f90adf7185bd95a41f54fe3f8"
+    sha256: "94771dd1711d876fb94faa31917ac0e158314d262a90e8cb659f34a0e8ae0dc0"
+    bytes: 200957
+    width: 1800
+    height: 1080
+  - path: maps/promenade/glow-calm.png
+    store: MAPS
+    asset_id: "acb361f744fd41f72a136ccf0f77fb5c"
+    sha256: "5a818e68e54a94376ebcf3b2f353f9e3c6ceea39c17f3846b6a30e093b7a319f"
+    bytes: 142963
+    width: 1800
+    height: 1080
+  - path: maps/promenade/base-hunted.png
+    store: MAPS
+    asset_id: "d62c5c6f8446d388be75ae2020339e00"
+    sha256: "ec6349d6a366be8d220199f53feebc26b227d735bc3cb75de8623cb52c94f4da"
+    bytes: 175094
+    width: 1800
+    height: 1080
+  - path: maps/promenade/glow-hunted.png
+    store: MAPS
+    asset_id: "d4dcf1ded073240be5bafdda61a8a512"
+    sha256: "4280a58899070538c1b646adcef9470a6398572dd83a4c730953bc8b7c0f7ccb"
+    bytes: 74797
+    width: 1800
+    height: 1080
+  - path: maps/promenade/hole.gif
+    store: MAPS
+    asset_id: "05f47e3b259733e45bdbc3e7ac3bdea4"
+    sha256: "73976c4d027f348a94bd05dbf52fe77d00e8217d4ce73eab0fe657951f583c13"
+    bytes: 1107262
+    width: 360
+    height: 360
+  - path: maps/patience/base.png
+    store: MAPS
+    asset_id: "224e0bfdca50895845a240d09188a1cf"
+    sha256: "8f63b4c2e73a7ed38dc738e18511177754499cfb7e5d849fbc892a4c9d6d3cf2"
+    bytes: 59366
+    width: 740
+    height: 490
+  - path: maps/patience/glow.png
+    store: MAPS
+    asset_id: "52bc2e7829f687d07dff36a2bb9f4487"
+    sha256: "3513f0fdda1f96529addec9bc5f664dede4f531a52f213b463ea1be412223dfd"
+    bytes: 24968
+    width: 740
+    height: 490
+  - path: portraits/dock-clerk.gif
+    store: PORTRAITS
+    asset_id: "f70a16d8ec7b46fe7695143b342e0e91"
+    sha256: "0526cb3d58501b8a7d25f0f6fac9dbf8efab659d357b243c54e35b16e80b52be"
+    bytes: 24357
+    width: 96
+    height: 96
+  - path: portraits/concierge.gif
+    store: PORTRAITS
+    asset_id: "f5868a313a1822ad9c090582ae6351d7"
+    sha256: "7efba0b0346e7310ece2864d26834000cc489268cb404d1e7bd856668397e68d"
+    bytes: 47631
+    width: 96
+    height: 96
+  - path: portraits/steward.gif
+    store: PORTRAITS
+    asset_id: "4465e7611b1ae3d303636ebcb850c99d"
+    sha256: "91ce044ebbb201392d232ffc074e9e564c64d92423ad62fda3edbef3dc1e130b"
+    bytes: 25844
+    width: 96
+    height: 96
+  - path: portraits/vendor.gif
+    store: PORTRAITS
+    asset_id: "833abde5ffaac6023f72276776b09a27"
+    sha256: "a1e370f07a1d722830969c6b852125eabefc8e7a9d593915b0d112d3ea382ece"
+    bytes: 132226
+    width: 96
+    height: 96
+  - path: portraits/nurse.gif
+    store: PORTRAITS
+    asset_id: "461939aba3c23dece06b3992b82c4571"
+    sha256: "25dacf1bc812a9a88adec2bc7886f66d4eee7eb06eb092a8df2495e655aeade2"
+    bytes: 25176
+    width: 96
+    height: 96
+  - path: portraits/guard.gif
+    store: PORTRAITS
+    asset_id: "be34be2fa69679917291e833b72ef08f"
+    sha256: "8451130f00e93dfe8f753c5fc885682499dddce524cc2cd71eef51cb9f48ed94"
+    bytes: 31522
+    width: 96
+    height: 96

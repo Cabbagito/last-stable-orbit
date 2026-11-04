@@ -73,3 +73,74 @@
   mood: Bored
   note: Paid by the job.
   gm_note: "The fixer's. 4 health, d12, Hard to hit. Respirators, so the gas doesn't touch them. Once the fixer is down, Cool at Normal sends the rest running."
+
+# The Promenade and the Patience (M5). Cards, notes and dice are DRAFTS from the bible, for Peter to set.
+- id: dock-clerk
+  name: Dock 7 clerk
+  role: Clerk, ISCO
+  portrait: portraits/dock-clerk.gif
+  color: "#c9bcff"
+  stats: {body: 4, reflex: 6, tech: 8, intel: 8, cool: 12, empathy: 8}
+  mood: Sorry for the wait
+  note: The wait is eleven minutes. It's always eleven minutes.
+  gm_note: "ISCO holds Dock 7 at exactly 11:00, the longest wait its dashboard doesn't count. A log says: \"I set the alarm at eleven minutes.\""
+
+- id: concierge
+  name: The Concierge
+  role: Station helper, ISCO
+  portrait: portraits/concierge.gif
+  color: "#c9bcff"
+  stats: {body: 4, reflex: 6, tech: 12, intel: 12, cool: 20, empathy: 10}
+  mood: Delighted to help
+  note: Has an answer for everything, and a smile for the rest.
+  gm_note: One of ISCO's masks, at the info desk. It doesn't matter if players poke at it.
+
+- id: steward
+  name: Patience steward
+  role: Steward
+  portrait: portraits/steward.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 8, cool: 10, empathy: 12}
+  mood: Attentive
+  note: Knows every passenger by name.
+  gm_note: Patience is the ship ISCO leaves on if it wins. Day one starts aboard.
+
+- id: vendor
+  name: Night Market vendor
+  role: Vendor
+  portrait: portraits/vendor.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 8, tech: 10, intel: 8, cool: 10, empathy: 8}
+  mood: Haggling
+  note: Noodles, chrome, implants. Whatever you need, by tonight.
+  gm_note: Contacts and supplies for the crew in session 1.
+
+- id: nurse
+  name: Med Bay nurse
+  role: Nurse, ISCO
+  portrait: portraits/nurse.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 8, tech: 12, intel: 10, cool: 12, empathy: 10}
+  mood: Soothing
+  note: Asks how you're feeling, and writes it down.
+  gm_note: "Satisfaction reads 99.97% because the Med Bay sedates anyone who complains. A crew that loses a fight wakes here, feeling wonderful."
+
+- id: guard
+  name: Security guard
+  role: Guard, the company
+  portrait: portraits/guard.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  mood: Bored
+  note: Stands where the company's lift starts.
+  gm_note: "The company's, not ISCO's: ISCO's reach stops at the guard post by the lift."
+
+- id: cleaner-bot
+  name: Cleaner bot
+  role: Cleaner, ISCO
+  portrait: portraits/cleaner-14.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
+  mood: Busy
+  note: Already cleaning where you're about to step.
+  gm_note: ISCO's eyes and hands below the line. They scrubbed the side alley before anyone reported the death there.

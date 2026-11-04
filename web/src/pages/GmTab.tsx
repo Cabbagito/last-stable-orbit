@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { GiveRow, Pocket, Step, Diamond, Eye, HP_MAX, ENTROPY_MAX, itemAria } from '../gm/parts'
 import { liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
+import { SendCrew, mapList } from '../gm/SendCrew'
 import { ViewAs } from '../gm/ViewAs'
 import { CutscenesSection, TvSection } from '../gm/StageSections'
 import { ring } from '../lib/ring'
@@ -227,7 +228,7 @@ function MapsSection({ view }: { view: View }) {
   return (
     <section className="r10-wide" aria-label="Maps">
       <div className="r10-h">Maps</div>
-      {Object.values(view.maps).map((m) => {
+      {mapList(view).map((m) => {
         const art = m.moods.find((x) => x.id === m.mood) ?? m.moods[0]
         const sws = liveSwitches(m)
         return (
@@ -235,19 +236,18 @@ function MapsSection({ view }: { view: View }) {
             <div className="r10-thumb" role="img" aria-label={`${m.name}, ${art.label}`} style={{ backgroundImage: `url(${art.base})` }} />
             <div>
               <div className="r10-cname">{m.name}</div>
-              <div className="r5-role">
-                {m.subtitle}
-                {m.subtitle && '. '}
-                {view.party_map === m.id ? 'The crew is here.' : ''}
+              <div className="r5-role">{m.subtitle}</div>
+              <SendCrew view={view} map={m} />
+            </div>
+            {m.moods.length > 1 && (
+              <div className="r10-mood3" role="group" aria-label={`${m.name}: mood`}>
+                {m.moods.map((x) => (
+                  <button key={x.id} type="button" className={m.mood === x.id ? 'on' : ''} aria-pressed={m.mood === x.id} onClick={() => void gmRun('gm.map.mood', { map: m.id, mood: x.id })}>
+                    {x.label}
+                  </button>
+                ))}
               </div>
-            </div>
-            <div className="r10-mood3" role="group" aria-label={`${m.name}: mood`}>
-              {m.moods.map((x) => (
-                <button key={x.id} type="button" className={m.mood === x.id ? 'on' : ''} aria-pressed={m.mood === x.id} onClick={() => void gmRun('gm.map.mood', { map: m.id, mood: x.id })}>
-                  {x.label}
-                </button>
-              ))}
-            </div>
+            )}
             {sws.length > 0 && (
               <div className="r10-swrow">
                 {sws.map((s) => {
@@ -290,7 +290,7 @@ function MapsSection({ view }: { view: View }) {
           </div>
         )
       })}
-      <div className="r10-hint">The other ten maps arrive with M5.</div>
+      <div className="r10-hint">The other eight maps are still to come.</div>
     </section>
   )
 }

@@ -1,4 +1,4 @@
-import { gmRun } from '../store/game'
+import { gmRun, useGame } from '../store/game'
 import type { MapView, SwitchDef } from '../types'
 
 /** The switches that apply in the map's current mood. */
@@ -15,11 +15,16 @@ export function pressSwitch(map: MapView, s: SwitchDef) {
   return gmRun('gm.map.switch', { map: map.id, switch: s.id, value: next })
 }
 
-/** Round 12: the map's mood and its switches, sitting just above the map's name. GM only. */
+/**
+ * Round 12: the map's mood and its switches, sitting just above the map's name. GM only. A map with one mood has
+ * nothing to pick. "What's where" shows or hides the Key board's pins, on this screen only.
+ */
 export function MoodBar({ map }: { map: MapView }) {
+  const pins = useGame((s) => s.pins)
+  const setPins = useGame((s) => s.setPins)
   return (
     <div className="r10-mood" role="group" aria-label="Mood and switches">
-      {map.moods.map((m) => (
+      {map.moods.length > 1 && map.moods.map((m) => (
         <button key={m.id} type="button" className={map.mood === m.id ? 'on' : ''} aria-pressed={map.mood === m.id} onClick={() => void gmRun('gm.map.mood', { map: map.id, mood: m.id })}>
           {m.label}
         </button>
@@ -32,6 +37,11 @@ export function MoodBar({ map }: { map: MapView }) {
           </button>
         )
       })}
+      {!!map.pins?.length && (
+        <button type="button" className={'r10-sw' + (pins ? ' on' : '')} aria-pressed={pins} title="The Key board's pins. Only you see them." onClick={() => setPins(!pins)}>
+          What's where
+        </button>
+      )}
     </div>
   )
 }

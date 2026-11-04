@@ -66,8 +66,10 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
     c.characters = _by_id(Character, _read(content_dir / "characters.yaml"), "characters.yaml")
     c.npcs = _by_id(Npc, _read(content_dir / "npcs.yaml"), "npcs.yaml")
     c.items = _by_id(Item, _read(content_dir / "items.yaml"), "items.yaml")
-    for p in sorted((content_dir / "maps").glob("*.yaml")):
-        m = _parse(MapDef, _read(p), f"maps/{p.name}")
+    maps = [_parse(MapDef, _read(p), f"maps/{p.name}") for p in sorted((content_dir / "maps").glob("*.yaml"))]
+    for m in sorted(maps, key=lambda m: m.order):
+        if m.id in c.maps:
+            raise ContentError(f"maps: duplicate id {m.id!r}")
         c.maps[m.id] = m
     for p in sorted((content_dir / "presets").glob("*.yaml")):
         pr = _parse(Preset, _read(p), f"presets/{p.name}")
@@ -143,6 +145,9 @@ def check_refs(c: Content) -> None:
                 else:
                     counted |= {item_id} if it.counted else set()
         problems += [f"{where}: vitals for unknown character {k!r}" for k in pr.vitals if k not in c.characters]
+    for m in c.maps.values():
+        if m.arrive and len(m.arrive) < len(c.characters):
+            problems.append(f"map {m.id}: arrive has {len(m.arrive)} spots for {len(c.characters)} crew")
     for cue in c.cutscenes.values():
         if not cue.sets:
             continue
@@ -176,6 +181,7 @@ def asset_paths(c: Content) -> set[str]:
             if mood.glow:
                 paths.add(mood.glow)
         paths |= {o.src for o in m.overlays}
+        paths |= {d.src for d in m.decals}
     for cue in c.cutscenes.values():
         paths |= {p for p in (cue.file, cue.still) if p}
     return paths

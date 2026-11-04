@@ -22,13 +22,14 @@ body{margin:0;background:#000}
 <div style="position: relative; width: 100%; height: 900px; overflow: hidden; background: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; color: #ece8f2;">
 <div onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onUp}}" onWheel="{{onWheel}}" style="position: absolute; inset: 0; cursor: {{cursor}}; touch-action: none;">
 <div style="position: absolute; left: 0; top: 0; width: 1900px; height: 1690px; isolation: isolate; transform-origin: 0 0; transform: {{worldTransform}};">
-<div role="img" aria-label="The Terminal room seen from above at an angle: a dark ribbed room whose floor is glass over the black hole, with huge clamps under the glass and the terminal on a dais in the middle. An enormous face inside a prism ring looms over the back corner, and a wall screen shows the station feed."></div>
-<sc-for list="{{bases}}" as="b" hint-placeholder-count="2">
+<div role="img" aria-label="The Terminal room seen from above at an angle: a dark ribbed room whose floor is glass over the black hole, with huge clamps under the glass and the terminal on a dais in the middle. A wall screen shows the station feed. When ISCO is revealed, an enormous face inside a prism ring looms over the back corner."></div>
+<sc-for list="{{bases}}" as="b" hint-placeholder-count="3">
 <img class="e-map" src="{{b.src}}" alt="" draggable="false" style="opacity: {{b.op}};">
 </sc-for>
+<div class="e-glow" style="opacity: {{glow_empty}};"><img class="e-hum" src="/_blob/6c2c1a143da3d0e8f3f3d2f7e1502154" alt="" draggable="false"></div>
 <div class="e-glow" style="opacity: {{glow_out}};"><img class="e-hum" src="/_blob/80f292b3b4020842f10a6899efee2e82" alt="" draggable="false"></div>
 <div class="e-glow" style="opacity: {{glow_in}};"><img class="e-hum" src="/_blob/a3adcdcd8a6ab33c68291a3cfaf6d8ca" alt="" draggable="false"></div>
-<img src="/_blob/d71a9765839e411c5f5bbabd2cb73296" alt="" draggable="false" style="position: absolute; left: 424px; top: 40px; width: 960px; height: 960px; max-width: none; image-rendering: pixelated; mix-blend-mode: screen; clip-path: circle(45.5% at 50.6% 43%); opacity: {{faceOp}}; pointer-events: none; transition: opacity .9s ease;">
+<img src="/_blob/d71a9765839e411c5f5bbabd2cb73296" alt="" draggable="false" style="position: absolute; left: 424px; top: 40px; width: 960px; height: 960px; max-width: none; image-rendering: pixelated; mix-blend-mode: screen; clip-path: circle(45.5% at 50.6% 43%); opacity: {{faceOp}}; pointer-events: none; transition: opacity 2.4s ease-in;">
 <div style="position: absolute; left: 1425px; top: 774px; width: 348px; height: 201px; box-sizing: border-box; padding: 9px 11px; overflow: hidden; transform-origin: 0 0; transform: matrix(1, .5, 0, 1, 0, 0); font-family: 'Silkscreen', monospace; font-size: 12px; line-height: 19px; color: #cfc4ff; pointer-events: none;">
 <div style="color: #ffffff;">STATION FEED</div>
 <div>HERE {{crew}} MIN / UP TOP {{station}} MIN</div>
@@ -56,7 +57,7 @@ body{margin:0;background:#000}
 <button type="button" class="e-key" onClick="{{zoomIn}}" aria-label="Zoom in">+</button>
 <button type="button" class="e-key" onClick="{{fit}}">FIT</button>
 <button type="button" class="e-key" onClick="{{toggleNames}}">NAMES</button>
-<sc-for list="{{moodBtns}}" as="b" hint-placeholder-count="2">
+<sc-for list="{{moodBtns}}" as="b" hint-placeholder-count="3">
 <button type="button" class="e-key" onClick="{{b.pick}}" style="background: {{b.bg}}; color: {{b.fg}};">{{b.label}}</button>
 </sc-for>
 <button type="button" class="e-key" onClick="{{addMin}}">+1 MIN</button>
@@ -67,7 +68,7 @@ body{margin:0;background:#000}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
-  state = { px: 221, py: 6, zoom: 0.525, pos: {}, drag: null, tokDrag: null, sel: null, names: false, mood: 'out', crewMin: 0, feed: 0 };
+  state = { px: 221, py: 6, zoom: 0.525, pos: {}, drag: null, tokDrag: null, sel: null, names: false, mood: 'empty', crewMin: 0, feed: 0 };
 
   proj(X, Y, Z) { return [((X - Y) * 30 + 430) * 2, ((X + Y) * 15 - Z * 36 + 380) * 2]; }
 
@@ -101,16 +102,16 @@ class Component extends DCLogic {
         select: () => { if (!this.dragged) this.setState({ sel: st.sel === d.id ? null : d.id }); }
       };
     });
-    const ids = ['out', 'in'];
-    const src = { out: '/_blob/75144b680620a0b51d467acfc0e4373c', in: '/_blob/cd21c7c40b9c70de685dc56f5940ada7' };
-    const labels = { out: 'SEAL OUT', in: 'SEAL IN' };
+    const ids = ['empty', 'out', 'in'];
+    const src = { empty: '/_blob/52fd9f21fe95941cda5285abd7156218', out: '/_blob/75144b680620a0b51d467acfc0e4373c', in: '/_blob/cd21c7c40b9c70de685dc56f5940ada7' };
+    const labels = { empty: 'EMPTY', out: 'ISCO', in: 'SEAL IN' };
     const FEED = ['CLEANERS FREEZE MID-WIPE', 'SLOTS START LOSING', 'DOCK 7 QUEUE PASSES 11:00', 'SATISFACTION FALLS FROM 99.97%', 'PATIENCE STARTS ITS ENGINES'];
     return {
       toks,
       bases: ids.map((m) => ({ src: src[m], op: st.mood === m ? 1 : 0 })),
-      glow_out: st.mood === 'out' ? 1 : 0, glow_in: st.mood === 'in' ? 1 : 0,
+      glow_empty: st.mood === 'empty' ? 1 : 0, glow_out: st.mood === 'out' ? 1 : 0, glow_in: st.mood === 'in' ? 1 : 0,
       moodBtns: ids.map((m) => ({ label: labels[m], bg: st.mood === m ? '#ff4fa3' : '#14121a', fg: st.mood === m ? '#09080c' : '#ece8f2', pick: () => this.setState({ mood: m }) })),
-      faceOp: st.mood === 'in' ? 1 : .68,
+      faceOp: st.mood === 'empty' ? 0 : st.mood === 'in' ? 1 : .68,
       crew: st.crewMin, station: Math.round(st.crewMin * 32) / 10,
       feedLines: FEED.slice(0, st.feed).map((t, i) => ({ t, col: i === st.feed - 1 ? '#ffffff' : '#8a80c8' })),
       addMin: () => this.setState({ crewMin: st.crewMin + 1 }),

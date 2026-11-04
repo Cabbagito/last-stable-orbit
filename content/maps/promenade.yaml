@@ -1,0 +1,96 @@
+# The Promenade, from the Maps canvas (boards "Promenade" and "PromenadeKey"). Layout and style are locked.
+# Art is 1800x1080, drawn at 2x. The shared isometric formula, with origin (360, 190).
+id: promenade
+name: The Promenade
+subtitle: Deck 2
+description: >-
+  The Promenade seen from above at an angle, a long street: Dock 7 in spotless white with queue rails and an
+  11:00 board, a plaza with a gold mural of Ilija and a huge window on the black hole, the Concierge's desk and
+  the company's blue lift, the Night Market with striped awnings and strings of amber and teal lanterns, a
+  too-clean side alley, the bar's warm door, a hazard-striped service door and the white Med Bay.
+display: [3600, 2160]
+origin: [360, 190]
+order: 2
+hum: street
+moods:
+  - {id: calm, label: Calm, base: maps/promenade/base-calm.png, glow: maps/promenade/glow-calm.png}
+  - {id: hunted, label: Hunted, base: maps/promenade/base-hunted.png, glow: maps/promenade/glow-hunted.png}
+switches:
+  - {id: cameras, label: Cameras, type: bool}
+decals:  # the black hole moving in the plaza window, placed exactly as the board places it
+  - {id: window-hole, src: maps/promenade/hole.gif, box: [403, 224], matrix: [1, 0.5, 0, 1, 1664.4, 584.4], img: [20, -68, 360, 360], filter: brightness(1.2)}
+cameras:  # six, drawn on the walls. Everyone sees their cones while Cameras is on; Hunted widens them.
+  switch: cameras
+  bounds: [0, 0, 47, 10]
+  cones:
+    - {mood: calm, at: [0.3, 1], deg: 38, spread: 52, reach: 10}
+    - {mood: calm, at: [10.9, 0.3], deg: 112, spread: 52, reach: 8.5}
+    - {mood: calm, at: [22.7, 0.3], deg: 112, spread: 52, reach: 9.5}
+    - {mood: calm, at: [34.4, 0.3], deg: 118, spread: 44, reach: 9.5}
+    - {mood: calm, at: [41.6, 0.3], deg: 72, spread: 50, reach: 9.5}
+    - {mood: calm, at: [46.8, 0.3], deg: 132, spread: 44, reach: 9}
+    - {mood: hunted, at: [0.3, 1], deg: 42, spread: 78, reach: 13}
+    - {mood: hunted, at: [10.9, 0.3], deg: 100, spread: 96, reach: 11}
+    - {mood: hunted, at: [22.7, 0.3], deg: 104, spread: 96, reach: 12}
+    - {mood: hunted, at: [34.4, 0.3], deg: 112, spread: 96, reach: 13}
+    - {mood: hunted, at: [41.6, 0.3], deg: 84, spread: 96, reach: 12}
+    - {mood: hunted, at: [46.8, 0.3], deg: 128, spread: 78, reach: 12}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  # at: where the marker sits, in world X, Y, Z. closeup: the centre of the card's close-up, in display px.
+  - id: queue-board
+    name: The 11:00 board
+    at: [4.92, -0.25, 2.5]
+    closeup: [1030, 340]
+    text: QUEUE 11:00. It has read 11:00 all day, however long the line. Nobody in the line complains.
+  - id: mural
+    name: The mural
+    at: [13.3, 0, 2.2]
+    closeup: [1515, 600]
+    codex: the-founder
+    text: >-
+      Old gold mosaic of a man under a black disc with an orbit ring for a halo. A grey streak at his temple.
+      No name.
+  - id: window
+    name: The window
+    at: [19.1, 0, 2.2]
+    closeup: [1860, 790]
+    text: A window the height of the street. The black hole turns below it, close enough that people lower their voices.
+  - id: founders-ring
+    name: The founder's ring
+    at: [19, 6, 0]
+    closeup: [1500, 1130]
+    text: A ring of old gold set into the plaza floor, worn smooth by feet. People walk around the black disc in its middle, never across it.
+  - id: alley
+    name: The side alley
+    at: [32.2, 12.8, 0]
+    closeup: [1884, 1700]
+    text: Cleaner than anywhere else on the street. Scrubbed to bare metal, and it still smells of solvent.
+  - id: satisfaction
+    name: "99.97%"
+    at: [44.38, -0.62, 2.4]
+    closeup: [3400, 1530]
+    text: "Over the Med Bay door, in soft white-violet: STATION SATISFACTION 99.97%. It never moves."
+# The Key board's "what's where". Only the GM sees these.
+pins:
+  - {k: "1", label: "Dock 7, with the queue and the 11:00 board", at: [6.3, 4.9, 1.0]}
+  - {k: "2", label: Gangway to the Patience, at: [0, 5, 1.6]}
+  - {k: "3", label: The clerk's desk, at: [1.7, 2.0, 1.5]}
+  - {k: "4", label: Mural of Ilija, at: [13.3, 0, 2.2]}
+  - {k: "5", label: The Concierge's info desk, at: [14, 6.3, 1.5]}
+  - {k: "6", label: "Night Market: noodles", at: [28.2, 1.9, 1.5]}
+  - {k: "7", label: "Night Market: chrome clinic", at: [32.9, 1.1, 1.3]}
+  - {k: "8", label: "Night Market: knock-off implants", at: [28, 8.2, 1.5]}
+  - {k: "9", label: The bar's door and lanterns, at: [38, 0.2, 1.3]}
+  - {k: "10", label: "Med Bay, with 99.97% over the door", at: [45.1, 0.2, 1.6]}
+  - {k: A, label: Window on the black hole, at: [19.1, 0, 2.2]}
+  - {k: B, label: Company lift to the executive decks, at: [24.4, 0.2, 1.6]}
+  - {k: C, label: "Guard post, where ISCO's reach stops", at: [26.4, 1.5, 1.4]}
+  - {k: D, label: Clean alley with a charging dock, at: [32.2, 12.8, 0]}
+  - {k: E, label: Service door down to Maintenance, at: [42.5, 0.1, 1.2]}
+  - {k: F, label: The bar's small sign outside, at: [38, 0, 3.75]}
+  - {k: G, label: Founder's ring set into the plaza floor, at: [19, 6, 0]}
+  - {k: H, label: Plastic plants and the ring bench, at: [42.6, 6.6, 2.1]}
+  - {k: J, label: "Second market cart, crates, benches", at: [35.2, 8.2, 1.5]}
+  - {k: K, label: Vending machine beside the bar, at: [35.5, 0.5, 2.2]}
+# Where the crew land when you send them here: off the Patience, in front of the Dock 7 gangway, in crew order.
+arrive: [[1.6, 4.6, 0], [2.4, 4.0, 0], [0.8, 5.4, 0], [2.2, 5.6, 0], [1.4, 6.2, 0]]

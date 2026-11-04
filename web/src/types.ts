@@ -55,6 +55,30 @@ export interface OverlayDef {
   value: number
 }
 
+/** A small piece of art set into the map (the black hole moving in the Promenade's window), placed as its board places it. */
+export interface DecalDef {
+  id: string
+  src: string
+  box: [number, number]
+  matrix: [number, number, number, number, number, number]
+  img: [number, number, number, number]
+  filter: string | null
+  moods: string[]
+}
+
+/** The cameras on a map's walls: each cone as world X, Y points on the floor, shown while `switch` is on. */
+export interface CamerasDef {
+  switch: string
+  cones: { mood: string; pts: [number, number][] }[]
+}
+
+/** A labelled point from the map's Key board ("what's where"). GM only. */
+export interface PinDef {
+  k: string
+  label: string
+  at: Vec3
+}
+
 export interface MapView {
   id: string
   name: string
@@ -62,12 +86,18 @@ export interface MapView {
   description: string
   display: [number, number]
   origin: [number, number]
+  hum: 'bar' | 'street' | 'none'
+  order: number // where it comes in the GM's lists: the order the story reaches it
   moods: MoodDef[]
   switches: SwitchDef[]
   overlays: OverlayDef[]
+  decals: DecalDef[]
+  cameras: CamerasDef | null
   mood: string
   values: Record<string, number>
   objects: MapObject[]
+  pins?: PinDef[] // GM only
+  arrive?: boolean // GM only: the crew can be sent here
 }
 
 /** Something in the world to inspect. Players get only what the GM has revealed. */

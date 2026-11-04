@@ -10,6 +10,7 @@ description: >-
   daughter over an old round table behind a brass rail, a door to the street, and a stockroom with kegs.
 display: [2560, 1440]
 origin: [536, 201]
+order: 3
 moods:
   - {id: open, label: Open, base: maps/event-horizon/base-open.png, glow: maps/event-horizon/glow-open.png}
   - {id: after, label: After hours, base: maps/event-horizon/base-after.png, glow: maps/event-horizon/glow-after.png}
@@ -40,3 +41,30 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     at: [-3.6, 9.267, 1]
     closeup: [300, 560]
     text: Four white machines in a nook, chiming softly. Nobody here seems to lose.
+# The Key board's "what's where" (board "Key"). Only the GM sees these.
+pins:
+  - {k: "1", label: Bar counter, at: [10.2, 3.0, 1.1]}
+  - {k: "2", label: Dax's place behind it, at: [11.6, 1.05, 0]}
+  - {k: "3", label: Four slot machines, at: [-2.1, 10.9, 2.6]}
+  - {k: "4", label: Round tables (five), at: [10.7, 9.3, 1.5]}
+  - {k: "5", label: Booths (three), at: [16, 9.5, 1.1]}
+  - {k: "6", label: "Founder's table, under the mural", at: [2.8, 3.7, 1.6]}
+  - {k: "7", label: Door out to the Night Market, at: [8, 13.1, 0.1]}
+  - {k: "8", label: "Vent: floor grate", at: [10.3, 11.9, 0]}
+  - {k: "8", label: "Vent: floor grate", at: [4.6, 11, 0]}
+  - {k: "8", label: "Vent: floor grate", at: [14.2, 5.3, 0]}
+  - {k: "8", label: "Vent: wall grille", at: [0, 8, 0.56]}
+  - {k: "9", label: "Hidden exit under the kegs (the Hatch switch)", at: [20.35, 1, 1.2]}
+  - {k: A, label: Stockroom, at: [20.3, 3.9, 0]}
+  - {k: B, label: The door Dax holds, at: [18, 1.25, 2.55]}
+  - {k: C, label: Brass rail and rope, at: [5.42, 5.6, 0.9]}
+  - {k: D, label: Two places always set, at: [3.72, 3.1, 1.2]}
+  - {k: E, label: "Empty camera bracket, cut wires", at: [0.2, 8, 3.8]}
+  - {k: F, label: "Sign's mark: black disc and ring", at: [7.08, 0, 3.2]}
+  - {k: G, label: "Mural's blue and stars, round the corner", at: [3, 0, 2.6]}
+  - {k: H, label: Worn mat and stool for Dax, at: [13.25, 0.98, 1.15]}
+  - {k: J, label: "Scuff marks by the kegs, the only tell", at: [22, 1.9, 0]}
+  - {k: K, label: Street lanterns outside the door, at: [8, 15, 1.2]}
+  - {k: L, label: Door leaves and doormat, at: [6.9, 12, 1.25]}
+# Where the crew land when you send them here: just inside the street door, in crew order.
+arrive: [[7.2, 11.6, 0], [7.8, 11.0, 0], [8.6, 10.2, 0], [9.4, 10.6, 0], [9.8, 11.4, 0]]

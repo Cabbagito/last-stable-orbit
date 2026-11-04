@@ -1,0 +1,39 @@
+# Session 1 from the start: day one, the crew aboard the Patience as it docks. The same pockets and the same
+# bar as "Session 1: the pitch at the bar", so you can play the whole session from here: send the crew to the
+# Promenade, then to the bar, from the GM column. Positions are drafts (the Maps boards' own).
+id: session-1-arrival
+name: "Session 1: arrival on the Patience"
+party_map: patience
+maps:
+  event-horizon: {mood: open, shown: [mural, slots]}
+  promenade: {mood: calm, switches: {cameras: 1}}
+tokens:
+  # aboard the Patience
+  - {kind: crew, ref: lale, map: patience, at: [10.0, 7.4, 0]}
+  - {kind: crew, ref: marlo, map: patience, at: [8.4, 7.8, 0]}
+  - {kind: crew, ref: tally, map: patience, at: [11.8, 6.8, 0]}
+  - {kind: crew, ref: ves, map: patience, at: [7.0, 1.2, 0]}
+  - {kind: crew, ref: tomo, map: patience, at: [5.0, 7.4, 0]}
+  - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
+  # the Promenade, calm
+  - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}
+  - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}
+  - {kind: npc, ref: service-droid, map: promenade, at: [12.6, 8.2, 0]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [20.4, 2.3, 0]}
+  - {kind: npc, ref: guard, map: promenade, at: [25.9, 2.9, 0]}
+  - {kind: npc, ref: vendor, map: promenade, at: [28.4, 7.2, 0]}
+  - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.0, 9.3, 0]}
+  - {kind: npc, ref: nurse, map: promenade, at: [44.8, 1.9, 0]}
+  # the bar, waiting for tonight (as in "the pitch at the bar")
+  - {kind: npc, ref: fixer, map: event-horizon, at: [4.203, 2.89, 0.24]}
+  - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
+  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [6.3, 5.4, 0]}
+  - {kind: npc, ref: slot-regular, map: event-horizon, at: [-0.86, 10.35, 0]}
+  - {kind: npc, ref: happy-resident, map: event-horizon, at: [12.1, 7.3, 0]}
+  - {kind: npc, ref: service-droid, map: event-horizon, at: [9.6, 7.9, 0]}
+inventory:  # DRAFT starting kit from the bible, for Peter to edit. Lale never carries a weapon.
+  lale: [invitation, {item: credits, count: 140}]
+  marlo: [sidearm, invitation, {item: credits, count: 140}]
+  tally: [tally-notebook, invitation, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, invitation, {item: credits, count: 140}]
+  tomo: [invitation, {item: credits, count: 140}]

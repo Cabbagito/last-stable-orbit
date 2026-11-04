@@ -42,6 +42,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
   const calls = useGame((s) => s.calls)
   useGame((s) => s.callTick) // re-render when a callout fades
   const isGm = useGame((s) => s.view?.me.role === 'gm')
+  const showPins = useGame((s) => s.pins && !s.preview)
   const [hover, setHover] = useState<string | null>(null) // a token or object under the mouse: it shows its name
   const [W, H] = map.display
 
@@ -246,6 +247,19 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
               </button>
             )
           })}
+          {isGm &&
+            showPins &&
+            map.pins?.map((p, i) => {
+              const [x, y] = proj(map.origin, p.at)
+              return (
+                <span key={i} className="app-pin" role="img" aria-label={`${p.k}: ${p.label}`} style={{ left: x, top: y, transform: `scale(${scale})` }}>
+                  {p.k}
+                  <span className="app-tag" aria-hidden="true">
+                    {p.label}
+                  </span>
+                </span>
+              )
+            })}
           {map.objects.map((o) => (
             <Marker
               key={o.id}

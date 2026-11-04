@@ -10,7 +10,7 @@ import time
 from .auth import Viewer
 from .commands import CommandError, handle, sweep
 from .content import Content
-from .models import GameState
+from .models import GameState, MapState
 from .state import apply, state_from_preset
 from .store import Store
 
@@ -33,6 +33,19 @@ class Engine:
         else:
             self.state = GameState.model_validate(snap[1])
             self._check_refs()
+            self._add_new_maps()
+
+    def _add_new_maps(self) -> None:
+        """A game saved before a map existed has no state for it: give it the default preset's (or its first mood)."""
+        preset = self.content.default_preset
+        events = [
+            ("map.added", {"map": m_id, "state": (preset.maps.get(m_id) or MapState(mood=m.moods[0].id)).model_dump()})
+            for m_id, m in self.content.maps.items()
+            if m_id not in self.state.maps
+        ]
+        if events:
+            self._commit("system", None, events, {})
+            log.info("added state for new maps: %s", ", ".join(e[1]["map"] for e in events))
 
     def _check_refs(self) -> None:
         """A renamed content id would leave state pointing at nothing. Say so at boot, loudly."""

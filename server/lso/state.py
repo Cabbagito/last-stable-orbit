@@ -70,6 +70,11 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         s.tokens[data["token"]] = TokenState.model_validate(data["state"])
     elif ev_type == "token.removed":
         s.tokens.pop(data["token"], None)
+    elif ev_type == "token.sent":  # the GM sent the crew to another map
+        t = s.tokens[data["token"]]
+        t.map, t.at = data["map"], tuple(data["at"])
+    elif ev_type == "map.added":  # a map the content gained after this game was saved
+        s.maps[data["map"]] = MapState.model_validate(data["state"])
     elif ev_type == "token.hidden_set":
         s.tokens[data["token"]].hidden = bool(data["hidden"])
     elif ev_type == "map.mood_set":
