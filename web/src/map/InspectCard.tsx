@@ -49,7 +49,7 @@ export function InspectCard() {
           media={obj.closeup ? undefined : <span className="app-ins-big app-ins-noicon" aria-hidden="true">OBJECT</span>}
           actions={
             <>
-              {obj.codex && <CodexButton />}
+              {obj.codex && <CodexButton entry={obj.codex} />}
               {isGm && (
                 <button type="button" className="r4-btn app-small" onClick={() => void gmRun('gm.object.show', { map: mapId, object: obj.id, shown: !obj.shown })}>
                   {obj.shown ? 'Hide' : 'Show'}
@@ -95,7 +95,7 @@ export function InspectCard() {
         }
         actions={
           <>
-            {t.codex && <CodexButton />}
+            {t.codex && <CodexButton entry={t.codex} />}
             {isGm && (
               <button type="button" className="r4-btn app-small" onClick={() => void gmRun('gm.token.hide', { token: t.id, hidden: !t.hidden })}>
                 {t.hidden ? 'Show' : 'Hide'}

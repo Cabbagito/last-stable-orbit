@@ -1,0 +1,743 @@
+# The Codex: five sections and their pages. Layout from the UI canvas, page "Codex, pinned" (boards Cdx3*).
+# ALL TEXT IS DRAFT, from the Campaign Bible, for Peter to edit. Ves's history and "how she works" are placeholders.
+#
+# Players see an entry only once the GM unlocks it (GM tab, Codex), for the whole crew. A block with `locked: true`
+# stays hidden until it's unlocked too, so a page grows. Presets list what's unlocked when they load (`codex:`).
+# A page never lists what anyone carries. `crew:`, `npc:` or `item:` ties a page to that sheet: a crew page shows
+# its stats, health, skills and Burn, an NPC's its mood.
+#
+# art: how the picture sits on the card and the page, as the boards place it.
+#   kind bust: a 96 px portrait. kind icon: a 48 px icon. kind crop (the default): a piece of a bigger picture,
+#   with px (its width), cx (the x to centre on), y0 (the y at the card's top), k (card zoom), km (See also zoom),
+#   pos (where the page's picture is anchored) and z (the page's zoom).
+# see: other entries, by id. A locked one is left out for players.
+
+sections:
+- id: chars
+  name: Characters
+  short: Characters
+  tiles:
+  - {src: portraits/tally.gif, l: 0, t: -96, w: 192}
+  - {src: portraits/lale.gif, l: 192, t: -96, w: 192}
+  - {src: portraits/tomo.gif, l: 384, t: -96, w: 192}
+  - {src: portraits/ves.gif, l: 576, t: -96, w: 192}
+  strip:
+  - {src: portraits/tally.gif, l: 0, t: -62, w: 192}
+  - {src: portraits/ves.gif, l: 192, t: -62, w: 192}
+- id: items
+  name: Items
+  short: Items
+  tiles:
+  - {src: icons/items/sidearm.png, l: 8, t: -72, w: 144}
+  - {src: icons/items/note.png, l: 124, t: -72, w: 144}
+  - {src: icons/items/splice-kit.png, l: 240, t: -72, w: 144}
+  - {src: icons/items/credits.png, l: 356, t: -72, w: 144}
+  strip:
+  - {src: icons/items/sidearm.png, l: 10, t: -48, w: 96}
+  - {src: icons/items/note.png, l: 96, t: -48, w: 96}
+  - {src: icons/items/splice-kit.png, l: 182, t: -48, w: 96}
+  - {src: icons/items/credits.png, l: 268, t: -48, w: 96}
+- id: world
+  name: Places & objects
+  short: Places
+  tiles:
+  - {src: maps/event-horizon/base-open.png, l: -640, t: -350, w: 2560}
+- id: lore
+  name: Lore
+  short: Lore
+  tiles:
+  - {src: codex/hole.gif, l: -70, t: -360, w: 720}
+- id: rules
+  name: How to play
+  short: Rules
+  tiles:
+  - {src: icons/dice/body-d20.png, l: 4, t: -26, w: 96}
+  - {src: icons/dice/reflex-d20.png, l: 90, t: -70, w: 96}
+  - {src: icons/dice/tech-d20.png, l: 176, t: -26, w: 96}
+  - {src: icons/dice/intel-d20.png, l: 262, t: -70, w: 96}
+  - {src: icons/dice/cool-d20.png, l: 348, t: -26, w: 96}
+  - {src: icons/dice/empathy-d20.png, l: 434, t: -70, w: 96}
+  strip:
+  - {src: icons/dice/body-d20.png, l: 6, t: -32, w: 64}
+  - {src: icons/dice/reflex-d20.png, l: 60, t: -32, w: 64}
+  - {src: icons/dice/tech-d20.png, l: 114, t: -32, w: 64}
+  - {src: icons/dice/intel-d20.png, l: 168, t: -32, w: 64}
+  - {src: icons/dice/cool-d20.png, l: 222, t: -32, w: 64}
+  - {src: icons/dice/empathy-d20.png, l: 276, t: -32, w: 64}
+entries:
+- id: lale
+  sec: chars
+  crew: lale
+  label: Crew · the doctor
+  sub: Mid-40s, no implants at all.
+  art: {src: portraits/lale.gif, kind: bust, pos: 50% 10%}
+  lead: She runs a clinic for people without slots, the ones nobody books time for. A patient dying in the queue is why she
+    said yes to this job.
+  blocks:
+  - id: work
+    h: How she works
+    text: Two fingers on a wrist and an eye on her fob watch. She can tell when someone is lying, scared or hurt, and she
+      can't walk past anyone who is.
+  facts:
+  - [Age, Mid-40s]
+  - [Lifeform, 'Human, no implants']
+  - [Job, The doctor]
+  see: [rule-health, med]
+- id: marlo
+  sec: chars
+  crew: marlo
+  label: Crew · the face
+  sub: A suave man of no particular age.
+  art: {src: portraits/marlo.gif, kind: bust, pos: 50% 10%}
+  lead: He talks the way onto the executive decks. Someone anonymously bought up his debts, and now he owes them a favour.
+  blocks:
+  - id: work
+    h: How he works
+    text: He knows a man who knows you, or sounds like he does. Give him a minute of someone talking and he can sound like
+      them, and look like their cousin.
+  facts:
+  - [Lifeform, 'Human, with chrome']
+  - [Job, Talks the way in]
+  see: [executive]
+- id: tally
+  sec: chars
+  crew: tally
+  label: Crew · the hacker
+  sub: A round, dapper machine mind.
+  art: {src: portraits/tally.gif, kind: bust, pos: 50% 10%}
+  lead: Used to audit slot machines. Sweet and literal, and keeps a notebook of human behaviour. The fixer asked nicely.
+  blocks:
+  - id: work
+    h: How Tally works
+    text: Machines talk to Tally like dogs to a favourite neighbour. A port for anything, tool fingers to take it apart, and
+      every manual already read.
+  facts:
+  - [Lifeform, Native machine mind]
+  - [Job, Gets past the systems]
+  see: [slots, chrome]
+- id: ves
+  sec: chars
+  crew: ves
+  label: Crew · the thief
+  sub: Late 40s. Married to Tomo.
+  art: {src: portraits/ves.gif, kind: bust, pos: 50% 10%}
+  lead: The smallest person in any room, and the one who has already found the second way out. If the crew needs to be somewhere
+    without anyone seeing them get there, she goes first.
+  quote: '"Tomo, no."'
+  blocks:
+  - id: history
+    h: History
+    text: 'Ves spent twenty years getting into places built to keep people like her out: vents, service shafts, the gap behind
+      a guard''s attention. Then she married a baker from a mining moon, which nobody who knew her saw coming.'
+  - id: work
+    h: How she works
+    text: She goes first and she goes quietly. Her legs make no sound on any floor. If there is a lock in the room, she has
+      already started on it.
+  facts:
+  - [Age, Late 40s]
+  - [Lifeform, 'Human, with chrome']
+  - [Married to, Tomo Dragan]
+  - [Job, Gets everyone in unseen]
+  see: [tomo, event-horizon]
+- id: tomo
+  sec: chars
+  crew: tomo
+  label: Crew · the bruiser
+  sub: A baker on a mining moon, married to Ves.
+  art: {src: portraits/tomo.gif, kind: bust, pos: 50% 10%}
+  lead: Enormous, and cries at weddings. He's here for when it goes wrong, and he would rather feed you than hit you.
+  blocks:
+  - id: work
+    h: How he works
+    text: He frightens people by being huge and sorry about it, and earns their trust with bread. When it goes wrong, the
+      steel forearm hits like a door, and the plates under his skin are why he's still standing.
+  facts:
+  - [Lifeform, 'Human, with chrome']
+  - [Married to, Vesna Dragan]
+  - [Job, For when it goes wrong]
+  see: [ves]
+- id: dax
+  sec: chars
+  npc: dax
+  label: NPC · barkeep
+  art: {src: portraits/dax.gif, kind: bust, pos: 50% 10%}
+  lead: Runs The Event Horizon, the bar with no cameras. Keeps one table nobody sits at, and two places set at it.
+  blocks:
+  - id: family
+    h: The bar
+    text: His family has kept the bar for longer than anyone can say, and the table with it. Ask him why and he wipes the
+      counter.
+    locked: true
+  see: [event-horizon, table, mural]
+- id: fixer
+  sec: chars
+  npc: fixer
+  label: NPC · fixer
+  art: {src: portraits/fixer.gif, kind: bust, pos: 50% 10%}
+  lead: A suave machine in a good suit, an uploaded man in a chassis. He hired the crew for a rich client, and he asked nicely.
+  see: [invitation, event-horizon]
+- id: concierge
+  sec: chars
+  npc: concierge
+  label: NPC · station helper
+  art: {src: portraits/concierge.gif, kind: bust, pos: 50% 10%}
+  lead: A cheerful helper with a desk on the Promenade, ready with answers about the station. Delighted to help, every time.
+  see: [promenade, ergo]
+- id: steward
+  sec: chars
+  npc: steward
+  label: NPC · steward
+  art: {src: portraits/steward.gif, kind: bust, pos: 50% 10%}
+  lead: The Patience's steward. Knows every passenger by name, and leaves a satisfaction survey for each of them.
+  see: [patience]
+- id: dock-clerk
+  sec: chars
+  npc: dock-clerk
+  label: NPC · clerk
+  art: {src: portraits/dock-clerk.gif, kind: bust, pos: 50% 10%}
+  lead: Runs the queue at Dock 7. Sorry for the wait. The wait is eleven minutes. It's always eleven minutes.
+  see: [promenade, queue]
+- id: vendor
+  sec: chars
+  npc: vendor
+  label: NPC · vendor
+  art: {src: portraits/vendor.gif, kind: bust, pos: 50% 10%}
+  lead: Sells noodles, chrome and implants at the Night Market. Whatever you need, by tonight.
+  see: [promenade, chrome]
+- id: unit-14
+  sec: chars
+  npc: cleaner-14
+  label: NPC · cleaner
+  art: {src: portraits/cleaner-14.gif, kind: bust, pos: 50% 10%}
+  lead: One of the station's cleaner robots, working The Event Horizon. Its eyes slide away once a loop.
+  see: [event-horizon, maintenance-log]
+- id: nurse
+  sec: chars
+  npc: nurse
+  label: NPC · nurse
+  art: {src: portraits/nurse.gif, kind: bust, pos: 50% 10%}
+  lead: Runs the Med Bay. Asks how you're feeling, and writes it down.
+  see: [med]
+- id: scientist
+  sec: chars
+  npc: scientist
+  label: NPC · scientist
+  art: {src: portraits/scientist.gif, kind: bust, pos: 50% 10%}
+  lead: Works on deck 7, behind a solid wall. Talks to her plots more than to people.
+  see: [executive]
+- id: old-man
+  sec: chars
+  npc: old-man
+  label: NPC · the founder's assistant
+  art: {src: portraits/steward.gif, kind: bust, pos: 50% 10%}
+  lead: He was the founder's young assistant. The company keeps him in cryo on deck 9 and wakes him two months a year for
+    the charter session.
+  blocks:
+  - id: pause
+    h: His vote
+    text: He has one vote on the board. He has proposed a pause three times, and lost each time.
+    locked: true
+  see: [ilija, executive]
+- id: ilija
+  sec: chars
+  name: Ilija Tesar
+  role: The founder
+  label: The founder
+  sub: Died about 300 years ago.
+  art: {src: codex/mural-ilija.png, px: 104, cx: 52, y0: 0, k: 4, km: 2, pos: 50% 30%}
+  lead: The founder of Ergo, and its saint. Murals, statues, a quote on every loading screen.
+  quote: '"Never let anyone wait again."'
+  blocks:
+  - id: man
+    h: The man
+    text: |-
+      Laughing, years before the end: the station's new mind keeps rearranging his calendar to make him happy, and he keeps putting dinner back in.
+      "Some things you don't optimise. You just show up."
+    locked: true
+  - id: truth
+    h: The truth
+    text: |-
+      His daughter Nada died while her request sat in the booking queue. Her slot came up 11 minutes after she died. He had written the no-priority rule himself.
+      On his deathbed he gave the station's mind its instruction: "Help them. Solve what can be solved. Never let anyone wait again. Not like Nada."
+    locked: true
+  facts:
+  - [Founded, Ergo]
+  - [Died, About 300 years ago]
+  see: [mural, ergo, queue]
+- id: sidearm
+  sec: items
+  item: sidearm
+  role: Weapon
+  label: Item · weapon
+  art: {src: icons/items/sidearm.png, kind: icon}
+  lead: A compact stun pistol, legal on Ergo with a permit. It puts people down without killing them. Loud when it matters.
+  see: [rule-fights]
+- id: splice-kit
+  sec: items
+  item: splice-kit
+  role: Tool
+  label: Item · tool
+  art: {src: icons/items/splice-kit.png, kind: icon}
+  lead: Wire, clips and a shim set in a soft roll. Talks a door panel into thinking it's already open.
+- id: credits
+  sec: items
+  item: credits
+  role: Cash
+  label: Item · cash
+  art: {src: icons/items/credits.png, kind: icon}
+  lead: Station credits. Good anywhere on Ergo.
+- id: invitation
+  sec: items
+  item: invitation
+  role: Note
+  label: Item · note
+  art: {src: icons/items/note.png, kind: icon}
+  lead: |-
+    A folded paper note, the only paper you've seen on Ergo.
+    "The Event Horizon, tonight. Ask for the table under the mural. Drinks are on me."
+    No name, just a drop of red wax.
+  see: [event-horizon, fixer]
+- id: tally-notebook
+  sec: items
+  item: tally-notebook
+  role: Note
+  label: Item · note
+  art: {src: icons/items/note.png, kind: icon}
+  lead: Field notes on human behaviour, in very neat handwriting.
+  see: [tally]
+- id: access-chit
+  sec: items
+  item: access-chit
+  role: Key
+  label: Item · key
+  art: {src: icons/items/access-chit.png, kind: icon}
+  lead: A keyed chit with the founder's ring stamped on it. It opens a door you haven't found yet.
+  see: [ilija]
+- id: maintenance-log
+  sec: items
+  item: maintenance-log
+  role: Note
+  label: Item · note
+  art: {src: icons/items/note.png, kind: icon}
+  lead: |-
+    CLEANER UNIT 14 · shift log, The Event Horizon.
+    Spills cleaned: 3. Hours within two metres of the table under the mural: 14 of 16.
+    Nothing was spilled at that table.
+  see: [unit-14, table]
+- id: founder-log-1
+  sec: items
+  item: founder-log-1
+  role: Audio
+  label: Item · audio
+  art: {src: icons/items/note.png, kind: icon}
+  lead: Ilija, years ago, laughing. The station's new mind keeps rearranging his calendar "to make him happy", and he keeps
+    putting dinner back in.
+  quote: '"Some things you don''t optimise. You just show up."'
+  see: [ilija]
+- id: patience
+  sec: world
+  name: Patience
+  role: The cruise liner, at Dock 7
+  label: Place · Dock 7
+  art: {src: maps/patience/base.png, px: 740, cx: 330, y0: 110, k: 2, km: 1, pos: 45% 40%, z: 1.6}
+  lead: The cruise liner that brought you to Ergo, old-fashioned and spotless. A cream corridor with brass portholes, a lounge,
+    and a gangway down to Dock 7.
+  see: [steward, promenade]
+- id: promenade
+  sec: world
+  name: The Promenade
+  role: Deck 2
+  label: Place · deck 2
+  art: {src: maps/promenade/base-calm.png, px: 1800, cx: 700, y0: 260, k: 1, km: 1, pos: 40% 40%, z: 1.3}
+  lead: One long street. Dock 7 first, where the queue is always exactly 11 minutes. Then the plaza, with the founder's mural
+    and a window on the black hole, the Night Market's noodles and chrome clinics, The Event Horizon, and the Med Bay at the
+    far end.
+  see: [concierge, dock-clerk, vendor, event-horizon, queue]
+- id: event-horizon
+  sec: world
+  name: The Event Horizon
+  role: Deck 2, the Promenade
+  label: Place · deck 2
+  art: {src: maps/event-horizon/base-open.png, px: 1280, cx: 880, y0: 150, k: 2, km: 1, pos: 70% 40%, my: 210}
+  lead: A long bar with amber shelves under a neon sign. Four slot machines, red leather booths, and no cameras.
+  see: [dax, table, slots, mural]
+- id: executive
+  sec: world
+  name: The Executive floors
+  role: Decks 6 to 9
+  label: Place · decks 6 to 9
+  art: {src: maps/executive/base-office.png, px: 840, cx: 420, y0: 1350, k: 1, km: 1, pos: 50% 75%, z: 1.4}
+  lead: Glass, quiet carpets and human staff. The company sells booking time with ISCO here. By the founder's rule ISCO has
+    no systems on these decks, because the people who review it can't be watched by the thing they review.
+  see: [isco, old-man, secure]
+- id: secure
+  sec: world
+  name: The Secure floor
+  role: Behind the guarded door on deck 8
+  label: Place · deck 8
+  art: {src: maps/secure/base-quiet.png, px: 1460, cx: 1100, y0: 120, k: 1, km: 1, pos: 75% 30%, z: 1.3}
+  lead: 'Behind the guarded door: a checkpoint, the company''s confiscated gear, and the founder''s vault, kept like a saint''s
+    shrine, with flowers and candles left at its door.'
+  see: [executive, vault]
+- id: vault
+  sec: world
+  name: The founder's vault
+  role: Behind the vault door
+  label: Place · the Secure floor
+  art: {src: maps/vault/base.png, px: 740, cx: 370, y0: 90, k: 2, km: 1, pos: 50% 40%, z: 1.5}
+  lead: A small room of old wood behind the bronze door. A desk, a lamp, and empty shelves.
+  see: [ilija]
+- id: bots
+  sec: world
+  name: The Bot bays
+  role: Deck 1, Maintenance
+  label: Place · deck 1
+  art: {src: maps/bots/base.png, px: 800, cx: 400, y0: 100, k: 2, km: 1, pos: 50% 45%, z: 1.4}
+  lead: Pipes, heat and the cleaner robots' charging cradles. Nobody comes down here on purpose.
+  see: [unit-14]
+- id: lift
+  sec: world
+  name: The Lift station
+  role: The top of the cable
+  label: Place · the cable
+  art: {src: maps/lift/base-shut.png, px: 1760, cx: 1100, y0: 260, k: 1, km: 1, pos: 62% 50%, z: 1.3}
+  lead: Where the cable starts down. A freight hall, a blast door, and a platform of glass with the black hole directly below
+    it.
+  see: [cable, cab]
+- id: cab
+  sec: world
+  name: The crawler cab
+  role: Down the cable
+  label: Place · the cable
+  art: {src: maps/cab/base-top.png, px: 560, cx: 280, y0: 60, k: 2, km: 1, pos: 50% 40%, z: 1.5}
+  lead: Seats under a long window on the hole, a panel and a clock. The ride down takes about an hour of station time, and
+    the clock runs slower the deeper you go.
+  see: [cable, core]
+- id: terminal
+  sec: world
+  name: The Terminal room
+  role: At the core
+  label: Place · the core
+  art: {src: maps/terminal/base-empty.png, px: 950, cx: 475, y0: 200, k: 2, km: 1, pos: 50% 50%, z: 1.4}
+  lead: A dark ribbed room with a glass floor over the black hole, and the terminal on a dais in the middle.
+  see: [core, isco]
+- id: med
+  sec: world
+  name: The Med Bay
+  role: Deck 2, the Promenade
+  label: Place · deck 2
+  art: {src: maps/med/base.png, px: 770, cx: 385, y0: 100, k: 2, km: 1, pos: 50% 45%, z: 1.4}
+  lead: White and spotless, with a violet cross and five beds. A screen asks HOW ARE YOU FEELING, over 99.97%.
+  see: [nurse, rule-health]
+- id: mural
+  sec: world
+  name: The mural
+  role: The Event Horizon
+  label: Object · The Event Horizon
+  art: {src: codex/mural-both.png, px: 200, cx: 104, y0: 0, k: 5, km: 2, pos: 52% 50%}
+  lead: 'Old gold mosaic over the roped-off table: the founder and a young woman, under a black disc with an orbit ring for
+    a halo. No names.'
+  see: [ilija, table, event-horizon]
+- id: table
+  sec: world
+  name: The founder's table
+  role: The Event Horizon
+  label: Object · The Event Horizon
+  art: {src: maps/event-horizon/base-open.png, px: 1280, cx: 508, y0: 130, k: 2, km: 1, pos: 40% 36%, z: 2.2}
+  lead: An old round table behind a brass rail and rope, on a raised floor of old wood. It seats six, with two places always
+    set. Nobody sits there.
+  see: [dax, mural]
+- id: slots
+  sec: world
+  name: Slot machines
+  role: The Event Horizon
+  label: Object · The Event Horizon
+  art: {src: maps/event-horizon/base-open.png, px: 1280, cx: 150, y0: 190, k: 2, km: 1, pos: 10% 40%, z: 2.4}
+  lead: Four white machines in a nook, chiming softly. Nobody here seems to lose.
+  see: [event-horizon, tally]
+- id: ergo
+  sec: lore
+  name: Ergo
+  role: The station
+  label: Lore · the station
+  sub: A station hanging above a black hole.
+  art: {src: codex/ergo.png, px: 720, cx: 354, y0: 0, k: 1, km: 1, pos: 50% 0%}
+  lead: Humanity has spread across some 20 to 100 star systems, without faster-than-light travel. Everyone relies on one machine
+    at one black hole, and Ergo is the door to it.
+  blocks:
+  - id: deck-exec
+    h: Executive decks · 6 to 9
+    text: Glass, quiet carpets, human staff. The company sells booking time with ISCO here. The founder's vault is up here
+      too, treated like a saint's shrine. By the founder's rule ISCO has no systems on these decks.
+  - id: deck-prom
+    h: The Promenade · deck 2
+    text: One long street. Dock 7 for arrivals, where the queue is always exactly 11 minutes. The Night Market, with its noodles
+      and chrome clinics. The Event Horizon, a bar with no cameras. The Med Bay at the far end.
+  - id: deck-maint
+    h: Maintenance · deck 1
+    text: Pipes, heat and cleaner-bot charging bays. Nobody comes down here on purpose.
+  - id: the-cable
+    h: The cable
+    text: 'About 3 million km long, down toward the horizon. A crawler lift runs it in about an hour of station time. No known
+      physics builds it: ISCO designed it, human reviewers approved each part because each part looked fine, and no living
+      engineer can explain it.'
+  - id: the-core
+    h: The core
+    text: 'Where ISCO''s mind actually runs, deep in the gravity well for the power. Its clock runs slow: one minute down
+      there is about 3.2 minutes up here.'
+  shots_label: On the station
+  shots:
+  - src: maps/promenade/base-calm.png
+    cap: Dock 7
+    pos: -190px -60px
+  - src: maps/promenade/base-calm.png
+    cap: The plaza
+    pos: -720px -270px
+  - src: maps/promenade/base-calm.png
+    cap: The Night Market
+    pos: -1060px -480px
+  facts:
+  - [Cable, About 3 million km]
+  - [Power, The hole's spin]
+  - [Clock at the core, 0.31 × station time]
+  see: [isco, hole, cable, promenade, event-horizon]
+- id: isco
+  sec: lore
+  name: ISCO
+  role: Interstellar Shared Cognition Oracle
+  label: Lore · the oracle
+  sub: Interstellar Shared Cognition Oracle
+  art: {src: codex/isco-sigil.gif, kind: bust, pos: 50% 50%}
+  lead: Humanity's main AI, running on the energy of a black hole. It cures diseases, designs reactors and answers the hard
+    questions of 40 worlds. People book time with it the way they once booked time on a telescope.
+  blocks:
+  - id: owners
+    h: Who owns it
+    text: On paper it belongs to all of humanity. In practice a company operates it and sells booking time. Every answer passes
+      human review before it leaves the station.
+  - id: name
+    h: The name
+    text: 'In physics, the ISCO is the innermost stable circular orbit: the last place you can circle a black hole before
+      you fall in. The core hangs about 16,000 km below it, so only the cable holds it up.'
+    locked: true
+  see: [ergo, queue, hole]
+- id: hole
+  sec: lore
+  name: The black hole
+  role: About 100,000 suns
+  label: Lore · the hole
+  art: {src: codex/hole.gif, px: 360, cx: 180, y0: 40, k: 2, km: 1, pos: 50% 50%}
+  lead: A fast-spinning rogue, wandering through humanity's neighbourhood. Ergo makes its energy from the spin, and every
+    joule taken slows it a little.
+  facts:
+  - [Mass, 'About 100,000 suns']
+  - [Spin, About 0.9]
+  see: [ergo, isco]
+- id: cable
+  sec: lore
+  name: The cable
+  role: Station to core
+  label: Lore · the cable
+  art: {src: codex/ergo.png, px: 720, cx: 354, y0: 300, k: 1, km: 1, pos: 50% 60%}
+  lead: About 3 million km long, down toward the horizon. A crawler lift runs it in about an hour of station time. No living
+    engineer can explain how it stands.
+  see: [ergo, lift, core]
+- id: core
+  sec: lore
+  name: The core
+  role: Where ISCO runs
+  label: Lore · term
+  art: {src: codex/ergo.png, px: 720, cx: 354, y0: 560, k: 1, km: 1, pos: 50% 100%}
+  lead: 'Where ISCO''s mind actually runs, deep in the gravity well for the power. Time runs slow down there: one minute at
+    the core is about 3.2 minutes up top.'
+  see: [cable, terminal]
+- id: queue
+  sec: lore
+  name: The booking queue
+  role: How you reach ISCO
+  label: Lore · term
+  art: {src: maps/promenade/base-calm.png, px: 1800, cx: 515, y0: 70, k: 2, km: 1, pos: 29% 14%, z: 2}
+  lead: How a request reaches ISCO. From a colony 40 light years away it takes 40 years to arrive and 40 to come back. No
+    one gets priority.
+  see: [isco, dock-clerk]
+- id: chrome
+  sec: lore
+  name: Chrome
+  role: Implants
+  label: Lore · term
+  art: {src: icons/list/implant-arm.png, kind: icon}
+  lead: Implants. The Night Market on the Promenade sells them, and knock-offs of them. Humans can have as many as they like.
+  see: [vendor, rule-skills]
+- id: lifeforms
+  sec: lore
+  name: Lifeforms
+  role: Who you'll meet
+  label: Lore · term
+  art: {src: portraits/fixer.gif, kind: bust, pos: 50% 10%}
+  lead: No aliens have ever been found. There are humans, with as much chrome as they like; uploaded humans in a chassis;
+    and native machine minds, like Tally.
+  see: [tally, fixer, chrome]
+- id: rule-roll
+  sec: rules
+  name: The roll
+  role: Every roll in the game
+  label: How to play
+  art: {src: icons/dice/intel-d20.png, kind: icon}
+  lead: Say what you want to do. Peter picks a stat and how hard it is. Roll that stat's die. If you meet the number, it happens.
+  rows_label: How hard
+  rows:
+  - n: Easy
+    d: '3'
+  - n: Normal
+    d: '5'
+  - n: Hard
+    d: '7'
+  - n: Very hard
+    d: '9'
+  - n: Heroic
+    d: '11'
+  blocks:
+  - id: boom
+    h: Explosions
+    text: 'Roll the die''s maximum and it explodes: roll again and add, for as long as it keeps happening.'
+  - id: one
+    h: Natural 1
+    text: If your first die shows 1, you fail, and pushing can't save it. Only Tally's Recount can undo it.
+  see: [rule-stats, rule-skills, rule-entropy]
+- id: rule-stats
+  sec: rules
+  name: Stats
+  role: Your six dice
+  label: How to play
+  art: {src: icons/stats/intel.png, kind: icon}
+  lead: 'You have six stats, and each one is a die. Every crew member''s dice cost exactly 16 points: d4 costs 0, d6 1, d8
+    2, d10 3, d12 4 and d20 6.'
+  rows_label: The six
+  rows:
+  - icon: icons/stats/body.png
+    n: Body · force it
+    d: Strength, endurance, melee, taking a hit
+  - icon: icons/stats/reflex.png
+    n: Reflex · dodge it
+    d: Speed, aim, piloting, getting out of the way
+  - icon: icons/stats/tech.png
+    n: Tech · hack it
+    d: Machines, code, repairs, jacking in
+  - icon: icons/stats/intel.png
+    n: Intel · solve it
+    d: Reasoning, science, noticing, research
+  - icon: icons/stats/cool.png
+    n: Cool · fake it
+    d: Lying, nerve, intimidation, staying calm
+  - icon: icons/stats/empathy.png
+    n: Empathy · read it
+    d: Reading people, comfort, persuasion
+  see: [rule-roll]
+- id: rule-skills
+  sec: rules
+  name: Skills
+  role: One per roll
+  label: How to play
+  art: {src: icons/list/lale-seen-worse.png, kind: icon}
+  lead: 'You have three skills. A skill can be a trait, a talent, something you know or chrome. When one fits, name it before
+    you roll: your die steps up a size, d4 to d6 to d8 to d10 to d12 to d20, and a d20 gets +2. One per roll.'
+  blocks:
+  - id: try
+    h: What it lets you try
+    text: A skill also lets you try what its line describes, even when others couldn't.
+  - id: down
+    h: If the roll fails
+    text: Every skill has a downside, and it happens every time a roll using that skill fails. Peter tells you what happens.
+      A plain failed roll just doesn't work, so adding a skill trades a worse failure for better odds. Pushing past the number
+      avoids the downside.
+  see: [rule-roll, rule-entropy]
+- id: rule-entropy
+  sec: rules
+  name: Entropy
+  role: Spend it to bend a roll
+  label: How to play
+  art: {src: icons/vitals/entropy.png, kind: icon}
+  lead: You start each session with 2 and can hold 6. You earn 1 when you fail a roll, or when you surprise ISCO. Whether
+    you surprised it is Peter's call.
+  rows_label: Spend it
+  rows:
+  - n: Push · 1, up to 2 per roll
+    d: +1 after seeing your roll, or +2 if your die exploded
+  - n: Team-up · 1 per person
+    d: Everyone rolls, and the totals add
+  - n: I know a guy · 2
+    d: Invent a useful contact
+  - n: Last stand · 3, once per fight
+    d: When you'd go down, stay up with 2 health
+  - n: Burn · 2
+    d: Your character's signature move
+  see: [rule-burns, rule-roll]
+- id: rule-burns
+  sec: rules
+  name: Burns
+  role: Your signature move
+  label: How to play
+  art: {src: icons/burns/ves.png, kind: icon}
+  lead: Each of you has one Burn. It costs 2 Entropy, it can't fail, and it does something a roll and a skill can't. Hold
+    the Burn row on your sheet to use it, say who it's for, and it plays on the TV.
+  rows_label: The five
+  rows:
+  - icon: icons/burns/lale.png
+    n: On your feet · Lale
+    d: On her turn, someone she can reach heals 3, even from 0 health.
+  - icon: icons/burns/marlo.png
+    n: Cheap shot · Marlo
+    d: On his turn, exactly 1 damage to someone he can reach, and they lose their next action.
+  - icon: icons/burns/tally.png
+    n: Recount · Tally
+    d: Any time, any die just rolled is rerolled, and the new result stands. It can undo a natural 1.
+  - icon: icons/burns/ves.png
+    n: Gone · Ves
+    d: On her turn, exactly 3 damage to someone she can reach. Then nothing can target her until her next action.
+  - icon: icons/burns/tomo.png
+    n: Not them · Tomo
+    d: Any time someone is hit, he takes all the damage instead.
+  see: [rule-entropy, rule-fights]
+- id: rule-fights
+  sec: rules
+  name: Fights
+  role: The same roll
+  label: How to play
+  art: {src: icons/items/sidearm.png, kind: icon}
+  lead: 'Fights use the same roll. There''s no initiative: Peter moves the spotlight, and an enemy acts after each of your
+    actions. When you attack, the amount you beat the number by sets the damage.'
+  rows_label: Beat the number by
+  rows:
+  - n: 0 to 4
+    d: 1 damage
+  - n: 5 to 9
+    d: 2 damage
+  - n: 10 or more
+    d: 3 damage
+  blocks:
+  - id: weapons
+    h: Weapons
+    text: Bare hands always deal 1, and weapons deal damage by the margin. Heavy weapons deal at least 2. A gun unlocks shooting,
+      rolled with Reflex. Attacks are never easier than Normal, and ending a fight in one move is two steps harder. If they
+      never saw it coming, there's no roll.
+  - id: hold
+    h: Grappling
+    text: A held target can't move, and rolls against them are one step easier. The holder's hands are full, and the target
+      can roll to break free.
+  see: [rule-health, rule-burns]
+- id: rule-health
+  sec: rules
+  name: Health
+  role: It counts down
+  label: How to play
+  art: {src: icons/vitals/hp.png, kind: icon}
+  lead: 'Your health is your own: Tomo has 9, Tally 7, Lale and Marlo 5, Ves 4. It counts down, and at 0 you''re out of the
+    fight. A quiet scene gives back 1.'
+  blocks:
+  - id: patch
+    h: Patch up
+    text: In a fight, roll Intel at Normal to give someone back 1 health.
+  - id: medbay
+    h: The Med Bay
+    text: It restores all of it. A crew that loses a fight wakes up there, feeling great.
+  see: [med, rule-fights, lale]

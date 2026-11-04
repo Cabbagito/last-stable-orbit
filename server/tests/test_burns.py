@@ -7,7 +7,7 @@ from lso.auth import Viewer
 from lso.config import ROOT
 from lso.content import load_content
 from lso.engine import Engine
-from lso.models import GameState
+from lso.models import RULES, GameState
 from lso.store import Store
 from lso.views import project, referenced_assets
 
@@ -77,7 +77,7 @@ def test_an_old_save_moves_to_each_characters_health(content, tmp_path):
     store.commit("system", None, [], old.model_dump(mode="json"), {})
     e = Engine(content, store)
     assert {c: e.state.vitals[c].hp for c in HEALTH} == {"lale": 5, "marlo": 5, "tally": 7, "ves": 4, "tomo": 3}
-    assert e.state.rules == 1
+    assert e.state.rules == RULES
     # and only once: a later boot leaves Tomo hurt
     e.state.vitals["tomo"].hp = 6
     store.commit("system", None, [], e.state.model_dump(mode="json"), {})

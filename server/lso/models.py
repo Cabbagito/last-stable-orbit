@@ -11,7 +11,7 @@ STATS = ("body", "reflex", "tech", "intel", "cool", "empathy")
 DIE_SIDES = (4, 6, 8, 10, 12, 20)
 ENTROPY_MAX = 6
 BURN_COST = 2  # Entropy a Burn spends
-RULES = 1  # the rules version a saved game is on: 1 gave each character their own health
+RULES = 2  # the rules version a saved game is on: 1 gave each character their own health, 2 the Codex
 
 Vec3 = tuple[float, float, float]
 
@@ -341,6 +341,117 @@ class Cutscene(Strict):
         return self
 
 
+CodexSec = Literal["chars", "items", "world", "lore", "rules"]
+CODEX_SECTIONS: tuple[str, ...] = ("chars", "items", "world", "lore", "rules")
+
+
+class CodexTile(Strict):
+    """A piece of art in a section's row on the Codex landing, or in its strip: px from the art's left edge and from
+    the row's middle, and its drawn width. Art framing, not positions."""
+
+    src: str
+    l: float  # noqa: E741 - the board's name
+    t: float
+    w: float
+
+
+class CodexSection(Strict):
+    id: CodexSec
+    name: str
+    short: str  # in the strip's section links
+    tiles: list[CodexTile]
+    strip: list[CodexTile] = []  # the section page's strip, when it differs from the landing row
+
+
+# How a picture sits on its card and page, as the Codex boards place it (Cdx3Main's art()): the source's width in
+# px, the x to centre on, the source y at the card's top, the card's whole-number zoom, and See also's zoom.
+ART_KINDS = {
+    "bust": {"px": 96, "cx": 48, "y0": 0, "k": 5.4, "km": 2, "pos": "50% 10%"},  # a 96 px portrait
+    "icon": {"px": 48, "cx": 24, "y0": -14, "k": 6, "km": 2, "pos": "50% 50%"},  # a 48 px item or rules icon
+    "crop": {"y0": 0, "k": 2, "km": 1, "pos": "50% 50%"},  # a piece of a map or a big picture: set px and cx
+}
+
+
+class CodexArt(Strict):
+    src: str
+    kind: Literal["bust", "icon", "crop"] = "crop"
+    px: float | None = None
+    cx: float | None = None
+    y0: float | None = None
+    my: float | None = None  # See also's top, when it differs from the card's
+    k: float | None = None
+    km: float | None = None
+    pos: str | None = None  # the page's object-position
+    z: float = 1  # the page's zoom on a crop
+
+    @model_validator(mode="after")
+    def _sized(self) -> "CodexArt":
+        if self.kind == "crop" and (self.px is None or self.cx is None):
+            raise ValueError(f"a crop of {self.src} needs px (its width) and cx (where to centre)")
+        return self
+
+    def placed(self) -> dict:
+        d = {**ART_KINDS[self.kind], **{k: v for k, v in self.model_dump().items() if v is not None}}
+        d.setdefault("my", d["y0"])
+        return d
+
+
+class CodexBlock(Strict):
+    """A section of a page. A `locked` one stays hidden until the GM unlocks it, so a page grows: the saint, then
+    the man, then the truth."""
+
+    id: str
+    h: str
+    text: str
+    locked: bool = False
+
+
+class CodexRow(Strict):
+    icon: str | None = None
+    n: str
+    d: str = ""
+
+
+class CodexShot(Strict):
+    src: str
+    cap: str
+    pos: str = "50% 50%"  # object-position, as the board's shots
+
+
+class CodexEntry(Strict):
+    """One Codex page. `crew`, `npc` or `item` ties it to that sheet: a crew page shows its stats, health, skills and
+    Burn, an NPC's its mood. Text is draft, for Peter to edit."""
+
+    id: str
+    sec: CodexSec
+    name: str = ""  # defaults to the sheet's name
+    role: str = ""  # the line under the name on its card
+    label: str = ""  # the small line over the page's name
+    sub: str = ""
+    art: CodexArt
+    crew: str | None = None
+    npc: str | None = None
+    item: str | None = None
+    lead: str = ""
+    quote: str = ""
+    blocks: list[CodexBlock] = []
+    rows_label: str = ""
+    rows: list[CodexRow] = []
+    facts: list[tuple[str, str]] = []
+    see: list[str] = []
+    shots_label: str = ""
+    shots: list[CodexShot] = []
+
+    @model_validator(mode="after")
+    def _one_sheet(self) -> "CodexEntry":
+        if sum(x is not None for x in (self.crew, self.npc, self.item)) > 1:
+            raise ValueError(f"codex entry {self.id} ties to more than one sheet")
+        ids = [b.id for b in self.blocks]
+        if len(ids) != len(set(ids)):
+            raise ValueError(f"codex entry {self.id}: block ids must be unique")
+        return self
+
+
 class PresetToken(Strict):
     id: str | None = None
     kind: Literal["crew", "npc"]
@@ -377,6 +488,7 @@ class Preset(Strict):
     tokens: list[PresetToken] = []
     vitals: dict[str, Vitals] = {}  # missing crew get their full health and 2 Entropy
     inventory: dict[str, list[str | PresetItem]] = {}  # holder -> item ids, or {item, count} for counted items
+    codex: list[str] = []  # Codex entries unlocked for the crew ("entry"), and locked blocks ("entry/block")
 
 
 # ---------------------------------------------------------------- state
@@ -468,3 +580,5 @@ class GameState(Strict):
     rolls: list[RollState] = Field(default_factory=list)  # open rolls, then the most recent closed ones
     seen: dict[str, list[str]] = {}  # character -> "map/object" keys they have inspected
     stage: StageState = Field(default_factory=StageState)
+    codex: list[str] = []  # unlocked for the whole crew: entry ids, and "entry/block" for a locked block
+    codex_read: dict[str, list[str]] = {}  # character -> the unlocked keys they've read; the rest are new to them

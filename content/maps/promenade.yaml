@@ -46,7 +46,7 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     name: The mural
     at: [13.3, 0, 2.2]
     closeup: [1515, 600]
-    codex: the-founder
+    codex: ilija
     text: >-
       Old gold mosaic of a man under a black disc with an orbit ring for a halo. A grey streak at his temple.
       No name.

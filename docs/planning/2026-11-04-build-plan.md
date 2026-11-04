@@ -11,16 +11,17 @@
 | M4: GM tab | **Done** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Peter tried it and is happy. NPC dice are drafts for Peter to set |
 | Stage: the TV and cutscenes | **Done** 2026-11-04. Peter tried it: "looks good and works well". The TV logs in with one click, no passcode. See "How Stage turned out" |
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
-| M6: Station and Codex tabs | **Next.** The Codex half is designed and approved; the Station needs its design session. Open questions are in M6, under "Before M6" |
+| M6: Station and Codex tabs | **Codex built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex texts and crops are drafts for Peter. The Station is next: its first boards are on the UI canvas, page "Station" |
 | M7–M9 | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
 - **In the data now:** each character has three skills in one unlabelled list, with what each covers and a downside that happens every time a roll using it fails. The crew's guns are stun pistols. The skill icons come from the Icons canvas, board "Skills".
-- **Still to build:**
-  - health by character: Tomo 9, Tally 7, Lale 5, Marlo 5, Ves 4 (`HP_MAX` is still 6 for everyone);
-  - Burns: one per character, a button that spends 2 Entropy and plays an animation on the TV, with no roll;
-  - the roll screen showing a failed skill's downside on the TV;
+- **Built 2026-11-04** (fa0d7be):
+  - health by character: Tomo 9, Tally 7, Lale 5, Marlo 5, Ves 4, with one ring segment per point. A saved game moves over once at boot: whoever was at the old full 6 is full again;
+  - Burns, from the Burn animations canvas (https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg): the Burn row under the name, held for half a second, spends 2 Entropy and plays the character's film, on the TV or on every laptop when there's no TV. Ves picks between her two cuts. Tally's Recount also sits on his roll screen beside Push. Tomo's row pulses for 5 s after one of the others is hurt, Tally's after a die lands. Peter applies what a Burn does by hand;
+  - a failed skill's downside on the TV: Peter presses Failed on the crew ring (a natural 1 always fails). Without a TV it shows on every laptop;
   - enemy cards: the spider mech has 13 health and cracks at 6, and the fixer has 10.
+- **Not built:** what happens at the target's token after a Burn's film (+3 for On your feet, the pink mark for Cheap shot, Ves going faint). The Burn board calls these the target's part; they need a target, so they wait for a design.
 
 **How M1 differs from the plan below** (this section wins where they disagree):
 - **Login:** players pick their character on a picker screen, and only the GM types a passcode (`LSO_GM_PASSCODE`). This replaces the per-player passcodes in "Auth flow".
@@ -466,6 +467,13 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   6. **Station, decided in its design round:** can players open places they haven't visited? Default: the cross-section shows all 11 places, but only ones the crew have been to (or Peter reveals) open.
   - **Not a question:** the local bible copy (`design/reference/campaign-bible.md`) dates from M1. The live doc has the crew rework and new enemy numbers, so re-read it before writing Codex text. The mech's and fixer's GM notes were corrected to 13 and 10 health on 2026-11-04.
   - **Game day decides M7's place:** if session 1 is soon, or players should read the Codex at home first, move M7 (hosting on Railway, backups, the layout checks) ahead of the Station.
+- **How M6 is going** (2026-11-04):
+  - **Peter said go** with the defaults above, plus the rules change, and pointed at the new Burn canvas.
+  - **The Codex** follows the Cdx3 boards: the landing's five rows, a section's cards with the name on the art, and a page with the sprite pinned beside two columns. Its texts are drafted from the live bible, not the boards, because the boards' crew pages and the Rules canvas predate the crew rework. All 53 entries are in `content/codex.yaml`.
+  - **Who sees what:** players get only unlocked entries and blocks (`views.py`, tests in `test_codex.py`). See also and the Scene's Codex buttons skip locked pages. The TV gets no Codex. "New" is per player and clears when they open the page.
+  - **Peter's controls:** the GM tab's Codex section (a switch per page and per locked block), and the same switches on each page when he opens it in the Codex tab, where locked pages show dimmed.
+  - **Unlocked at the start of session 1:** the crew, How to play, Patience, the Promenade and the bar, plus four things everyone on Ergo knows (Ergo, ISCO, the black hole, the booking queue). The bar-after-hours preset adds who and what they meet at the bar.
+  - **Still with Peter:** every Codex text, the card crops of the maps, the old man's stand-in art, and separate note icons (the notes share one icon today).
 
 ### M7: Ship for session 1 · S · review fan-out plus your dry run
 - **Goal:** hosted, hardened and rehearsed.

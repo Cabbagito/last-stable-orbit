@@ -4,6 +4,7 @@ import { CamerasButton, liveSwitches, pressSwitch, switchLabel } from '../gm/Moo
 import { MiniMap } from '../gm/MiniMap'
 import { SendCrew, mapList } from '../gm/SendCrew'
 import { ViewAs } from '../gm/ViewAs'
+import { CodexSection } from '../gm/CodexSection'
 import { CutscenesSection, TvSection } from '../gm/StageSections'
 import { ring } from '../lib/ring'
 import { RingPortrait } from '../shell/RingPortrait'
@@ -11,13 +12,14 @@ import { useItemTip, type TipBind } from '../inspect/ItemTip'
 import { gmRun, useGame } from '../store/game'
 import type { CrewMember, InvEntry, View } from '../types'
 
-type Section = 'crew' | 'cut' | 'tv' | 'maps' | 'session'
+type Section = 'crew' | 'cut' | 'tv' | 'maps' | 'codex' | 'session'
 
 const SECTIONS: [Section, string, string?][] = [
   ['crew', 'Crew and pockets'],
   ['cut', 'Cutscenes'],
   ['tv', 'The TV'],
   ['maps', 'Maps'],
+  ['codex', 'Codex'],
   ['session', 'Session'],
 ]
 
@@ -55,6 +57,7 @@ export function GmTab() {
       <div className="r12-main">
         {section === 'crew' && <CrewSection view={view} onView={setViewAs} />}
         {section === 'maps' && <MapsSection view={view} />}
+        {section === 'codex' && <CodexSection view={view} />}
         {section === 'session' && <SessionSection view={view} />}
         {section === 'cut' && <CutscenesSection view={view} />}
         {section === 'tv' && <TvSection view={view} />}

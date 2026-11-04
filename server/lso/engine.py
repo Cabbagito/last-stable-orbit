@@ -37,16 +37,23 @@ class Engine:
             self._update_rules()
 
     def _update_rules(self) -> None:
-        """A game saved under older rules. Rules 1 gave each character their own health: whoever was at the old full
-        6 is at their new full, and nobody keeps more than their health."""
+        """A game saved under older rules, brought up to date once. Rules 1 gave each character their own health:
+        whoever was at the old full 6 is at their new full, and nobody keeps more than their health. Rules 2 added
+        the Codex: the default preset's entries are unlocked."""
         if self.state.rules >= RULES:
             return
-        hp = {}
-        for c_id, c in self.content.characters.items():
-            v = self.state.vitals.get(c_id)
-            hp[c_id] = c.health if v is None or v.hp == 6 else min(v.hp, c.health)
-        self._commit("system", None, [("rules.updated", {"rules": RULES, "hp": hp})], {})
-        log.info("brought the saved game up to rules %s: %s", RULES, hp)
+        events: list[tuple[str, dict]] = []
+        data: dict = {"rules": RULES}
+        if self.state.rules < 1:
+            hp = {}
+            for c_id, c in self.content.characters.items():
+                v = self.state.vitals.get(c_id)
+                hp[c_id] = c.health if v is None or v.hp == 6 else min(v.hp, c.health)
+            data["hp"] = hp
+        if self.state.rules < 2 and not self.state.codex and self.content.default_preset.codex:
+            events.append(("codex.set", {"keys": list(self.content.default_preset.codex), "unlocked": True}))
+        self._commit("system", None, events + [("rules.updated", data)], {})
+        log.info("brought the saved game up to rules %s", RULES)
 
     def _add_new_maps(self) -> None:
         """A game saved before a map existed has no state for it: give it the default preset's (or its first mood)."""
@@ -74,6 +81,9 @@ class Engine:
             bad.append(f"party_map {s.party_map!r}")
         if s.stage.film and s.stage.film.cue not in c.cutscenes:
             bad.append(f"film {s.stage.film.cue!r}")
+        from .content import codex_keys
+
+        bad += [f"codex {k!r}" for k in s.codex if k not in codex_keys(c)]
         if s.stage.burn and s.stage.burn.char not in c.characters:
             bad.append(f"burn {s.stage.burn.char!r}")
         if s.stage.follow and s.stage.follow not in c.characters:

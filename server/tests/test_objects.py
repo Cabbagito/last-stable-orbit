@@ -64,7 +64,9 @@ def test_session_1_reveals_the_bar(engine, content):
     assert engine.state.maps[EH].shown == ["mural", "slots"]
     t = objects(project(engine.state, content, TALLY))
     assert set(t) == {"mural", "slots"} and not t["mural"]["seen"]
-    assert t["mural"]["codex"] == "the-founder" and t["mural"]["closeup"] == [878, 296]
+    assert t["mural"]["closeup"] == [878, 296]
+    # its Codex page is locked at the start of session 1, so players get no link to it; the GM does
+    assert t["mural"]["codex"] is None and objects(project(engine.state, content, GM))["mural"]["codex"] == "mural"
 
 
 async def test_hidden_objects_never_reach_players(engine, content):
@@ -120,9 +122,11 @@ async def test_reveals_and_looks_survive_a_restart(content, tmp_path):
     assert e2.state.maps[EH].shown == ["mural"] and e2.state.seen == {"tally": ["event-horizon/mural"]}
 
 
-def test_npc_codex_and_skill_text_reach_the_card(engine, content):
+async def test_npc_codex_and_skill_text_reach_the_card(engine, content):
+    assert project(engine.state, content, TALLY)["tokens"]["fixer"]["codex"] is None  # locked: no Codex button
+    assert (await run(engine, GM, "gm.codex.unlock", {"entry": "fixer"}))["ok"]
     v = project(engine.state, content, TALLY)
-    assert v["tokens"]["fixer"]["codex"] == "the-fixer"
+    assert v["tokens"]["fixer"]["codex"] == "fixer"
     ves = next(c for c in v["crew"] if c["id"] == "ves")
     assert next(e for e in ves["list"] if e["name"] == "Tomo, no")["text"]
 

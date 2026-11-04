@@ -9,6 +9,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 - **Codex:** the UI canvas (https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff), page "Codex, pinned". The decisions are in the plan's M6.
 - **Maps:** `design/reference/maps/*.dc.html` (Main = The Event Horizon). Every board shares one isometric formula; see `web/src/lib/proj.ts`.
 - **Cutscenes and the TV ("Stage"):** the claude.ai doc LSO — Cutscenes and Stage (https://claude.ai/artifact/8Bh5PsiSBjLaJaHyJfNUz8, read it with the Claude Docs connector), plus one canvas per cutscene (the first is The shotgun, https://claude.ai/artifact/ExqP99kRwpzUP9Funyg7Sv).
+- **Burns:** the Burn animations canvas (https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg): the five films, their icons, and the Burn row on the sheet.
 - **Art:** imported from the claude.ai artifacts. `assets/manifest.yaml` lists each file's store and asset id. Fetch more with the Artifact tool's read action, using the asset id as the path, one call per asset.
 
 ## Scope decisions (override the artifacts)

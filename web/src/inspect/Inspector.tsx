@@ -1,4 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
+import { codexHref } from '../pages/Codex'
+import { useGame } from '../store/game'
 
 /**
  * Round 9's inspector (Round 8's T3): the thing at 2x, a kind label, its name, then what it says.
@@ -95,10 +97,11 @@ export function Closeup({ art, display, centre, alt }: { art: string; display: [
   )
 }
 
-/** The Codex button, shown only for things that have an entry. The Codex itself arrives in M6. */
-export function CodexButton() {
+/** The Codex button, shown only for things whose entry is unlocked (the server sends no link to a locked one). */
+export function CodexButton({ entry }: { entry: string }) {
+  const href = useGame((s) => codexHref(s.view, entry))
   return (
-    <button type="button" className="r4-btn app-small app-cdx" disabled title="The Codex arrives in a later milestone">
+    <button type="button" className="r4-btn app-small app-cdx" disabled={!href} onClick={() => href && (location.hash = href.slice(1))} title="Open its page in the Codex">
       <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
         <path d="M1.5 2h3.5a1 1 0 0 1 1 1v7.5a1 1 0 0 0-1-1H1.5zM10.5 2H7a1 1 0 0 0-1 1v7.5a1 1 0 0 1 1-1h3.5z" fill="none" stroke="currentColor" strokeWidth="1.2" />
       </svg>

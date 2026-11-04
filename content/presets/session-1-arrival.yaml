@@ -40,3 +40,10 @@ inventory:  # DRAFT starting kit from the bible, for Peter to edit. Lale never c
   tally: [tally-notebook, invitation, {item: credits, count: 140}]
   ves: [sidearm, splice-kit, invitation, {item: credits, count: 140}]
   tomo: [invitation, {item: credits, count: 140}]
+
+# The Codex at the start of session 1 (DRAFT): the crew pages, How to play, where they start or reach on day one,
+# and what everyone on Ergo already knows. Everything else stays locked until Peter unlocks it in the GM tab.
+codex: [lale, marlo, tally, ves, tomo,
+        rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health,
+        patience, promenade, event-horizon,
+        ergo, isco, hole, queue]

@@ -19,6 +19,10 @@ objects, the crew's public sheets, and no pockets at all. It also gets each publ
 the roller's screen does, to play the same animation in its band; it shows each die as the roller's screen
 lands it. And it gets every film's file, to have them ready, because at the table only the TV plays films.
 
+The Codex: a player gets only the entries the GM has unlocked, and on each page only the blocks that are open.
+A locked entry's id, name and art never leave the server: not in the Codex, not in See also, not on a Codex button
+in the Scene. Pages never list what anyone carries. The TV gets no Codex. The GM gets every entry, marked.
+
 Films: a player's laptop gets a film's file only while it plays, and only when its laptop plays it (no TV, or
 online). With a TV it gets only when the film starts and ends, and shows the black hole meanwhile.
 """
@@ -37,7 +41,20 @@ def url(path: str | None) -> str | None:
     return ASSET_PREFIX + path if path else None
 
 
-def _objects_view(state: GameState, d, ms, viewer: Viewer) -> list[dict]:
+def codex_open(state: GameState, content: Content, viewer: Viewer) -> set[str]:
+    """The Codex entries this viewer may know exist."""
+    if viewer.is_gm:
+        return set(content.codex)
+    if viewer.is_stage:
+        return set()
+    return {k for k in state.codex if k in content.codex}
+
+
+def _link(entry: str | None, open_: set[str]) -> str | None:
+    return entry if entry in open_ else None
+
+
+def _objects_view(state: GameState, d, ms, viewer: Viewer, open_: set[str]) -> list[dict]:
     """Players get only what the GM has revealed, each marked with whether they've inspected it."""
     shown = set(ms.shown) if ms else set()
     seen = set(state.seen.get(viewer.char or "", []))
@@ -45,13 +62,13 @@ def _objects_view(state: GameState, d, ms, viewer: Viewer) -> list[dict]:
     for o in d.objects:
         if not viewer.is_gm and o.id not in shown:
             continue
-        v = {"id": o.id, "name": o.name, "at": list(o.at), "text": o.text, "closeup": list(o.closeup) if o.closeup else None, "codex": o.codex}
+        v = {"id": o.id, "name": o.name, "at": list(o.at), "text": o.text, "closeup": list(o.closeup) if o.closeup else None, "codex": _link(o.codex, open_)}
         v |= {"shown": o.id in shown} if viewer.is_gm else {"seen": f"{d.id}/{o.id}" in seen}
         out.append(v)
     return out
 
 
-def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer) -> dict:
+def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer, open_: set[str]) -> dict:
     d = content.maps[map_id]
     ms = state.maps.get(map_id)
     out = {
@@ -78,7 +95,7 @@ def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer) -
         "floors": [f.model_dump() for f in d.floors],
         "mood": ms.mood if ms else d.moods[0].id,
         "values": dict(ms.switches) if ms else {},
-        "objects": _objects_view(state, d, ms, viewer),
+        "objects": _objects_view(state, d, ms, viewer, open_),
     }
     if viewer.is_gm:
         out["pins"] = [p.model_dump() for p in d.pins]  # the Key board's "what's where", for the GM's eyes only
@@ -117,14 +134,19 @@ def _burn_view(b) -> dict | None:
     return {"name": b.name, "when": b.when, "text": b.text, "icon": url(b.icon), "color": b.color, "react": b.react, "cuts": cuts}
 
 
-def _token_view(content: Content, tid: str, t, gm: bool) -> dict:
+def crew_page(content: Content, char: str) -> str | None:
+    return next((e.id for e in content.codex.values() if e.crew == char), None)
+
+
+def _token_view(content: Content, tid: str, t, gm: bool, open_: set[str]) -> dict:
     base = {"id": tid, "kind": t.kind, "ref": t.ref, "map": t.map, "at": list(t.at)}
     if t.kind == "crew":
         c = content.characters[t.ref]
-        base |= {"name": c.short, "role": c.role, "portrait": url(c.portrait), "color": c.color, "mood": "", "note": "", "codex": None}
+        page = _link(crew_page(content, c.id), open_)
+        base |= {"name": c.short, "role": c.role, "portrait": url(c.portrait), "color": c.color, "mood": "", "note": "", "codex": page}
     else:
         n = content.npcs[t.ref]
-        base |= {"name": n.name, "role": n.role, "portrait": url(n.portrait), "color": n.color, "mood": n.mood, "note": n.note, "codex": n.codex, "size": n.size}
+        base |= {"name": n.name, "role": n.role, "portrait": url(n.portrait), "color": n.color, "mood": n.mood, "note": n.note, "codex": _link(n.codex, open_), "size": n.size}
         if gm:
             base |= {"gm_note": n.gm_note, "stats": n.stats}  # an NPC's dice are the GM's secret
     if gm:
@@ -132,17 +154,109 @@ def _token_view(content: Content, tid: str, t, gm: bool) -> dict:
     return base
 
 
-def _item_view(it) -> dict:
-    return {"id": it.id, "name": it.name, "icon": url(it.icon), "kind": it.kind, "text": it.text, "counted": it.counted, "codex": it.codex}
+def _item_view(it, open_: set[str]) -> dict:
+    return {"id": it.id, "name": it.name, "icon": url(it.icon), "kind": it.kind, "text": it.text, "counted": it.counted, "codex": _link(it.codex, open_)}
 
 
-def _inventory_view(content: Content, entries) -> list[dict]:
+def _inventory_view(content: Content, entries, open_: set[str]) -> list[dict]:
     out = []
     for e in entries:
         it = content.items.get(e.item)
         if it:
-            out.append({"uid": e.uid, "item": _item_view(it), "count": e.count, "new": e.new})
+            out.append({"uid": e.uid, "item": _item_view(it, open_), "count": e.count, "new": e.new})
     return out
+
+
+def _art(a) -> dict:
+    return {**a.placed(), "src": url(a.src)}
+
+
+def _entry_view(state: GameState, content: Content, e, viewer: Viewer, open_: set[str]) -> dict:
+    """One page as this viewer may read it: only its open blocks, and See also only to entries they can open."""
+    gm = viewer.is_gm
+    read = set(state.codex_read.get(viewer.char or "", []))
+
+    def bkey(b):
+        return f"{e.id}/{b.id}"
+
+    blocks = []
+    for b in e.blocks:
+        unlocked = not b.locked or bkey(b) in state.codex
+        if not unlocked and not gm:
+            continue
+        v = {"id": b.id, "h": b.h, "text": b.text}
+        if gm:
+            v |= {"locked": b.locked, "unlocked": unlocked}
+        else:
+            v["new"] = b.locked and bkey(b) not in read
+        blocks.append(v)
+    name, role = e.name, e.role
+    out: dict = {
+        "id": e.id,
+        "sec": e.sec,
+        "label": e.label,
+        "sub": e.sub,
+        "art": _art(e.art),
+        "lead": e.lead,
+        "quote": e.quote,
+        "blocks": blocks,
+        "rows_label": e.rows_label,
+        "rows": [{"icon": url(r.icon), "n": r.n, "d": r.d} for r in e.rows],
+        "facts": [list(f) for f in e.facts],
+        "shots_label": e.shots_label,
+        "shots": [{"src": url(x.src), "cap": x.cap, "pos": x.pos} for x in e.shots],
+        "crew": None,
+        "npc": None,
+    }
+    if e.crew:
+        c = content.characters[e.crew]
+        name, role = name or c.name, role or c.role
+        out["crew"] = {
+            "id": c.id,
+            "stats": c.stats,
+            "health": c.health,
+            "color": c.color,
+            "skills": [{"icon": url(k.icon), "name": k.name, "text": k.text, "downside": k.downside} for k in c.entries],
+            "burn": {"name": c.burn.name, "when": c.burn.when, "text": c.burn.text, "icon": url(c.burn.icon)} if c.burn else None,
+        }
+    elif e.npc:
+        n = content.npcs[e.npc]
+        name, role = name or n.name, role or n.role
+        out["npc"] = {"mood": n.mood}
+    elif e.item:
+        it = content.items[e.item]
+        name = name or it.name
+    out |= {"name": name, "role": role}
+    if gm:
+        out["unlocked"] = e.id in state.codex
+    else:
+        out["new"] = e.id not in read or any(b.get("new") for b in blocks)
+    return out
+
+
+def _codex_view(state: GameState, content: Content, viewer: Viewer, open_: set[str]) -> dict | None:
+    if viewer.is_stage or not content.codex:
+        return None
+    entries = [_entry_view(state, content, e, viewer, open_) for e in content.codex.values() if e.id in open_]
+    by_id = {x["id"]: x for x in entries}
+    for x, e in zip(entries, (content.codex[x["id"]] for x in entries)):
+        x["see"] = [{"id": s, "name": by_id[s]["name"], "art": by_id[s]["art"]} for s in e.see if s in by_id]
+    sections = []
+    for sec in content.codex_sections:
+        mine = [x for x in entries if x["sec"] == sec.id]
+        tile = lambda t: {"src": url(t.src), "l": t.l, "t": t.t, "w": t.w}  # noqa: E731
+        sections.append(
+            {
+                "id": sec.id,
+                "name": sec.name,
+                "short": sec.short,
+                "tiles": [tile(t) for t in sec.tiles],
+                "strip": [tile(t) for t in (sec.strip or sec.tiles)],
+                "count": len(mine),
+                "new": sum(1 for x in mine if x.get("new")),
+            }
+        )
+    return {"sections": sections, "entries": entries}
 
 
 def roll_phase(r: RollState) -> str:
@@ -269,9 +383,10 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
 def project(state: GameState, content: Content, viewer: Viewer, online: frozenset[str] = frozenset()) -> dict:
     gm = viewer.is_gm
     here = viewer_map(state, viewer)
+    open_ = codex_open(state, content, viewer)
     map_ids = list(content.maps) if gm else ([here] if here in content.maps else [])
     tokens = {
-        tid: _token_view(content, tid, t, gm)
+        tid: _token_view(content, tid, t, gm, open_)
         for tid, t in state.tokens.items()
         if gm or (t.map in map_ids and not t.hidden)
     }
@@ -281,9 +396,10 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         "me": {"seat": viewer.seat, "role": viewer.role, "char": viewer.char},
         "party_map": here,
         "crew": _crew_view(content, state),
-        "maps": {m: _map_view(content, state, m, viewer) for m in map_ids},
+        "maps": {m: _map_view(content, state, m, viewer, open_) for m in map_ids},
         "tokens": tokens,
-        "inventory": {h: _inventory_view(content, state.inventory.get(h, [])) for h in holders},
+        "inventory": {h: _inventory_view(content, state.inventory.get(h, []), open_) for h in holders},
+        "codex": _codex_view(state, content, viewer, open_),
         "rolls": _rolls_view(state, viewer, set(tokens)),
         "stage": _stage_view(state, content, viewer, online),
     }
@@ -293,7 +409,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
             for n in content.npcs.values()
         ]
         view["presets"] = [{"id": p.id, "name": p.name} for p in content.presets.values()]
-        view["items"] = [_item_view(it) for it in content.items.values()]  # the catalogue, for giving
+        view["items"] = [_item_view(it, open_) for it in content.items.values()]  # the catalogue, for giving
     return view
 
 

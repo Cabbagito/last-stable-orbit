@@ -429,6 +429,17 @@ def handle(
         key = f"{map_id}/{obj}"
         return [] if key in state.seen.get(viewer.char, []) else [("object.seen", {"char": viewer.char, "key": key})]
 
+    if kind == "codex.read":
+        # a player opened a page: it, and the blocks they can see on it, aren't new to them any more
+        if not viewer.char:
+            raise _invalid("players mark what they've read")
+        e = content.codex.get(_str(args, "entry"))
+        if not e or e.id not in state.codex:
+            raise _invalid("there's no page like that")
+        keys = [e.id] + [f"{e.id}/{b.id}" for b in e.blocks if b.locked and f"{e.id}/{b.id}" in state.codex]
+        fresh = [k for k in keys if k not in state.codex_read.get(viewer.char, [])]
+        return [("codex.read", {"char": viewer.char, "keys": fresh})] if fresh else []
+
     if kind == "burn.use":
         if not viewer.char:
             raise _invalid("the GM burns for someone with gm.burn.use")
@@ -517,6 +528,20 @@ def handle(
         if not isinstance(hp, int) or not isinstance(en, int) or isinstance(hp, bool) or isinstance(en, bool):
             raise _invalid("hp and entropy must be whole numbers")
         return [("vitals.set", {"char": char, "hp": max(0, min(top, hp)), "entropy": max(0, min(ENTROPY_MAX, en))})]
+
+    if kind == "gm.codex.unlock":
+        # for the whole crew: an entry, or one locked block of it
+        e = content.codex.get(_str(args, "entry"))
+        if not e:
+            raise _invalid("unknown Codex entry")
+        key = e.id
+        if args.get("block") is not None:
+            b = next((b for b in e.blocks if b.id == args.get("block")), None)
+            if not b or not b.locked:
+                raise _invalid(f"{e.name or e.id} has no locked block {args.get('block')!r}")
+            key = f"{e.id}/{b.id}"
+        on = bool(args.get("unlocked", True))
+        return [] if (key in state.codex) == on else [("codex.set", {"keys": [key], "unlocked": on})]
 
     if kind == "gm.burn.use":
         return _burn(state, content, _holder(content, args, "char"), args.get("cut"), now)

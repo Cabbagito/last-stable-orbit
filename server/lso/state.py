@@ -47,7 +47,15 @@ def state_from_preset(preset: Preset, content: Content) -> dict:
             else InvEntry(uid=f"{holder}-{i + 1}", item=e).model_dump()
             for i, e in enumerate(entries)
         ]
-    return {"rules": RULES, "party_map": preset.party_map, "maps": maps, "tokens": tokens, "vitals": vitals, "inventory": inventory}
+    return {
+        "rules": RULES,
+        "party_map": preset.party_map,
+        "maps": maps,
+        "tokens": tokens,
+        "vitals": vitals,
+        "inventory": inventory,
+        "codex": list(preset.codex),
+    }
 
 
 def _entry(s: GameState, holder: str, uid: str) -> InvEntry:
@@ -84,6 +92,12 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "vitals.set":
         v = s.vitals.setdefault(data["char"], Vitals(hp=0))
         v.hp, v.entropy = int(data["hp"]), int(data["entropy"])
+    elif ev_type == "codex.set":  # the GM unlocked (or locked again) entries or blocks, for the whole crew
+        keys = list(data["keys"])
+        s.codex = [k for k in s.codex if k not in keys] + (keys if data["unlocked"] else [])
+    elif ev_type == "codex.read":
+        read = s.codex_read.setdefault(data["char"], [])
+        read += [k for k in data["keys"] if k not in read]
     elif ev_type == "rules.updated":  # a game saved under older rules, brought up to date at boot
         for char, hp in data.get("hp", {}).items():
             s.vitals.setdefault(char, Vitals(hp=0)).hp = int(hp)

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Login } from './pages/Login'
 import { RollDialog, preloadRollFonts } from './roll/RollDialog'
 import { GmTab } from './pages/GmTab'
+import { Codex } from './pages/Codex'
 import { Placeholder } from './pages/Placeholder'
 import { Scene } from './pages/Scene'
 import { Header, type Tab } from './shell/Header'
@@ -11,11 +12,11 @@ import { Tv } from './stage/Tv'
 import { useGame } from './store/game'
 import type { Me } from './types'
 
-const TAB_IDS: Tab[] = ['scene', 'station', 'crew', 'codex', 'gm']
+const TAB_IDS: Tab[] = ['scene', 'station', 'codex', 'gm']
 
 function useHashTab(isGm: boolean): Tab {
   const read = (): Tab => {
-    const h = location.hash.slice(1) as Tab
+    const h = location.hash.slice(1).split('/')[0] as Tab // #codex/ves is the Codex tab, on Ves's page
     return TAB_IDS.includes(h) && (h !== 'gm' || isGm) ? h : 'scene'
   }
   const [tab, setTab] = useState<Tab>(read)
@@ -108,7 +109,7 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
   return (
     <div className={'r4 th-meridian' + (preview ? ' app-preview' : '')}>
       <Header tab={tab} isGm={isGm} onLogout={onLogout} />
-      {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : <Placeholder tab={tab} />}
+      {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : tab === 'codex' ? <Codex /> : <Placeholder tab={tab} />}
       <Downside where="laptop" />
       <RollDialog />
       <LaptopFilm />

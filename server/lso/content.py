@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import STATS, Character, Cutscene, Item, MapDef, Npc, Preset, PresetItem
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, Preset, PresetItem
 
 log = logging.getLogger("lso.content")
 
@@ -27,6 +27,8 @@ class Content:
     presets: dict[str, Preset] = field(default_factory=dict)
     insults: dict[str, list[str]] = field(default_factory=dict)  # "any" plus one pool per stat
     cutscenes: dict[str, Cutscene] = field(default_factory=dict)  # in the order the GM will use them
+    codex: dict[str, CodexEntry] = field(default_factory=dict)  # in reading order within each section
+    codex_sections: list[CodexSection] = field(default_factory=list)  # the landing's five rows, in order
     missing_assets: list[str] = field(default_factory=list)
 
     @property
@@ -76,6 +78,13 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
         c.presets[pr.id] = pr
     cut = content_dir / "cutscenes.yaml"
     c.cutscenes = _by_id(Cutscene, _read(cut), "cutscenes.yaml") if cut.is_file() else {}
+    cdx = content_dir / "codex.yaml"
+    if cdx.is_file():
+        raw = _read(cdx) or {}
+        if not isinstance(raw, dict):
+            raise ContentError("codex.yaml: expected sections and entries")
+        c.codex_sections = [_parse(CodexSection, r, f"codex.yaml sections[{i}]") for i, r in enumerate(raw.get("sections") or [])]
+        c.codex = _by_id(CodexEntry, raw.get("entries") or [], "codex.yaml entries")
     ins = content_dir / "insults.yaml"
     c.insults = _insults((_read(ins) or {}) if ins.is_file() else {})
     if clash := set(c.characters) & set(c.npcs):
@@ -169,8 +178,42 @@ def check_refs(c: Content) -> None:
                 problems.append(f"{where}: bad switch {st.map}.{sw}={val}")
         problems += [f"{where}: token ref {t.ref!r} is not an NPC" for t in st.tokens if t.ref not in c.npcs]
         problems += [f"{where}: token id {t.id!r} is a crew member's" for t in st.tokens if t.id in c.characters]
+    problems += _codex_problems(c)
     if problems:
         raise ContentError("content references are broken:\n  " + "\n  ".join(problems))
+
+
+def codex_keys(c: Content) -> set[str]:
+    """Everything the GM can unlock: each entry, and each locked block as "entry/block"."""
+    return set(c.codex) | {f"{e.id}/{b.id}" for e in c.codex.values() for b in e.blocks if b.locked}
+
+
+def _codex_problems(c: Content) -> list[str]:
+    problems: list[str] = []
+    if c.codex and [s.id for s in c.codex_sections] != list(CODEX_SECTIONS):
+        problems.append(f"codex.yaml: sections must be {', '.join(CODEX_SECTIONS)}, in that order")
+    for e in c.codex.values():
+        where = f"codex entry {e.id}"
+        problems += [f"{where}: see also {s!r} isn't an entry" for s in e.see if s not in c.codex]
+        if e.crew and e.crew not in c.characters:
+            problems.append(f"{where}: unknown crew {e.crew!r}")
+        if e.npc and e.npc not in c.npcs:
+            problems.append(f"{where}: unknown NPC {e.npc!r}")
+        if e.item and e.item not in c.items:
+            problems.append(f"{where}: unknown item {e.item!r}")
+        if not (e.name or e.crew or e.npc or e.item):
+            problems.append(f"{where}: needs a name")
+    crew_pages = [e.crew for e in c.codex.values() if e.crew]
+    if len(crew_pages) != len(set(crew_pages)):
+        problems.append("codex: a crew member has two pages")
+    # what the Scene's Codex buttons point at
+    refs = [(f"NPC {n.id}", n.codex) for n in c.npcs.values()] + [(f"item {i.id}", i.codex) for i in c.items.values()]
+    refs += [(f"map {m.id} object {o.id}", o.codex) for m in c.maps.values() for o in m.objects]
+    problems += [f"{who}: codex {ref!r} isn't an entry" for who, ref in refs if ref and ref not in c.codex]
+    keys = codex_keys(c)
+    for pr in c.presets.values():
+        problems += [f"preset {pr.id}: codex {k!r} isn't an entry or a locked block" for k in pr.codex if k not in keys]
+    return problems
 
 
 def asset_paths(c: Content) -> set[str]:
@@ -192,4 +235,9 @@ def asset_paths(c: Content) -> set[str]:
         paths |= {d.src for d in m.decals}
     for cue in c.cutscenes.values():
         paths |= {p for p in (cue.file, cue.still) if p}
+    for sec in c.codex_sections:
+        paths |= {t.src for t in sec.tiles + sec.strip}
+    for e in c.codex.values():
+        paths.add(e.art.src)
+        paths |= {r.icon for r in e.rows if r.icon} | {s.src for s in e.shots}
     return paths

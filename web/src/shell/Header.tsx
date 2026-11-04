@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useGame } from '../store/game'
 
-export type Tab = 'scene' | 'station' | 'crew' | 'codex' | 'gm'
+export type Tab = 'scene' | 'station' | 'codex' | 'gm'
 
 const TABS: [Tab, string][] = [
   ['scene', 'Scene'],
   ['station', 'Station'],
-  ['crew', 'Crew'],
   ['codex', 'Codex'],
 ]
 

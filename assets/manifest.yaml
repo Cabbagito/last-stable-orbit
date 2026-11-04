@@ -1072,3 +1072,38 @@ assets:
     bytes: 184620
     width: 1920
     height: 1080
+  - path: codex/ergo.png
+    store: UI
+    asset_id: "289c9795eda8054e4afdac1493f721f1"
+    sha256: "da03b85acb1106aa177c6e42ed9b66ee1d1c86e34caf9bad54801b136207a75e"
+    bytes: 10036
+    width: 720
+    height: 800
+  - path: codex/hole.gif
+    store: UI
+    asset_id: "3d6d8c7c793e35f8fe793818f1698f36"
+    sha256: "73976c4d027f348a94bd05dbf52fe77d00e8217d4ce73eab0fe657951f583c13"
+    bytes: 1107262
+    width: 360
+    height: 360
+  - path: codex/mural-both.png
+    store: UI
+    asset_id: "78f7ef85fa3a53e828670036aec6fb8b"
+    sha256: "f7522a14216c5e4835158f3e3aa3ac5eaf0332d0494e3cd8090dc8100676d927"
+    bytes: 15959
+    width: 200
+    height: 104
+  - path: codex/mural-ilija.png
+    store: UI
+    asset_id: "e8de5d4119143291dedfa1fdd5348f50"
+    sha256: "28b18fc5686ed61fd6a97338bf55124215cdaefb192c4eec497d72cd83e4f4fb"
+    bytes: 11253
+    width: 104
+    height: 136
+  - path: codex/isco-sigil.gif
+    store: UI
+    asset_id: "5292e21e0d1a4956777875ade437b41c"
+    sha256: "5e1b0758042a9a7cbd51b4b0b8ace8e8f410e7b93d47f5b5bc30c07983992a73"
+    bytes: 101879
+    width: 96
+    height: 96

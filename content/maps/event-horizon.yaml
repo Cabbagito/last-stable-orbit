@@ -32,7 +32,7 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     name: The mural
     at: [1.033, 4.9, 2.5]
     closeup: [878, 296]
-    codex: the-founder
+    codex: mural
     text: >-
       Old gold mosaic over the roped-off table: the founder and his daughter, under a black disc with an
       orbit ring for a halo. No names.

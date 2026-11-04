@@ -1,7 +1,7 @@
 # NPCs that can stand on a map. mood and note show on the NPC card for everyone who can see the token.
 # gm_note is only ever sent to the GM. color is the token ring: crew pink, the fixer's people red,
 # Dax amber, ISCO's side white-violet, ordinary residents dusk grey.
-# codex names the NPC's Codex entry; the card shows a Codex button only when it's set (the Codex itself is M6).
+# codex names the NPC's Codex entry (content/codex.yaml); the card shows a Codex button once that entry is unlocked.
 # stats: the die for each stat, like the crew's. The GM rolls an NPC by stat. Only the GM ever sees them.
 # The dice are DRAFTS from Round 12 of the UI canvas, for Peter to set.
 
@@ -13,7 +13,7 @@
   stats: {body: 12, reflex: 6, tech: 6, intel: 10, cool: 20, empathy: 8}
   mood: Watching the door
   note: Keeps one table nobody sits at.
-  codex: old-dax
+  codex: dax
   gm_note: His family has kept the founder's table and the bar for 300 years. Holds the stockroom door in session 4.
 
 - id: fixer
@@ -24,13 +24,14 @@
   stats: {body: 12, reflex: 10, tech: 12, intel: 12, cool: 20, empathy: 4}
   mood: Patient
   note: Asked nicely.
-  codex: the-fixer
+  codex: fixer
   gm_note: "Uploaded man in a chassis. Thinks a rich client hired him; the client is ISCO. Final boss at the lift: 10 health, d20, Very hard to hit."
 
 - id: cleaner-14
   name: Cleaner Unit 14
   role: Cleaner, ISCO
   portrait: portraits/cleaner-14.gif
+  codex: unit-14
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 10, cool: 20, empathy: 4}
   mood: Delighted
@@ -79,6 +80,7 @@
   name: Dock 7 clerk
   role: Clerk, ISCO
   portrait: portraits/dock-clerk.gif
+  codex: dock-clerk
   color: "#c9bcff"
   stats: {body: 4, reflex: 6, tech: 8, intel: 8, cool: 12, empathy: 8}
   mood: Sorry for the wait
@@ -89,6 +91,7 @@
   name: The Concierge
   role: Station helper, ISCO
   portrait: portraits/concierge.gif
+  codex: concierge
   color: "#c9bcff"
   stats: {body: 4, reflex: 6, tech: 12, intel: 12, cool: 20, empathy: 10}
   mood: Delighted to help
@@ -99,6 +102,7 @@
   name: Patience steward
   role: Steward
   portrait: portraits/steward.gif
+  codex: steward
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 8, cool: 10, empathy: 12}
   mood: Attentive
@@ -109,6 +113,7 @@
   name: Night Market vendor
   role: Vendor
   portrait: portraits/vendor.gif
+  codex: vendor
   color: "#8f88a3"
   stats: {body: 6, reflex: 8, tech: 10, intel: 8, cool: 10, empathy: 8}
   mood: Haggling
@@ -119,6 +124,7 @@
   name: Med Bay nurse
   role: Nurse, ISCO
   portrait: portraits/nurse.gif
+  codex: nurse
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 10, cool: 12, empathy: 10}
   mood: Soothing
@@ -150,6 +156,7 @@
   name: The scientist
   role: Scientist, the company
   portrait: portraits/scientist.gif
+  codex: scientist
   color: "#f2b544"
   stats: {body: 4, reflex: 6, tech: 12, intel: 20, cool: 8, empathy: 8}
   mood: Tired
@@ -160,6 +167,7 @@
   name: The old man
   role: The founder's assistant
   portrait: portraits/steward.gif
+  codex: old-man
   color: "#8f88a3"
   stats: {body: 4, reflex: 4, tech: 6, intel: 12, cool: 12, empathy: 12}
   mood: Awake, for now

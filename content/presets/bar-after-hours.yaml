@@ -22,3 +22,10 @@ inventory:
   tally: [tally-notebook, {item: credits, count: 140}]
   ves: [sidearm, splice-kit, {item: credits, count: 90}, maintenance-log]
   tomo: [{item: credits, count: 140}]
+
+# The Codex by the end of the night at the bar (DRAFT): session 1's start, plus who and what they met there.
+codex: [lale, marlo, tally, ves, tomo,
+        rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health,
+        patience, promenade, event-horizon,
+        ergo, isco, hole, queue,
+        dax, fixer, concierge, dock-clerk, steward, ilija, invitation, mural, table, slots]

@@ -5,6 +5,7 @@ import './styles/meridian.css'
 import './styles/app.css'
 import './styles/gm.css'
 import './styles/stage.css'
+import './styles/codex.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

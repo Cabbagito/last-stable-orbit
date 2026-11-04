@@ -161,3 +161,18 @@
 .app-vaframe{flex:1;min-height:0;width:100%;border:0;display:block;background:#000}
 /* app: inside the view, nothing takes a click that would act as the player */
 .app-preview .r3-tok,.app-preview .app-mk{cursor:default}
+/* the GM tab's Codex: every page, with its switch */
+.app-cxgm{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:20px 28px;align-items:start}
+.app-cxgm-sec{min-width:0}
+.app-cxgm-row{display:flex;align-items:center;gap:12px;padding:6px 0;border-top:1px solid #1e2024;min-height:52px}
+.app-cxgm-row:last-child{border-bottom:1px solid #1e2024}
+.app-cxgm-art{width:40px;height:40px;object-fit:cover;object-position:50% 15%;flex:none;background:#08090b;box-shadow:0 0 0 1px #1e2024}
+.app-cxgm-row.off .app-cxgm-art{filter:grayscale(.75) brightness(.5)}
+.app-cxgm-name{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.app-cxgm-row.off .app-cxgm-name > span:first-child{color:#8a8e96}
+.app-cxgm-blocks{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.app-cxgm-chip{background:#000;border:1px solid #2f3238;color:#8a8e96;font-size:11.5px;padding:2px 7px;cursor:pointer}
+.app-cxgm-chip.on{border-color:#ff4fa3;color:#ff7dbb}
+.app-cxgm-sw{flex:none;width:92px;min-height:32px;background:#000;border:1px solid #2f3238;color:#8a8e96;font-family:'Michroma',sans-serif;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.app-cxgm-sw:hover{border-color:#fff;color:#fff}
+.app-cxgm-sw.on{border-color:#ff4fa3;color:#ff7dbb}

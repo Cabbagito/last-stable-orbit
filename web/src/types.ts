@@ -290,9 +290,79 @@ export interface View {
   inventory: Record<string, InvEntry[]>
   rolls: RollView[]
   stage: StageView
+  codex: CodexView | null
   roster?: RosterNpc[] // GM only
   presets?: { id: string; name: string }[] // GM only
   items?: Item[] // GM only: the catalogue, for giving
+}
+
+export type CodexSec = 'chars' | 'items' | 'world' | 'lore' | 'rules'
+
+/** How a picture sits on its card and page, as the Codex boards place it. */
+export interface CodexArt {
+  src: string
+  kind: 'bust' | 'icon' | 'crop'
+  px: number // the source's width
+  cx: number // the x to centre on
+  y0: number // the source y at the card's top
+  my: number // See also's top
+  k: number // the card's zoom
+  km: number // See also's zoom
+  pos: string // the page's object-position
+  z: number // the page's zoom
+}
+
+export interface CodexTile {
+  src: string
+  l: number
+  t: number
+  w: number
+}
+
+export interface CodexSectionView {
+  id: CodexSec
+  name: string
+  short: string
+  tiles: CodexTile[]
+  strip: CodexTile[]
+  count: number
+  new: number
+}
+
+export interface CodexEntryView {
+  id: string
+  sec: CodexSec
+  name: string
+  role: string
+  label: string
+  sub: string
+  art: CodexArt
+  lead: string
+  quote: string
+  blocks: { id: string; h: string; text: string; new?: boolean; locked?: boolean; unlocked?: boolean }[]
+  rows_label: string
+  rows: { icon: string | null; n: string; d: string }[]
+  facts: [string, string][]
+  shots_label: string
+  shots: { src: string; cap: string; pos: string }[]
+  see: { id: string; name: string; art: CodexArt }[]
+  crew: {
+    id: string
+    stats: Record<StatKey, number>
+    health: number
+    color: string
+    skills: { icon: string | null; name: string; text: string; downside: string | null }[]
+    burn: { name: string; when: string; text: string; icon: string } | null
+  } | null
+  npc: { mood: string } | null
+  new?: boolean // players: not read yet
+  unlocked?: boolean // GM only
+}
+
+/** The Codex as this viewer may read it: players get only unlocked entries and blocks. The TV gets none. */
+export interface CodexView {
+  sections: CodexSectionView[]
+  entries: CodexEntryView[]
 }
 
 export interface Ack {
