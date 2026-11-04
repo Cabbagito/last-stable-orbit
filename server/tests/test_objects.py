@@ -120,11 +120,11 @@ async def test_reveals_and_looks_survive_a_restart(content, tmp_path):
     assert e2.state.maps[EH].shown == ["mural"] and e2.state.seen == {"tally": ["event-horizon/mural"]}
 
 
-def test_npc_codex_and_chrome_text_reach_the_card(engine, content):
+def test_npc_codex_and_skill_text_reach_the_card(engine, content):
     v = project(engine.state, content, TALLY)
     assert v["tokens"]["fixer"]["codex"] == "the-fixer"
     ves = next(c for c in v["crew"] if c["id"] == "ves")
-    assert next(e for e in ves["list"] if e["name"] == "Silent legs")["text"]
+    assert next(e for e in ves["list"] if e["name"] == "Tomo, no")["text"]
 
 
 def test_tallys_look_sends_marlo_nothing(client, seat):

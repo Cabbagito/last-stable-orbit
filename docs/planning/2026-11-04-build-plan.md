@@ -13,6 +13,14 @@
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
 | M6–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
+**Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
+- **In the data now:** each character has three skills in one unlabelled list, with what each covers and a downside that happens every time a roll using it fails. The crew's guns are stun pistols. The skill icons come from the Icons canvas, board "Skills".
+- **Still to build:**
+  - health by character: Tomo 9, Tally 7, Lale 5, Marlo 5, Ves 4 (`HP_MAX` is still 6 for everyone);
+  - Burns: one per character, a button that spends 2 Entropy and plays an animation on the TV, with no roll;
+  - the roll screen showing a failed skill's downside on the TV;
+  - enemy cards: the spider mech has 13 health and cracks at 6, and the fixer has 10.
+
 **How M1 differs from the plan below** (this section wins where they disagree):
 - **Login:** players pick their character on a picker screen, and only the GM types a passcode (`LSO_GM_PASSCODE`). This replaces the per-player passcodes in "Auth flow".
 - **Port:** the app runs on http://localhost:8070, because 8000 and 8001 belong to other projects on Peter's Mac.

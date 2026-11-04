@@ -1,8 +1,7 @@
-# Chrome `text` is the tooltip: DRAFT one-liners from the bible, for Peter to edit.
 # The five premade crew, from the Campaign Bible ("The five").
 # stats: the die for each stat. Every line costs 16 points (d4 0, d6 1, d8 2, d10 3, d12 4, d20 6).
-# list: skills and chrome share one list (one pick per roll). icon: a file under assets/, or leave it out
-# for a text-only row until the icon is drawn on the Icons canvas.
+# list: three skills, one pick per roll. A skill can be a trait, a talent, knowledge or chrome; the sheet doesn't label which.
+# text: what it covers. downside: what happens every time a roll using it fails.
 
 - id: lale
   name: Dr. Lale Osei
@@ -11,9 +10,9 @@
   portrait: portraits/lale.gif
   stats: {body: 6, reflex: 6, tech: 8, intel: 12, cool: 8, empathy: 20}
   list:
-    - {kind: skill, name: Has seen worse, downside: Can't walk past anyone hurt.}
-    - {kind: skill, name: Everyone tells me things, downside: "Keeps secrets, even when she shouldn't."}
-    - {kind: skill, name: Steady hands, downside: Never carries a weapon.}
+    - {kind: skill, name: "Has seen worse", text: "Medicine, wounds and delicate work under pressure.", downside: "It's worse than it looked, so she stays with them and misses the next beat.", icon: icons/list/lale-seen-worse.png}
+    - {kind: skill, name: "Your pulse says otherwise", text: "Two fingers on a wrist and an eye on her fob watch: is this person lying, scared or hurt?", downside: "They notice what she's doing, pull away and stop trusting her.", icon: icons/list/lale-pulse.png}
+    - {kind: skill, name: "Bedside manner", text: "Calming people, and getting them to open up or do as they're told.", downside: "Now they're her patient. They won't leave her alone, and they talk about her.", icon: icons/list/lale-bedside.png}
 
 - id: marlo
   name: Marlo Quill
@@ -22,11 +21,9 @@
   portrait: portraits/marlo.gif
   stats: {body: 4, reflex: 8, tech: 6, intel: 10, cool: 20, empathy: 12}
   list:
-    - {kind: skill, name: I know a man who knows you, downside: Has burned someone on every world.}
-    - {kind: skill, name: Born for this suit, downside: Can't resist an audience.}
-    - {kind: skill, name: "Sorry, wrong room", downside: Runs when it gets real.}
-    - {kind: chrome, name: Voice mod, text: "Sounds like anyone he has heard talk for a minute."}
-    - {kind: chrome, name: Face-shaping, text: "A face that shifts a little: older, younger, someone's cousin."}
+    - {kind: skill, name: "I know a man who knows you", text: "Name-dropping, contacts and knowing how a place works.", downside: "They do know him, and he burned them.", icon: icons/list/marlo-man.png}
+    - {kind: skill, name: "Sorry, wrong room", text: "Getting into places he shouldn't be, or talking his way out.", downside: "They're happy to help. Someone walks him to the right room and stays with him.", icon: icons/list/marlo-wrong-room.png}
+    - {kind: skill, name: "Someone's cousin", text: "A voice and face that shift: he sounds like anyone he has heard talk for a minute, and looks older, younger or like someone's cousin.", downside: "It slips mid-sentence, where they can see it.", icon: icons/list/marlo-cousin.png}
 
 - id: tally
   name: Tally
@@ -35,11 +32,9 @@
   portrait: portraits/tally.gif
   stats: {body: 10, reflex: 10, tech: 20, intel: 12, cool: 4, empathy: 4}
   list:
-    - {kind: skill, name: Talks to machines like dogs, downside: Gets attached.}
-    - {kind: skill, name: "Has read the manual, all of them", downside: Explains at the worst moment.}
-    - {kind: skill, name: "Statistically, no", downside: Says the true thing aloud.}
-    - {kind: chrome, name: Tool fingers, text: "Fingertips that open into drivers, probes and a very small saw.", icon: icons/list/implant-grip.png}
-    - {kind: chrome, name: Universal port, text: "Plugs straight into any machine that will let it, and some that won't.", icon: icons/list/implant-port.png}
+    - {kind: skill, name: "Talks to machines like dogs", text: "Coaxing machines and plugging into them, through a port for anything.", downside: "It goes and tells its owner: ISCO below the executive decks, the company above.", icon: icons/list/tally-dogs.png}
+    - {kind: skill, name: "Has read the manual, all of them", text: "How anything is built, and tool fingers to take it apart.", downside: "Tally explains out loud, at length, and everyone nearby hears.", icon: icons/list/tally-manual.png}
+    - {kind: skill, name: "Statistically, no", text: "Spotting a lie, a bad bet or a rigged game.", downside: "Tally announces the conclusion aloud, to the person it's about, and it's wrong.", icon: icons/list/tally-statistically.png}
 
 - id: ves
   name: Vesna Dragan
@@ -48,11 +43,9 @@
   portrait: portraits/ves.gif
   stats: {body: 4, reflex: 20, tech: 10, intel: 8, cool: 12, empathy: 6}
   list:
-    - {kind: skill, name: Been in worse vents, downside: Can't leave a lock alone., icon: icons/list/ves-vents.png}
-    - {kind: skill, name: Nobody looks at the small woman, downside: Holds grudges., icon: icons/list/ves-nobody.png}
-    - {kind: skill, name: "Tomo, no", downside: Always has to fix him., icon: icons/list/ves-tomo-no.png}
-    - {kind: chrome, name: Silent legs, text: "Legs that make no sound, on any floor.", icon: icons/list/ves-silent-legs.png}
-    - {kind: chrome, name: Camera-cone eye, text: "A replacement eye that sees what cameras see: where each one points, and where it doesn't.", icon: icons/list/ves-cone-eye.png}
+    - {kind: skill, name: "Been in worse vents", text: "Vents, locks, climbing and tight spaces.", downside: "She's stuck, and it's loud.", icon: icons/list/ves-vents.png}
+    - {kind: skill, name: "Nobody looks at the small woman", text: "Walking past people unnoticed.", downside: "Someone looks, and they'll remember her face.", icon: icons/list/ves-nobody.png}
+    - {kind: skill, name: "Tomo, no", text: "Keeping Tomo out of trouble, or getting him out.", downside: "Tomo thinks she's in trouble. He drops what he's doing and comes running to the rescue, loudly.", icon: icons/list/ves-tomo-no.png}
 
 - id: tomo
   name: Tomo Dragan
@@ -61,8 +54,6 @@
   portrait: portraits/tomo.gif
   stats: {body: 20, reflex: 8, tech: 6, intel: 6, cool: 8, empathy: 12}
   list:
-    - {kind: skill, name: Please don't make me, downside: Apologizes after.}
-    - {kind: skill, name: People just tell me things, downside: Feeds everyone at bad times.}
-    - {kind: skill, name: Carried worse, downside: Can't leave anyone.}
-    - {kind: chrome, name: Steel forearm, text: "A steel forearm. It hits like a door, and it counts as a weapon.", icon: icons/list/implant-arm.png}
-    - {kind: chrome, name: Dermal plating, text: "Plates under the skin that turn a knife or a stray shot."}
+    - {kind: skill, name: "Please don't make me", text: "Frightening people by being huge and sorry about it.", downside: "He apologises and says his wife will sort it out. Now they're looking for Ves.", icon: icons/list/tomo-dont-make-me.png}
+    - {kind: skill, name: "Have you eaten?", text: "Earning trust, usually with bread.", downside: "Now everyone wants feeding, right now, and they're loud about it.", icon: icons/list/tomo-eaten.png}
+    - {kind: skill, name: "Steel forearm", text: "It hits like a door, knocks people out and breaks things, and it counts as a weapon.", downside: "It sticks in whatever he hit, and he misses the next beat pulling it out.", icon: icons/list/implant-arm.png}

@@ -6,10 +6,10 @@
 
 # --- the starting kit
 - id: sidearm
-  name: Sidearm
+  name: Stun pistol
   icon: icons/items/sidearm.png
   kind: weapon
-  text: A compact pistol, legal on Ergo with a permit. Loud when it matters.
+  text: A compact stun pistol, legal on Ergo with a permit. It puts people down without killing them. Loud when it matters.
 
 - id: splice-kit
   name: Splice kit

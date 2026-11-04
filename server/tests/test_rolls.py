@@ -141,7 +141,7 @@ async def test_player_rolls_their_own_stat(engine, dice):
     assert r.sides == 12 and r.entry == "Been in worse vents"
 
     dice.push(15)
-    await run(engine, VES, "roll.start", {"stat": "reflex", "entry": 3})  # a d20 with chrome: +2
+    await run(engine, VES, "roll.start", {"stat": "reflex", "entry": 1})  # a d20 with a skill: +2
     assert (latest(engine).sides, latest(engine).bonus) == (20, 2)
 
 

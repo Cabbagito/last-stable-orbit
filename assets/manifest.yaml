@@ -560,6 +560,83 @@ assets:
     bytes: 1357
     width: 48
     height: 48
+  - path: icons/list/lale-seen-worse.png
+    store: ICONS
+    asset_id: "3d960896b1606cee6cbd14e3737fc1be"
+    sha256: "2c5dbf0fa04a3b68f7eadbd289cf1199a8dc4feae98eb8a0aea441d1d6aef0a8"
+    bytes: 1064
+    width: 48
+    height: 48
+  - path: icons/list/lale-pulse.png
+    store: ICONS
+    asset_id: "951f9f6d4d53eb96e4f8db63d952f907"
+    sha256: "466dd1c3771beb6d891630bca3cfa9d59464d64b15fa159a3b1642a025099434"
+    bytes: 1470
+    width: 48
+    height: 48
+  - path: icons/list/lale-bedside.png
+    store: ICONS
+    asset_id: "eeed9f1b41904974f8946a2ed0f1be1d"
+    sha256: "d4922be22b02460eb52ec6d1e28b0c755dcbb7bbfb8ff260c827f09d151381b1"
+    bytes: 1243
+    width: 48
+    height: 48
+  - path: icons/list/marlo-man.png
+    store: ICONS
+    asset_id: "f6dbbde4ac843eda0a2ee36660e49eab"
+    sha256: "34798cbc8e8e0487c11fa565c67054cce8daba9f7c8c51fc20d44b6a535b6359"
+    bytes: 998
+    width: 48
+    height: 48
+  - path: icons/list/marlo-wrong-room.png
+    store: ICONS
+    asset_id: "5dfd04a68360854c0af231ab359327f7"
+    sha256: "3293d697b9e47d383b624b38896c8135227563a14e861666d5ff70339c63c5f2"
+    bytes: 688
+    width: 48
+    height: 48
+  - path: icons/list/marlo-cousin.png
+    store: ICONS
+    asset_id: "53a02371ccade0e9af1b3153817ad099"
+    sha256: "d54c41fa0a7d47aecffa4a42d59ddfc059951e3ef214435ca2c87206dcb22034"
+    bytes: 1290
+    width: 48
+    height: 48
+  - path: icons/list/tally-dogs.png
+    store: ICONS
+    asset_id: "3102837d126deeabefd4d5e3a68bd63a"
+    sha256: "0f42841e5c8200e3aeb5e565660bd793741dfe6950d2b538437e2a85995f502e"
+    bytes: 1195
+    width: 48
+    height: 48
+  - path: icons/list/tally-manual.png
+    store: ICONS
+    asset_id: "c189a0d7932dd5096a1735f2a79d507c"
+    sha256: "c0c0724c39ad23bdab2089e7c69df9e791d6ac3911a4dc8bb20a4851b6997d30"
+    bytes: 1930
+    width: 48
+    height: 48
+  - path: icons/list/tally-statistically.png
+    store: ICONS
+    asset_id: "e37b5dd97b3530e2198b0e9d1f4a1a66"
+    sha256: "5898ada6317e16e46b6c86ad313eb300139245d14e7611b9d216171d29c60b31"
+    bytes: 945
+    width: 48
+    height: 48
+  - path: icons/list/tomo-dont-make-me.png
+    store: ICONS
+    asset_id: "288f73762ec5bed71d014cd83907dd38"
+    sha256: "77315865d69acd227330f30f383936e0df72953dd1706cf56a213d1a0224a225"
+    bytes: 1192
+    width: 48
+    height: 48
+  - path: icons/list/tomo-eaten.png
+    store: ICONS
+    asset_id: "f29926106c2cd230fbfb077ae141d095"
+    sha256: "d155cd6132eb052fbd939818b6b562d7dad5f0129d22dead60f893c412b7d976"
+    bytes: 1247
+    width: 48
+    height: 48
   - path: icons/vitals/hp.png
     store: ICONS
     asset_id: "e9e30d5688bf5b2a2d6d58e2345df578"

@@ -98,11 +98,8 @@ function SheetTip({ hover, me, items }: { hover: Anchor; me: CrewMember; items: 
         <>
           <div className="app-ins-txt">Pick it on a roll when it fits: your die steps up one size. A d20 gets +2.</div>
           {k.downside && (
-            <InspectBlock label="DOWNSIDE" tone="down">
+            <InspectBlock label="IF THE ROLL FAILS" tone="down">
               <div className="app-ins-txt">{k.downside}</div>
-              <div className="app-ins-txt app-ins-gap">
-                When the GM offers the trouble, take it for <span className="app-ins-en">+1 Entropy</span>, or say no.
-              </div>
             </InspectBlock>
           )}
         </>
