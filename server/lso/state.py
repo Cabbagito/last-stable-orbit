@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import GameState, InvEntry, MapState, Preset, PresetItem, RollState, TokenState, Vitals
+from .models import FilmState, GameState, InvEntry, MapState, Preset, PresetItem, RollState, TokenState, Vitals
 
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
 
@@ -62,6 +62,7 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     s.seq = seq
     if ev_type == "world.loaded":
         fresh = GameState.model_validate({**data["state"], "seq": seq})
+        fresh.stage = s.stage  # a preset sets the world, not the table: the setup, camera and films carry over
         return fresh
     if ev_type == "token.moved":
         s.tokens[data["token"]].at = tuple(data["at"])
@@ -113,6 +114,18 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         r = _roll(s, data["roll"])
         r.shown, r.open = len(r.dice), False
         _trim_rolls(s)
+    elif ev_type == "party.map_set":
+        s.party_map = data["map"]
+    elif ev_type == "film.started":
+        s.stage.film = FilmState.model_validate(data)
+    elif ev_type == "film.ended":
+        s.stage.film = None
+        if data["cue"] not in s.stage.played:
+            s.stage.played.append(data["cue"])
+    elif ev_type == "stage.setup_set":
+        s.stage.setup = data["setup"]
+    elif ev_type == "stage.camera_set":
+        s.stage.camera, s.stage.follow = data["camera"], data.get("follow")
     else:
         raise UnknownEvent(ev_type)
     return s

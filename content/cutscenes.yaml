@@ -1,0 +1,29 @@
+# Cutscenes: full-screen pixel films, in the order you'll use them. You start one from the GM tab and it plays
+# to the end, with no controls. Each is one video file with its sound baked in (see the doc "LSO — Cutscenes
+# and Stage"). A cue with no file isn't made yet: it shows in the list, greyed out.
+#
+# `sets` is what the cue sets behind the film, so play resumes in the right place when it ends: the map (the
+# party looks at it), its mood and switches, and NPCs placed where the film leaves them. The crew stay put.
+# Positions are drafts for Peter to adjust.
+
+- id: wait
+  name: "Waiting screen: Ergo and the hole"
+  sub: Loops on the TV until the intro plays
+
+- id: intro
+  name: "Intro: Patience arrives"
+  sub: About 3 minutes
+  ends: Ends on the Patience map, and play begins.
+
+- id: shotgun
+  name: "The bar: the shotgun"
+  sub: 36 s, ends act 3
+  ends: Ends on the bar after hours, with Dax at the gap in the rail. The crew stay where they are.
+  file: films/shotgun.mp4
+  length: 35.83
+  still: films/shotgun-still.png
+  sets:
+    map: event-horizon
+    mood: after
+    tokens:
+      - {ref: dax, at: [11.6, 1.05, 0]}

@@ -136,4 +136,4 @@ def test_tallys_look_sends_marlo_nothing(client, seat):
             assert f["t"] == "view"
         assert f["ok"]
         m.send_json({"t": "ping"})
-        assert m.receive_json() == {"t": "pong"}  # Tally's "looked at" is hers alone
+        assert m.receive_json()["t"] == "pong"  # Tally's "looked at" is hers alone

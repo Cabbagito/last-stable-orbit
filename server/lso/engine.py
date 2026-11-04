@@ -46,6 +46,10 @@ class Engine:
         bad += [f"inventory {h}: item {e.item!r}" for h, es in s.inventory.items() for e in es if e.item not in c.items]
         if s.party_map and s.party_map not in c.maps:
             bad.append(f"party_map {s.party_map!r}")
+        if s.stage.film and s.stage.film.cue not in c.cutscenes:
+            bad.append(f"film {s.stage.film.cue!r}")
+        if s.stage.follow and s.stage.follow not in c.characters:
+            bad.append(f"camera follow {s.stage.follow!r}")
         if bad:
             raise RuntimeError(
                 "Saved state refers to content that no longer exists:\n  "

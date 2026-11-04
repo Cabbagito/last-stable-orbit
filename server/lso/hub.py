@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import time
 from dataclasses import dataclass, field
 
 from fastapi import WebSocket
@@ -57,7 +58,7 @@ class Hub:
             log.debug("send to %s failed", c.viewer.seat)
 
     async def send_view(self, c: Conn, force: bool = False) -> None:
-        view = project(self.engine.state, self.engine.content, c.viewer)
+        view = project(self.engine.state, self.engine.content, c.viewer, frozenset(self.online()))
         body = _dump(view)
         h = hashlib.sha256(body.encode()).hexdigest()
         if h == c.last_hash and not force:
@@ -65,7 +66,8 @@ class Hub:
         c.last_hash = h
         c.frames += 1
         c.visible_tokens = set(view["tokens"])
-        await self._send(c, {"t": "view", "v": c.frames, "view": view})
+        # the server's clock, so films start at one moment on every screen
+        await self._send(c, {"t": "view", "v": c.frames, "now": round(time.time(), 3), "view": view})
 
     async def broadcast(self) -> None:
         for c in list(self.conns):
@@ -82,6 +84,6 @@ class Hub:
         hit = self._asset_cache.get(viewer.seat)
         if hit and hit[0] == seq:
             return hit[1]
-        allowed = referenced_assets(project(self.engine.state, self.engine.content, viewer))
+        allowed = referenced_assets(project(self.engine.state, self.engine.content, viewer, frozenset(self.online())))
         self._asset_cache[viewer.seat] = (seq, allowed)
         return allowed

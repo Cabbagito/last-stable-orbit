@@ -70,6 +70,16 @@ export class RollClock {
     }
   }
 
+  /** Holding at an explosion gate. */
+  get holding() {
+    return this.waiting
+  }
+
+  /** Dice landed so far. */
+  get landedCount() {
+    return this.landed
+  }
+
   /** "Roll again" at an explosion. */
   release(now: number) {
     if (this.waiting) this.resumeAt(now)

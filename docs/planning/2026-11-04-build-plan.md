@@ -9,7 +9,7 @@
 | Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
 | M4: GM tab | **Done** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Peter tried it and is happy. NPC dice are drafts for Peter to set |
-| Stage: the TV and cutscenes | **Started.** Planned, with Peter's answers, in the Stage section after M4. Round 13 drew the laptops' black-hole screen; Peter picked the dust in the disc's colours, with no text |
+| Stage: the TV and cutscenes | **Built** 2026-11-04, waiting on Peter's try. The TV's login and feed, the cue list, films in sync, the table setting, the camera and the laptops' black hole. See "How Stage turned out" |
 | M5–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -337,6 +337,32 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
        - **Peter's pick (2026-11-04): C's falling dust, in A's colours (pink on the side turning away, cyan on the side turning toward you, brighter there), at 5 px pixels, with no text on screen at all.** The `R13FilmDust` board is updated to that; A and B stay as drawn.
   4. **Sound:** only the films' own baked-in sound in this milestone. The soundboard, per-map ambience and roll sounds come later.
 - **Known limits:** the online setup can be built now, but it can only be tested once the app is hosted (M7).
+- **How Stage turned out** (built 2026-11-04; this wins over the proposals above):
+  - **The TV is the Stage seat.** On the login screen, "This screen is the TV" asks for the GM passcode and logs in as `stage`. Its screen (`web/src/stage/Tv.tsx`) has no header, no rail and nothing to press. It needs one click to start, which goes full screen and lets films play their sound. The mouse is hidden on it.
+    - Its socket refuses every intent (`read_only`), like view as player.
+    - Its feed is a player's with no seat: the party map, its visible tokens and revealed objects, the crew's public sheets, no pockets. It gets each public roll's dice as the roll starts, as the roller's screen does, to play the same animation. It gets every film's file, to have them ready. Never hidden tokens or rolls, NPC dice, notes, the roster or the cue list. Leak tests in `server/tests/test_stage.py`.
+    - The GM tab knows when it's connected.
+  - **TV 2, the band** (`TvBand.tsx`): a public roll slides up along the bottom with the roller's ring, name, stat and die, and plays the real roll animation in step with the roller's screen. At an explosion it waits until the roller's screen rolls again; if the roller skips, it skips. It stays 3.8 s after the dice settle, then slides away. Rolls under way when the TV connects don't get one.
+  - **The camera** (GM tab, The TV): Whole crew frames every crew member on the map; Follow one centres on one of them; Whoever rolls frames the crew and moves to whoever rolls, above the band, until the band leaves. Moves glide over 0.9 s.
+  - **Cutscenes** are in `content/cutscenes.yaml`, in the order you'll use them. A cue with no file shows as "NOT MADE YET". Each made cue has its file, its length, the GM's still, and `sets`: what it sets behind the film (the party's map, mood, switches, NPCs placed). The shotgun sets the bar after hours with Dax at [11.6, 1.05, 0], his after-hours spot. That position is a draft for "the gap in the rail".
+    - `gm.film.play` starts a film 1.5 s after the press with a TV (it has the file already), or 3 s without one (laptops fetch it then). It can't be stopped, and while it plays the setup and camera don't change either. The server ends it on time and marks the cue played.
+    - The film itself is `assets/films/shotgun.mp4` (35.8 s, 1920×1080, sound baked in), from the shotgun canvas.
+  - **In sync:** every frame and pong carries the server's clock, and each screen keeps its offset from the shortest round trip (`web/src/net/clock.ts`). A screen starts the film at the server moment; one that's late jumps to where everyone is, and one that drifts more than 0.3 s jumps back.
+  - **Which screens play it, and who may fetch it:**
+    - With a TV: only the TV plays it, with all the sound. Players' laptops show the black hole (Round 13's dust) until it ends; they never get the file or the film's name. The GM's laptop keeps working, and the cue list shows its progress.
+    - No TV: every laptop plays it, players' muted, the GM's with the sound. Players get the file only once its cue fires.
+    - Online: every laptop plays it with its sound. If a browser won't start the sound by itself, the film plays muted with a "Turn the sound on" button.
+    - The GM's still is a spoiler, so only the GM gets it.
+  - **The GM tab:** Cutscenes is the cue list with a two-step Play, progress while it plays, and PLAYED after. The TV has the status, where you're playing, the camera with faces for Follow one, and "On the TV now", the TV's own screen small and silent (`/?as=stage`).
+  - **Loading a preset keeps the table setting:** where you're playing, the camera, and which cues were played.
+  - **Not built:** the waiting loop and the intro, which aren't made yet; a stop button (Peter's call); and the soundboard, ambience and roll sounds (later).
+  - **Checked:** 104 server tests (17 new) and 22 web tests. Walked through on a separate test server with the GM, the TV and Tally:
+    - the TV's login and start click;
+    - the camera following Ves;
+    - Dax's public Cool roll in the band, with the camera cutting to him and back;
+    - the shotgun with a TV: the film on the TV, the black hole on Tally's laptop, progress in the GM tab, then the bar after hours everywhere and PLAYED;
+    - the shotgun with no TV: the GM's laptop with sound and Tally's muted, about 0.2 s apart, and nothing on the TV.
+  - **Online** is built, but it can only really be tested once the app is hosted (M7).
 
 ### M5: The other 10 maps · M · best ultracode fan-out
 - **Goal:** every map from the Maps canvas, driven by data.

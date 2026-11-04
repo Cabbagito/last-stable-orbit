@@ -1,0 +1,63 @@
+/* Stage: the TV, films, the laptops' black hole, and the GM tab's Cutscenes and TV sections (Rounds 12 and 13). */
+
+/* ---------- films, on any screen that plays one ---------- */
+.app-film{position:fixed;inset:0;z-index:50;background:#000;opacity:0;pointer-events:none;transition:opacity .8s ease}
+.app-film.on{opacity:1;pointer-events:auto}
+.app-film video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;image-rendering:pixelated;display:block}
+.app-filmsound{position:absolute;left:50%;bottom:24px;transform:translateX(-50%)}
+.app-hole{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated}
+
+/* ---------- the TV ---------- */
+.app-tv{position:fixed;inset:0;background:#000;overflow:hidden;color:var(--ink);font-family:var(--body);cursor:none}
+.app-tv.app-wait{display:grid;place-items:center}
+.app-tvmap{position:absolute;inset:0;cursor:none}
+.app-tvworld{transition:transform .9s cubic-bezier(.4,0,.2,1)}
+.app-tvplace{position:absolute;left:0;top:0;padding:18px 24px;transform:scale(var(--k));transform-origin:0 0;pointer-events:none;z-index:4}
+.app-tvstart{position:absolute;inset:0;z-index:60;background:rgba(0,0,0,.86);border:0;color:var(--ink);font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer}
+.app-tvstart:focus-visible{outline:2px solid #fff;outline-offset:-6px}
+
+/* TV 2: a public roll slides up in a band along the bottom (R12StageBand), laid out at 1440 x 810 and scaled */
+.app-band{position:absolute;left:0;bottom:0;width:calc(100% / var(--k));height:210px;box-sizing:border-box;display:flex;align-items:center;gap:24px;padding:0 32px;background:rgba(0,0,0,.92);box-shadow:0 -1px 0 var(--c, #2f3238);transform:scale(var(--k)) translateY(102%);transform-origin:0 100%;transition:transform .5s cubic-bezier(.2,.8,.2,1);z-index:6}
+.app-band.on{transform:scale(var(--k))}
+.app-bwho{display:flex;align-items:center;gap:18px;width:420px;flex:none}
+.app-bname{font-family:'Michroma',sans-serif;font-size:22px;color:#ffffff;line-height:1.2}
+.app-blab{font-family:'Michroma',sans-serif;font-size:10px;letter-spacing:.18em;color:var(--c);margin-top:8px}
+.app-bcv{flex:1;height:210px;min-width:0;position:relative}
+.app-bcv canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* ---------- the GM tab: Cutscenes ---------- */
+.r12-wide{max-width:920px;display:flex;flex-direction:column;gap:12px}
+.r12-cue{min-height:108px;gap:16px}
+.r12-cue.on{background:#0b0b0d}
+.r12-cue.off{opacity:.55}
+.r12-cthumb{width:160px;height:90px;flex:none;display:block;image-rendering:pixelated;box-shadow:0 0 0 1px #1e2024}
+.r12-none{display:grid;place-items:center;font-family:'Michroma',sans-serif;font-size:7px;letter-spacing:.14em;color:#8a8e96;background:#060608}
+.r12-cmeta{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;padding:10px 0}
+.r12-cname{font-size:15px;color:#fff}
+.r12-cend{color:#b9bdc4;font-size:12.5px;line-height:1.35}
+.r12-prog{display:block;height:3px;background:#1e2024;margin-top:4px}
+.r12-prog span{display:block;height:3px;background:#ff4fa3;transition:width .5s linear}
+.r12-ptime{font-family:'VT323',monospace;font-size:18px;color:#ff7dbb;line-height:1}
+.r12-cact{display:flex;gap:6px;align-items:center;flex:none}
+.r12-go{background:#ff4fa3;color:#000;border:0;min-height:36px;padding:0 14px;cursor:pointer;font-family:'Michroma',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase}
+.r12-go:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+/* ---------- the GM tab: The TV ---------- */
+.r12-tvgrid{display:grid;grid-template-columns:minmax(0,1fr) 605px;gap:30px;align-items:start;margin-top:4px}
+.r12-tvcol{display:flex;flex-direction:column;gap:10px;min-width:0}
+.r12-status{display:flex;align-items:center;gap:8px;color:#e7e9ec;min-height:24px}
+.r12-dot{width:8px;height:8px;border-radius:50%;background:#5ee08c;flex:none}
+.r12-seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#1e2024;border:1px solid #1e2024}
+.r12-seg3 button{background:#000;border:0;min-height:44px;cursor:pointer;color:#b9bdc4;font-size:12.5px;padding:0 6px}
+.r12-seg3 button:hover{color:#fff}
+.r12-seg3 button.on{color:#fff;background:#180c13;box-shadow:inset 0 -2px 0 #ff4fa3}
+.r12-seg3 button:disabled{cursor:default;color:#5e626a}
+.r12-tvprev{position:relative;width:605px;height:340px;overflow:hidden;box-shadow:0 0 0 1px #2f3238;background:#000;flex:none}
+.r12-tvprev iframe{position:absolute;left:0;top:0;width:1440px;height:810px;border:0;transform:scale(.42);transform-origin:0 0;pointer-events:none}
+.r12-tvmood{font-family:'Michroma',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#b4b8c0;margin-top:8px}
+.r10-faces{display:flex;gap:4px}
+@media (max-width:1180px){.r12-tvgrid{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- login: the TV's way in ---------- */
+.app-loginlinks{display:flex;gap:28px;align-items:center}
+.app-loginlinks .app-link,.app-gmlogin .app-link{min-height:44px}

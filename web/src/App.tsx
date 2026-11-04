@@ -5,6 +5,8 @@ import { GmTab } from './pages/GmTab'
 import { Placeholder } from './pages/Placeholder'
 import { Scene } from './pages/Scene'
 import { Header, type Tab } from './shell/Header'
+import { LaptopFilm } from './stage/Film'
+import { Tv } from './stage/Tv'
 import { useGame } from './store/game'
 import type { Me } from './types'
 
@@ -47,6 +49,7 @@ export function App() {
   if (preview) return <Preview seat={preview} />
   if (me === 'loading') return <div className="r4 th-meridian" />
   if (!me) return <Login onIn={setMe} />
+  if (me.role === 'stage') return <TvScreen />
   return (
     <Game
       me={me}
@@ -65,6 +68,7 @@ export function App() {
  */
 function Preview({ seat }: { seat: string }) {
   const authLost = useGame((s) => s.authLost)
+  if (seat === 'stage' && !authLost) return <TvScreen /> // the GM tab's preview of the TV
   if (authLost)
     return (
       <div className="r4 th-meridian">
@@ -74,6 +78,22 @@ function Preview({ seat }: { seat: string }) {
       </div>
     )
   return <Game me={{ seat, role: 'player', char: seat }} />
+}
+
+/** The TV: no header, no tabs, nothing to press. Logging out is for another screen: it only watches. */
+function TvScreen() {
+  const connect = useGame((s) => s.connect)
+  const disconnect = useGame((s) => s.disconnect)
+  useEffect(() => {
+    connect()
+    preloadRollFonts()
+    return disconnect
+  }, [connect, disconnect])
+  return (
+    <div className="r4 th-meridian">
+      <Tv />
+    </div>
+  )
 }
 
 function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
@@ -93,6 +113,7 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
       <Header tab={tab} isGm={isGm} onLogout={onLogout} />
       {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : <Placeholder tab={tab} />}
       <RollDialog />
+      <LaptopFilm />
     </div>
   )
 }

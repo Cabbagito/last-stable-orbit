@@ -8,6 +8,7 @@ import { RingPortrait } from '../shell/RingPortrait'
 import { Callout, Orbit, calloutKey, calloutSpeech, isSpinning } from '../roll/Callout'
 import { calloutsBy } from '../roll/callouts'
 import { Eye } from '../gm/parts'
+import { MapLayers } from './MapLayers'
 
 interface Cam {
   px: number
@@ -193,8 +194,6 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
 
   const scale = cam ? clamp(0.8 / cam.zoom, 0.6, 1.8) : 1
   const callouts = calloutsBy(rolls ?? [], calls, Date.now(), (r) => r.token)
-  const shown = (o: { mood: string; switch: string; value: number }) =>
-    map.mood === o.mood && (map.values[o.switch] ?? 0) === o.value ? 1 : 0
   return (
     <div
       ref={box}
@@ -210,27 +209,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
           className="app-world"
           style={{ width: W, height: H, transform: `translate(${cam.px}px, ${cam.py}px) scale(${cam.zoom})` }}
         >
-          <div role="img" aria-label={map.description} />
-          {map.moods.map((m) => (
-            <img key={m.id} className="r3-map" src={m.base} alt="" draggable={false} style={{ width: W, height: H, opacity: map.mood === m.id ? 1 : 0 }} />
-          ))}
-          {map.overlays
-            .filter((o) => o.layer === 'patch')
-            .map((o) => (
-              <img key={o.id} className="r3-map" src={o.src} alt="" draggable={false} style={{ width: W, height: H, opacity: shown(o) }} />
-            ))}
-          {map.moods.map((m) =>
-            m.glow ? (
-              <div key={m.id} className="r3-glow" style={{ width: W, height: H, opacity: map.mood === m.id ? 1 : 0 }}>
-                <img className="r3-hum" src={m.glow} alt="" draggable={false} style={{ width: W, height: H }} />
-              </div>
-            ) : null,
-          )}
-          {map.overlays
-            .filter((o) => o.layer === 'gas')
-            .map((o) => (
-              <img key={o.id} className="r3-map app-gas" src={o.src} alt="" draggable={false} style={{ width: W, height: H, opacity: shown(o) }} />
-            ))}
+          <MapLayers map={map} />
           {tokens.map((t) => {
             const [x, y] = proj(map.origin, where(t))
             const on = selected === t.id

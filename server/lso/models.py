@@ -163,6 +163,44 @@ class MapDef(Strict):
         return next((o for o in self.objects if o.id == object_id), None)
 
 
+class CueToken(Strict):
+    """An NPC a cue puts on the map behind its film (placed, or moved there if it's already somewhere)."""
+
+    id: str | None = None  # the token; defaults to the NPC's id
+    ref: str
+    at: Vec3
+    hidden: bool = False
+
+
+class CueSets(Strict):
+    """What a cue sets behind its film, so play resumes in the right place when it ends."""
+
+    map: str
+    mood: str | None = None
+    switches: dict[str, int] = {}
+    tokens: list[CueToken] = []
+    party: bool = True  # also make it the map the party looks at
+
+
+class Cutscene(Strict):
+    """One film, started by the GM and played to the end with no controls. A cue with no file isn't made yet."""
+
+    id: str
+    name: str
+    sub: str = ""  # "36 s, ends act 3"
+    ends: str = ""  # where play resumes, for the GM
+    file: str | None = None  # the video under assets/, with its sound baked in
+    length: float | None = None  # seconds; required with a file
+    still: str | None = None  # the GM's thumbnail; never sent to players
+    sets: CueSets | None = None
+
+    @model_validator(mode="after")
+    def _made(self) -> "Cutscene":
+        if self.file and not (self.length and self.length > 0):
+            raise ValueError(f"cutscene {self.id} has a file, so it needs its length in seconds")
+        return self
+
+
 class PresetToken(Strict):
     id: str | None = None
     kind: Literal["crew", "npc"]
@@ -246,6 +284,28 @@ class RollState(Strict):
     started: float = 0.0  # server time, for the sweeper
 
 
+SETUPS = ("tv", "notv", "online")  # where you're playing: at the table with a TV, at the table without one, online
+CAMERAS = ("crew", "follow", "roller")  # the TV's camera: the whole crew, one of them, or cut to whoever rolls
+
+
+class FilmState(Strict):
+    """A film playing now: every screen that plays it starts it at `at` (server time) and stops at `ends`."""
+
+    cue: str
+    at: float
+    ends: float
+
+
+class StageState(Strict):
+    """The TV and the table: where you're playing, the TV's camera, and the film playing now, if any."""
+
+    setup: Literal["tv", "notv", "online"] = "tv"
+    camera: Literal["crew", "follow", "roller"] = "crew"
+    follow: str | None = None  # a character, for the "follow" camera
+    film: FilmState | None = None
+    played: list[str] = []  # cues played this campaign, for the GM's list
+
+
 class GameState(Strict):
     seq: int = 0  # seq of the last applied event
     party_map: str = ""  # where viewers without a token on a map look
@@ -255,3 +315,4 @@ class GameState(Strict):
     inventory: dict[str, list[InvEntry]] = {}
     rolls: list[RollState] = Field(default_factory=list)  # open rolls, then the most recent closed ones
     seen: dict[str, list[str]] = {}  # character -> "map/object" keys they have inspected
+    stage: StageState = Field(default_factory=StageState)

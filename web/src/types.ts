@@ -6,7 +6,7 @@ export type StatKey = (typeof STATS)[number]
 
 export interface Me {
   seat: string
-  role: 'gm' | 'player'
+  role: 'gm' | 'player' | 'stage' // stage: the TV at the table
   char: string | null
 }
 
@@ -141,7 +141,7 @@ export interface RollView {
   pushed: number
   value?: number // once landed
   count?: number // dice it took
-  // the roller and the GM only:
+  // the roller, the GM and the TV only:
   dice?: number[]
   bonus?: number
   seed?: number
@@ -152,6 +152,40 @@ export interface RollView {
   hidden?: boolean
 }
 
+export type Setup = 'tv' | 'notv' | 'online'
+export type Camera = 'crew' | 'follow' | 'roller'
+
+/** A film playing now. Times are the server's, in seconds. `src` only reaches screens that play it. */
+export interface FilmView {
+  at: number // it starts here, on every screen that plays it
+  ends: number
+  src?: string
+  sound?: boolean
+  cue?: string // GM only
+  name?: string // GM only
+}
+
+export interface CueView {
+  id: string
+  name: string
+  sub: string
+  ends: string
+  still: string | null
+  length: number | null
+  ready: boolean // its film is made
+  played: boolean
+}
+
+export interface StageView {
+  setup: Setup
+  camera: Camera
+  follow: string | null
+  film: FilmView | null
+  tv?: boolean // GM only: the TV is connected
+  cues?: CueView[] // GM only
+  films?: string[] // the TV only: every film, fetched ahead
+}
+
 export interface View {
   me: Me
   party_map: string
@@ -160,6 +194,7 @@ export interface View {
   tokens: Record<string, TokenView>
   inventory: Record<string, InvEntry[]>
   rolls: RollView[]
+  stage: StageView
   roster?: RosterNpc[] // GM only
   presets?: { id: string; name: string }[] // GM only
   items?: Item[] // GM only: the catalogue, for giving
@@ -173,7 +208,7 @@ export interface Ack {
 }
 
 export type ServerFrame =
-  | { t: 'view'; v: number; view: View }
+  | { t: 'view'; v: number; now?: number; view: View }
   | { t: 'drag'; token: string; at: Vec3; by: string }
   | ({ t: 'ack' } & Ack)
-  | { t: 'pong' }
+  | { t: 'pong'; now?: number }

@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import STATS, Character, Item, MapDef, Npc, Preset, PresetItem
+from .models import STATS, Character, Cutscene, Item, MapDef, Npc, Preset, PresetItem
 
 log = logging.getLogger("lso.content")
 
@@ -26,6 +26,7 @@ class Content:
     maps: dict[str, MapDef] = field(default_factory=dict)
     presets: dict[str, Preset] = field(default_factory=dict)
     insults: dict[str, list[str]] = field(default_factory=dict)  # "any" plus one pool per stat
+    cutscenes: dict[str, Cutscene] = field(default_factory=dict)  # in the order the GM will use them
     missing_assets: list[str] = field(default_factory=list)
 
     @property
@@ -71,6 +72,8 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
     for p in sorted((content_dir / "presets").glob("*.yaml")):
         pr = _parse(Preset, _read(p), f"presets/{p.name}")
         c.presets[pr.id] = pr
+    cut = content_dir / "cutscenes.yaml"
+    c.cutscenes = _by_id(Cutscene, _read(cut), "cutscenes.yaml") if cut.is_file() else {}
     ins = content_dir / "insults.yaml"
     c.insults = _insults((_read(ins) or {}) if ins.is_file() else {})
     if clash := set(c.characters) & set(c.npcs):
@@ -140,6 +143,22 @@ def check_refs(c: Content) -> None:
                 else:
                     counted |= {item_id} if it.counted else set()
         problems += [f"{where}: vitals for unknown character {k!r}" for k in pr.vitals if k not in c.characters]
+    for cue in c.cutscenes.values():
+        if not cue.sets:
+            continue
+        where, st = f"cutscene {cue.id}", cue.sets
+        m = c.maps.get(st.map)
+        if not m:
+            problems.append(f"{where}: unknown map {st.map!r}")
+            continue
+        if st.mood and st.mood not in {x.id for x in m.moods}:
+            problems.append(f"{where}: map {st.map} has no mood {st.mood!r}")
+        for sw, val in st.switches.items():
+            d = m.switch(sw)
+            if not d or not 0 <= val <= (1 if d.type == "bool" else d.max):
+                problems.append(f"{where}: bad switch {st.map}.{sw}={val}")
+        problems += [f"{where}: token ref {t.ref!r} is not an NPC" for t in st.tokens if t.ref not in c.npcs]
+        problems += [f"{where}: token id {t.id!r} is a crew member's" for t in st.tokens if t.id in c.characters]
     if problems:
         raise ContentError("content references are broken:\n  " + "\n  ".join(problems))
 
@@ -157,4 +176,6 @@ def asset_paths(c: Content) -> set[str]:
             if mood.glow:
                 paths.add(mood.glow)
         paths |= {o.src for o in m.overlays}
+    for cue in c.cutscenes.values():
+        paths |= {p for p in (cue.file, cue.still) if p}
     return paths

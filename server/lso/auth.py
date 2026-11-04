@@ -2,6 +2,7 @@
 
 The login cookie carries the seat id and the auth epoch; bumping LSO_AUTH_EPOCH logs everyone out.
 Player seats aren't secret (the table trusts each other); the GM seat is, because it sees everything.
+The TV logs in as the Stage seat, with the GM's passcode: it may fetch every film ahead of its cue.
 """
 
 from __future__ import annotations
@@ -17,20 +18,25 @@ from .config import Settings
 COOKIE = "lso_session"
 MAX_AGE = 180 * 24 * 3600  # half a year: players stay logged in for the whole campaign
 GM = "gm"
+STAGE = "stage"  # the TV at the table: read-only, and only what everyone may see
 
 
 @dataclass(frozen=True)
 class Viewer:
     seat: str
-    role: str  # "gm" | "player"
+    role: str  # "gm" | "player" | "stage"
 
     @property
     def is_gm(self) -> bool:
         return self.role == "gm"
 
     @property
+    def is_stage(self) -> bool:
+        return self.role == "stage"
+
+    @property
     def char(self) -> str | None:
-        return None if self.is_gm else self.seat
+        return self.seat if self.role == "player" else None
 
 
 class Auth:
@@ -44,6 +50,9 @@ class Auth:
         if hmac.compare_digest(given, self.settings.gm_passcode.strip().lower().encode()):
             return Viewer(GM, "gm")
         return None
+
+    def stage(self) -> Viewer:
+        return Viewer(STAGE, "stage")
 
     def player(self, seat: str) -> Viewer | None:
         return Viewer(seat, "player") if seat in self.players else None
@@ -61,4 +70,6 @@ class Auth:
         if not isinstance(data, dict) or data.get("e") != self.settings.auth_epoch:
             return None
         seat = str(data.get("s", ""))
-        return Viewer(GM, "gm") if seat == GM else self.player(seat)
+        if seat == GM:
+            return Viewer(GM, "gm")
+        return self.stage() if seat == STAGE else self.player(seat)

@@ -5,6 +5,7 @@ stores:
   PORTRAITS: https://claude.ai/artifact/Y2sm7h6zcsYAcQNxqqAUVd
   ICONS: https://claude.ai/artifact/Hi3fgpcXR84e5cy2y7jNBs
   UI: https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff
+  SHOTGUN: https://claude.ai/artifact/ExqP99kRwpzUP9Funyg7Sv
 assets:
   - path: maps/event-horizon/base-open.png
     store: MAPS
@@ -573,3 +574,17 @@ assets:
     bytes: 989
     width: 48
     height: 48
+  - path: films/shotgun.mp4
+    store: SHOTGUN
+    asset_id: "f5082d83bac9a099d8907e63d85ecc77"
+    sha256: "d2f41d36250af772026a17a2c975dc672e6f16ec3da2f47e22a5fa4e70ce1dc9"
+    bytes: 3444849
+    width: 1920
+    height: 1080
+  - path: films/shotgun-still.png
+    store: UI
+    asset_id: "b2b9c14cd5c600be480ef84cd8a3c82c"
+    sha256: "15e89bf2c2533ecee9b675b1e579ee19610df5f79fee04e14cdc86f44895c7b1"
+    bytes: 28757
+    width: 480
+    height: 270

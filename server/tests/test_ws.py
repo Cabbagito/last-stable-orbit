@@ -81,7 +81,7 @@ def test_hidden_moves_send_players_nothing(client, seat):
         intent(g, "token.move", {"token": "cleaner-14", "at": [2, 2, 0]}, "b")  # hidden: Ves's view is unchanged
         recv(g, "ack")
         v.send_json({"t": "ping"})
-        assert v.receive_json() == {"t": "pong"}  # no view frame was queued before the pong
+        assert v.receive_json()["t"] == "pong"  # no view frame was queued before the pong
 
 
 def test_reconnect_gets_current_state(client, seat):
@@ -118,7 +118,7 @@ def test_hidden_gm_roll_sends_players_zero_frames(client, seat, app):
             intent(g, kind, args, f"x{i}")
             recv(g, "ack")
         v.send_json({"t": "ping"})
-        assert v.receive_json() == {"t": "pong"}  # not a single frame reached Ves during the whole roll
+        assert v.receive_json()["t"] == "pong"  # not a single frame reached Ves during the whole roll
 
 
 def test_others_see_a_roll_as_it_lands(client, seat, app):

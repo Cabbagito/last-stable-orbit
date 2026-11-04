@@ -47,8 +47,8 @@ async def sweeper(engine: Engine, hub: Hub) -> None:
 
 
 class LoginBody(BaseModel):
-    seat: str | None = None  # a character id: players just pick who they are
-    passcode: str | None = None  # the GM's passcode
+    seat: str | None = None  # a character id: players just pick who they are. "stage": the TV
+    passcode: str | None = None  # the GM's passcode, for the GM and for the TV
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -100,7 +100,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.post("/api/login")
     async def login(body: LoginBody, request: Request, response: Response):
         auth: Auth = request.app.state.auth
-        if body.seat and body.seat != "gm":
+        if body.seat == "stage":
+            # the TV fetches every film ahead of its cue, so it takes the GM's passcode
+            if not auth.check_gm(body.passcode or ""):
+                raise HTTPException(401, "That passcode doesn't open anything.")
+            v = auth.stage()
+        elif body.seat and body.seat != "gm":
             v = auth.player(body.seat)
             if not v:
                 raise HTTPException(404, "No one by that name is on this crew.")
@@ -168,15 +173,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             if not viewer.is_gm:
                 await ws.close(code=4403, reason="only the GM can view as a player")
                 return
-            viewer = ws.app.state.auth.player(view_as)
+            # "/ws?as=stage": what the TV shows, for the GM tab's preview
+            viewer = ws.app.state.auth.stage() if view_as == "stage" else ws.app.state.auth.player(view_as)
             if viewer is None:
                 await ws.close(code=4404, reason="no one by that name is on this crew")
                 return
         hub: Hub = ws.app.state.hub
         engine: Engine = ws.app.state.engine
         conn = hub.add(ws, viewer, preview=view_as is not None)
+        read_only = conn.preview or viewer.is_stage  # the TV, and the GM looking through someone's screen, only watch
         try:
             await hub.send_view(conn, force=True)
+            if viewer.is_stage and not conn.preview:
+                await hub.broadcast()  # the GM tab says the TV is connected
             while True:
                 try:
                     msg = json.loads(await ws.receive_text())
@@ -186,16 +195,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                     continue
                 t = msg.get("t")
                 if t == "ping":
-                    await ws.send_text('{"t":"pong"}')
+                    await ws.send_text(json.dumps({"t": "pong", "now": round(time.time(), 3)}))
                 elif t == "resync":
                     await hub.send_view(conn, force=True)
                 elif t == "intent":
                     kind, args, iid = msg.get("type"), msg.get("args") or {}, msg.get("id")
                     if not isinstance(kind, str) or (iid is not None and not isinstance(iid, str)):
                         continue
-                    if conn.preview:  # looking only: nothing done here may act as the player
+                    if read_only:  # looking only: nothing done here may act as anyone
                         if kind != "token.drag":
-                            await ws.send_text(json.dumps({"t": "ack", "id": iid, "ok": False, "code": "read_only", "error": "This is a read-only view of a player's screen"}))
+                            why = "The TV only shows the game" if viewer.is_stage and not conn.preview else "This is a read-only view"
+                            await ws.send_text(json.dumps({"t": "ack", "id": iid, "ok": False, "code": "read_only", "error": why}))
                         continue
                     if kind == "token.drag":  # live, unlogged, relayed to whoever can see the token
                         try:
@@ -212,6 +222,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             pass
         finally:
             hub.remove(conn)
+            if viewer.is_stage and not conn.preview:
+                with contextlib.suppress(Exception):
+                    await hub.broadcast()  # the GM tab says the TV went away
 
     dist = settings.web_dist
 

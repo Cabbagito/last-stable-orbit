@@ -235,11 +235,11 @@ def test_an_item_handed_to_marlo_reaches_only_marlo_and_the_gm(client, seat):
         assert LOG_TEXT in json.dumps(recv(g, "view")["view"]["inventory"]["marlo"])
         assert recv(g, "ack")["ok"]
         t.send_json({"t": "ping"})
-        assert t.receive_json() == {"t": "pong"}  # Tally's view didn't change, so she got no frame at all
+        assert t.receive_json()["t"] == "pong"  # Tally's view didn't change, so she got no frame at all
 
         uid = next(e["uid"] for e in mine if e["item"]["id"] == "maintenance-log")
         intent(m, "item.seen", {"uid": uid}, "seen")
         assert not next(e for e in recv(m, "view")["view"]["inventory"]["marlo"] if e["uid"] == uid)["new"]
         assert recv(m, "ack")["ok"]
         t.send_json({"t": "ping"})
-        assert t.receive_json() == {"t": "pong"}
+        assert t.receive_json()["t"] == "pong"

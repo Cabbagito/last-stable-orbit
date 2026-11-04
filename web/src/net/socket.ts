@@ -1,4 +1,5 @@
 import type { Ack, ServerFrame, Vec3 } from '../types'
+import { serverClock } from './clock'
 
 export type Status = 'connecting' | 'live' | 'offline'
 
@@ -18,12 +19,13 @@ export class GameSocket {
   private timer: number | undefined
   private retry: number | undefined
   private stopped = false
+  private pingAt = 0
 
   constructor(
     private onFrame: (f: ServerFrame) => void,
     private onStatus: (s: Status) => void,
     private onAuthLost: () => void,
-    private path = '/ws', // "/ws?as=tally": the GM's read-only view of one player's screen
+    private path = '/ws', // "/ws?as=tally": the GM's read-only view of one player's screen ("as=stage": the TV's)
   ) {}
 
   start() {
@@ -59,6 +61,11 @@ export class GameSocket {
       ws.close() // silent for too long: treat as dead and reconnect
       return
     }
+    this.ping(ws)
+  }
+
+  private ping(ws: WebSocket) {
+    this.pingAt = Date.now()
     ws.send('{"t":"ping"}')
   }
 
@@ -71,6 +78,9 @@ export class GameSocket {
     ws.onopen = () => {
       this.backoff = 500
       this.lastSeen = Date.now()
+      serverClock.reset()
+      this.ping(ws) // learn the server's clock straight away, and again a moment later
+      window.setTimeout(() => ws.readyState === WebSocket.OPEN && this.ping(ws), 1500)
       this.onStatus('live')
     }
     ws.onmessage = (e) => {
@@ -81,6 +91,8 @@ export class GameSocket {
       } catch {
         return
       }
+      if (f.t === 'pong' && f.now) serverClock.fromPong(f.now, this.pingAt, this.lastSeen)
+      if (f.t === 'view' && f.now) serverClock.fromFrame(f.now, this.lastSeen)
       if (f.t === 'ack' && f.id) {
         this.pending.get(f.id)?.(f)
         this.pending.delete(f.id)

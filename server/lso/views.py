@@ -8,7 +8,15 @@ Every frame a client receives is built here for that viewer. A player gets:
 - their own inventory only, with each item's text (clues are items, so this is where they hide);
 - each crew member's latest roll, and the latest public roll of each NPC they can see. The dice of a
   roll that isn't theirs arrive only as they land on the roller's screen. Hidden GM rolls never.
-The GM gets everything, plus the NPC roster, the presets and the item catalogue.
+The GM gets everything, plus the NPC roster, the presets, the item catalogue and the cue list.
+
+The TV (the Stage seat) gets what a player gets with no seat: the party map, its visible tokens and revealed
+objects, the crew's public sheets, and no pockets at all. It also gets each public roll's dice as it starts, as
+the roller's screen does, to play the same animation in its band; it shows each die as the roller's screen
+lands it. And it gets every film's file, to have them ready, because at the table only the TV plays films.
+
+Films: a player's laptop gets a film's file only while it plays, and only when its laptop plays it (no TV, or
+online). With a TV it gets only when the film starts and ends, and shows the black hole meanwhile.
 """
 
 from __future__ import annotations
@@ -120,7 +128,7 @@ def roll_phase(r: RollState) -> str:
 
 
 def _roll_view(state: GameState, r: RollState, viewer: Viewer, visible_tokens: set[str]) -> dict:
-    full = viewer.is_gm or r.by == viewer.seat
+    full = viewer.is_gm or viewer.is_stage or r.by == viewer.seat  # the TV gets public rolls only
     phase = roll_phase(r)
     crew_token = next((tid for tid, t in state.tokens.items() if t.kind == "crew" and t.ref == r.char), None) if r.char else None
     token = crew_token if r.char else r.token
@@ -176,7 +184,45 @@ def viewer_map(state: GameState, viewer: Viewer) -> str:
     return state.party_map
 
 
-def project(state: GameState, content: Content, viewer: Viewer) -> dict:
+def plays_film(setup: str, viewer: Viewer) -> bool:
+    """Which screens play a film: the TV, if there is one; otherwise every laptop, the GM's included."""
+    return viewer.is_stage if setup == "tv" else not viewer.is_stage
+
+
+def _stage_view(state: GameState, content: Content, viewer: Viewer, online: frozenset[str]) -> dict:
+    st = state.stage
+    out: dict = {"setup": st.setup, "camera": st.camera, "follow": st.follow, "film": None}
+    f = st.film
+    if f and f.cue in content.cutscenes:
+        cue = content.cutscenes[f.cue]
+        film: dict = {"at": f.at, "ends": f.ends}
+        if plays_film(st.setup, viewer):
+            # sound from one device at the table: the TV, or the GM's laptop when there's no TV
+            film |= {"src": url(cue.file), "sound": viewer.is_stage or viewer.is_gm or st.setup == "online"}
+        if viewer.is_gm:
+            film |= {"cue": cue.id, "name": cue.name}
+        out["film"] = film
+    if viewer.is_gm:
+        out["tv"] = "stage" in online
+        out["cues"] = [
+            {
+                "id": c.id,
+                "name": c.name,
+                "sub": c.sub,
+                "ends": c.ends,
+                "still": url(c.still),
+                "length": c.length,
+                "ready": bool(c.file),
+                "played": c.id in st.played,
+            }
+            for c in content.cutscenes.values()
+        ]
+    if viewer.is_stage:
+        out["films"] = [url(c.file) for c in content.cutscenes.values() if c.file]  # fetched ahead, so a cue starts at once
+    return out
+
+
+def project(state: GameState, content: Content, viewer: Viewer, online: frozenset[str] = frozenset()) -> dict:
     gm = viewer.is_gm
     here = viewer_map(state, viewer)
     map_ids = list(content.maps) if gm else ([here] if here in content.maps else [])
@@ -185,7 +231,8 @@ def project(state: GameState, content: Content, viewer: Viewer) -> dict:
         for tid, t in state.tokens.items()
         if gm or (t.map in map_ids and not t.hidden)
     }
-    holders = list(content.characters) if gm else [viewer.char]  # a player's own pockets, never anyone else's
+    # a player's own pockets, never anyone else's; the TV has none
+    holders = list(content.characters) if gm else [viewer.char] if viewer.char else []
     view = {
         "me": {"seat": viewer.seat, "role": viewer.role, "char": viewer.char},
         "party_map": here,
@@ -194,6 +241,7 @@ def project(state: GameState, content: Content, viewer: Viewer) -> dict:
         "tokens": tokens,
         "inventory": {h: _inventory_view(content, state.inventory.get(h, [])) for h in holders},
         "rolls": _rolls_view(state, viewer, set(tokens)),
+        "stage": _stage_view(state, content, viewer, online),
     }
     if gm:
         view["roster"] = [

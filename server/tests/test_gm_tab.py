@@ -134,7 +134,7 @@ def test_view_as_is_read_only(client, seat, app):
             assert (ack["id"], ack["ok"], ack["code"]) == (f"p{i}", False, "read_only"), kind
         p.send_json({"t": "intent", "type": "token.drag", "args": {"token": "tally", "at": [7, 7, 0.24]}})
         g.send_json({"t": "ping"})
-        assert g.receive_json() == {"t": "pong"}  # the drag reached no one
+        assert g.receive_json()["t"] == "pong"  # the drag reached no one
         assert engine.state.seq == seq
 
 

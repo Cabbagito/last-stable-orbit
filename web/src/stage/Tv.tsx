@@ -1,0 +1,166 @@
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { proj } from '../lib/proj'
+import { plainRing, ring } from '../lib/ring'
+import { MapLayers } from '../map/MapLayers'
+import { RingPortrait } from '../shell/RingPortrait'
+import { useGame } from '../store/game'
+import type { MapView, TokenView, Vec3, View } from '../types'
+import { FilmPlayer } from './Film'
+import { TvBand } from './TvBand'
+
+/**
+ * The TV at the table (the Stage seat). Full screen: the party's map with only what everyone may see, no crew
+ * rail; public rolls slide up in a band along the bottom (Round 12's TV 2); films play here, with all the sound.
+ * Its camera is set from the GM tab. It needs one click before the browser lets it go full screen and play sound.
+ */
+export function Tv() {
+  const view = useGame((s) => s.view)
+  const preview = useGame((s) => s.preview) // the GM tab's small preview of the TV: no click, no sound
+  const [started, setStarted] = useState(!!preview)
+  const [focus, setFocus] = useState<string | null>(null) // the token whose roll is in the band
+  const k = useScale()
+  if (!view) return <div className="app-tv app-wait">Docking…</div>
+  const map = view.maps[view.party_map]
+  const tokens = Object.values(view.tokens).filter((t) => map && t.map === map.id)
+  const mood = map?.moods.find((m) => m.id === map.mood)
+
+  const start = () => {
+    void document.documentElement.requestFullscreen?.().catch(() => undefined)
+    setStarted(true) // this click also lets the films play their sound
+  }
+
+  return (
+    <div className="app-tv" style={{ '--k': k } as React.CSSProperties}>
+      {map ? <TvMap map={map} tokens={tokens} view={view} focus={focus} /> : <div className="app-wait">Somewhere the map doesn't reach.</div>}
+      {map && (
+        <div className="app-tvplace">
+          <div className="r4-place">{map.name}</div>
+          {mood && <div className="r12-tvmood">{mood.label}</div>}
+        </div>
+      )}
+      <TvBand onFocus={setFocus} />
+      {(view.stage.films ?? []).map((src) => (
+        <FilmPlayer key={src} src={src} film={view.stage.film} sound={!preview} />
+      ))}
+      {!started && (
+        <button type="button" className="app-tvstart" onClick={start}>
+          <span className="r4-place">The TV</span>
+          <span>Click anywhere to start. It goes full screen, and films play their sound here.</span>
+        </button>
+      )}
+    </div>
+  )
+}
+
+/** Round 12 drew the TV at 1440 x 810: the band and labels keep those proportions on any screen. */
+function useScale() {
+  const read = () => Math.min(window.innerWidth / 1440, window.innerHeight / 810) || 1
+  const [k, setK] = useState(read)
+  useEffect(() => {
+    const on = () => setK(read())
+    window.addEventListener('resize', on)
+    return () => window.removeEventListener('resize', on)
+  }, [])
+  return k
+}
+
+interface Cam {
+  px: number
+  py: number
+  zoom: number
+}
+
+const PAD_X = 240 // world px kept around what the camera frames
+const PAD_TOP = 300 // a token stands about 100 px tall above its foot
+const PAD_BOTTOM = 160
+const CREW_MAX = 1.25
+const ONE_MAX = 1.5
+
+/**
+ * Frame some points on the map (world px): as close as `max` allows while every point fits, never further out
+ * than the whole map, and kept on the art where the map is bigger than the screen. `inset` keeps the bottom of
+ * the screen clear (the band).
+ */
+function frame(size: [number, number], map: MapView, pts: [number, number][], max: number, inset = 0): Cam {
+  const [w, h0] = size
+  const h = h0 - inset
+  const [W, H] = map.display
+  const all = Math.min(w / W, h0 / H)
+  if (!pts.length) return { zoom: all, px: (w - W * all) / 2, py: (h0 - H * all) / 2 }
+  const xs = pts.map((p) => p[0])
+  const ys = pts.map((p) => p[1])
+  const x0 = Math.min(...xs) - PAD_X
+  const x1 = Math.max(...xs) + PAD_X
+  const y0 = Math.min(...ys) - PAD_TOP
+  const y1 = Math.max(...ys) + PAD_BOTTOM
+  const zoom = Math.max(all, Math.min(max, w / (x1 - x0), h / (y1 - y0)))
+  const keep = (p: number, view: number, world: number) => (world * zoom >= view ? Math.min(0, Math.max(view - world * zoom, p)) : (view - world * zoom) / 2)
+  return {
+    zoom,
+    px: keep(w / 2 - ((x0 + x1) / 2) * zoom, w, W),
+    py: keep(h / 2 - ((y0 + y1) / 2) * zoom, h0, H),
+  }
+}
+
+function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]; view: View; focus: string | null }) {
+  const box = useRef<HTMLDivElement>(null)
+  const [size, setSize] = useState<[number, number]>([0, 0])
+  const remote = useGame((s) => s.remote)
+  const [W, H] = map.display
+
+  useLayoutEffect(() => {
+    const el = box.current
+    if (!el) return
+    const ro = new ResizeObserver(([e]) => setSize([e.contentRect.width, e.contentRect.height]))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  const where = (t: TokenView): Vec3 => remote[t.id]?.at ?? t.at
+  const at = (t: TokenView) => proj(map.origin, where(t))
+  const crew = tokens.filter((t) => t.kind === 'crew')
+  const { camera, follow } = view.stage
+  const followed = crew.find((t) => t.ref === follow)
+  const rolling = camera === 'roller' && focus ? tokens.find((t) => t.id === focus) : undefined
+  const band = size[1] * 0.26 // the band's share of the screen
+  const cam = !size[0]
+    ? null
+    : rolling
+      ? frame(size, map, [at(rolling)], ONE_MAX, band)
+      : camera === 'follow' && followed
+        ? frame(size, map, [at(followed)], ONE_MAX)
+        : frame(size, map, crew.map(at), CREW_MAX)
+
+  return (
+    <div ref={box} className="app-mapbox app-tvmap">
+      {cam && (
+        <div className="app-world app-tvworld" style={{ width: W, height: H, transform: `translate(${cam.px}px, ${cam.py}px) scale(${cam.zoom})` }}>
+          <MapLayers map={map} />
+          {tokens.map((t) => {
+            const [x, y] = at(t)
+            const c = t.kind === 'crew' ? view.crew.find((m) => m.id === t.ref) : undefined
+            const r = c ? ring(c.hp, c.entropy, 64, 9) : plainRing(t.color, 64, 5)
+            return (
+              <span key={t.id} className="r3-tok app-fixedtok" role="img" aria-label={t.name} style={{ left: x, top: y, zIndex: Math.round(y) }}>
+                <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${t.color}`, background: 'rgba(0,0,0,.35)' }} />
+                <span style={{ position: 'absolute', left: '50%', bottom: 8, width: 1.5, height: 36, marginLeft: -0.75, background: t.color }} />
+                <RingPortrait src={t.portrait} ring={r} size={64} style={{ position: 'absolute', left: 0, top: 0 }} />
+              </span>
+            )
+          })}
+          {map.objects.map((o) => {
+            const [x, y] = proj(map.origin, o.at)
+            return (
+              <span key={o.id} className="app-mk seen" role="img" aria-label={o.name} style={{ left: x, top: y, zIndex: Math.round(y) }}>
+                <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+                  <path d="M11 1.5 L20.5 11 L11 20.5 L1.5 11 Z" fill="rgba(0,0,0,.6)" stroke="#ffffff" strokeWidth="1.8" />
+                  <circle cx="11" cy="11" r="2.1" fill="#ffffff" />
+                </svg>
+              </span>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}

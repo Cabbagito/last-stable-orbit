@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { GiveRow, Pocket, Step, Diamond, Eye, HP_MAX, ENTROPY_MAX, itemAria } from '../gm/parts'
 import { liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
 import { ViewAs } from '../gm/ViewAs'
+import { CutscenesSection, TvSection } from '../gm/StageSections'
 import { ring } from '../lib/ring'
 import { RingPortrait } from '../shell/RingPortrait'
 import { useItemTip, type TipBind } from '../inspect/ItemTip'
@@ -12,8 +13,8 @@ type Section = 'crew' | 'cut' | 'tv' | 'maps' | 'session'
 
 const SECTIONS: [Section, string, string?][] = [
   ['crew', 'Crew and pockets'],
-  ['cut', 'Cutscenes', 'Stage'],
-  ['tv', 'The TV', 'Stage'],
+  ['cut', 'Cutscenes'],
+  ['tv', 'The TV'],
   ['maps', 'Maps'],
   ['session', 'Session'],
 ]
@@ -21,7 +22,7 @@ const SECTIONS: [Section, string, string?][] = [
 /**
  * The GM tab (Round 12, board R12TabCrew): what you do between scenes. A section nav on the left; the crew's
  * HP, Entropy and every pocket; every map's mood, switches and things; New session and presets; and a
- * read-only look at any player's screen. Cutscenes and the TV come with the Stage milestone.
+ * read-only look at any player's screen; the cue list; and the TV: where you're playing, and its camera.
  */
 export function GmTab() {
   const view = useGame((s) => s.view)
@@ -53,16 +54,8 @@ export function GmTab() {
         {section === 'crew' && <CrewSection view={view} onView={setViewAs} />}
         {section === 'maps' && <MapsSection view={view} />}
         {section === 'session' && <SessionSection view={view} />}
-        {(section === 'cut' || section === 'tv') && (
-          <section className="r10-wide" aria-label={section === 'cut' ? 'Cutscenes' : 'The TV'}>
-            <div className="r10-h">{section === 'cut' ? 'Cutscenes' : 'The TV'}</div>
-            <div className="r10-hint">
-              {section === 'cut'
-                ? 'Comes with the Stage milestone, straight after this one: your cue list, each film starting in sync on the TV and every laptop, and the map it leaves behind.'
-                : "Comes with the Stage milestone, straight after this one: the TV's own read-only login, where you're playing, and its camera."}
-            </div>
-          </section>
-        )}
+        {section === 'cut' && <CutscenesSection view={view} />}
+        {section === 'tv' && <TvSection view={view} />}
       </div>
       {seeing && <ViewAs who={seeing} onClose={() => setViewAs(null)} />}
     </div>

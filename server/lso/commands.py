@@ -11,7 +11,7 @@ import random
 from . import rules
 from .auth import Viewer
 from .content import Content
-from .models import COUNT_MAX, DIE_SIDES, ENTROPY_MAX, HP_MAX, STATS, GameState, InvEntry, RollState
+from .models import CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_MAX, HP_MAX, SETUPS, STATS, GameState, InvEntry, RollState, TokenState
 from .state import state_from_preset
 from .views import viewer_map
 
@@ -23,6 +23,10 @@ SESSION_ENTROPY = 2  # what "New session" sets everyone's Entropy to
 REVEAL_AFTER = 45.0  # everyone sees the result even if the roller's screen never got there (6 exploding dice with every gate held run about 40 s)
 OFFLINE_CLOSE_AFTER = 30.0  # a roll this old whose roller has gone away is closed
 STALE_CLOSE_AFTER = 600.0  # nothing stays open longer than this
+
+# A film starts this long after the GM presses Play, at one moment on every screen that plays it. The TV has
+# every film already; laptops fetch theirs when the cue fires, so they get longer.
+FILM_LEAD = {"tv": 1.5, "notv": 3.0, "online": 3.0}
 
 
 class CommandError(Exception):
@@ -255,9 +259,77 @@ def _gm_item(state: GameState, content: Content, kind: str, args: dict) -> Event
     raise _invalid(f"unknown intent {kind!r}")
 
 
-def sweep(state: GameState, now: float, online: set[str]) -> Events:
-    """System housekeeping for rolls whose roller's screen stopped talking to us."""
+def film_playing(state: GameState, now: float) -> bool:
+    f = state.stage.film
+    return f is not None and now < f.ends
+
+
+def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: float) -> Events:
+    """Films and the TV. A film can't be stopped once it starts, so nothing here touches one that's playing."""
+    if kind == "gm.film.play":
+        cue = content.cutscenes.get(_str(args, "cue"))
+        if not cue:
+            raise _invalid("unknown cutscene")
+        if not cue.file or not cue.length:
+            raise _invalid(f"{cue.name} isn't made yet")
+        if film_playing(state, now):
+            raise _invalid("a film is playing: it can't be stopped, so wait for it to end")
+        events: Events = []
+        if state.stage.film:  # it ended a moment ago and the sweeper hasn't caught up
+            events.append(("film.ended", {"cue": state.stage.film.cue}))
+        at = round(now + FILM_LEAD[state.stage.setup], 3)
+        events.append(("film.started", {"cue": cue.id, "at": at, "ends": round(at + cue.length, 3)}))
+        return events + _cue_sets(state, content, cue)
+
+    if film_playing(state, now):
+        raise _invalid("a film is playing: change the TV once it ends")
+
+    if kind == "gm.stage.setup":
+        setup = _str(args, "setup")
+        if setup not in SETUPS:
+            raise _invalid(f"setup must be one of {', '.join(SETUPS)}")
+        return [] if setup == state.stage.setup else [("stage.setup_set", {"setup": setup})]
+
+    if kind == "gm.stage.camera":
+        camera = _str(args, "camera")
+        if camera not in CAMERAS:
+            raise _invalid(f"camera must be one of {', '.join(CAMERAS)}")
+        follow = args.get("follow", state.stage.follow)
+        if camera == "follow" and follow is None:
+            follow = next(iter(content.characters), None)
+        if follow is not None and follow not in content.characters:
+            raise _invalid("follow must be a crew member")
+        if (camera, follow) == (state.stage.camera, state.stage.follow):
+            return []
+        return [("stage.camera_set", {"camera": camera, "follow": follow})]
+
+    raise _invalid(f"unknown intent {kind!r}")
+
+
+def _cue_sets(state: GameState, content: Content, cue) -> Events:
+    """What a cue sets behind its film: the map, its mood and switches, and NPCs placed where the film leaves them."""
+    st = cue.sets
+    if not st:
+        return []
     events: Events = []
+    if st.party and state.party_map != st.map:
+        events.append(("party.map_set", {"map": st.map}))
+    if st.mood and state.maps[st.map].mood != st.mood:
+        events.append(("map.mood_set", {"map": st.map, "mood": st.mood}))
+    for sw, value in st.switches.items():
+        if state.maps[st.map].switches.get(sw, 0) != value:
+            events.append(("map.switch_set", {"map": st.map, "switch": sw, "value": value}))
+    for t in st.tokens:
+        tok = TokenState(kind="npc", ref=t.ref, map=st.map, at=t.at, hidden=t.hidden)
+        events.append(("token.placed", {"token": t.id or t.ref, "state": tok.model_dump()}))
+    return events
+
+
+def sweep(state: GameState, now: float, online: set[str]) -> Events:
+    """System housekeeping: rolls whose roller's screen stopped talking to us, and films that have ended."""
+    events: Events = []
+    if state.stage.film and now >= state.stage.film.ends:
+        events.append(("film.ended", {"cue": state.stage.film.cue}))
     for r in state.rolls:
         if not r.open:
             continue
@@ -390,6 +462,9 @@ def handle(
 
     if kind == "gm.roll.start":
         return _gm_roll(state, content, args, rng, now)
+
+    if kind.startswith(("gm.film.", "gm.stage.")):
+        return _gm_stage(state, content, kind, args, now)
 
     if kind.startswith("gm.item."):
         return _gm_item(state, content, kind, args)
