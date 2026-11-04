@@ -8,7 +8,7 @@
 | M2: The roll | **Done** (see "How M2 turned out") |
 | Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
-| M4: GM tab | **In progress.** Round 12 (the Scene run from the chips, the GM tab, the TV) is on the UI canvas for Peter; the server half (New session, view as player) is built |
+| M4: GM tab | **In progress.** Round 12 is approved and the server half (New session, view as player) is built. Next: the web build, M4's Order step 3 |
 | M5–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -205,12 +205,44 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - you can run the bar scene from your Scene, and set it up from the GM tab;
   - "view as player" never shows a hidden token, object or someone else's pocket (test).
 - **Order (planned 2026-11-04):**
-  1. **Round 11 on the UI canvas** (boards `R11SceneA`–`C`, `R11Office1`–`2`): three Scene layouts and two GM tabs. Peter's notes on it led to Round 12, below. **Round 12 is waiting on Peter.**
+  1. **Round 11 on the UI canvas** (boards `R11SceneA`–`C`, `R11Office1`–`2`): three Scene layouts and two GM tabs. Peter's notes on it led to Round 12, below, which he **approved** on 2026-11-04.
   2. **The server, which doesn't wait on the pick** (**built**, tests in `server/tests/test_gm_tab.py`):
      - `gm.session.new` sets every crew member's Entropy to 2, as ordinary `vitals.set` events.
      - **View as player** is a second, read-only socket: `/ws?as=<character>`, accepted only with the GM's cookie. It gets exactly that seat's projection, every intent on it is refused, it doesn't count as that player being online, and drags reach it as they reach the player.
-  3. **The web build** of the picked layouts: the Scene's GM controls, the GM tab, and the player's screen with a "viewing as" banner.
-  4. **Checks:** leak tests for view-as, a test for New session, and a walk through the bar scene with two seats.
+  3. **The web build, from Round 12** (approved 2026-11-04):
+     1. **NPC stats.** Add `stats:` for every NPC in `content/npcs.yaml`, using Round 12's drafts for Peter to set, validated like the crew's.
+        - `gm.roll.start` for an NPC takes a stat and uses that NPC's die.
+        - "Just a die" still takes a stat and a die, and is always hidden.
+        - Add tests.
+     2. **The GM's Scene** (boards `R12Scene`, `R12SceneCrew`):
+        - **Left column, "In this scene":**
+          - one compact list of things to inspect, NPCs and crew, each with show/hide and with × to remove an NPC; clicking a name opens its card;
+          - the roster as faces, to add an NPC hidden;
+          - "Just a die".
+        - **Gone from the Scene:** last rolls, pockets, presets and the old Roll section.
+        - **Mood and switches** sit above the map name.
+        - **Crew rail:** hover a ring for HP and Entropy steppers.
+        - **Cards:**
+          - An NPC's card has its six stats as roll buttons, each showing its die, and a Hidden switch that's locked for a hidden NPC. It also has Hide/Show, Remove and your note.
+          - A crew card has HP and Entropy steppers, Hide, their pockets and a Give row. **Every item in the Give row shows its name on hover and focus.** Peter couldn't tell items apart on the canvas, because many share an icon.
+          - A thing's card has Show/Hide.
+        - **NPC rolls** play the full roll animation on your screen. GM rolls already do this.
+     3. **The GM tab** (`#gm`, board `R12TabCrew`): a section nav.
+        - **Crew and pockets:**
+          - HP, Entropy and every pocket;
+          - give, with names shown;
+          - take;
+          - move, by picking up and handing over, plus drag;
+          - edit counts;
+          - view as player.
+        - **Maps:** every map's mood, switches and things to inspect.
+        - **Session:** New session and presets.
+        - **Cutscenes and The TV** come with the Stage milestone below, but the nav leaves room for them.
+     4. **View as player:** opens that seat's screen read-only from `/ws?as=<character>`, under a pink "Viewing as" banner, with a way back.
+  4. **Checks:**
+     - tests for NPC stats and NPC rolls;
+     - the view-as leak tests (already built);
+     - a two-seat walk through the bar scene: give Tally the log from her card, hide and show Unit 14, roll for Dax in public and hidden, and press New session.
 - **Defaults taken while planning:**
   - The Scene keeps a quick mood switch for the map you're on, because moods change mid-scene (the lights go out). The GM tab has every map.
   - Clicking a crew member opens their card with HP and Entropy steppers and their pockets, so you can hand over a clue mid-scene. The full pocket table moves to the GM tab.
@@ -223,10 +255,14 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **The TV shows no crew rail.** For a public roll it shows a bigger animation if that can be done tastefully, or else the roll on the chip. Round 12 shows three ways.
 - **Round 12 on the UI canvas** (`R12*` boards) draws all of this:
   - Scene with Dax's card, whose six stats are his rolls (NPC dice are drafts for Peter to set);
-  - Scene with Tally's card, which has a Give row (open question: do you want that, or only the GM tab?);
+  - Scene with Tally's card, which has a Give row (Peter wants it, with item names visible);
   - the GM tab's crew, cutscenes and TV sections;
   - the TV three ways: on the chip, a band along the bottom, or a camera cut to the roller with a card.
-- **Proposed, not yet agreed:** Stage and cutscenes become their own milestone straight after M4. That covers the TV login and its feed (with leak tests), films starting in sync, laptops going black, cues that set the map behind the film, and the table setting.
+- **Peter's picks on Round 12 (2026-11-04):**
+  - Everything as drawn.
+  - The Give row on the crew card, with item names visible.
+  - **TV 2 for public rolls:** a band slides up along the bottom with the roller, the stat and the real dice animation, then slides away. The map stays put.
+- **Proposed, and Peter hasn't objected:** Stage and cutscenes become their own milestone straight after M4. That covers the TV login and its feed (with leak tests), films starting in sync, laptops going black, cues that set the map behind the film, and the table setting.
 - **Moved to M5:** "send the crew to a map", since there is only one map until then.
 - **Why here:** after M1–M3 every GM function exists, so one design pass can lay them all out.
 
