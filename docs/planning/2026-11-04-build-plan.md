@@ -418,6 +418,9 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - **The spider mech** is a double-size token (`size: 2` on the NPC), on the map and on the TV.
     - **New NPCs (drafts):** the scientist, the spider mech (its enemy card in its GM note), and the old man with the steward's portrait as a stand-in (the board's own stand-in; there's no art for him). The security guard's GM note gained its enemy card.
     - **Arrival spots,** checked against the art: deck 6 out of the lift, inside the Secure floor's door from deck 8, the Lift station's old wood passage, the vault's rug inside the bronze door, the foot of the ladder from Dax's hatch in the Bot bays, the cab's seats, the glass by the Terminal room's crawler door, and one to a bed in the Med Bay.
+    - **Peter's follow-ups (2026-11-04):**
+      - **A clear camera button:** each camera map's Cameras switch is now its own button, "Hide camera cones" / "Show camera cones" with an eye, in the mood bar and in the GM tab. It hides every cone for everyone (Peter picked this over switching off one camera at a time, or hiding them on his screen only).
+      - **The GM tab's Maps show the state:** the cards fill the width (two or three across) and each has a live miniature: the current mood, its switches (gas, the hatch, the feed), decals, cones while shown, and everyone on it, hidden ones faint. Click it to open that map on the Scene. Under it: who's there (hidden ones marked), its cameras and whether their cones show, its mood and switches, and its things to inspect.
     - **Not done:** art for the old man, reviewers, managers and executives (the boards used other portraits as stand-ins); presets for sessions 2 to 5; a single crew member sent to another map. The Executive floors' deck buttons sit under a card on a narrow window.
 
 ### M6: Station and Codex tabs · M · the Codex is designed; the Station still needs its design session

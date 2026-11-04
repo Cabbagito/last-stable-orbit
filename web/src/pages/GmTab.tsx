@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { GiveRow, Pocket, Step, Diamond, Eye, HP_MAX, ENTROPY_MAX, itemAria } from '../gm/parts'
-import { liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
+import { CamerasButton, liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
+import { MiniMap } from '../gm/MiniMap'
 import { SendCrew, mapList } from '../gm/SendCrew'
 import { ViewAs } from '../gm/ViewAs'
 import { CutscenesSection, TvSection } from '../gm/StageSections'
@@ -224,72 +225,120 @@ function CountInput({ value, label, onCommit }: { value: number; label: string; 
   )
 }
 
+/**
+ * Every map as it stands right now (Peter, 2026-11-04): a live miniature with its mood, switches, cones and
+ * everyone on it (click it to open the map on the Scene), then who's there, its cameras, and its things to
+ * inspect. The cards fill the width, two or three across.
+ */
 function MapsSection({ view }: { view: View }) {
+  const setGmMap = useGame((s) => s.setGmMap)
+  const crewOrder = view.crew.map((c) => c.id)
   return (
-    <section className="r10-wide" aria-label="Maps">
+    <section className="app-mapsgrid-wrap" aria-label="Maps">
       <div className="r10-h">Maps</div>
-      {mapList(view).map((m) => {
-        const art = m.moods.find((x) => x.id === m.mood) ?? m.moods[0]
-        const sws = liveSwitches(m)
-        return (
-          <div key={m.id} className="r10-mapcard">
-            <div className="r10-thumb" role="img" aria-label={`${m.name}, ${art.label}`} style={{ backgroundImage: `url(${art.base})` }} />
-            <div>
-              <div className="r10-cname">{m.name}</div>
-              <div className="r5-role">{m.subtitle}</div>
-              <SendCrew view={view} map={m} />
-            </div>
-            {m.moods.length > 1 && (
-              <div className="r10-mood3" role="group" aria-label={`${m.name}: mood`}>
-                {m.moods.map((x) => (
-                  <button key={x.id} type="button" className={m.mood === x.id ? 'on' : ''} aria-pressed={m.mood === x.id} onClick={() => void gmRun('gm.map.mood', { map: m.id, mood: x.id })}>
-                    {x.label}
-                  </button>
-                ))}
+      <div className="app-mapsgrid">
+        {mapList(view).map((m) => {
+          const sws = liveSwitches(m)
+          const here = Object.values(view.tokens).filter((t) => t.map === m.id)
+          const crew = here.filter((t) => t.kind === 'crew').sort((a, b) => crewOrder.indexOf(a.ref) - crewOrder.indexOf(b.ref))
+          const npcs = here.filter((t) => t.kind === 'npc').sort((a, b) => a.name.localeCompare(b.name))
+          const cams = m.cameras
+          const camsOn = !!cams && (m.values[cams.switch] ?? 0) > 0
+          return (
+            <div key={m.id} className="r10-mapcard">
+              <MiniMap
+                map={m}
+                tokens={here}
+                onOpen={() => {
+                  setGmMap(m.id)
+                  location.hash = 'scene'
+                }}
+              />
+              <div>
+                <div className="r10-cname">{m.name}</div>
+                <div className="r5-role">
+                  {m.subtitle}
+                  {view.party_map === m.id && <span className="r10-dimtxt"> · the party's map</span>}
+                </div>
+                <SendCrew view={view} map={m} />
               </div>
-            )}
-            {sws.length > 0 && (
-              <div className="r10-swrow">
-                {sws.map((s) => {
-                  const v = m.values[s.id] ?? 0
-                  return (
-                    <button key={s.id} type="button" className={'r10-btn' + (v ? ' on' : '')} aria-pressed={v > 0} onClick={() => void pressSwitch(m, s)}>
-                      {switchLabel(s, v)}
+              {m.moods.length > 1 && (
+                <div className="r10-mood3" role="group" aria-label={`${m.name}: mood`}>
+                  {m.moods.map((x) => (
+                    <button key={x.id} type="button" className={m.mood === x.id ? 'on' : ''} aria-pressed={m.mood === x.id} onClick={() => void gmRun('gm.map.mood', { map: m.id, mood: x.id })}>
+                      {x.label}
                     </button>
-                  )
-                })}
-              </div>
-            )}
-            {m.objects.length > 0 && (
-              <>
-                <span className="r4-lab" style={{ marginTop: 4 }}>
-                  THINGS TO INSPECT
-                </span>
-                <div className="r5-rows">
-                  {m.objects.map((o) => (
-                    <div key={o.id} className={'r5-row r10-hrow' + (o.shown ? '' : ' dim')}>
-                      <Diamond />
-                      <span className="r10-grow">
-                        {o.name}
-                        <span className="r10-dimtxt">{o.shown ? ' · players see it' : ' · hidden'}</span>
-                      </span>
-                      <button
-                        type="button"
-                        className={'r10-ico' + (o.shown ? '' : ' off')}
-                        aria-label={(o.shown ? 'Hide ' : 'Show ') + o.name}
-                        title={(o.shown ? 'Hide ' : 'Show ') + o.name}
-                        onClick={() => void gmRun('gm.object.show', { map: m.id, object: o.id, shown: !o.shown })}
-                      >
-                        <Eye off={!o.shown} />
-                      </button>
-                    </div>
                   ))}
                 </div>
-              </>
-            )}
-          </div>
-        )
-      })}
+              )}
+              {sws.length > 0 && (
+                <div className="r10-swrow">
+                  {sws.map((sw) => {
+                    const v = m.values[sw.id] ?? 0
+                    return (
+                      <button key={sw.id} type="button" className={'r10-btn' + (v ? ' on' : '')} aria-pressed={v > 0} onClick={() => void pressSwitch(m, sw)}>
+                        {switchLabel(sw, v)}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+              {cams && (
+                <div className="app-camrow">
+                  <span className="r4-lab">CAMERAS</span>
+                  <span className="r10-dimtxt">
+                    {cams.cones.filter((c) => c.mood === null || c.mood === m.mood).length} on the walls · {camsOn ? 'everyone sees their cones' : 'cones hidden'}
+                  </span>
+                  <CamerasButton map={m} className="r10-btn" />
+                </div>
+              )}
+              <div>
+                <span className="r4-lab">HERE</span>
+                {here.length ? (
+                  <div className="app-who">
+                    {[...crew, ...npcs].map((t) => (
+                      <span key={t.id} className={'app-whochip' + (t.hidden ? ' off' : '')} title={t.hidden ? `${t.name} (hidden from players)` : t.name}>
+                        <img src={t.portrait} alt="" className="r3-px" style={{ boxShadow: `0 0 0 1.5px ${t.color}` }} />
+                        {t.name}
+                        {t.hidden && <span className="r10-dimtxt"> · hidden</span>}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="r10-dimtxt" style={{ marginTop: 4 }}>
+                    Nobody.
+                  </div>
+                )}
+              </div>
+              {m.objects.length > 0 && (
+                <div>
+                  <span className="r4-lab">THINGS TO INSPECT</span>
+                  <div className="r5-rows" style={{ marginTop: 4 }}>
+                    {m.objects.map((o) => (
+                      <div key={o.id} className={'r5-row r10-hrow' + (o.shown ? '' : ' dim')}>
+                        <Diamond />
+                        <span className="r10-grow">
+                          {o.name}
+                          <span className="r10-dimtxt">{o.shown ? ' · players see it' : ' · hidden'}</span>
+                        </span>
+                        <button
+                          type="button"
+                          className={'r10-ico' + (o.shown ? '' : ' off')}
+                          aria-label={(o.shown ? 'Hide ' : 'Show ') + o.name}
+                          title={(o.shown ? 'Hide ' : 'Show ') + o.name}
+                          onClick={() => void gmRun('gm.object.show', { map: m.id, object: o.id, shown: !o.shown })}
+                        >
+                          <Eye off={!o.shown} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
     </section>
   )
 }
