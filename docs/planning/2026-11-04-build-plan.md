@@ -8,7 +8,8 @@
 | M2: The roll | **Done** (see "How M2 turned out") |
 | Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
-| M4: GM tab | **Built** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Waiting on Peter's own walk through it. NPC dice are drafts for Peter to set |
+| M4: GM tab | **Done** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Peter tried it and is happy. NPC dice are drafts for Peter to set |
+| Stage: the TV and cutscenes | **Next.** Its open questions are in the Stage section, after M4 |
 | M5–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -301,6 +302,30 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - Viewed as Tally.
     - Pressed New session: Entropy went to 2 and HP stayed.
 - **Why here:** after M1–M3 every GM function exists, so one design pass can lay them all out.
+
+### Stage: the TV and cutscenes · M · next after M4
+- **Goal:** the TV at the table shows the map and the public rolls, and you start cutscenes from the GM tab. Sources: the doc "LSO — Cutscenes and Stage" (see CLAUDE.md), and Round 12's boards `R12TabCutscenes`, `R12TabTV` and `R12StageBand`.
+- **Already decided:**
+  - Cutscenes are set and forget: full screen, played to the end, with no controls at all, not even stop.
+  - Each cutscene is one video file with its sound baked in.
+    - The shotgun scene's third cut is on its canvas as a video asset (`f5082d83bac9a099d8907e63d85ecc77`), ready to import.
+    - The intro and the waiting loop aren't made yet.
+  - The TV is a read-only "Stage" seat. It shows the full-screen map and only what everyone may see, with no crew rail and no meter (the meter is cut).
+  - Public rolls show on the TV as TV 2: a band along the bottom with the roller, the stat and the real dice animation.
+  - The GM tab gets the Cutscenes section (the cue list, with a two-step Play) and The TV section: where you're playing, and the camera, which fits the crew, follows one player, or cuts to whoever rolls.
+  - A cue also sets the map, mood and tokens behind the film. The shotgun ends on the bar after hours, with Dax at the gap in the rail.
+- **Proposed build:**
+  - the Stage socket and its projection, with leak tests (it's a player-like view with no seat);
+  - the TV page;
+  - films starting at one shared moment on the screens that play them;
+  - the table setting;
+  - the GM tab's two sections.
+- **Open questions for Peter** (asked 2026-11-04):
+  1. **Order.** Stage before M5's maps? Session 1 needs both: the opening film ends on the *Patience* map, which comes with M5.
+  2. **How the TV logs in.** A button in the GM tab that opens a TV window on your laptop, to drag onto the TV as a second display? Or a TV option on the login screen, behind your passcode, for a separate device? Or both?
+  3. **Laptops during a film at the table with a TV:** fully black, as the doc recommends?
+  4. **Sound in this milestone:** only the films' own sound? The soundboard, the per-map ambience and roll sounds would then come later.
+- **Known limits:** the online setup can be built now, but it can only be tested once the app is hosted (M7).
 
 ### M5: The other 10 maps · M · best ultracode fan-out
 - **Goal:** every map from the Maps canvas, driven by data.
