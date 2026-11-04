@@ -8,7 +8,7 @@
 | M2: The roll | **Done** (see "How M2 turned out") |
 | Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
-| M4: GM tab | **In progress.** Round 11 is on the UI canvas for Peter to pick from; the server half (New session, view as player) is built |
+| M4: GM tab | **In progress.** Round 12 (the Scene run from the chips, the GM tab, the TV) is on the UI canvas for Peter; the server half (New session, view as player) is built |
 | M5–M9 | Not started |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -205,7 +205,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - you can run the bar scene from your Scene, and set it up from the GM tab;
   - "view as player" never shows a hidden token, object or someone else's pocket (test).
 - **Order (planned 2026-11-04):**
-  1. **Round 11 on the UI canvas** (boards `R11SceneA`–`C`, `R11Office1`–`2`). Three Scene layouts (one column top to bottom, one column with three tabs, map-first with floating panels) and two GM tabs (one page, or seat by seat with a live preview). You pick one of each, or mix. **Waiting on Peter.**
+  1. **Round 11 on the UI canvas** (boards `R11SceneA`–`C`, `R11Office1`–`2`): three Scene layouts and two GM tabs. Peter's notes on it led to Round 12, below. **Round 12 is waiting on Peter.**
   2. **The server, which doesn't wait on the pick** (**built**, tests in `server/tests/test_gm_tab.py`):
      - `gm.session.new` sets every crew member's Entropy to 2, as ordinary `vitals.set` events.
      - **View as player** is a second, read-only socket: `/ws?as=<character>`, accepted only with the GM's cookie. It gets exactly that seat's projection, every intent on it is refused, it doesn't count as that player being online, and drags reach it as they reach the player.
@@ -214,6 +214,19 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
 - **Defaults taken while planning:**
   - The Scene keeps a quick mood switch for the map you're on, because moods change mid-scene (the lights go out). The GM tab has every map.
   - Clicking a crew member opens their card with HP and Entropy steppers and their pockets, so you can hand over a clue mid-scene. The full pocket table moves to the GM tab.
+- **Decided after Round 11 (2026-11-04),** once the cutscene plans arrived (`LSO — Cutscenes and Stage`, see CLAUDE.md):
+  - **The Scene holds only what's in the scene:** the mood selector above the map name, the characters on the map, and the things to inspect. Cutscenes, items, the TV and setup are in the GM tab.
+  - **You run characters from their chips.** Click a chip to open its card, which holds moving, HP, Entropy, hiding and rolling. Hiding, removing and adding NPCs and things stays, in one compact list.
+  - **No "last rolls" list.**
+  - **Every character has stats.** An NPC rolls by picking a stat, so its die comes from its sheet. "Just a die" picks a stat and a die. NPC rolls play the full animation on your screen.
+  - **Cutscenes are set and forget.** You start one from the GM tab, it goes full screen and plays to the end, with no controls while it plays, not even a stop button. Nothing about the TV or cutscenes sits on the Scene.
+  - **The TV shows no crew rail.** For a public roll it shows a bigger animation if that can be done tastefully, or else the roll on the chip. Round 12 shows three ways.
+- **Round 12 on the UI canvas** (`R12*` boards) draws all of this:
+  - Scene with Dax's card, whose six stats are his rolls (NPC dice are drafts for Peter to set);
+  - Scene with Tally's card, which has a Give row (open question: do you want that, or only the GM tab?);
+  - the GM tab's crew, cutscenes and TV sections;
+  - the TV three ways: on the chip, a band along the bottom, or a camera cut to the roller with a card.
+- **Proposed, not yet agreed:** Stage and cutscenes become their own milestone straight after M4. That covers the TV login and its feed (with leak tests), films starting in sync, laptops going black, cues that set the map behind the film, and the table setting.
 - **Moved to M5:** "send the crew to a map", since there is only one map until then.
 - **Why here:** after M1–M3 every GM function exists, so one design pass can lay them all out.
 
