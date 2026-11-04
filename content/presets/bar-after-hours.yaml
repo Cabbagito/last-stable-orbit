@@ -3,7 +3,7 @@ id: bar-after-hours
 name: The bar after hours
 party_map: event-horizon
 maps:
-  event-horizon: {mood: after, switches: {seals_box: 0}}
+  event-horizon: {mood: after, switches: {seals_box: 0}, shown: [mural, slots]}
 tokens:
   - {kind: crew, ref: ves, map: event-horizon, at: [9.7, 6.2, 0]}
   - {kind: crew, ref: tomo, map: event-horizon, at: [9.4, 3.9, 0]}

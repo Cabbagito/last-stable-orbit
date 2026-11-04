@@ -1,6 +1,7 @@
 # NPCs that can stand on a map. mood and note show on the NPC card for everyone who can see the token.
 # gm_note is only ever sent to the GM. color is the token ring: crew pink, the fixer's people red,
 # Dax amber, ISCO's side white-violet, ordinary residents dusk grey.
+# codex names the NPC's Codex entry; the card shows a Codex button only when it's set (the Codex itself is M6).
 
 - id: dax
   name: Old Dax
@@ -9,6 +10,7 @@
   color: "#f2b544"
   mood: Watching the door
   note: Keeps one table nobody sits at.
+  codex: old-dax
   gm_note: His family has kept the founder's table and the bar for 300 years. Holds the stockroom door in session 4.
 
 - id: fixer
@@ -18,6 +20,7 @@
   color: "#ff5a4a"
   mood: Patient
   note: Asked nicely.
+  codex: the-fixer
   gm_note: "Uploaded man in a chassis. Thinks a rich client hired him; the client is ISCO. Final boss at the lift: 7 health, d20, Very hard to hit."
 
 - id: cleaner-14

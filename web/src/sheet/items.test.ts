@@ -4,7 +4,7 @@ import { itemLabel, shortCount } from './items'
 
 const entry = (over: Partial<InvEntry> & { counted?: boolean }): InvEntry => ({
   uid: 'i1',
-  item: { id: 'credits', name: 'Credits', icon: '/assets/icons/items/credits.png', kind: 'cash', text: '', counted: !!over.counted },
+  item: { id: 'credits', name: 'Credits', icon: '/assets/icons/items/credits.png', kind: 'cash', text: '', counted: !!over.counted, codex: null },
   count: null,
   new: false,
   ...over,

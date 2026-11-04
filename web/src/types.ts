@@ -15,6 +15,7 @@ export interface ListEntry {
   kind: 'skill' | 'chrome'
   downside: string | null
   icon: string | null
+  text: string // the tooltip: what it is or does
 }
 
 export interface CrewMember {
@@ -66,6 +67,19 @@ export interface MapView {
   overlays: OverlayDef[]
   mood: string
   values: Record<string, number>
+  objects: MapObject[]
+}
+
+/** Something in the world to inspect. Players get only what the GM has revealed. */
+export interface MapObject {
+  id: string
+  name: string
+  at: Vec3
+  text: string
+  closeup: [number, number] | null // centre of the card's close-up, in display px
+  codex: string | null
+  seen?: boolean // players: they've looked at it
+  shown?: boolean // GM only: players can see it
 }
 
 export interface TokenView {
@@ -80,6 +94,7 @@ export interface TokenView {
   color: string
   mood: string
   note: string
+  codex: string | null
   hidden?: boolean // GM only
   gm_note?: string // GM only
 }
@@ -91,6 +106,7 @@ export interface Item {
   kind: 'gear' | 'weapon' | 'tool' | 'cash' | 'key' | 'note' | 'audio'
   text: string // the tooltip; only its holder and the GM get it
   counted: boolean // credits: one entry holding an amount
+  codex: string | null
 }
 
 export interface InvEntry {

@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { objectKey } from '../inspect/objects'
 import { proj, unproj } from '../lib/proj'
 import { plainRing, ring } from '../lib/ring'
 import { send, useGame } from '../store/game'
-import type { MapView as MapDef, TokenView, Vec3 } from '../types'
+import type { MapView as MapDef, MapObject, TokenView, Vec3 } from '../types'
 import { RingPortrait } from '../shell/RingPortrait'
 import { Callout, Orbit, calloutKey, calloutSpeech, isSpinning } from '../roll/Callout'
 import { calloutsBy } from '../roll/callouts'
@@ -38,6 +39,8 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
   const rolls = useGame((s) => s.view?.rolls)
   const calls = useGame((s) => s.calls)
   useGame((s) => s.callTick) // re-render when a callout fades
+  const isGm = useGame((s) => s.view?.me.role === 'gm')
+  const [hover, setHover] = useState<string | null>(null) // a token or object under the mouse: it shows its name
   const [W, H] = map.display
 
   useLayoutEffect(() => {
@@ -139,6 +142,14 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
     }
   }
 
+  // An object's marker selects like a token you can't move: press without dragging and its card opens.
+  const onMarkDown = (e: React.PointerEvent, key: string) => {
+    if (e.button !== 0 || !cam) return
+    e.stopPropagation()
+    box.current?.setPointerCapture(e.pointerId)
+    gesture.current = { kind: 'pan', sx: e.clientX, sy: e.clientY, px: cam.px, py: cam.py, moved: false, pressed: key }
+  }
+
   const onPointerMove = (e: React.PointerEvent) => {
     const g = gesture.current
     if (!g || !cam) return
@@ -146,6 +157,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
     const dy = e.clientY - g.sy
     if (!g.moved && Math.abs(dx) + Math.abs(dy) <= 3) return
     g.moved = true
+    setHover(null)
     if (g.kind === 'pan') {
       setCam({ ...cam, px: g.px + dx, py: g.py + dy })
       return
@@ -232,18 +244,92 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
                 className={'r3-tok' + (t.hidden ? ' app-hiddentok' : '') + (canMove(t) ? '' : ' app-fixedtok')}
                 aria-label={t.name + (t.hidden ? ' (hidden from players)' : '') + (call ? `, ${calloutSpeech(call.r)}` : '')}
                 onPointerDown={(e) => onTokenDown(e, t)}
-                style={{ left: x, top: y, transform: `scale(${scale})`, zIndex: Math.round(y) + (call ? 3000 : 0) }}
+                onPointerEnter={() => setHover(t.id)}
+                onPointerLeave={() => setHover((h) => (h === t.id ? null : h))}
+                style={{ left: x, top: y, transform: `scale(${scale})`, zIndex: Math.round(y) + (call || hover === t.id ? 3000 : 0) }}
               >
                 <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${foot}`, background: 'rgba(0,0,0,.35)' }} />
                 <span style={{ position: 'absolute', left: '50%', bottom: 8, width: 1.5, height: 36, marginLeft: -0.75, background: foot }} />
                 <RingPortrait src={t.portrait} ring={r} size={64} style={{ position: 'absolute', left: 0, top: 0 }} />
                 {call && isSpinning(call.r) && <Orbit stat={call.r.stat} />}
                 {call && <Callout key={calloutKey(call.r)} r={call.r} side="s-t" fading={call.fading} />}
+                {!call && hover === t.id && !on && local?.token !== t.id && (
+                  <span className="app-tag" aria-hidden="true">
+                    {t.name}
+                  </span>
+                )}
               </button>
             )
           })}
+          {map.objects.map((o) => (
+            <Marker
+              key={o.id}
+              o={o}
+              map={map}
+              scale={scale}
+              open={selected === objectKey(map.id, o.id)}
+              hovered={hover === objectKey(map.id, o.id)}
+              isGm={isGm}
+              onDown={(e) => onMarkDown(e, objectKey(map.id, o.id))}
+              onKey={() => select(selected === objectKey(map.id, o.id) ? null : objectKey(map.id, o.id))}
+              onHover={(on) => setHover((h) => (on ? objectKey(map.id, o.id) : h === objectKey(map.id, o.id) ? null : h))}
+            />
+          ))}
         </div>
       )}
     </div>
+  )
+}
+
+/**
+ * A thing you can inspect. Pink and pulsing until you've looked at it, then quieter; white while its card is
+ * open. The GM also sees the hidden ones, faded.
+ */
+function Marker({
+  o,
+  map,
+  scale,
+  open,
+  hovered,
+  isGm,
+  onDown,
+  onKey,
+  onHover,
+}: {
+  o: MapObject
+  map: MapDef
+  scale: number
+  open: boolean
+  hovered: boolean
+  isGm: boolean
+  onDown: (e: React.PointerEvent) => void
+  onKey: () => void
+  onHover: (on: boolean) => void
+}) {
+  const [x, y] = proj(map.origin, o.at)
+  const fresh = !isGm && !o.seen
+  const state = open ? 'open' : fresh ? 'unseen' : 'seen'
+  const ink = state === 'unseen' ? '#ff4fa3' : '#ffffff'
+  return (
+    <button
+      type="button"
+      className={`app-mk ${state}` + (hovered ? ' hov' : '') + (isGm && !o.shown ? ' off' : '')}
+      aria-label={`Inspect ${o.name}` + (fresh ? ', not looked at yet' : '') + (isGm && !o.shown ? ' (hidden from players)' : '')}
+      onPointerDown={onDown}
+      onClick={(e) => e.detail === 0 && onKey()} // Enter or Space; a mouse press selects through the map's gesture
+      onPointerEnter={() => onHover(true)}
+      onPointerLeave={() => onHover(false)}
+      style={{ left: x, top: y, transform: `scale(${scale})`, zIndex: Math.round(y) + (hovered ? 3000 : 0) }}
+    >
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+        <path d="M11 1.5 L20.5 11 L11 20.5 L1.5 11 Z" fill={open ? '#ffffff' : 'rgba(0,0,0,.6)'} stroke={ink} strokeWidth="1.8" />
+        <circle cx="11" cy="11" r="2.1" fill={open ? '#000000' : ink} />
+      </svg>
+      {hovered && !open && (
+        <span className="app-tag" aria-hidden="true">
+          {o.name}
+        </span>
+      )}
+    </button>
   )
 }

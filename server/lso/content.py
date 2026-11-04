@@ -115,6 +115,7 @@ def check_refs(c: Content) -> None:
                 d = m.switch(sw)
                 if not d or not 0 <= val <= (1 if d.type == "bool" else d.max):
                     problems.append(f"{where}: bad switch {map_id}.{sw}={val}")
+            problems += [f"{where}: map {map_id} has no object {o!r}" for o in ms.shown if not m.object(o)]
         for t in pr.tokens:
             pool = c.characters if t.kind == "crew" else c.npcs
             if t.ref not in pool:

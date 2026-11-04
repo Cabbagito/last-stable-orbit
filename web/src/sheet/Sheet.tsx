@@ -1,9 +1,12 @@
+import { useState } from 'react'
+import { anchorOf, anchorStyle, type Anchor } from '../inspect/anchor'
+import { InspectBlock, InspectIcon, Inspector } from '../inspect/Inspector'
 import { ring } from '../lib/ring'
 import { STAT_LOOK } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
 import { useGame } from '../store/game'
 import { ItemRow } from './ItemRow'
-import { STATS, type CrewMember, type InvEntry } from '../types'
+import { STATS, type CrewMember, type InvEntry, type Item } from '../types'
 
 const STAT_NAME: Record<string, string> = {
   body: 'BODY',
@@ -14,9 +17,22 @@ const STAT_NAME: Record<string, string> = {
   empathy: 'EMPATHY',
 }
 
+const KIND_LABEL: Record<Item['kind'], string> = {
+  gear: 'GEAR',
+  weapon: 'WEAPON',
+  tool: 'TOOL',
+  cash: 'CASH',
+  key: 'KEY',
+  note: 'NOTE',
+  audio: 'AUDIO LOG',
+}
+
 /** The R6 character sheet: portrait in its ring, name, the 3x2 stat table, skills + chrome, items. */
 export function Sheet({ me, items }: { me: CrewMember; items: InvEntry[] }) {
   const openPick = useGame((s) => s.openPick)
+  const [hover, setHover] = useState<Anchor | null>(null)
+  const onHover = (key: string, el: HTMLElement) => setHover(anchorOf(key, el))
+  const onLeave = (key: string) => setHover((h) => (h?.key === key ? null : h))
   return (
     <aside aria-label="Character sheet" className="r4-col">
       <div role="img" aria-label={`${me.short}. HP ${me.hp} of 6, Entropy ${me.entropy} of 6`} style={{ alignSelf: 'center' }}>
@@ -41,8 +57,17 @@ export function Sheet({ me, items }: { me: CrewMember; items: InvEntry[] }) {
         })}
       </section>
       <section aria-label="Skills and chrome" className="r5-rows" style={{ flex: 'none' }}>
-        {me.list.map((k) => (
-          <div key={k.name} className="r5-row" title={k.downside ? `Downside: ${k.downside}` : k.kind === 'chrome' ? 'Chrome' : undefined}>
+        {me.list.map((k, i) => (
+          <div
+            key={k.name}
+            className={'r5-row app-row' + (hover?.key === `row:${i}` ? ' on' : '')}
+            tabIndex={0}
+            aria-describedby={hover?.key === `row:${i}` ? 'app-sheettip' : undefined}
+            onMouseEnter={(e) => onHover(`row:${i}`, e.currentTarget)}
+            onMouseLeave={() => onLeave(`row:${i}`)}
+            onFocus={(e) => onHover(`row:${i}`, e.currentTarget)}
+            onBlur={() => onLeave(`row:${i}`)}
+          >
             {k.icon ? (
               <img src={k.icon} alt="" className="r3-px" style={{ width: 48, height: 48 }} />
             ) : (
@@ -54,7 +79,54 @@ export function Sheet({ me, items }: { me: CrewMember; items: InvEntry[] }) {
           </div>
         ))}
       </section>
-      <ItemRow items={items} />
+      <ItemRow items={items} hover={hover} onHover={onHover} onLeave={onLeave} />
+      {hover && <SheetTip hover={hover} me={me} items={items} />}
     </aside>
+  )
+}
+
+/** The inspector for whatever is hovered on the sheet, beside the column with its caret at the row. */
+function SheetTip({ hover, me, items }: { hover: Anchor; me: CrewMember; items: InvEntry[] }) {
+  const { style, side } = anchorStyle(hover)
+  const at = { id: 'app-sheettip', role: 'tooltip', className: 'app-sheettip ' + side, style }
+  if (hover.key.startsWith('item:')) {
+    const e = items.find((i) => `item:${i.uid}` === hover.key)
+    if (!e) return null
+    return (
+      <Inspector
+        {...at}
+        label={KIND_LABEL[e.item.kind]}
+        name={e.item.name}
+        media={<InspectIcon src={e.item.icon} fallback="ITEM" />}
+        sub={e.item.counted ? <span className="app-ins-num">{(e.count ?? 0).toLocaleString('en-US')}</span> : undefined}
+      >
+        {e.item.text && <div className="app-ins-txt">{e.item.text}</div>}
+      </Inspector>
+    )
+  }
+  const k = me.list[Number(hover.key.slice('row:'.length))]
+  if (!k) return null
+  const chrome = k.kind === 'chrome'
+  return (
+    <Inspector {...at} label={chrome ? 'CHROME' : 'SKILL'} name={k.name} media={<InspectIcon src={k.icon} fallback={chrome ? 'CHROME' : 'SKILL'} />}>
+      {k.text && <div className="app-ins-txt">{k.text}</div>}
+      {chrome ? (
+        <InspectBlock label="ON A ROLL">
+          <div className="app-ins-txt">Pick it like a skill. No downside, and it can do things a person can't.</div>
+        </InspectBlock>
+      ) : (
+        <>
+          <div className="app-ins-txt">Pick it on a roll when it fits: your die steps up one size. A d20 gets +2.</div>
+          {k.downside && (
+            <InspectBlock label="DOWNSIDE" tone="down">
+              <div className="app-ins-txt">{k.downside}</div>
+              <div className="app-ins-txt app-ins-gap">
+                When the GM offers the trouble, take it for <span className="app-ins-en">+1 Entropy</span>, or say no.
+              </div>
+            </InspectBlock>
+          )}
+        </>
+      )}
+    </Inspector>
   )
 }

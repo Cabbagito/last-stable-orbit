@@ -28,6 +28,7 @@ class ListEntry(Strict):
     kind: Literal["skill", "chrome"]
     downside: str | None = None
     icon: str | None = None  # path under assets/, or None for a text-only row
+    text: str = ""  # the tooltip: what it is or does (chrome especially)
 
 
 class Character(Strict):
@@ -60,6 +61,7 @@ class Npc(Strict):
     mood: str = ""
     note: str = ""
     gm_note: str = ""  # never sent to players
+    codex: str | None = None  # its Codex entry, once the Codex exists (M6)
 
 
 COUNT_MAX = 999_999
@@ -74,6 +76,7 @@ class Item(Strict):
     kind: Literal["gear", "weapon", "tool", "cash", "key", "note", "audio"] = "gear"
     text: str = ""  # the tooltip: what it is, what it says. Only its holder and the GM ever see it.
     counted: bool = False  # credits: one entry holding an amount, instead of one entry per piece
+    codex: str | None = None
 
 
 class Mood(Strict):
@@ -102,6 +105,17 @@ class Overlay(Strict):
     value: int = 1
 
 
+class MapObject(Strict):
+    """Something in the world a player can inspect, such as a mural. Players see it once the GM reveals it."""
+
+    id: str
+    name: str
+    at: Vec3  # where its marker sits
+    text: str
+    closeup: tuple[float, float] | None = None  # centre of the card's close-up, in the map's display px (art framing, not a position)
+    codex: str | None = None
+
+
 class MapDef(Strict):
     id: str
     name: str
@@ -112,9 +126,13 @@ class MapDef(Strict):
     moods: list[Mood]
     switches: list[Switch] = []
     overlays: list[Overlay] = []
+    objects: list[MapObject] = []
 
     @model_validator(mode="after")
     def _refs(self) -> "MapDef":
+        ids = [o.id for o in self.objects]
+        if len(ids) != len(set(ids)):
+            raise ValueError("object ids must be unique on a map")
         mood_ids = {m.id for m in self.moods}
         sw = {s.id: s for s in self.switches}
         for s in self.switches:
@@ -129,6 +147,9 @@ class MapDef(Strict):
 
     def switch(self, switch_id: str) -> Switch | None:
         return next((s for s in self.switches if s.id == switch_id), None)
+
+    def object(self, object_id: str) -> MapObject | None:
+        return next((o for o in self.objects if o.id == object_id), None)
 
 
 class PresetToken(Strict):
@@ -148,6 +169,7 @@ class PresetItem(Strict):
 class MapState(Strict):
     mood: str
     switches: dict[str, int] = {}
+    shown: list[str] = []  # objects players can see and inspect
 
 
 class Vitals(Strict):
@@ -221,3 +243,4 @@ class GameState(Strict):
     vitals: dict[str, Vitals] = {}
     inventory: dict[str, list[InvEntry]] = {}
     rolls: list[RollState] = Field(default_factory=list)  # open rolls, then the most recent closed ones
+    seen: dict[str, list[str]] = {}  # character -> "map/object" keys they have inspected

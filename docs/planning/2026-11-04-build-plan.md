@@ -170,10 +170,15 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - objects in the world, such as the mural.
   - **Codex buttons:** characters, objects, items and maybe skills will have Codex entries. A card shows a Codex button only when there is an entry.
   - **Later:** clicking an item or a skill opens an Items tab (name not settled) with it selected. That waits until the tooltips are done.
-  - **Proposed in Round 9, waiting on Peter's look:**
+  - **Built (Round 9, approved 2026-11-04):**
     - **Your sheet:** items, skills and chrome open the inspector on hover, to the right of the sheet and over the map, with a caret at the row.
     - **The map and rail:** hovering a token shows only its name, so passing the mouse over a crowded map pops nothing. Clicking a token or a rail portrait opens its card, docked at the map's top right as now.
     - **World objects:** each gets a diamond marker once you reveal it. The marker is pink and pulsing until that player has looked, then quieter. Clicking it opens a card with a close-up of the art.
+    - **How:**
+      - Objects are listed per map in `content/maps/<id>.yaml` (`objects`: id, name, `at` in X/Y/Z, text, `closeup`, `codex`).
+      - A preset reveals them through `shown`; you toggle them with `gm.object.show`. Each player's "looked at" is `object.seen`, kept per character.
+      - Players never receive a hidden object (leak test).
+    - **Codex button:** `codex` on NPCs, items and objects. The button shows but is disabled until M6 builds the Codex.
 
 ### M4: GM tab · M · design fan-out, then a single build session
 - **Goal:** one designed GM tab that replaces the plain dock.
@@ -195,7 +200,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - SVG camera cones;
     - Executive deck support, with `oy = 150 + (9 − deck) × 450`, where the deck jump keeps X,Y;
     - point-of-interest pins that only you see;
-    - inspectable objects per map (name, text, close-up, an optional Codex entry), shown to players once you reveal them (Round 9).
+    - inspectable objects for each new map (built for The Event Horizon after M3: the mural, the slot machines).
   - **Per-map files:** one `content/maps/<id>.yaml` per map, with assets deduplicated by sha256.
   - **Order:** Patience and Promenade CALM (session 1), Executive decks (session 2), then the rest.
 - **Done when:** a screenshot of each map in each mood matches its board, and a token placed on a key point lands on it.

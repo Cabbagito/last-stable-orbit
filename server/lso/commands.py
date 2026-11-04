@@ -13,6 +13,7 @@ from .auth import Viewer
 from .content import Content
 from .models import COUNT_MAX, DIE_SIDES, ENTROPY_MAX, HP_MAX, STATS, GameState, InvEntry, RollState
 from .state import state_from_preset
+from .views import viewer_map
 
 Events = list[tuple[str, dict]]
 COORD_LIMIT = 500.0  # world units; far beyond any map, just stops garbage
@@ -285,6 +286,16 @@ def handle(
     if kind.startswith("roll."):
         return _roll_intent(viewer, state, content, kind, args, rng, now)
 
+    if kind == "object.seen":
+        if viewer.is_gm:
+            raise _invalid("players mark what they've inspected")
+        map_id, obj = _str(args, "map"), _str(args, "object")
+        ms = state.maps.get(map_id)
+        if map_id != viewer_map(state, viewer) or not ms or obj not in ms.shown:
+            raise _invalid("there's nothing like that here")
+        key = f"{map_id}/{obj}"
+        return [] if key in state.seen.get(viewer.char, []) else [("object.seen", {"char": viewer.char, "key": key})]
+
     if kind == "item.seen":
         if viewer.is_gm:
             raise _invalid("only an item's holder marks it seen")
@@ -343,6 +354,16 @@ def handle(
         if not isinstance(value, int) or not 0 <= value <= top:
             raise _invalid(f"value must be 0..{top}")
         return [("map.switch_set", {"map": map_id, "switch": sw, "value": value})]
+
+    if kind == "gm.object.show":
+        map_id, obj = _str(args, "map"), _str(args, "object")
+        m = content.maps.get(map_id)
+        if not m or not m.object(obj):
+            raise _invalid("unknown map or object")
+        shown = bool(args.get("shown"))
+        if (obj in state.maps[map_id].shown) == shown:
+            return []
+        return [("object.shown", {"map": map_id, "object": obj, "shown": shown})]
 
     if kind == "gm.vitals.set":
         char = _str(args, "char")

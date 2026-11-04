@@ -78,6 +78,13 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "vitals.set":
         v = s.vitals.setdefault(data["char"], Vitals())
         v.hp, v.entropy = int(data["hp"]), int(data["entropy"])
+    elif ev_type == "object.shown":
+        ms = s.maps[data["map"]]
+        ms.shown = [o for o in ms.shown if o != data["object"]] + ([data["object"]] if data["shown"] else [])
+    elif ev_type == "object.seen":
+        keys = s.seen.setdefault(data["char"], [])
+        if data["key"] not in keys:
+            keys.append(data["key"])
     elif ev_type == "item.given":
         s.inventory.setdefault(data["holder"], []).append(InvEntry.model_validate(data["entry"]))
     elif ev_type == "item.taken":

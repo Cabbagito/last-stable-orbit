@@ -24,3 +24,19 @@ overlays:  # drawn in this order: patches over the base, gas over the glow
   - {id: gas-1, src: maps/event-horizon/gas-1.png, layer: gas, mood: stand, switch: gas, value: 1}
   - {id: gas-2, src: maps/event-horizon/gas-2.png, layer: gas, mood: stand, switch: gas, value: 2}
   - {id: gas-3, src: maps/event-horizon/gas-3.png, layer: gas, mood: stand, switch: gas, value: 3}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  # at: where the marker sits, in world X, Y, Z. closeup: the centre of the card's close-up of the art,
+  # in display px (the 2560 x 1440 space tokens are drawn in).
+  - id: mural
+    name: The mural
+    at: [1.033, 4.9, 2.5]
+    closeup: [878, 296]
+    codex: the-founder
+    text: >-
+      Old gold mosaic over the roped-off table: the founder and his daughter, under a black disc with an
+      orbit ring for a halo. No names.
+  - id: slots
+    name: Slot machines
+    at: [-3.6, 9.267, 1]
+    closeup: [300, 560]
+    text: Four white machines in a nook, chiming softly. Nobody here seems to lose.

@@ -1,6 +1,6 @@
 import { GmPanel } from '../gm/GmPanel'
 import { MapView } from '../map/MapView'
-import { NpcCard } from '../map/NpcCard'
+import { InspectCard } from '../map/InspectCard'
 import { Sheet } from '../sheet/Sheet'
 import { CrewRail } from '../shell/CrewRail'
 import { useGame } from '../store/game'
@@ -34,7 +34,7 @@ export function Scene() {
           <div className="app-wait">Somewhere the map doesn't reach.</div>
         )}
         <CrewRail />
-        <NpcCard />
+        <InspectCard />
       </section>
     </div>
   )

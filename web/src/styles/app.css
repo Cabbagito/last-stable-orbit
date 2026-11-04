@@ -162,11 +162,6 @@ body {
   position: absolute;
   right: 100px;
   top: 8px;
-  width: 290px;
-  background: #000;
-  box-shadow: 0 0 0 1px #1e2024;
-  box-sizing: border-box;
-  padding: 14px;
   z-index: 5;
 }
 .app-gmnote {
@@ -469,8 +464,7 @@ body {
 .p-fade{opacity:0}
 @media (prefers-reduced-motion:reduce){.r7-orbit,.r7-strip,.r7-body,.r7-cool,.r7-pulse path,.r7-num,.r7-chip,.r7-plus{animation:none}}
 
-/* M3: the sheet's "On hand" row. One panel above the row holds the hovered item's name and text (R6's
-   tooltip is one line of name; this is the same black box and hairline, grown to hold a clue). */
+/* M3: the sheet's "On hand" row: a count badge for credits, a pink NEW tag until its holder has looked. */
 .r5-items.app-items {
   position: relative;
   flex-wrap: wrap;
@@ -523,65 +517,9 @@ body {
   padding: 0 3px;
   pointer-events: none;
 }
-.app-itemtip {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: calc(100% + 8px);
-  background: #000;
-  box-shadow: 0 0 0 1px var(--btnline);
-  padding: 8px 10px 9px;
-  font-size: 13px;
-  line-height: 1.4;
-  color: #b9bdc4;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.12s;
-  z-index: 9;
-}
-.app-itemtip.on {
-  opacity: 1;
-}
-.app-itemtip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: calc(var(--x, 24px) - 5px);
-  margin-top: -4px;
-  width: 8px;
-  height: 8px;
-  background: #000;
-  border-right: 1px solid var(--btnline);
-  border-bottom: 1px solid var(--btnline);
-  transform: rotate(45deg);
-}
-.app-itemtip-head {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: 3px;
-}
-.app-itemtip-name {
-  flex: 1;
-  min-width: 0;
-  color: #fff;
-  font-size: 13.5px;
-}
-.app-itemtip-count {
-  font-family: 'VT323', monospace;
-  font-size: 20px;
-  line-height: 0.8;
-  color: #fff;
-}
-.app-itemtip-text {
-  white-space: pre-line;
-}
 @media (prefers-reduced-motion: reduce) {
   .app-item.new {
     animation: none;
-  }
-  .app-itemtip {
-    transition: none;
   }
 }
 
@@ -613,4 +551,229 @@ body {
   font-size: 12px;
   line-height: 1.35;
   white-space: pre-line;
+}
+
+/* Round 9: the inspector (Round 8's T3). On the sheet it shows on hover, beside the column; on the map it's
+   the card for what you clicked. */
+.app-ins {
+  box-sizing: border-box;
+  width: 300px;
+  background: #000;
+  box-shadow: 0 0 0 1px var(--btnline);
+  padding: 10px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #b9bdc4;
+}
+.app-ins-top {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 9px;
+}
+.app-ins-big {
+  width: 96px;
+  height: 96px;
+  flex: none;
+  background: #0b0c0e;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.app-ins-noicon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Michroma', sans-serif;
+  font-size: 7px;
+  letter-spacing: 0.14em;
+  color: #5e626a;
+}
+.app-ins-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 6px;
+  min-width: 0;
+}
+.app-ins-wide-meta .app-ins-meta {
+  padding-top: 0;
+  margin-bottom: 8px;
+}
+.app-ins-name {
+  font-size: 16px;
+  line-height: 1.2;
+  color: #fff;
+}
+.app-ins-num {
+  font-family: 'VT323', monospace;
+  font-size: 44px;
+  line-height: 0.75;
+  color: #fff;
+}
+.app-ins-sub {
+  color: #8a8e96;
+  font-style: italic;
+  line-height: 1.3;
+}
+.app-ins-vit {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  line-height: 1;
+  color: #8a8e96;
+}
+.app-ins-hp {
+  color: #5ee08c;
+}
+.app-ins-en {
+  color: #f2b544;
+}
+.app-ins-txt {
+  white-space: pre-line;
+}
+.app-ins-gap {
+  margin-top: 3px;
+}
+.app-ins-blk {
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+.app-ins-blk .r4-lab {
+  display: block;
+  margin-bottom: 4px;
+}
+.app-ins-blk.down .r4-lab {
+  color: #f2b544;
+}
+.app-ins-acts {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}
+.app-ins .app-warn {
+  margin: 0 0 6px;
+}
+.app-ins .app-gmnote {
+  margin: 10px 0 0;
+}
+.r4-btn.app-cdx {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-color: var(--accent);
+  color: #ff7dbb;
+}
+.r4-btn.app-cdx:disabled {
+  opacity: 0.7;
+}
+.app-ins-wide {
+  width: 278px;
+  height: 170px;
+  margin: -1px 0 10px -1px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.app-sheettip {
+  position: fixed;
+  z-index: 30;
+  pointer-events: none;
+}
+.app-sheettip::after {
+  content: '';
+  position: absolute;
+  left: -5px;
+  width: 8px;
+  height: 8px;
+  background: #000;
+  border-left: 1px solid var(--btnline);
+  border-bottom: 1px solid var(--btnline);
+  transform: rotate(45deg);
+}
+.app-sheettip.cl-top::after {
+  top: 42px;
+}
+.app-sheettip.cl-bot::after {
+  bottom: 42px;
+}
+.r5-row.app-row {
+  outline: none;
+  transition: background 0.15s;
+}
+.r5-row.app-row:hover,
+.r5-row.app-row.on {
+  background: #101114;
+}
+.r5-row.app-row:focus-visible {
+  box-shadow: inset 0 0 0 1px #fff;
+}
+
+/* Round 9: a name on hover, for tokens and things to inspect. Inside the scaled token, so it stays one size on screen. */
+.app-tag {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  transform: translateX(-50%);
+  background: #000;
+  box-shadow: 0 0 0 1px var(--btnline);
+  color: #fff;
+  padding: 6px 11px;
+  font-size: 16px;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.app-mk {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform-origin: 11px 11px;
+}
+.app-mk svg {
+  display: block;
+  transition: opacity 0.15s;
+}
+.app-mk.seen svg {
+  opacity: 0.6;
+}
+.app-mk.hov svg {
+  opacity: 1;
+}
+.app-mk.off {
+  opacity: 0.45;
+}
+.app-mk.unseen::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--accent);
+  animation: app-ping 1.6s ease-out infinite;
+  pointer-events: none;
+}
+.app-mk:focus-visible {
+  outline: 1px solid #fff;
+  outline-offset: 2px;
+}
+@keyframes app-ping {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-mk.unseen::before {
+    animation: none;
+  }
 }

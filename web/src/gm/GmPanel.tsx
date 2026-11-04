@@ -6,12 +6,13 @@ import { RingPortrait } from '../shell/RingPortrait'
 import { send, useGame } from '../store/game'
 import { STATS, type MapView, type RollView, type StatKey, type View } from '../types'
 import { GmPockets } from './GmPockets'
+import { objectKey } from '../inspect/objects'
 
 const DICE = [4, 6, 8, 10, 12, 20]
 
 /**
  * The GM's left column on the Scene, in place of a character sheet: crew vitals, every character's pockets,
- * the map's mood and switches, rolls, the tokens on this map, the NPC roster and presets. Milestone 4 gives the GM tab its own design.
+ * the map's mood and switches, rolls, the tokens and things to inspect on this map, the NPC roster and presets. Milestone 4 gives the GM tab its own design.
  */
 export function GmPanel({ map }: { map: MapView | undefined }) {
   const view = useGame((s) => s.view)
@@ -223,6 +224,25 @@ export function GmPanel({ map }: { map: MapView | undefined }) {
                     Remove
                   </button>
                 )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {map && map.objects.length > 0 && (
+        <section aria-label="Things to inspect">
+          <div className="r5-sec">Things to inspect</div>
+          <div className="r5-rows">
+            {map.objects.map((o) => (
+              <div key={o.id} className={'r5-row app-gmrow' + (o.shown ? '' : ' app-dim')}>
+                <button type="button" className="app-link app-grow" onClick={() => select(objectKey(map.id, o.id))}>
+                  {o.name}
+                  {o.shown ? '' : ' · hidden'}
+                </button>
+                <button type="button" className="r4-btn app-small" onClick={() => run('gm.object.show', { map: map.id, object: o.id, shown: !o.shown })}>
+                  {o.shown ? 'Hide' : 'Show'}
+                </button>
               </div>
             ))}
           </div>

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { GameSocket, type Status } from '../net/socket'
+import { stillThere } from '../inspect/objects'
 import { FADE, LINGER, emptyMemo, remember, type CallMemo } from '../roll/callouts'
 import type { Ack, ServerFrame, StatKey, Vec3, View } from '../types'
 
@@ -58,7 +59,7 @@ export const useGame = create<GameStore>((set, get) => {
         const mine = f.view.rolls.find((r) => r.by === f.view.me.seat && r.open && !get().dismissed[r.id])
         if (mine) dialog = { kind: 'roll', rollId: mine.id, resume: true }
       }
-      set({ view: f.view, remote, selected: sel && f.view.tokens[sel] ? sel : null, calls: memo, dialog, resumeCheck: false })
+      set({ view: f.view, remote, selected: stillThere(f.view, sel) ? sel : null, calls: memo, dialog, resumeCheck: false })
     } else if (f.t === 'drag') {
       const t = Date.now()
       set({ remote: { ...get().remote, [f.token]: { at: f.at, t } } })

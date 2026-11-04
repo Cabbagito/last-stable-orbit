@@ -2,6 +2,7 @@
 
 Every frame a client receives is built here for that viewer. A player gets:
 - the one map they are on (their own token's map, else the party map), and only that map's art;
+- the objects on it the GM has revealed (a mural, the slot machines), each marked with whether they've inspected it;
 - the tokens on that map that aren't hidden, with each NPC's public card (never its gm_note);
 - every crew member's public sheet and vitals (the crew rail shows them);
 - their own inventory only, with each item's text (clues are items, so this is where they hide);
@@ -24,7 +25,21 @@ def url(path: str | None) -> str | None:
     return ASSET_PREFIX + path if path else None
 
 
-def _map_view(content: Content, state: GameState, map_id: str) -> dict:
+def _objects_view(state: GameState, d, ms, viewer: Viewer) -> list[dict]:
+    """Players get only what the GM has revealed, each marked with whether they've inspected it."""
+    shown = set(ms.shown) if ms else set()
+    seen = set(state.seen.get(viewer.char or "", []))
+    out = []
+    for o in d.objects:
+        if not viewer.is_gm and o.id not in shown:
+            continue
+        v = {"id": o.id, "name": o.name, "at": list(o.at), "text": o.text, "closeup": list(o.closeup) if o.closeup else None, "codex": o.codex}
+        v |= {"shown": o.id in shown} if viewer.is_gm else {"seen": f"{d.id}/{o.id}" in seen}
+        out.append(v)
+    return out
+
+
+def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer) -> dict:
     d = content.maps[map_id]
     ms = state.maps.get(map_id)
     return {
@@ -39,6 +54,7 @@ def _map_view(content: Content, state: GameState, map_id: str) -> dict:
         "overlays": [{**o.model_dump(), "src": url(o.src)} for o in d.overlays],
         "mood": ms.mood if ms else d.moods[0].id,
         "values": dict(ms.switches) if ms else {},
+        "objects": _objects_view(state, d, ms, viewer),
     }
 
 
@@ -67,10 +83,10 @@ def _token_view(content: Content, tid: str, t, gm: bool) -> dict:
     base = {"id": tid, "kind": t.kind, "ref": t.ref, "map": t.map, "at": list(t.at)}
     if t.kind == "crew":
         c = content.characters[t.ref]
-        base |= {"name": c.short, "role": c.role, "portrait": url(c.portrait), "color": c.color, "mood": "", "note": ""}
+        base |= {"name": c.short, "role": c.role, "portrait": url(c.portrait), "color": c.color, "mood": "", "note": "", "codex": None}
     else:
         n = content.npcs[t.ref]
-        base |= {"name": n.name, "role": n.role, "portrait": url(n.portrait), "color": n.color, "mood": n.mood, "note": n.note}
+        base |= {"name": n.name, "role": n.role, "portrait": url(n.portrait), "color": n.color, "mood": n.mood, "note": n.note, "codex": n.codex}
         if gm:
             base["gm_note"] = n.gm_note
     if gm:
@@ -79,7 +95,7 @@ def _token_view(content: Content, tid: str, t, gm: bool) -> dict:
 
 
 def _item_view(it) -> dict:
-    return {"id": it.id, "name": it.name, "icon": url(it.icon), "kind": it.kind, "text": it.text, "counted": it.counted}
+    return {"id": it.id, "name": it.name, "icon": url(it.icon), "kind": it.kind, "text": it.text, "counted": it.counted, "codex": it.codex}
 
 
 def _inventory_view(content: Content, entries) -> list[dict]:
@@ -174,7 +190,7 @@ def project(state: GameState, content: Content, viewer: Viewer) -> dict:
         "me": {"seat": viewer.seat, "role": viewer.role, "char": viewer.char},
         "party_map": here,
         "crew": _crew_view(content, state),
-        "maps": {m: _map_view(content, state, m) for m in map_ids},
+        "maps": {m: _map_view(content, state, m, viewer) for m in map_ids},
         "tokens": tokens,
         "inventory": {h: _inventory_view(content, state.inventory.get(h, [])) for h in holders},
         "rolls": _rolls_view(state, viewer, set(tokens)),
