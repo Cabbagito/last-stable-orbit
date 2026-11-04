@@ -348,6 +348,8 @@ def _cue_sets(state: GameState, content: Content, cue) -> Events:
     events: Events = []
     if st.party and state.party_map != st.map:
         events.append(("party.map_set", {"map": st.map}))
+    if st.party:
+        events += _lit(state, content, st.map)
     if st.mood and state.maps[st.map].mood != st.mood:
         events.append(("map.mood_set", {"map": st.map, "mood": st.mood}))
     for sw, value in st.switches.items():
@@ -378,7 +380,13 @@ def _send_crew(state: GameState, content: Content, map_id: str) -> Events:
             events.append(("token.sent", {"token": tid, "map": map_id, "at": at}))
     if state.party_map != map_id:
         events.append(("party.map_set", {"map": map_id}))
-    return events
+    return events + _lit(state, content, map_id)
+
+
+def _lit(state: GameState, content: Content, map_id: str) -> Events:
+    """The crew is going somewhere: it lights up on the Station."""
+    places = {p.map for p in content.station.places} if content.station else set()
+    return [("station.shown", {"map": map_id, "shown": True})] if map_id in places and map_id not in state.station else []
 
 
 def sweep(state: GameState, now: float, online: set[str]) -> Events:
@@ -542,6 +550,13 @@ def handle(
             key = f"{e.id}/{b.id}"
         on = bool(args.get("unlocked", True))
         return [] if (key in state.codex) == on else [("codex.set", {"keys": [key], "unlocked": on})]
+
+    if kind == "gm.station.show":
+        map_id = _str(args, "map")
+        if not content.station or map_id not in {p.map for p in content.station.places}:
+            raise _invalid("that isn't a place on the Station")
+        shown = bool(args.get("shown", True))
+        return [] if (map_id in state.station) == shown else [("station.shown", {"map": map_id, "shown": shown})]
 
     if kind == "gm.burn.use":
         return _burn(state, content, _holder(content, args, "char"), args.get("cut"), now)

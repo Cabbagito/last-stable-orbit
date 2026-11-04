@@ -11,7 +11,7 @@
 | M4: GM tab | **Done** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Peter tried it and is happy. NPC dice are drafts for Peter to set |
 | Stage: the TV and cutscenes | **Done** 2026-11-04. Peter tried it: "looks good and works well". The TV logs in with one click, no passcode. See "How Stage turned out" |
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
-| M6: Station and Codex tabs | **Codex built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex texts and crops are drafts for Peter. The Station is next: its first boards are on the UI canvas, page "Station" |
+| M6: Station and Codex tabs | **Built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex and Station texts, and the Codex's card crops, are drafts for Peter, who hasn't tried either tab yet |
 | M7–M9 | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -474,6 +474,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **Peter's controls:** the GM tab's Codex section (a switch per page and per locked block), and the same switches on each page when he opens it in the Codex tab, where locked pages show dimmed.
   - **Unlocked at the start of session 1:** the crew, How to play, Patience, the Promenade and the bar, plus four things everyone on Ergo knows (Ergo, ISCO, the black hole, the booking queue). The bar-after-hours preset adds who and what they meet at the bar.
   - **Still with Peter:** every Codex text, the card crops of the maps, the old man's stand-in art, and separate note icons (the notes share one icon today).
+  - **The Station** follows the UI canvas's page "Station" (boards Station and StationGM): Ergo cut open, with all 11 places. A place is lit once the crew has been sent there (or a cue takes the party there), or Peter shows it; a dark one shows its text with "The crew hasn't been here", sends no art or map preview, and the core keeps its name. Players see where the crew stands, only on lit places and never a hidden token. Clicking a lit place shows a player its map as a picture, and their token stays put. Peter's click picks a place; its panel opens it on the Scene, or shows or hides it. Places and texts are in `content/station.yaml`; tests in `test_station.py`. Presets light where the crew has been (session 1: the Patience, the Promenade and the bar; the arrival: the Patience).
 
 ### M7: Ship for session 1 · S · review fan-out plus your dry run
 - **Goal:** hosted, hardened and rehearsed.

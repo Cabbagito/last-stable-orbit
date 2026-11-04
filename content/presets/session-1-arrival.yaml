@@ -47,3 +47,6 @@ codex: [lale, marlo, tally, ves, tomo,
         rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health,
         patience, promenade, event-horizon,
         ergo, isco, hole, queue]
+
+# The Station: places the crew has been, lit and open (the party map and wherever the crew stands are added).
+station: [patience]  # they've only just docked

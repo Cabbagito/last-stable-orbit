@@ -11,7 +11,7 @@ STATS = ("body", "reflex", "tech", "intel", "cool", "empathy")
 DIE_SIDES = (4, 6, 8, 10, 12, 20)
 ENTROPY_MAX = 6
 BURN_COST = 2  # Entropy a Burn spends
-RULES = 2  # the rules version a saved game is on: 1 gave each character their own health, 2 the Codex
+RULES = 3  # the rules version a saved game is on: 1 gave each character their own health, 2 the Codex, 3 the Station
 
 Vec3 = tuple[float, float, float]
 
@@ -452,6 +452,48 @@ class CodexEntry(Strict):
         return self
 
 
+class StationTag(Strict):
+    x: float
+    y: float
+    text: str
+    dark: str | None = None  # what it reads until the place is shown (the core)
+
+
+class StationPlace(Strict):
+    """One place on the Station's cross-section: a map, its label and blurb, the overlay that lights it once the crew
+    has been there, and the boxes you hover. Positions are display px on the 1100 x 840 picture (art framing)."""
+
+    map: str
+    name: str
+    dark_name: str | None = None
+    where: str
+    blurb: str
+    lit: str
+    tags: list[StationTag]
+    chip: tuple[float, float]
+    hots: list[tuple[float, float, float, float]] = Field(min_length=1)
+
+
+class StationLabel(Strict):
+    x: float
+    y: float
+    text: str
+
+
+class Station(Strict):
+    art: str
+    hole: str
+    labels: list[StationLabel] = []
+    places: list[StationPlace]
+
+    @model_validator(mode="after")
+    def _once(self) -> "Station":
+        ids = [p.map for p in self.places]
+        if len(ids) != len(set(ids)):
+            raise ValueError("a map shows on the Station once")
+        return self
+
+
 class PresetToken(Strict):
     id: str | None = None
     kind: Literal["crew", "npc"]
@@ -489,6 +531,7 @@ class Preset(Strict):
     vitals: dict[str, Vitals] = {}  # missing crew get their full health and 2 Entropy
     inventory: dict[str, list[str | PresetItem]] = {}  # holder -> item ids, or {item, count} for counted items
     codex: list[str] = []  # Codex entries unlocked for the crew ("entry"), and locked blocks ("entry/block")
+    station: list[str] = []  # places lit on the Station; the party map and the crew's maps are added
 
 
 # ---------------------------------------------------------------- state
@@ -582,3 +625,4 @@ class GameState(Strict):
     stage: StageState = Field(default_factory=StageState)
     codex: list[str] = []  # unlocked for the whole crew: entry ids, and "entry/block" for a locked block
     codex_read: dict[str, list[str]] = {}  # character -> the unlocked keys they've read; the rest are new to them
+    station: list[str] = []  # maps lit on the Station for the crew: they've been there, or the GM showed them

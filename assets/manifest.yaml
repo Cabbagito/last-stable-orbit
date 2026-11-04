@@ -1135,3 +1135,87 @@ assets:
     bytes: 101879
     width: 96
     height: 96
+  - path: station/ergo.png
+    store: UI
+    asset_id: "c7015c60545fe7a9a258c5b2993390eb"
+    sha256: "6412940a0e16a2d7e9e902abdec0e78d15b42f9e9fd9598721f7ce1f91cc391b"
+    bytes: 20543
+    width: 550
+    height: 420
+  - path: station/lit-patience.png
+    store: UI
+    asset_id: "67a2acc4935ef13fe8b2936d4d8d99b2"
+    sha256: "4e5a46c0500ca6505b7d0d0df477cb77b99123cc6f0da661a5c652718f183906"
+    bytes: 1070
+    width: 550
+    height: 420
+  - path: station/lit-promenade.png
+    store: UI
+    asset_id: "5b748be6465d652eb52c9a89d7ca9d22"
+    sha256: "393f5212b9d5d2cdf1f3d4495049de32dfb63b734a9c3dadb320ad5027c383d4"
+    bytes: 3501
+    width: 550
+    height: 420
+  - path: station/lit-event-horizon.png
+    store: UI
+    asset_id: "383d764c394f86fdb2e6c025a3001fd1"
+    sha256: "faa4687367bcbe8260dd56db3431ac665bdd533294ebbd6feb81367567bd5233"
+    bytes: 2433
+    width: 550
+    height: 420
+  - path: station/lit-med.png
+    store: UI
+    asset_id: "b981e085e8f3ed4a8f1c42ad1e8c85ef"
+    sha256: "09a188ba20d483ce28f22c017e49df8fd83dcb88305877cda27e69f47f273da1"
+    bytes: 1452
+    width: 550
+    height: 420
+  - path: station/lit-executive.png
+    store: UI
+    asset_id: "7a151ed70eb17dffbf1634b82c22d3de"
+    sha256: "4e6a6d11224172c98725a650b6761b93c03bf0027aa31736a334c32e8f7d0439"
+    bytes: 4674
+    width: 550
+    height: 420
+  - path: station/lit-secure.png
+    store: UI
+    asset_id: "4e7fd585227782183a3cea5c4d06c867"
+    sha256: "e5aa8810d9e0e4d8fa0fc3a6928f9a118497bef936a05210d1be2c7dd09cf390"
+    bytes: 1459
+    width: 550
+    height: 420
+  - path: station/lit-vault.png
+    store: UI
+    asset_id: "1f5937cd3dcff2fc027928a8886cc3ac"
+    sha256: "48a92950bd562ec3319071f6b42d2e0ffb8bfe3496c131785d4d671942f6eb8f"
+    bytes: 1757
+    width: 550
+    height: 420
+  - path: station/lit-bots.png
+    store: UI
+    asset_id: "f52eeec6c83cf71f98f8bef2daa880c6"
+    sha256: "5237fe64e93c2160d51fda7ec522b46b26c7f377f0d30ff8cae864343c3b9620"
+    bytes: 2021
+    width: 550
+    height: 420
+  - path: station/lit-lift.png
+    store: UI
+    asset_id: "5edd70d5514ad460d50756b65a51d0bf"
+    sha256: "7ea25627468768579c4d826633ad18bf6a2a4d6d3d10b68614d7a61293071b18"
+    bytes: 2842
+    width: 550
+    height: 420
+  - path: station/lit-cab.png
+    store: UI
+    asset_id: "b55f84fdb32340aa418c95677646c53e"
+    sha256: "2ef5919e0a5518f3ecfe9f28f08592e95517abf3419bf187c3525a238f9ebf23"
+    bytes: 1137
+    width: 550
+    height: 420
+  - path: station/lit-terminal.png
+    store: UI
+    asset_id: "ae59635ded48b009df94dc5480f75540"
+    sha256: "ad7c7492c8073e35ab685a46d3bce7ebb07b7eadf570a53228b9537f1434cfe9"
+    bytes: 1833
+    width: 550
+    height: 420

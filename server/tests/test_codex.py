@@ -10,7 +10,7 @@ from lso.auth import Viewer
 from lso.config import ROOT
 from lso.content import load_content
 from lso.engine import Engine
-from lso.models import GameState
+from lso.models import RULES, GameState
 from lso.store import Store
 from lso.views import project, referenced_assets
 
@@ -169,7 +169,7 @@ def test_an_old_save_gets_the_day_one_codex(content, tmp_path):
     old.rules, old.codex = 1, []
     store.commit("system", None, [], old.model_dump(mode="json"), {})
     e = Engine(content, store)
-    assert set(e.state.codex) == DAY_ONE and e.state.rules == 2
+    assert set(e.state.codex) == DAY_ONE and e.state.rules == RULES
     # health isn't touched again: rules 1 already did that
     assert e.state.vitals == old.vitals
 

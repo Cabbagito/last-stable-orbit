@@ -55,7 +55,18 @@ def state_from_preset(preset: Preset, content: Content) -> dict:
         "vitals": vitals,
         "inventory": inventory,
         "codex": list(preset.codex),
+        "station": station_lit(preset, content, tokens),
     }
+
+
+def station_lit(preset: Preset, content: Content, tokens: dict[str, dict]) -> list[str]:
+    """A preset's lit places: its own list, the party map, and wherever the crew stands."""
+    places = {p.map for p in content.station.places} if content.station else set()
+    lit = list(preset.station)
+    for m in [preset.party_map] + [t["map"] for t in tokens.values() if t["kind"] == "crew"]:
+        if m in places and m not in lit:
+            lit.append(m)
+    return lit
 
 
 def _entry(s: GameState, holder: str, uid: str) -> InvEntry:
@@ -95,6 +106,8 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "codex.set":  # the GM unlocked (or locked again) entries or blocks, for the whole crew
         keys = list(data["keys"])
         s.codex = [k for k in s.codex if k not in keys] + (keys if data["unlocked"] else [])
+    elif ev_type == "station.shown":  # a place lit on the Station: the crew went there, or the GM showed it
+        s.station = [m for m in s.station if m != data["map"]] + ([data["map"]] if data["shown"] else [])
     elif ev_type == "codex.read":
         read = s.codex_read.setdefault(data["char"], [])
         read += [k for k in data["keys"] if k not in read]

@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, Preset, PresetItem
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, Preset, PresetItem, Station
 
 log = logging.getLogger("lso.content")
 
@@ -29,6 +29,7 @@ class Content:
     cutscenes: dict[str, Cutscene] = field(default_factory=dict)  # in the order the GM will use them
     codex: dict[str, CodexEntry] = field(default_factory=dict)  # in reading order within each section
     codex_sections: list[CodexSection] = field(default_factory=list)  # the landing's five rows, in order
+    station: Station | None = None  # the Station tab's cross-section
     missing_assets: list[str] = field(default_factory=list)
 
     @property
@@ -85,6 +86,9 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
             raise ContentError("codex.yaml: expected sections and entries")
         c.codex_sections = [_parse(CodexSection, r, f"codex.yaml sections[{i}]") for i, r in enumerate(raw.get("sections") or [])]
         c.codex = _by_id(CodexEntry, raw.get("entries") or [], "codex.yaml entries")
+    stn = content_dir / "station.yaml"
+    if stn.is_file():
+        c.station = _parse(Station, _read(stn), "station.yaml")
     ins = content_dir / "insults.yaml"
     c.insults = _insults((_read(ins) or {}) if ins.is_file() else {})
     if clash := set(c.characters) & set(c.npcs):
@@ -179,6 +183,11 @@ def check_refs(c: Content) -> None:
         problems += [f"{where}: token ref {t.ref!r} is not an NPC" for t in st.tokens if t.ref not in c.npcs]
         problems += [f"{where}: token id {t.id!r} is a crew member's" for t in st.tokens if t.id in c.characters]
     problems += _codex_problems(c)
+    if c.station:
+        problems += [f"station.yaml: unknown map {p.map!r}" for p in c.station.places if p.map not in c.maps]
+    places = {p.map for p in c.station.places} if c.station else set()
+    for pr in c.presets.values():
+        problems += [f"preset {pr.id}: station {m!r} isn't a place on the Station" for m in pr.station if m not in places]
     if problems:
         raise ContentError("content references are broken:\n  " + "\n  ".join(problems))
 
@@ -237,6 +246,8 @@ def asset_paths(c: Content) -> set[str]:
         paths |= {p for p in (cue.file, cue.still) if p}
     for sec in c.codex_sections:
         paths |= {t.src for t in sec.tiles + sec.strip}
+    if c.station:
+        paths |= {c.station.art, c.station.hole} | {p.lit for p in c.station.places}
     for e in c.codex.values():
         paths.add(e.art.src)
         paths |= {r.icon for r in e.rows if r.icon} | {s.src for s in e.shots}

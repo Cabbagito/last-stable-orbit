@@ -6,7 +6,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 
 - **Story, world and rules:** `design/reference/campaign-bible.md`, a copy of the claude.ai Campaign Bible (https://claude.ai/artifact/M1yC81nP1if8VLKYnviCHp). The live doc may be newer.
 - **UI:** `design/reference/ui/R6.dc.html`, the latest round ("Meridian, ruled", modified from round 4's Meridian). Always build from the latest round.
-- **Codex:** the UI canvas (https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff), page "Codex, pinned". The decisions are in the plan's M6.
+- **Codex and Station:** the UI canvas (https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff), pages "Codex, pinned" and "Station". The decisions are in the plan's M6.
 - **Maps:** `design/reference/maps/*.dc.html` (Main = The Event Horizon). Every board shares one isometric formula; see `web/src/lib/proj.ts`.
 - **Cutscenes and the TV ("Stage"):** the claude.ai doc LSO — Cutscenes and Stage (https://claude.ai/artifact/8Bh5PsiSBjLaJaHyJfNUz8, read it with the Claude Docs connector), plus one canvas per cutscene (the first is The shotgun, https://claude.ai/artifact/ExqP99kRwpzUP9Funyg7Sv).
 - **Burns:** the Burn animations canvas (https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg): the five films, their icons, and the Burn row on the sheet.

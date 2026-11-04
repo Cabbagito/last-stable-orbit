@@ -23,6 +23,10 @@ The Codex: a player gets only the entries the GM has unlocked, and on each page 
 A locked entry's id, name and art never leave the server: not in the Codex, not in See also, not on a Codex button
 in the Scene. Pages never list what anyone carries. The TV gets no Codex. The GM gets every entry, marked.
 
+The Station: everyone but the TV gets all of Ergo's places, but a place the crew hasn't been to (and the GM hasn't
+shown) is dark: no lit overlay and no map preview, and the core goes by "The core". Players see where each of the
+crew stands, but only on lit places, and never a hidden token.
+
 Films: a player's laptop gets a film's file only while it plays, and only when its laptop plays it (no TV, or
 online). With a TV it gets only when the film starts and ends, and shows the black hole meanwhile.
 """
@@ -234,6 +238,42 @@ def _entry_view(state: GameState, content: Content, e, viewer: Viewer, open_: se
     return out
 
 
+def _station_view(state: GameState, content: Content, viewer: Viewer) -> dict | None:
+    st = content.station
+    if viewer.is_stage or not st:
+        return None
+    gm = viewer.is_gm
+    lit = set(state.station)
+    places = []
+    for p in st.places:
+        on = p.map in lit
+        known = on or gm  # the GM always sees what it is
+        m = content.maps[p.map]
+        v = {
+            "id": p.map,
+            "name": p.name if known or not p.dark_name else p.dark_name,
+            "where": p.where,
+            "blurb": p.blurb,
+            "tags": [{"x": t.x, "y": t.y, "text": t.text if known or not t.dark else t.dark} for t in p.tags],
+            "chip": list(p.chip),
+            "hots": [list(h) for h in p.hots],
+            "lit": on,
+            "overlay": url(p.lit) if known else None,
+            "preview": url(m.moods[0].base) if known else None,
+        }
+        places.append(v)
+    crew = []
+    for t in state.tokens.values():
+        if t.kind != "crew" or t.map not in {p.map for p in st.places}:
+            continue
+        if gm or (not t.hidden and t.map in lit):
+            crew.append({"char": t.ref, "map": t.map} | ({"hidden": t.hidden} if gm else {}))
+    order = list(content.characters)
+    crew.sort(key=lambda c: order.index(c["char"]))
+    labels = [x.model_dump() for x in st.labels]
+    return {"art": url(st.art), "hole": url(st.hole), "labels": labels, "places": places, "crew": crew}
+
+
 def _codex_view(state: GameState, content: Content, viewer: Viewer, open_: set[str]) -> dict | None:
     if viewer.is_stage or not content.codex:
         return None
@@ -400,6 +440,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         "tokens": tokens,
         "inventory": {h: _inventory_view(content, state.inventory.get(h, []), open_) for h in holders},
         "codex": _codex_view(state, content, viewer, open_),
+        "station": _station_view(state, content, viewer),
         "rolls": _rolls_view(state, viewer, set(tokens)),
         "stage": _stage_view(state, content, viewer, online),
     }

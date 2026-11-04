@@ -52,6 +52,14 @@ class Engine:
             data["hp"] = hp
         if self.state.rules < 2 and not self.state.codex and self.content.default_preset.codex:
             events.append(("codex.set", {"keys": list(self.content.default_preset.codex), "unlocked": True}))
+        if self.state.rules < 3 and self.content.station:
+            # Rules 3 added the Station: light the default preset's places, the party map, and where the crew is
+            places = {p.map for p in self.content.station.places}
+            seen = list(self.content.default_preset.station) + [self.state.party_map]
+            seen += [t.map for t in self.state.tokens.values() if t.kind == "crew"]
+            for m in dict.fromkeys(seen):
+                if m in places and m not in self.state.station:
+                    events.append(("station.shown", {"map": m, "shown": True}))
         self._commit("system", None, events + [("rules.updated", data)], {})
         log.info("brought the saved game up to rules %s", RULES)
 
@@ -84,6 +92,8 @@ class Engine:
         from .content import codex_keys
 
         bad += [f"codex {k!r}" for k in s.codex if k not in codex_keys(c)]
+        places = {p.map for p in c.station.places} if c.station else set()
+        bad += [f"station {m!r}" for m in s.station if m not in places]
         if s.stage.burn and s.stage.burn.char not in c.characters:
             bad.append(f"burn {s.stage.burn.char!r}")
         if s.stage.follow and s.stage.follow not in c.characters:

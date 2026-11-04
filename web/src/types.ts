@@ -291,6 +291,7 @@ export interface View {
   rolls: RollView[]
   stage: StageView
   codex: CodexView | null
+  station: StationView | null
   roster?: RosterNpc[] // GM only
   presets?: { id: string; name: string }[] // GM only
   items?: Item[] // GM only: the catalogue, for giving
@@ -363,6 +364,28 @@ export interface CodexEntryView {
 export interface CodexView {
   sections: CodexSectionView[]
   entries: CodexEntryView[]
+}
+
+/** One place on the Station's cross-section. A dark one (`lit` false) has no overlay or preview for players. */
+export interface StationPlaceView {
+  id: string // its map
+  name: string
+  where: string
+  blurb: string
+  tags: { x: number; y: number; text: string }[]
+  chip: [number, number]
+  hots: [number, number, number, number][]
+  lit: boolean
+  overlay: string | null
+  preview: string | null
+}
+
+export interface StationView {
+  art: string
+  hole: string
+  labels: { x: number; y: number; text: string }[]
+  places: StationPlaceView[]
+  crew: { char: string; map: string; hidden?: boolean }[]
 }
 
 export interface Ack {

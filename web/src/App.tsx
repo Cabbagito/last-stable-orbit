@@ -4,6 +4,7 @@ import { RollDialog, preloadRollFonts } from './roll/RollDialog'
 import { GmTab } from './pages/GmTab'
 import { Codex } from './pages/Codex'
 import { Placeholder } from './pages/Placeholder'
+import { Station } from './pages/Station'
 import { Scene } from './pages/Scene'
 import { Header, type Tab } from './shell/Header'
 import { Downside } from './stage/Downside'
@@ -109,7 +110,7 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
   return (
     <div className={'r4 th-meridian' + (preview ? ' app-preview' : '')}>
       <Header tab={tab} isGm={isGm} onLogout={onLogout} />
-      {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : tab === 'codex' ? <Codex /> : <Placeholder tab={tab} />}
+      {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : tab === 'codex' ? <Codex /> : tab === 'station' ? <Station /> : <Placeholder tab={tab} />}
       <Downside where="laptop" />
       <RollDialog />
       <LaptopFilm />

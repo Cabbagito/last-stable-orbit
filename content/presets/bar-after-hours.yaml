@@ -29,3 +29,6 @@ codex: [lale, marlo, tally, ves, tomo,
         patience, promenade, event-horizon,
         ergo, isco, hole, queue,
         dax, fixer, concierge, dock-clerk, steward, ilija, invitation, mural, table, slots]
+
+# The Station: places the crew has been, lit and open (the party map and wherever the crew stands are added).
+station: [patience, promenade, event-horizon]

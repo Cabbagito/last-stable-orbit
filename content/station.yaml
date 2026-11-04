@@ -1,0 +1,115 @@
+# The Station tab: Ergo cut open, from the UI canvas's page "Station" (boards Station and StationGM).
+# Every place shows. One the crew has been to, or Peter has shown them, lights up and its map opens; the rest stay
+# dark, with "The crew hasn't been here". A place with `dark_name` goes by that until it's shown (the core).
+# Sending the crew somewhere shows it. Peter shows or hides any place from the Station tab.
+#
+# Positions are the board's, in display px on the 1100 x 840 picture (the art is drawn at 2x):
+#   tags: its labels. chip: where the first crew chip sits (the rest go right, 28 px apart).
+#   hots: the boxes you hover and click, x, y, width, height.
+# Texts are DRAFTS from the board, for Peter to edit.
+
+art: station/ergo.png
+hole: codex/hole.gif
+labels:
+  - {x: 714, y: 728, text: About 3 million km}
+
+places:
+  - map: patience
+    name: Patience
+    where: Moored at Dock 7
+    blurb: The old liner that brought you here, all cream decks, brass rails and warm windows.
+    lit: station/lit-patience.png
+    tags: [{x: 52, y: 336, text: Patience}]
+    chip: [150, 458]
+    hots: [[48, 352, 232, 112]]
+
+  - map: promenade
+    name: The Promenade
+    where: Deck 2
+    blurb: "One long street. Dock 7's queue is always exactly 11 minutes. Then the plaza with the mural of Ilija, and the Night Market with its noodles and chrome clinics."
+    lit: station/lit-promenade.png
+    tags: [{x: 702, y: 358, text: The Promenade}, {x: 282, y: 384, text: Dock 7}]
+    chip: [800, 442]
+    hots: [[280, 402, 84, 32], [700, 374, 208, 68]]
+
+  - map: event-horizon
+    name: The Event Horizon
+    where: Deck 2, on the Promenade
+    blurb: A bar with four slot machines that never lose, and no cameras.
+    lit: station/lit-event-horizon.png
+    tags: [{x: 894, y: 358, text: Event Horizon}]
+    chip: [930, 442]
+    hots: [[910, 374, 72, 68]]
+
+  - map: med
+    name: The Med Bay
+    where: Deck 2, the far end
+    blurb: Station satisfaction is 99.97%.
+    lit: station/lit-med.png
+    tags: [{x: 990, y: 358, text: Med Bay}]
+    chip: [1006, 442]
+    hots: [[984, 374, 56, 68]]
+
+  - map: executive
+    name: The Executive floors
+    where: Decks 6 to 9
+    blurb: "Glass, quiet carpets, human staff. The company sells booking time with ISCO here. By the founder's rule, ISCO has no systems on these decks."
+    lit: station/lit-executive.png
+    tags: [{x: 702, y: 106, text: Executive floors}]
+    chip: [780, 296]
+    hots: [[700, 120, 152, 176]]
+
+  - map: secure
+    name: The Secure floor
+    where: Behind the guarded door on deck 8
+    blurb: Locked away from the rest of the executive decks.
+    lit: station/lit-secure.png
+    tags: [{x: 856, y: 144, text: Secure floor}]
+    chip: [900, 214]
+    hots: [[856, 158, 100, 56]]
+
+  - map: vault
+    name: The founder's vault
+    where: At the end of the Secure floor
+    blurb: "His private vault, treated like a saint's shrine, with flowers and candles left at the door."
+    lit: station/lit-vault.png
+    tags: [{x: 958, y: 144, text: Vault}]
+    chip: [988, 214]
+    hots: [[958, 158, 54, 56]]
+
+  - map: bots
+    name: The Bot bays
+    where: Deck 1, Maintenance
+    blurb: Pipes, heat and cleaner-bot charging bays. Nobody comes down here on purpose.
+    lit: station/lit-bots.png
+    tags: [{x: 1012, y: 470, text: Bot bays}]
+    chip: [760, 502]
+    hots: [[700, 450, 320, 52]]
+
+  - map: lift
+    name: The Lift station
+    where: Top of the cable
+    blurb: Where the crawler leaves for the core, about an hour down the cable.
+    lit: station/lit-lift.png
+    tags: [{x: 900, y: 534, text: Lift station}]
+    chip: [800, 568]
+    hots: [[700, 508, 260, 70]]
+
+  - map: cab
+    name: The Crawler cab
+    where: On the cable
+    blurb: It runs the cable in about an hour of station time. Clocks run slower the further down you ride.
+    lit: station/lit-cab.png
+    tags: [{x: 728, y: 697, text: Crawler}]
+    chip: [752, 708]
+    hots: [[678, 686, 46, 36]]
+
+  - map: terminal
+    name: The Terminal room
+    dark_name: The core
+    where: The bottom of the cable
+    blurb: "Where ISCO's mind actually runs, deep in the gravity well for the power. One minute down there is about 3.2 minutes up here."
+    lit: station/lit-terminal.png
+    tags: [{x: 798, y: 775, text: Terminal room, dark: The core}]
+    chip: [740, 790]
+    hots: [[608, 752, 184, 80]]
