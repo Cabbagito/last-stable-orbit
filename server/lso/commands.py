@@ -17,6 +17,7 @@ from .views import viewer_map
 
 Events = list[tuple[str, dict]]
 COORD_LIMIT = 500.0  # world units; far beyond any map, just stops garbage
+SESSION_ENTROPY = 2  # what "New session" sets everyone's Entropy to
 
 # The sweeper, for a roller whose laptop sleeps or whose tab closes mid-roll:
 REVEAL_AFTER = 45.0  # everyone sees the result even if the roller's screen never got there (6 exploding dice with every gate held run about 40 s)
@@ -375,6 +376,15 @@ def handle(
         if not isinstance(hp, int) or not isinstance(en, int) or isinstance(hp, bool) or isinstance(en, bool):
             raise _invalid("hp and entropy must be whole numbers")
         return [("vitals.set", {"char": char, "hp": max(0, min(HP_MAX, hp)), "entropy": max(0, min(ENTROPY_MAX, en))})]
+
+    if kind == "gm.session.new":
+        # Everyone starts a session with 2 Entropy. HP, pockets and the maps carry over.
+        events: Events = []
+        for char in content.characters:
+            cur = state.vitals.get(char)
+            if cur and cur.entropy != SESSION_ENTROPY:
+                events.append(("vitals.set", {"char": char, "hp": cur.hp, "entropy": SESSION_ENTROPY}))
+        return events
 
     if kind == "gm.roll.start":
         return _gm_roll(state, content, args, rng, now)

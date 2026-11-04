@@ -23,6 +23,9 @@ class Conn:
     last_hash: str = ""
     frames: int = 0  # per-connection counter, so gaps reveal nothing about hidden activity
     visible_tokens: set[str] = field(default_factory=set)
+    # "View as player": the GM watching one seat's own feed. Its viewer is that player, so it gets exactly
+    # their projection, but it's read-only and doesn't mean the player is here.
+    preview: bool = False
 
 
 def _dump(obj) -> str:
@@ -35,10 +38,14 @@ class Hub:
         self.conns: set[Conn] = set()
         self._asset_cache: dict[str, tuple[int, set[str]]] = {}
 
-    def add(self, ws: WebSocket, viewer: Viewer) -> Conn:
-        c = Conn(ws, viewer)
+    def add(self, ws: WebSocket, viewer: Viewer, preview: bool = False) -> Conn:
+        c = Conn(ws, viewer, preview=preview)
         self.conns.add(c)
         return c
+
+    def online(self) -> set[str]:
+        """Seats with a screen of their own open. The GM viewing as Tally doesn't make Tally online."""
+        return {c.viewer.seat for c in self.conns if not c.preview}
 
     def remove(self, c: Conn) -> None:
         self.conns.discard(c)

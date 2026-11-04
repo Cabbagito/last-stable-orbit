@@ -8,7 +8,7 @@
 | M2: The roll | **Done** (see "How M2 turned out") |
 | Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
-| M4: GM tab | **Next** (decided 2026-11-04, see M4) |
+| M4: GM tab | **In progress.** Round 11 is on the UI canvas for Peter to pick from; the server half (New session, view as player) is built |
 | M5–M9 | Not started |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -189,7 +189,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **No undo.** You fix mistakes by hand.
   - **No group playtest first.** You test alone as we go.
 - **In it:**
-  - **Design:** 2–3 R6-style variants on the UI canvas first (Round 10); you pick one.
+  - **Design:** 2–3 R6-style variants on the UI canvas first (Round 11; Round 10 on the canvas is the Codex); you pick one.
   - **On your Scene, beside the map:**
     - rolls for NPCs, public or hidden, with recent history;
     - the tokens on this map (show, hide, remove) and the roster to place NPCs;
@@ -204,6 +204,16 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
 - **Done when:**
   - you can run the bar scene from your Scene, and set it up from the GM tab;
   - "view as player" never shows a hidden token, object or someone else's pocket (test).
+- **Order (planned 2026-11-04):**
+  1. **Round 11 on the UI canvas** (boards `R11SceneA`–`C`, `R11Office1`–`2`). Three Scene layouts (one column top to bottom, one column with three tabs, map-first with floating panels) and two GM tabs (one page, or seat by seat with a live preview). You pick one of each, or mix. **Waiting on Peter.**
+  2. **The server, which doesn't wait on the pick** (**built**, tests in `server/tests/test_gm_tab.py`):
+     - `gm.session.new` sets every crew member's Entropy to 2, as ordinary `vitals.set` events.
+     - **View as player** is a second, read-only socket: `/ws?as=<character>`, accepted only with the GM's cookie. It gets exactly that seat's projection, every intent on it is refused, it doesn't count as that player being online, and drags reach it as they reach the player.
+  3. **The web build** of the picked layouts: the Scene's GM controls, the GM tab, and the player's screen with a "viewing as" banner.
+  4. **Checks:** leak tests for view-as, a test for New session, and a walk through the bar scene with two seats.
+- **Defaults taken while planning:**
+  - The Scene keeps a quick mood switch for the map you're on, because moods change mid-scene (the lights go out). The GM tab has every map.
+  - Clicking a crew member opens their card with HP and Entropy steppers and their pockets, so you can hand over a clue mid-scene. The full pocket table moves to the GM tab.
 - **Moved to M5:** "send the crew to a map", since there is only one map until then.
 - **Why here:** after M1–M3 every GM function exists, so one design pass can lay them all out.
 

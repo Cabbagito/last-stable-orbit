@@ -37,8 +37,8 @@ async def sweeper(engine: Engine, hub: Hub) -> None:
         await asyncio.sleep(SWEEP_EVERY)
         try:
             now = time.time()
-            for c in hub.conns:
-                last_seen[c.viewer.seat] = now
+            for s in hub.online():
+                last_seen[s] = now
             online = {seat for seat, t in last_seen.items() if now - t < AWAY_AFTER}
             if await engine.sweep(online):
                 await hub.broadcast()
@@ -88,7 +88,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def seats(request: Request):
         """The character picker: who can be chosen, and who is already on board."""
         engine: Engine = request.app.state.engine
-        online = {c.viewer.seat for c in request.app.state.hub.conns}
+        online = request.app.state.hub.online()
         return {
             "crew": [
                 {"id": c.id, "name": c.name, "short": c.short, "role": c.role, "portrait": url(c.portrait), "color": c.color, "online": c.id in online}
@@ -162,9 +162,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if viewer is None or not origin_ok(ws):
             await ws.close(code=4401, reason="login required")
             return
+        view_as = ws.query_params.get("as")
+        if view_as is not None:
+            # "View as player" (/ws?as=tally): the GM gets that seat's own feed, read-only
+            if not viewer.is_gm:
+                await ws.close(code=4403, reason="only the GM can view as a player")
+                return
+            viewer = ws.app.state.auth.player(view_as)
+            if viewer is None:
+                await ws.close(code=4404, reason="no one by that name is on this crew")
+                return
         hub: Hub = ws.app.state.hub
         engine: Engine = ws.app.state.engine
-        conn = hub.add(ws, viewer)
+        conn = hub.add(ws, viewer, preview=view_as is not None)
         try:
             await hub.send_view(conn, force=True)
             while True:
@@ -182,6 +192,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 elif t == "intent":
                     kind, args, iid = msg.get("type"), msg.get("args") or {}, msg.get("id")
                     if not isinstance(kind, str) or (iid is not None and not isinstance(iid, str)):
+                        continue
+                    if conn.preview:  # looking only: nothing done here may act as the player
+                        if kind != "token.drag":
+                            await ws.send_text(json.dumps({"t": "ack", "id": iid, "ok": False, "code": "read_only", "error": "This is a read-only view of a player's screen"}))
                         continue
                     if kind == "token.drag":  # live, unlogged, relayed to whoever can see the token
                         try:
