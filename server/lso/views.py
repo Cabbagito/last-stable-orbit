@@ -3,7 +3,7 @@
 Every frame a client receives is built here for that viewer. A player gets:
 - the one map they are on (their own token's map, else the party map), and only that map's art;
 - the objects on it the GM has revealed (a mural, the slot machines), each marked with whether they've inspected it;
-- the tokens on that map that aren't hidden, with each NPC's public card (never its gm_note);
+- the tokens on that map that aren't hidden, with each NPC's public card (never its gm_note or its dice);
 - every crew member's public sheet and vitals (the crew rail shows them);
 - their own inventory only, with each item's text (clues are items, so this is where they hide);
 - each crew member's latest roll, and the latest public roll of each NPC they can see. The dice of a
@@ -88,7 +88,7 @@ def _token_view(content: Content, tid: str, t, gm: bool) -> dict:
         n = content.npcs[t.ref]
         base |= {"name": n.name, "role": n.role, "portrait": url(n.portrait), "color": n.color, "mood": n.mood, "note": n.note, "codex": n.codex}
         if gm:
-            base["gm_note"] = n.gm_note
+            base |= {"gm_note": n.gm_note, "stats": n.stats}  # an NPC's dice are the GM's secret
     if gm:
         base["hidden"] = t.hidden
     return base

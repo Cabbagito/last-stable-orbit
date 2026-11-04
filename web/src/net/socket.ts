@@ -23,6 +23,7 @@ export class GameSocket {
     private onFrame: (f: ServerFrame) => void,
     private onStatus: (s: Status) => void,
     private onAuthLost: () => void,
+    private path = '/ws', // "/ws?as=tally": the GM's read-only view of one player's screen
   ) {}
 
   start() {
@@ -65,7 +66,7 @@ export class GameSocket {
     if (this.stopped) return
     this.onStatus('connecting')
     const proto = location.protocol === 'https:' ? 'wss' : 'ws'
-    const ws = new WebSocket(`${proto}://${location.host}/ws`)
+    const ws = new WebSocket(`${proto}://${location.host}${this.path}`)
     this.ws = ws
     ws.onopen = () => {
       this.backoff = 500
@@ -91,7 +92,8 @@ export class GameSocket {
       this.ws = null
       for (const [id, resolve] of this.pending) resolve({ id, ok: false, code: 'offline' })
       this.pending.clear()
-      if (e.code === 4401) {
+      if (e.code === 4401 || e.code === 4403 || e.code === 4404) {
+        // logged out; or a view-as for a non-GM or a seat that doesn't exist: retrying won't help
         this.onAuthLost()
         return
       }

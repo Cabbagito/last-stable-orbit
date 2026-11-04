@@ -30,6 +30,10 @@ interface GameStore {
   resumeCheck: boolean
   calls: CallMemo
   callTick: number
+  /** The GM looking at one player's screen, read-only (`/?as=tally`): nothing here may act as them. */
+  preview: string | null
+  /** The last GM action the server refused, shown in the GM column and the GM tab until the next one works. */
+  gmError: string
   connect: () => void
   disconnect: () => void
   select: (id: string | null) => void
@@ -87,12 +91,16 @@ export const useGame = create<GameStore>((set, get) => {
     resumeCheck: false,
     calls: emptyMemo(),
     callTick: 0,
+    preview: previewSeat(),
+    gmError: '',
     connect: () => {
       if (get().socket) return
+      const as = get().preview
       const socket = new GameSocket(
         onFrame,
         (status) => set(status === 'live' ? { status, resumeCheck: true } : { status }),
         () => set({ authLost: true }),
+        as ? `/ws?as=${encodeURIComponent(as)}` : '/ws',
       )
       set({ socket })
       socket.start()
@@ -104,7 +112,9 @@ export const useGame = create<GameStore>((set, get) => {
     select: (selected) => set({ selected }),
     setLocal: (local) => set({ local }),
     setGmMap: (gmMap) => set({ gmMap }),
-    openPick: (stat, entry = -1) => set({ dialog: { kind: 'pick', stat, entry } }),
+    openPick: (stat, entry = -1) => {
+      if (!get().preview) set({ dialog: { kind: 'pick', stat, entry } })
+    },
     openRoll: (rollId, resume = false) => set({ dialog: { kind: 'roll', rollId, resume } }),
     closeDialog: () => {
       const d = get().dialog
@@ -113,5 +123,27 @@ export const useGame = create<GameStore>((set, get) => {
   }
 })
 
-export const send = (type: string, args: Record<string, unknown>): Promise<Ack> =>
-  useGame.getState().socket?.send(type, args) ?? Promise.resolve({ id: null, ok: false, code: 'offline' })
+/** Which seat this window is viewing as, if it's the GM's read-only view of a player. */
+function previewSeat(): string | null {
+  return new URLSearchParams(location.search).get('as') || null
+}
+
+export const send = (type: string, args: Record<string, unknown>): Promise<Ack> => {
+  if (useGame.getState().preview) return Promise.resolve({ id: null, ok: false, code: 'read_only' }) // the server refuses it too
+  return useGame.getState().socket?.send(type, args) ?? Promise.resolve({ id: null, ok: false, code: 'offline' })
+}
+
+/** A GM action: a refusal shows in the GM column (or the GM tab) until the next action works. */
+export async function gmRun(type: string, args: Record<string, unknown>): Promise<Ack> {
+  const ack = await send(type, args)
+  useGame.setState({ gmError: ack.ok ? '' : ack.error || ack.code || 'That did not work' })
+  return ack
+}
+
+/** Roll for an NPC by its stat (its die is on its sheet), or "just a die". The animation plays here. */
+export async function gmRoll(args: { token: string; stat: StatKey; hidden: boolean } | { token: null; stat: StatKey; sides: number }) {
+  const ack = await gmRun('gm.roll.start', args)
+  if (!ack.ok) return
+  const mine = useGame.getState().view?.rolls.filter((r) => r.by === 'gm' && r.open).pop()
+  if (mine) useGame.getState().openRoll(mine.id)
+}

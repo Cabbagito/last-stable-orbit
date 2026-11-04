@@ -129,10 +129,13 @@ def test_player_projection_hides_secrets(engine, content):
             assert n.gm_note not in view
     assert "roster" not in view and "presets" not in view
     v = project(st, content, VES)
+    npcs = [t for t in v["tokens"].values() if t["kind"] == "npc"]
+    assert npcs and all("stats" not in t for t in npcs)  # an NPC's dice are the GM's secret
     assert list(v["inventory"]) == ["ves"]  # only her own pockets
     assert list(v["maps"]) == ["event-horizon"]
     g = project(st, content, GM)
     assert g["tokens"]["cleaner-14"]["hidden"] is True and "gm_note" in g["tokens"]["dax"]
+    assert g["tokens"]["dax"]["stats"] == content.npcs["dax"].stats
     assert set(g["inventory"]) == {"lale", "marlo", "tally", "ves", "tomo"}
 
 

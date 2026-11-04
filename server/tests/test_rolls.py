@@ -3,6 +3,7 @@
 import json
 
 import pytest
+from pydantic import ValidationError
 
 from lso import rules
 from lso.auth import Viewer
@@ -10,7 +11,7 @@ from lso.commands import sweep
 from lso.config import ROOT
 from lso.content import load_content
 from lso.engine import Engine
-from lso.models import GameState
+from lso.models import DIE_SIDES, STATS, GameState, Npc
 from lso.state import KEEP_CLOSED_ROLLS, apply
 from lso.store import Store
 from lso.views import project
@@ -226,11 +227,26 @@ async def test_gm_can_close_any_roll(engine, dice):
 # ---------------------------------------------------------------- GM rolls
 
 
+def test_every_npc_has_a_sheet(content):
+    for n in content.npcs.values():
+        assert list(n.stats) == list(STATS) and set(n.stats.values()) <= set(DIE_SIDES), n.id
+    base = {"id": "x", "name": "X", "portrait": "portraits/dax.gif"}
+    six = dict.fromkeys(STATS, 6)
+    for bad in ({}, {**six, "body": 7}, {k: 6 for k in STATS[:5]}, {**six, "luck": 6}):
+        with pytest.raises(ValidationError):
+            Npc.model_validate({**base, "stats": bad})
+    with pytest.raises(ValidationError):
+        Npc.model_validate(base)  # stats are required
+
+
 async def test_gm_rolls_for_npcs(engine, dice):
     dice.push(9)
-    assert (await run(engine, GM, "gm.roll.start", {"token": "dax", "sides": 12, "stat": "cool", "hidden": False}))["ok"]
+    assert (await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "cool", "hidden": False}))["ok"]
     r = latest(engine)
-    assert (r.by, r.token, r.char, r.handle, r.sides, r.hidden, r.bonus) == ("gm", "dax", None, "dax", 12, False, 0)
+    assert (r.by, r.token, r.char, r.handle, r.sides, r.hidden, r.bonus) == ("gm", "dax", None, "dax", 20, False, 0)  # Dax's Cool is a d20
+    dice.push(2)
+    await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "reflex"})
+    assert latest(engine).sides == 6  # and his Reflex a d6
 
     dice.push(3)
     await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20, "stat": "intel", "hidden": False})
@@ -238,20 +254,22 @@ async def test_gm_rolls_for_npcs(engine, dice):
     assert not engine.state.rolls[0].open  # the GM has one roll open at a time too
 
     await run(engine, GM, "gm.token.hide", {"token": "cleaner-14", "hidden": True})
-    ack = await run(engine, GM, "gm.roll.start", {"token": "cleaner-14", "sides": 6, "stat": "body"})
+    ack = await run(engine, GM, "gm.roll.start", {"token": "cleaner-14", "stat": "body"})
     assert ack["code"] == "invalid" and "hidden" in ack["error"]
     dice.push(4)
-    assert (await run(engine, GM, "gm.roll.start", {"token": "cleaner-14", "sides": 6, "stat": "body", "hidden": True}))["ok"]
+    assert (await run(engine, GM, "gm.roll.start", {"token": "cleaner-14", "stat": "body", "hidden": True}))["ok"]
+    assert latest(engine).sides == 6
 
-    for bad in ({"token": "ves", "sides": 6, "stat": "body"}, {"token": "nobody", "sides": 6, "stat": "body"},
-                {"token": "dax", "sides": 7, "stat": "body"}, {"token": "dax", "sides": 6, "stat": "luck"}):
+    for bad in ({"token": "ves", "stat": "body"}, {"token": "nobody", "stat": "body"}, {"token": "dax", "stat": "luck"},
+                {"token": "dax", "sides": 20, "stat": "body"},  # an NPC's die is on its sheet, not picked
+                {"token": None, "sides": 7, "stat": "body"}, {"token": None, "stat": "body"}):
         assert (await run(engine, GM, "gm.roll.start", bad))["code"] == "invalid", bad
-    assert (await run(engine, VES, "gm.roll.start", {"token": "dax", "sides": 6, "stat": "body"}))["code"] == "forbidden"
+    assert (await run(engine, VES, "gm.roll.start", {"token": "dax", "stat": "body"}))["code"] == "forbidden"
 
 
 async def test_gm_rolls_can_be_pushed_by_no_one(engine, dice):
     dice.push(5)
-    await run(engine, GM, "gm.roll.start", {"token": "dax", "sides": 6, "stat": "body"})
+    await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "body"})
     ack = await run(engine, GM, "roll.push", {"roll": latest(engine).id})
     assert ack["code"] == "invalid"
 
@@ -329,7 +347,7 @@ async def test_hidden_gm_rolls_never_reach_players(engine, dice):
 
 async def test_npc_rolls_follow_their_token(engine, dice):
     dice.push(5)
-    await run(engine, GM, "gm.roll.start", {"token": "dax", "sides": 8, "stat": "empathy"})
+    await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "empathy"})
     rolls = project(engine.state, engine.content, VES)["rolls"]
     assert [r["token"] for r in rolls] == ["dax"]
     await run(engine, GM, "gm.token.hide", {"token": "dax", "hidden": True})
@@ -392,7 +410,7 @@ async def test_replay_with_rolls_rebuilds_snapshot(engine, dice):
     await run(engine, VES, "roll.reveal", {"roll": rid, "shown": 1})
     await run(engine, VES, "roll.push", {"roll": rid})
     await run(engine, VES, "roll.start", {"stat": "tech"})  # closes the first
-    await run(engine, GM, "gm.roll.start", {"token": "dax", "sides": 8, "stat": "body"})
+    await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "body"})
     state = GameState()
     for seq, ev_type, data in engine.store.events():
         state = apply(state, seq, ev_type, json.loads(data))

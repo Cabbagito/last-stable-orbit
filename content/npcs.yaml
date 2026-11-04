@@ -2,12 +2,15 @@
 # gm_note is only ever sent to the GM. color is the token ring: crew pink, the fixer's people red,
 # Dax amber, ISCO's side white-violet, ordinary residents dusk grey.
 # codex names the NPC's Codex entry; the card shows a Codex button only when it's set (the Codex itself is M6).
+# stats: the die for each stat, like the crew's. The GM rolls an NPC by stat. Only the GM ever sees them.
+# The dice are DRAFTS from Round 12 of the UI canvas, for Peter to set.
 
 - id: dax
   name: Old Dax
   role: Barkeep
   portrait: portraits/dax.gif
   color: "#f2b544"
+  stats: {body: 12, reflex: 6, tech: 6, intel: 10, cool: 20, empathy: 8}
   mood: Watching the door
   note: Keeps one table nobody sits at.
   codex: old-dax
@@ -18,6 +21,7 @@
   role: Fixer
   portrait: portraits/fixer.gif
   color: "#ff5a4a"
+  stats: {body: 12, reflex: 10, tech: 12, intel: 12, cool: 20, empathy: 4}
   mood: Patient
   note: Asked nicely.
   codex: the-fixer
@@ -28,6 +32,7 @@
   role: Cleaner, ISCO
   portrait: portraits/cleaner-14.gif
   color: "#c9bcff"
+  stats: {body: 6, reflex: 8, tech: 12, intel: 10, cool: 20, empathy: 4}
   mood: Delighted
   note: Its eyes slide away once a loop.
   gm_note: "No cameras in the bar, but Unit 14 is always somewhere near the crew's table. ISCO's eyes."
@@ -37,6 +42,7 @@
   role: Resident
   portrait: portraits/slot-regular.gif
   color: "#c9bcff"
+  stats: {body: 4, reflex: 6, tech: 4, intel: 6, cool: 12, empathy: 6}
   mood: Winning
   note: Has never lost.
 
@@ -45,6 +51,7 @@
   role: Resident
   portrait: portraits/happy-resident.gif
   color: "#a9a2bc"
+  stats: {body: 6, reflex: 6, tech: 4, intel: 6, cool: 8, empathy: 12}
   mood: Happy
   note: Very happy.
 
@@ -53,6 +60,7 @@
   role: Staff, ISCO
   portrait: portraits/service-droid.gif
   color: "#c9bcff"
+  stats: {body: 8, reflex: 8, tech: 12, intel: 8, cool: 10, empathy: 6}
   mood: Helpful
   note: Will bring you anything.
 
@@ -61,6 +69,7 @@
   role: Muscle
   portrait: portraits/hired-gun.gif
   color: "#ff5a4a"
+  stats: {body: 12, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}
   mood: Bored
   note: Paid by the job.
   gm_note: "The fixer's. 4 health, d12, Hard to hit. Respirators, so the gas doesn't touch them. Once the fixer is down, Cool at Normal sends the rest running."

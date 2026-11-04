@@ -159,25 +159,27 @@ def _roll_intent(viewer: Viewer, state: GameState, content: Content, kind: str, 
 
 
 def _gm_roll(state: GameState, content: Content, args: dict, rng, now: float) -> Events:
-    sides = _int(args, "sides")
-    if sides not in DIE_SIDES:
-        raise _invalid(f"sides must be one of {DIE_SIDES}")
+    """An NPC rolls the die on its sheet for the stat. "Just a die" names its own die and is always hidden."""
     stat = _stat(args)
     token = args.get("token")
+    if token is None:
+        sides = _int(args, "sides")
+        if sides not in DIE_SIDES:
+            raise _invalid(f"sides must be one of {DIE_SIDES}")
+        # no token to sit on, so nobody else could see it: GM only
+        return _new_roll(state, content, rng, now, by="gm", token=None, handle="gm", stat=stat, sides=sides, hidden=True)
+    if not isinstance(token, str):
+        raise _invalid("token must be a token id or null")
+    t = state.tokens.get(token)
+    if t is None or t.kind != "npc":
+        raise _invalid("the GM rolls for NPC tokens")
+    if "sides" in args:
+        raise _invalid("an NPC rolls the die on its sheet: send the stat, not sides")
     hidden = bool(args.get("hidden", False))
-    handle = "gm"
-    if token is not None:
-        if not isinstance(token, str):
-            raise _invalid("token must be a token id or null")
-        t = state.tokens.get(token)
-        if t is None or t.kind != "npc":
-            raise _invalid("the GM rolls for NPC tokens")
-        if t.hidden and not hidden:
-            raise _invalid("that token is hidden from players: make the roll hidden, or show the token first")
-        handle = t.ref
-    else:
-        hidden = True  # just a die, with no token to sit on: only the GM sees it
-    return _new_roll(state, content, rng, now, by="gm", token=token, handle=handle, stat=stat, sides=sides, hidden=hidden)
+    if t.hidden and not hidden:
+        raise _invalid("that token is hidden from players: make the roll hidden, or show the token first")
+    sides = content.npcs[t.ref].stats[stat]
+    return _new_roll(state, content, rng, now, by="gm", token=token, handle=t.ref, stat=stat, sides=sides, hidden=hidden)
 
 
 def _holder(content: Content, args: dict, key: str = "holder") -> str:

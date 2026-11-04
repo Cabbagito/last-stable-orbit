@@ -1,13 +1,17 @@
-import { useEffect } from 'react'
-import { Closeup, CodexButton, Inspector } from '../inspect/Inspector'
+import { useEffect, useState, type CSSProperties } from 'react'
+import { GiveRow, Pocket, Vitals, Eye } from '../gm/parts'
+import { Closeup, CodexButton, InspectBlock, Inspector } from '../inspect/Inspector'
 import { findObject } from '../inspect/objects'
 import { ring } from '../lib/ring'
+import { STAT_LOOK, statIcon } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
-import { send, useGame } from '../store/game'
+import { gmRoll, gmRun, send, useGame } from '../store/game'
+import { STATS, type TokenView } from '../types'
 
 /**
  * The card for whatever was clicked on the map or in the crew rail: a crew member, an NPC, or a thing in
- * the world. Round 9's inspector, docked at the map's top right. The GM also sees what players can't.
+ * the world. Round 9's inspector, docked at the map's top right. The GM also sees what players can't, and runs
+ * the scene from here (Round 12): an NPC's card rolls its stats, a crew card has HP, Entropy, pockets and Give.
  */
 export function InspectCard() {
   const view = useGame((s) => s.view)
@@ -44,7 +48,7 @@ export function InspectCard() {
             <>
               {obj.codex && <CodexButton />}
               {isGm && (
-                <button type="button" className="r4-btn app-small" onClick={() => send('gm.object.show', { map: mapId, object: obj.id, shown: !obj.shown })}>
+                <button type="button" className="r4-btn app-small" onClick={() => void gmRun('gm.object.show', { map: mapId, object: obj.id, shown: !obj.shown })}>
                   {obj.shown ? 'Hide' : 'Show'}
                 </button>
               )}
@@ -52,7 +56,7 @@ export function InspectCard() {
             </>
           }
         >
-          {isGm && !obj.shown && <div className="r4-lab app-warn">HIDDEN FROM PLAYERS</div>}
+          {isGm && !obj.shown && <div className="r10-warn">HIDDEN FROM PLAYERS</div>}
           <div className="app-ins-txt">{obj.text}</div>
         </Inspector>
       </aside>
@@ -62,6 +66,7 @@ export function InspectCard() {
   const t = view.tokens[selected]
   if (!t) return null
   const crew = t.kind === 'crew' ? view.crew.find((c) => c.id === t.ref) : undefined
+  const pockets = crew ? view.inventory[crew.id] ?? [] : []
   return (
     <aside aria-label={t.name} className="app-card">
       <Inspector
@@ -76,9 +81,11 @@ export function InspectCard() {
         }
         sub={
           crew ? (
-            <span className="app-ins-vit">
-              HP <span className="app-ins-hp">{crew.hp}</span>/6 · EN <span className="app-ins-en">{crew.entropy}</span>/6
-            </span>
+            !isGm && (
+              <span className="app-ins-vit">
+                HP <span className="app-ins-hp">{crew.hp}</span>/6 · EN <span className="app-ins-en">{crew.entropy}</span>/6
+              </span>
+            )
           ) : (
             t.mood && <span className="app-ins-sub">{t.mood}.</span>
           )
@@ -87,18 +94,86 @@ export function InspectCard() {
           <>
             {t.codex && <CodexButton />}
             {isGm && (
-              <button type="button" className="r4-btn app-small" onClick={() => send('gm.token.hide', { token: t.id, hidden: !t.hidden })}>
+              <button type="button" className="r4-btn app-small" onClick={() => void gmRun('gm.token.hide', { token: t.id, hidden: !t.hidden })}>
                 {t.hidden ? 'Show' : 'Hide'}
+              </button>
+            )}
+            {isGm && !crew && (
+              <button type="button" className="r4-btn app-small" onClick={() => void gmRun('gm.token.remove', { token: t.id })}>
+                Remove
               </button>
             )}
             {close}
           </>
         }
       >
-        {t.hidden && <div className="r4-lab app-warn">HIDDEN FROM PLAYERS</div>}
+        {isGm && crew && (
+          <div className="r10-cvit">
+            <Vitals c={crew} />
+          </div>
+        )}
+        {t.hidden && <div className="r10-warn">HIDDEN FROM PLAYERS</div>}
         {t.note && <div className="app-ins-txt">{t.note}</div>}
-        {isGm && t.gm_note && <div className="app-gmnote">{t.gm_note}</div>}
+        {isGm && t.gm_note && (
+          <div className="r10-gmn">
+            <span className="r4-lab">ONLY YOU SEE THIS</span>
+            <div className="app-ins-txt">{t.gm_note}</div>
+          </div>
+        )}
+        {isGm && !crew && t.stats && <NpcRolls key={t.id} t={t} stats={t.stats} />}
+        {isGm && crew && (
+          <InspectBlock label="ON HAND">
+            <div className="r10-pkrow" style={{ marginTop: 6 }}>
+              {pockets.map((e) => (
+                <Pocket key={e.uid} e={e} holder={crew} />
+              ))}
+              {pockets.length === 0 && <span className="r10-dimtxt">Nothing yet.</span>}
+            </div>
+            <span className="r4-lab" style={{ display: 'block', marginTop: 10 }}>
+              GIVE
+            </span>
+            <div className="r10-give">
+              <GiveRow to={crew} items={view.items ?? []} />
+            </div>
+          </InspectBlock>
+        )}
       </Inspector>
     </aside>
+  )
+}
+
+/**
+ * An NPC's six stats as its rolls, each showing the die on its sheet. The roll plays here in full, and players
+ * see it land on the NPC's chip unless it's hidden. A hidden NPC can only roll hidden.
+ */
+function NpcRolls({ t, stats }: { t: TokenView; stats: NonNullable<TokenView['stats']> }) {
+  const [hideRoll, setHideRoll] = useState(false)
+  const lock = !!t.hidden
+  const hidden = lock || hideRoll
+  return (
+    <InspectBlock label="ROLL">
+      <div className="r12-rgrid">
+        {STATS.map((s) => (
+          <button
+            key={s}
+            type="button"
+            className="r12-rbtn"
+            aria-label={`Roll ${STAT_LOOK[s].title} for ${t.name}, d${stats[s]}` + (hidden ? ', hidden' : '')}
+            onClick={() => void gmRoll({ token: t.id, stat: s, hidden })}
+            style={{ '--c': STAT_LOOK[s].col } as CSSProperties}
+          >
+            <img src={statIcon(s)} alt="" className="r3-px" />
+            <span className="r12-rtxt">
+              <span className="r12-rname">{STAT_LOOK[s].title}</span>
+              <span className="r12-rdie">d{stats[s]}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+      <button type="button" className={'r10-hide r12-rhide' + (hidden ? ' on' : '')} aria-pressed={hidden} disabled={lock} onClick={() => setHideRoll(!hideRoll)}>
+        <Eye off={hidden} />
+        <span>{lock ? 'Hidden NPC, so only you see the roll' : hidden ? 'Hidden roll: only you see it' : 'Public roll: everyone sees it'}</span>
+      </button>
+    </InspectBlock>
   )
 }

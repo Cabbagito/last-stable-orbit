@@ -31,6 +31,16 @@ class ListEntry(Strict):
     text: str = ""  # the tooltip: what it is or does (chrome especially)
 
 
+def _six_dice(v: dict[str, int]) -> dict[str, int]:
+    """A sheet's stats: exactly the six, each one of the dice, in sheet order."""
+    if set(v) != set(STATS):
+        raise ValueError(f"stats must have exactly {', '.join(STATS)}")
+    bad = {k: d for k, d in v.items() if d not in DIE_SIDES}
+    if bad:
+        raise ValueError(f"stat dice must be one of {DIE_SIDES}: {bad}")
+    return {k: v[k] for k in STATS}
+
+
 class Character(Strict):
     id: str
     name: str  # full name, on the sheet
@@ -43,13 +53,8 @@ class Character(Strict):
 
     @field_validator("stats")
     @classmethod
-    def _six_dice(cls, v: dict[str, int]) -> dict[str, int]:
-        if set(v) != set(STATS):
-            raise ValueError(f"stats must have exactly {', '.join(STATS)}")
-        bad = {k: d for k, d in v.items() if d not in DIE_SIDES}
-        if bad:
-            raise ValueError(f"stat dice must be one of {DIE_SIDES}: {bad}")
-        return {k: v[k] for k in STATS}
+    def _stats(cls, v: dict[str, int]) -> dict[str, int]:
+        return _six_dice(v)
 
 
 class Npc(Strict):
@@ -58,10 +63,16 @@ class Npc(Strict):
     role: str = ""
     portrait: str
     color: str = "#8f88a3"
+    stats: dict[str, int]  # the die for each stat; the GM rolls an NPC by stat. Never sent to players.
     mood: str = ""
     note: str = ""
     gm_note: str = ""  # never sent to players
     codex: str | None = None  # its Codex entry, once the Codex exists (M6)
+
+    @field_validator("stats")
+    @classmethod
+    def _stats(cls, v: dict[str, int]) -> dict[str, int]:
+        return _six_dice(v)
 
 
 COUNT_MAX = 999_999

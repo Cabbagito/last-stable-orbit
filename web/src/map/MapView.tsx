@@ -7,6 +7,7 @@ import type { MapView as MapDef, MapObject, TokenView, Vec3 } from '../types'
 import { RingPortrait } from '../shell/RingPortrait'
 import { Callout, Orbit, calloutKey, calloutSpeech, isSpinning } from '../roll/Callout'
 import { calloutsBy } from '../roll/callouts'
+import { Eye } from '../gm/parts'
 
 interface Cam {
   px: number
@@ -253,6 +254,11 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
                 <RingPortrait src={t.portrait} ring={r} size={64} style={{ position: 'absolute', left: 0, top: 0 }} />
                 {call && isSpinning(call.r) && <Orbit stat={call.r.stat} />}
                 {call && <Callout key={calloutKey(call.r)} r={call.r} side="s-t" fading={call.fading} />}
+                {t.hidden && (
+                  <b className="r10-eyeb" aria-hidden="true">
+                    <Eye off size={14} />
+                  </b>
+                )}
                 {!call && hover === t.id && !on && local?.token !== t.id && (
                   <span className="app-tag" aria-hidden="true">
                     {t.name}

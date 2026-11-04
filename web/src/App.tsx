@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Login } from './pages/Login'
 import { RollDialog, preloadRollFonts } from './roll/RollDialog'
+import { GmTab } from './pages/GmTab'
 import { Placeholder } from './pages/Placeholder'
 import { Scene } from './pages/Scene'
 import { Header, type Tab } from './shell/Header'
@@ -26,6 +27,7 @@ function useHashTab(isGm: boolean): Tab {
 export function App() {
   const [me, setMe] = useState<Me | null | 'loading'>('loading')
   const authLost = useGame((s) => s.authLost)
+  const preview = useGame((s) => s.preview)
 
   useEffect(() => {
     fetch('/api/me')
@@ -35,13 +37,14 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    if (authLost) {
+    if (authLost && !preview) { // the view-as frame shows its own message instead, and must not reconnect
       useGame.getState().disconnect()
       useGame.setState({ authLost: false })
       setMe(null)
     }
-  }, [authLost])
+  }, [authLost, preview])
 
+  if (preview) return <Preview seat={preview} />
   if (me === 'loading') return <div className="r4 th-meridian" />
   if (!me) return <Login onIn={setMe} />
   return (
@@ -56,8 +59,26 @@ export function App() {
   )
 }
 
-function Game({ me, onLogout }: { me: Me; onLogout: () => void }) {
+/**
+ * The GM's read-only view of one player's screen, inside the GM tab's "Viewing as" frame. It's the player's own
+ * app, fed that player's projection by the server; there's no way to log out or act from here.
+ */
+function Preview({ seat }: { seat: string }) {
+  const authLost = useGame((s) => s.authLost)
+  if (authLost)
+    return (
+      <div className="r4 th-meridian">
+        <div className="app-body app-placeholder">
+          <p style={{ color: 'var(--dim)' }}>This view closed. Only the GM can look at a player's screen, and only one on this crew.</p>
+        </div>
+      </div>
+    )
+  return <Game me={{ seat, role: 'player', char: seat }} />
+}
+
+function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
   const isGm = me.role === 'gm'
+  const preview = useGame((s) => s.preview)
   const tab = useHashTab(isGm)
   const connect = useGame((s) => s.connect)
   const disconnect = useGame((s) => s.disconnect)
@@ -68,9 +89,9 @@ function Game({ me, onLogout }: { me: Me; onLogout: () => void }) {
   }, [connect, disconnect])
 
   return (
-    <div className="r4 th-meridian">
+    <div className={'r4 th-meridian' + (preview ? ' app-preview' : '')}>
       <Header tab={tab} isGm={isGm} onLogout={onLogout} />
-      {tab === 'scene' ? <Scene /> : <Placeholder tab={tab} />}
+      {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : <Placeholder tab={tab} />}
       <RollDialog />
     </div>
   )

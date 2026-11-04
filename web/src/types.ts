@@ -97,6 +97,7 @@ export interface TokenView {
   codex: string | null
   hidden?: boolean // GM only
   gm_note?: string // GM only
+  stats?: Record<StatKey, number> // GM only, NPCs: the die for each stat
 }
 
 export interface Item {

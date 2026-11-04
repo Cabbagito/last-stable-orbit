@@ -8,7 +8,7 @@
 | M2: The roll | **Done** (see "How M2 turned out") |
 | Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
-| M4: GM tab | **In progress.** Round 12 is approved and the server half (New session, view as player) is built. Next: the web build, M4's Order step 3 |
+| M4: GM tab | **Built** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Waiting on Peter's own walk through it. NPC dice are drafts for Peter to set |
 | M5–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -209,7 +209,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   2. **The server, which doesn't wait on the pick** (**built**, tests in `server/tests/test_gm_tab.py`):
      - `gm.session.new` sets every crew member's Entropy to 2, as ordinary `vitals.set` events.
      - **View as player** is a second, read-only socket: `/ws?as=<character>`, accepted only with the GM's cookie. It gets exactly that seat's projection, every intent on it is refused, it doesn't count as that player being online, and drags reach it as they reach the player.
-  3. **The web build, from Round 12** (approved 2026-11-04):
+  3. **The web build, from Round 12** (approved 2026-11-04; **built**, see "How M4 turned out" below):
      1. **NPC stats.** Add `stats:` for every NPC in `content/npcs.yaml`, using Round 12's drafts for Peter to set, validated like the crew's.
         - `gm.roll.start` for an NPC takes a stat and uses that NPC's die.
         - "Just a die" still takes a stat and a die, and is always hidden.
@@ -264,6 +264,35 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **TV 2 for public rolls:** a band slides up along the bottom with the roller, the stat and the real dice animation, then slides away. The map stays put.
 - **Proposed, and Peter hasn't objected:** Stage and cutscenes become their own milestone straight after M4. That covers the TV login and its feed (with leak tests), films starting in sync, laptops going black, cues that set the map behind the film, and the table setting.
 - **Moved to M5:** "send the crew to a map", since there is only one map until then.
+- **How M4 turned out** (built 2026-11-04; this wins over M2's "GM rolls" notes):
+  - **NPC sheets:** every NPC in `content/npcs.yaml` has `stats:`, validated like the crew's. The dice are Round 12's drafts, for Peter to set.
+    - `gm.roll.start` for an NPC takes only a stat and rolls the die on its sheet. Sending `sides` with an NPC is refused.
+    - "Just a die" takes a stat and a die, and is always hidden.
+    - An NPC's dice go to the GM only, in its token view; a leak test checks players never get them.
+  - **The GM's Scene** (`web/src/gm/GmScene.tsx`): the "In this scene" list, the roster faces and "Just a die". The mood bar sits above the map's name (`MoodBar.tsx`). Hidden tokens get an eye badge on the map.
+  - **Cards** (`web/src/map/InspectCard.tsx`): an NPC's six stat rolls with the Hidden switch, and a crew card with steppers, pockets and the Give row. Every Give item names itself on hover and focus.
+  - **Crew rail:** hovering a ring shows HP and Entropy steppers. While you're on the rail it sits above an open card, because Round 12 had the steppers open behind the card. In the walk a click meant for a stepper rolled Dax's Reflex.
+  - **The GM tab** (`web/src/pages/GmTab.tsx`):
+    - Crew and pockets: pick up and hand over, or drag onto a row; type an amount for credits.
+    - Maps.
+    - Session: New session, and presets behind a confirm.
+    - Cutscenes and The TV are in the nav, marked "Stage", with a line saying they come with that milestone.
+  - **View as player** is the player's own app in a frame, loaded from `/?as=<seat>` (`web/src/gm/ViewAs.tsx`).
+    - It connects to `/ws?as=<seat>`, so the server feeds it exactly that seat's projection.
+    - It's read-only on both ends: the server refuses every intent, and the client sends none and opens no roll screen.
+    - It has no log-out or full-screen button.
+    - Esc or "Back to the GM tab" closes it.
+  - **Defaults taken:**
+    - A counted item (credits) from the Give row adds 50, as drawn; you change the amount in the GM tab.
+    - Removing an NPC from the scene list or its card doesn't ask first.
+  - **Checked:** 87 server tests, 22 web tests, and a two-seat walk.
+    - Gave Tally the maintenance log from her card: she got it, marked new.
+    - Hid and showed Unit 14: it left and came back on her map.
+    - Rolled Dax's Cool in public: the full animation on the GM's screen, "rolled Cool: 3" on Tally's chip.
+    - Rolled Dax's Body hidden: Tally saw nothing.
+    - Moved an item by hand-over and by a drop.
+    - Viewed as Tally.
+    - Pressed New session: Entropy went to 2 and HP stayed.
 - **Why here:** after M1–M3 every GM function exists, so one design pass can lay them all out.
 
 ### M5: The other 10 maps · M · best ultracode fan-out

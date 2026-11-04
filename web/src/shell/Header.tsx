@@ -21,7 +21,7 @@ export function Logo() {
 
 const STATUS_TEXT = { live: 'Live', connecting: 'Connecting', offline: 'Reconnecting' } as const
 
-export function Header({ tab, isGm, onLogout }: { tab: Tab; isGm: boolean; onLogout: () => void }) {
+export function Header({ tab, isGm, onLogout }: { tab: Tab; isGm: boolean; onLogout?: () => void }) {
   const status = useGame((s) => s.status)
   const me = useGame((s) => s.view?.me)
   const tabs = isGm ? [...TABS, ['gm', 'GM'] as [Tab, string]] : TABS
@@ -41,10 +41,12 @@ export function Header({ tab, isGm, onLogout }: { tab: Tab; isGm: boolean; onLog
           {STATUS_TEXT[status]}
         </span>
         {me && <span className="r4-lab">{me.role === 'gm' ? 'GM' : me.seat.toUpperCase()}</span>}
-        <FullscreenButton />
-        <button type="button" className="app-link" onClick={onLogout}>
-          {isGm ? 'Log out' : 'Change character'}
-        </button>
+        {onLogout && <FullscreenButton />}
+        {onLogout && ( // none in the GM's read-only view of a player: it would log the GM out
+          <button type="button" className="app-link" onClick={onLogout}>
+            {isGm ? 'Log out' : 'Change character'}
+          </button>
+        )}
       </div>
     </header>
   )

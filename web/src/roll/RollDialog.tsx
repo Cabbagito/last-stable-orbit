@@ -33,7 +33,7 @@ export function RollDialog() {
   )
 }
 
-/** R6's top row: the roller's ring, their name, and Close. */
+/** R6's top row: the roller's ring, their name, and Close. A GM roll also names the stat and die (Round 12). */
 function Head({ roll, me, onClose }: { roll?: RollView; me?: CrewMember; onClose: () => void }) {
   const view = useGame((s) => s.view)
   const crew = roll?.char ? view?.crew.find((c) => c.id === roll.char) : me
@@ -48,7 +48,8 @@ function Head({ roll, me, onClose }: { roll?: RollView; me?: CrewMember; onClose
       <span className="r4-h" style={{ fontSize: 14 }}>
         {crew?.short ?? tok?.name ?? 'Just a die'}
       </span>
-      {roll?.hidden && <span className="r5-role">Hidden from players</span>}
+      {roll && !roll.char && <span className="r10-dimtxt">{STAT_LOOK[roll.stat].title} · d{roll.sides}</span>}
+      {roll?.hidden && <span className="r12-tag">HIDDEN · ONLY YOU SEE IT</span>}
       <button type="button" className="r4-btn" onClick={onClose} style={{ marginLeft: 'auto', pointerEvents: 'auto' }}>
         Close
       </button>
