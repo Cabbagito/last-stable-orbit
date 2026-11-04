@@ -161,6 +161,19 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **Before the playtest:** load the "Session 1" preset once. A world saved before M3 has credits with no amount, so they show 0.
 - **Why here:** it is small and backend-heavy. It also gives the GM tab its last missing control before that tab is designed.
 - **Later, maybe:** an Items tab at the top for the in-depth view, with images, charts and longer text.
+- **Decided after M3 (2026-11-04): one inspector for everything you can look at.**
+  - **The style:** Round 8's T3 ("Inspector"): the icon at 2×, a kind label, the name, then the text. It may take room, because it only shows while you look.
+  - **Where it applies:**
+    - items;
+    - skills and chrome, which also get tooltips;
+    - crew and NPCs;
+    - objects in the world, such as the mural.
+  - **Codex buttons:** characters, objects, items and maybe skills will have Codex entries. A card shows a Codex button only when there is an entry.
+  - **Later:** clicking an item or a skill opens an Items tab (name not settled) with it selected. That waits until the tooltips are done.
+  - **Proposed in Round 9, waiting on Peter's look:**
+    - **Your sheet:** items, skills and chrome open the inspector on hover, to the right of the sheet and over the map, with a caret at the row.
+    - **The map and rail:** hovering a token shows only its name, so passing the mouse over a crowded map pops nothing. Clicking a token or a rail portrait opens its card, docked at the map's top right as now.
+    - **World objects:** each gets a diamond marker once you reveal it. The marker is pink and pulsing until that player has looked, then quieter. Clicking it opens a card with a close-up of the art.
 
 ### M4: GM tab · M · design fan-out, then a single build session
 - **Goal:** one designed GM tab that replaces the plain dock.
@@ -181,7 +194,8 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **Shared features first:**
     - SVG camera cones;
     - Executive deck support, with `oy = 150 + (9 − deck) × 450`, where the deck jump keeps X,Y;
-    - point-of-interest pins that only you see.
+    - point-of-interest pins that only you see;
+    - inspectable objects per map (name, text, close-up, an optional Codex entry), shown to players once you reveal them (Round 9).
   - **Per-map files:** one `content/maps/<id>.yaml` per map, with assets deduplicated by sha256.
   - **Order:** Patience and Promenade CALM (session 1), Executive decks (session 2), then the rest.
 - **Done when:** a screenshot of each map in each mood matches its board, and a token placed on a key point lands on it.
