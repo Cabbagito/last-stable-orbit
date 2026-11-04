@@ -116,17 +116,26 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - The playtest checkpoint follows.
 - **Why second:** rolls matter most for the feel at the table, and only you can judge that.
 
-### M3: Pockets and notes · S · single short session
-- **Goal:** you control every inventory, and clues are handed out as readable note items.
+### M3: Pockets and items · S · single short session
+- **Goal:** you control every inventory, and clues are handed out as predefined items.
+- **Decided 2026-11-04** (replaces the earlier note reader and live note-writing):
+  - **Items are predefined** in `content/items.yaml`. Nobody types notes in the app, neither players nor you.
+  - **A note is just an item:** a note icon whose text says what it is. An audio log is an item too, whose text is the transcript or a summary of it, whichever holds what matters.
+  - **Text only, in a tooltip.** Hovering an item shows its name and text. Images and charts (the eval plots) wait for a possible Items tab later.
+  - **Only you move items.** You give, take and move them from the GM column. Players can't pass items to each other.
+  - **Players see only their own pockets** (decision 6). An item's text never reaches anyone but its holder and you.
 - **In it:**
-  - Item YAML with kinds gear, note, credits and key; notes carry a Markdown body or an image.
-  - You give, take and move items, and write notes on the fly mid-session.
-  - A note reader, and a NEW pulse that only the receiver sees.
+  - A `text` field on items, and a multi-line tooltip in R6's style. R6's own tooltip shows only the name on one line.
+  - GM controls in the GM column: give an item from the catalogue to a character, take it away, move it to someone else.
+  - A NEW pulse on an item until its holder hovers it. Only the holder sees it.
+  - **Credits:** my default is a counted amount on the credits item that you change. Say if you'd rather keep fixed items like "140 credits".
+  - **Content:** the session-1 starting kit and the clue items. You write them, or I draft them from the bible for you to edit.
 - **Done when:**
-  - A note handed to Marlo reaches only Marlo and you (socket test).
+  - An item handed to Marlo reaches only Marlo and you (socket test).
   - It survives a restart.
-  - You approve how the reader looks.
+  - You approve how the tooltip looks.
 - **Why here:** it is small and backend-heavy. It also gives the GM tab its last missing control before that tab is designed.
+- **Later, maybe:** an Items tab at the top for the in-depth view, with images, charts and longer text.
 
 ### M4: GM tab · M · design fan-out, then a single build session
 - **Goal:** one designed GM tab that replaces the plain dock.
@@ -413,6 +422,6 @@ To use it per task, put "ultracode" in that milestone's prompt rather than leavi
 
 **Later:**
 
-6. **Item privacy.** Can players see each other's items, or only their own? Note bodies stay visible only to the holder and you either way. This sets the M3 filter.
+6. ~~**Item privacy.**~~ **Decided:** players see only their own items, and only you move them.
 7. **Briefs before session 1.** Will players read their briefs at home through the app? If yes, Railway and the Crew tab must land earlier.
 8. **Station tab.** Can players open maps of places they haven't visited yet? Decide at the M6 design pass.
