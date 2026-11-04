@@ -9,7 +9,7 @@
 | Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
 | M4: GM tab | **Done** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Peter tried it and is happy. NPC dice are drafts for Peter to set |
-| Stage: the TV and cutscenes | **Next.** Planned, with Peter's answers, in the Stage section after M4. Start by drawing the laptops' black-hole screen on the UI canvas |
+| Stage: the TV and cutscenes | **Started.** Planned, with Peter's answers, in the Stage section after M4. Round 13 draws three looks for the laptops' black-hole screen; waiting on Peter's pick |
 | M5–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -329,6 +329,12 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   3. **Laptops during a film at the table aren't pure black.** They show something a player glances at, thinks "cool", and looks away from: Peter's idea is the spinning black hole.
      - My proposal: small and dim in the middle of the black, turning slowly, drawn by the app in pixels; a faint "LOOK UP" could fade in once and go.
      - Draw it on the UI canvas first, with a variant or two, before building it.
+     - **Round 13 on the UI canvas** (page "Round 13", boards `R13FilmDisc`, `R13FilmRing` and `R13FilmDust`) draws three looks. Each is a 1440×900 laptop, black, with faint twinkling stars, a hole about 55–60 px across in the middle, and "LOOK UP" fading in once after 1.5 s and out by 8.5 s. Each board has two tweaks: LOOK UP on or off, and the pixel size (2–5 px, default 3).
+       - **A · Disc:** a lit disc seen almost edge-on. Its far half bends up over the top of the shadow, with a faint image tucked under it. It's pink on the side turning away and cyan on the side turning toward you, the poster's two colours. Inner grains go round in about 16 s, outer ones in about a minute.
+       - **B · Ring:** the logo's black hole, larger and in pixels: the shadow's rim, a hairline ring tilted as in the logo, and the pink satellite going round once every 28 s, passing behind the hole.
+       - **C · Dust:** faint lilac grains spiral in over about a minute, warming through pink to white, and go out at the edge. It echoes ISCO's public "Swarm" face (particles round a black hole).
+       - Drawn the way the app will draw it: a low-resolution canvas scaled up with crisp pixels, at 30 frames a second, and a still frame for anyone who has reduced motion on.
+       - Waiting on Peter's pick.
   4. **Sound:** only the films' own baked-in sound in this milestone. The soundboard, per-map ambience and roll sounds come later.
 - **Known limits:** the online setup can be built now, but it can only be tested once the app is hosted (M7).
 
