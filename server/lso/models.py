@@ -62,11 +62,18 @@ class Npc(Strict):
     gm_note: str = ""  # never sent to players
 
 
+COUNT_MAX = 999_999
+
+
 class Item(Strict):
+    """Something a character can hold. Clues are items too: a note, an audio log."""
+
     id: str
     name: str
     icon: str
-    kind: Literal["gear", "weapon", "tool", "cash", "key", "note"] = "gear"
+    kind: Literal["gear", "weapon", "tool", "cash", "key", "note", "audio"] = "gear"
+    text: str = ""  # the tooltip: what it is, what it says. Only its holder and the GM ever see it.
+    counted: bool = False  # credits: one entry holding an amount, instead of one entry per piece
 
 
 class Mood(Strict):
@@ -133,6 +140,11 @@ class PresetToken(Strict):
     hidden: bool = False
 
 
+class PresetItem(Strict):
+    item: str
+    count: int = Field(ge=0, le=COUNT_MAX)
+
+
 class MapState(Strict):
     mood: str
     switches: dict[str, int] = {}
@@ -153,7 +165,7 @@ class Preset(Strict):
     maps: dict[str, MapState] = {}
     tokens: list[PresetToken] = []
     vitals: dict[str, Vitals] = {}  # missing crew get HP 6, Entropy 2
-    inventory: dict[str, list[str]] = {}  # holder -> item ids
+    inventory: dict[str, list[str | PresetItem]] = {}  # holder -> item ids, or {item, count} for counted items
 
 
 # ---------------------------------------------------------------- state
@@ -170,6 +182,8 @@ class TokenState(Strict):
 class InvEntry(Strict):
     uid: str
     item: str
+    count: int | None = None  # counted items only
+    new: bool = False  # handed over and not yet looked at by its holder
 
 
 class RollState(Strict):

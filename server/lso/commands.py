@@ -11,7 +11,7 @@ import random
 from . import rules
 from .auth import Viewer
 from .content import Content
-from .models import DIE_SIDES, ENTROPY_MAX, HP_MAX, STATS, GameState, RollState
+from .models import COUNT_MAX, DIE_SIDES, ENTROPY_MAX, HP_MAX, STATS, GameState, InvEntry, RollState
 from .state import state_from_preset
 
 Events = list[tuple[str, dict]]
@@ -178,6 +178,79 @@ def _gm_roll(state: GameState, content: Content, args: dict, rng, now: float) ->
     return _new_roll(state, content, rng, now, by="gm", token=token, handle=handle, stat=stat, sides=sides, hidden=hidden)
 
 
+def _holder(content: Content, args: dict, key: str = "holder") -> str:
+    holder = _str(args, key)
+    if holder not in content.characters:
+        raise _invalid(f"{key} must be a character")
+    return holder
+
+
+def _held(state: GameState, holder: str, uid: str) -> InvEntry:
+    e = next((e for e in state.inventory.get(holder, []) if e.uid == uid), None)
+    if e is None:
+        raise _invalid("they don't hold that")
+    return e
+
+
+def _count(args: dict, lowest: int) -> int:
+    n = _int(args, "count")
+    if not lowest <= n <= COUNT_MAX:
+        raise _invalid(f"count must be {lowest}..{COUNT_MAX}")
+    return n
+
+
+def _gm_item(state: GameState, content: Content, kind: str, args: dict) -> Events:
+    """Only the GM moves items. Counted items (credits) merge into what the holder already has."""
+    holder = _holder(content, args)
+
+    if kind == "gm.item.give":
+        item_id = _str(args, "item")
+        it = content.items.get(item_id)
+        if not it:
+            raise _invalid("unknown item")
+        if not it.counted:
+            if "count" in args:
+                raise _invalid(f"{it.name} isn't counted")
+            entry = InvEntry(uid=f"i{state.seq + 1}", item=item_id, new=True)
+            return [("item.given", {"holder": holder, "entry": entry.model_dump()})]
+        n = _count(args, 1)
+        have = next((e for e in state.inventory.get(holder, []) if e.item == item_id), None)
+        if have:
+            return [("item.counted", {"holder": holder, "uid": have.uid, "count": min(COUNT_MAX, (have.count or 0) + n), "new": True})]
+        entry = InvEntry(uid=f"i{state.seq + 1}", item=item_id, count=n, new=True)
+        return [("item.given", {"holder": holder, "entry": entry.model_dump()})]
+
+    e = _held(state, holder, _str(args, "uid"))
+
+    if kind == "gm.item.take":
+        return [("item.taken", {"holder": holder, "uid": e.uid})]
+
+    if kind == "gm.item.move":
+        to = _holder(content, args, "to")
+        if to == holder:
+            return []
+        it = content.items.get(e.item)
+        have = next((x for x in state.inventory.get(to, []) if x.item == e.item), None) if it and it.counted else None
+        if have:
+            total = min(COUNT_MAX, (have.count or 0) + (e.count or 0))
+            return [
+                ("item.taken", {"holder": holder, "uid": e.uid}),
+                ("item.counted", {"holder": to, "uid": have.uid, "count": total, "new": True}),
+            ]
+        return [("item.moved", {"holder": holder, "uid": e.uid, "to": to})]
+
+    if kind == "gm.item.count":
+        it = content.items.get(e.item)
+        if not it or not it.counted:
+            raise _invalid("that item isn't counted")
+        n = _count(args, 0)
+        if n == e.count:
+            return []
+        return [("item.counted", {"holder": holder, "uid": e.uid, "count": n, "new": n > (e.count or 0)})]
+
+    raise _invalid(f"unknown intent {kind!r}")
+
+
 def sweep(state: GameState, now: float, online: set[str]) -> Events:
     """System housekeeping for rolls whose roller's screen stopped talking to us."""
     events: Events = []
@@ -211,6 +284,12 @@ def handle(
 
     if kind.startswith("roll."):
         return _roll_intent(viewer, state, content, kind, args, rng, now)
+
+    if kind == "item.seen":
+        if viewer.is_gm:
+            raise _invalid("only an item's holder marks it seen")
+        e = _held(state, viewer.char, _str(args, "uid"))
+        return [("item.seen", {"holder": viewer.char, "uid": e.uid})] if e.new else []
 
     if not kind.startswith("gm."):
         raise _invalid(f"unknown intent {kind!r}")
@@ -278,6 +357,9 @@ def handle(
 
     if kind == "gm.roll.start":
         return _gm_roll(state, content, args, rng, now)
+
+    if kind.startswith("gm.item."):
+        return _gm_item(state, content, kind, args)
 
     if kind == "gm.world.load_preset":
         preset = content.presets.get(_str(args, "preset"))

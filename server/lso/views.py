@@ -4,10 +4,10 @@ Every frame a client receives is built here for that viewer. A player gets:
 - the one map they are on (their own token's map, else the party map), and only that map's art;
 - the tokens on that map that aren't hidden, with each NPC's public card (never its gm_note);
 - every crew member's public sheet and vitals (the crew rail shows them);
-- their own inventory only;
+- their own inventory only, with each item's text (clues are items, so this is where they hide);
 - each crew member's latest roll, and the latest public roll of each NPC they can see. The dice of a
   roll that isn't theirs arrive only as they land on the roller's screen. Hidden GM rolls never.
-The GM gets everything, plus the NPC roster and the presets.
+The GM gets everything, plus the NPC roster, the presets and the item catalogue.
 """
 
 from __future__ import annotations
@@ -78,12 +78,16 @@ def _token_view(content: Content, tid: str, t, gm: bool) -> dict:
     return base
 
 
+def _item_view(it) -> dict:
+    return {"id": it.id, "name": it.name, "icon": url(it.icon), "kind": it.kind, "text": it.text, "counted": it.counted}
+
+
 def _inventory_view(content: Content, entries) -> list[dict]:
     out = []
     for e in entries:
         it = content.items.get(e.item)
         if it:
-            out.append({"uid": e.uid, "item": {"id": it.id, "name": it.name, "icon": url(it.icon), "kind": it.kind}})
+            out.append({"uid": e.uid, "item": _item_view(it), "count": e.count, "new": e.new})
     return out
 
 
@@ -165,14 +169,14 @@ def project(state: GameState, content: Content, viewer: Viewer) -> dict:
         for tid, t in state.tokens.items()
         if gm or (t.map in map_ids and not t.hidden)
     }
-    holders = state.inventory.keys() if gm else [h for h in state.inventory if h == viewer.char]
+    holders = list(content.characters) if gm else [viewer.char]  # a player's own pockets, never anyone else's
     view = {
         "me": {"seat": viewer.seat, "role": viewer.role, "char": viewer.char},
         "party_map": here,
         "crew": _crew_view(content, state),
         "maps": {m: _map_view(content, state, m) for m in map_ids},
         "tokens": tokens,
-        "inventory": {h: _inventory_view(content, state.inventory[h]) for h in holders},
+        "inventory": {h: _inventory_view(content, state.inventory.get(h, [])) for h in holders},
         "rolls": _rolls_view(state, viewer, set(tokens)),
     }
     if gm:
@@ -181,6 +185,7 @@ def project(state: GameState, content: Content, viewer: Viewer) -> dict:
             for n in content.npcs.values()
         ]
         view["presets"] = [{"id": p.id, "name": p.name} for p in content.presets.values()]
+        view["items"] = [_item_view(it) for it in content.items.values()]  # the catalogue, for giving
     return view
 
 

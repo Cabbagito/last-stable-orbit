@@ -13,8 +13,8 @@ tokens:
   - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0], hidden: true}
 inventory:
-  lale: [credits]
-  marlo: [sidearm, credits]
-  tally: [credits]
-  ves: [sidearm, splice-kit, credits]
-  tomo: [credits]
+  lale: [{item: credits, count: 120}]
+  marlo: [sidearm, {item: credits, count: 60}]
+  tally: [tally-notebook, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, {item: credits, count: 90}, maintenance-log]
+  tomo: [{item: credits, count: 140}]

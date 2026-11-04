@@ -88,12 +88,16 @@ export interface Item {
   id: string
   name: string
   icon: string
-  kind: string
+  kind: 'gear' | 'weapon' | 'tool' | 'cash' | 'key' | 'note' | 'audio'
+  text: string // the tooltip; only its holder and the GM get it
+  counted: boolean // credits: one entry holding an amount
 }
 
 export interface InvEntry {
   uid: string
   item: Item
+  count: number | null // counted items only
+  new: boolean // handed over and not yet looked at by its holder
 }
 
 export interface RosterNpc {
@@ -141,6 +145,7 @@ export interface View {
   rolls: RollView[]
   roster?: RosterNpc[] // GM only
   presets?: { id: string; name: string }[] // GM only
+  items?: Item[] // GM only: the catalogue, for giving
 }
 
 export interface Ack {

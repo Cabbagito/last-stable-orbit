@@ -5,12 +5,13 @@ import { STAT_LOOK } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
 import { send, useGame } from '../store/game'
 import { STATS, type MapView, type RollView, type StatKey, type View } from '../types'
+import { GmPockets } from './GmPockets'
 
 const DICE = [4, 6, 8, 10, 12, 20]
 
 /**
- * The GM's left column on the Scene, in place of a character sheet: crew vitals, the map's mood and
- * switches, the tokens on this map, the NPC roster and presets. Milestone 4 gives the GM tab its own design.
+ * The GM's left column on the Scene, in place of a character sheet: crew vitals, every character's pockets,
+ * the map's mood and switches, rolls, the tokens on this map, the NPC roster and presets. Milestone 4 gives the GM tab its own design.
  */
 export function GmPanel({ map }: { map: MapView | undefined }) {
   const view = useGame((s) => s.view)
@@ -74,6 +75,8 @@ export function GmPanel({ map }: { map: MapView | undefined }) {
           ))}
         </div>
       </section>
+
+      <GmPockets view={view} run={run} />
 
       {map && (
         <section aria-label="Map state">

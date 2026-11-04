@@ -20,9 +20,9 @@ tokens:
   - {kind: npc, ref: happy-resident, map: event-horizon, at: [12.1, 7.3, 0]}
   - {kind: npc, ref: service-droid, map: event-horizon, at: [9.6, 7.9, 0]}
 # Every crew member starts at HP 6, Entropy 2 unless listed under vitals.
-inventory:  # placeholders until Peter sets the real starting kit
-  lale: [credits]
-  marlo: [sidearm, credits]
-  tally: [credits]
-  ves: [sidearm, splice-kit, credits]
-  tomo: [credits]
+inventory:  # DRAFT starting kit from the bible, for Peter to edit. Lale never carries a weapon.
+  lale: [invitation, {item: credits, count: 140}]
+  marlo: [sidearm, invitation, {item: credits, count: 140}]
+  tally: [tally-notebook, invitation, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, invitation, {item: credits, count: 140}]
+  tomo: [invitation, {item: credits, count: 140}]

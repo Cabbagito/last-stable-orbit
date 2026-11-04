@@ -2,6 +2,7 @@ import { ring } from '../lib/ring'
 import { STAT_LOOK } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
 import { useGame } from '../store/game'
+import { ItemRow } from './ItemRow'
 import { STATS, type CrewMember, type InvEntry } from '../types'
 
 const STAT_NAME: Record<string, string> = {
@@ -53,13 +54,7 @@ export function Sheet({ me, items }: { me: CrewMember; items: InvEntry[] }) {
           </div>
         ))}
       </section>
-      <section aria-label="On hand" className="r5-items" style={{ flex: 'none' }}>
-        {items.map((i) => (
-          <span key={i.uid} className="r5-tip" data-name={i.item.name} tabIndex={0}>
-            <img src={i.item.icon} alt={i.item.name} className="r3-px" style={{ width: 48, height: 48 }} />
-          </span>
-        ))}
-      </section>
+      <ItemRow items={items} />
     </aside>
   )
 }

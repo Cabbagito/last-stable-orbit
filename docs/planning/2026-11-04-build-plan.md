@@ -7,7 +7,8 @@
 | M1: Tokens at The Event Horizon | **Done** (commits 05cddc2, 4901ce3, 9a51d7c) |
 | M2: The roll | **Done** (see "How M2 turned out") |
 | Playtest | **Next:** 20 minutes of the bar scene with 2–3 people |
-| M3–M9 | Not started |
+| M3: Pockets and items | **Built**; waiting on Peter to approve the tooltip and edit the drafted item texts (see "How M3 is built") |
+| M4–M9 | Not started |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
 - **Login:** players pick their character on a picker screen, and only the GM types a passcode (`LSO_GM_PASSCODE`). This replaces the per-player passcodes in "Auth flow".
@@ -26,7 +27,7 @@
 - **Defaults taken:**
   - A player sees the map their own token is on (split party).
   - Skill and chrome rows without art show a SKILL / CHROME box.
-- **Still placeholders:** starting inventories in `content/presets/session-1.yaml`, for Peter to set.
+- **Still placeholders:** starting inventories in `content/presets/session-1.yaml` (drafted from the bible in M3), for Peter to set.
 
 **Decided for M2: the roll callout others see.** The design is Round 7 on the UI canvas (`R7Live`, `R7States`).
 - **While rolling:** a spinning ring in the stat's colour around the token head and the rail ring, plus a small chip with the stat name and a looping motion per stat:
@@ -134,6 +135,30 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - An item handed to Marlo reaches only Marlo and you (socket test).
   - It survives a restart.
   - You approve how the tooltip looks.
+- **How M3 is built** (planned 2026-11-04):
+  - **Content:** `Item` gains `text` (the tooltip) and `counted` (one entry holding an amount, for credits). A new kind, `audio`, is for audio logs. Preset inventories take `{item: credits, count: 140}` beside plain ids.
+  - **State:** each inventory entry holds `uid`, `item`, `count` and `new`.
+  - **Events:**
+    - `item.given`: you hand over an entry, marked new.
+    - `item.taken`.
+    - `item.moved`: it keeps its uid and is new for its new holder.
+    - `item.counted`: the amount changes, and it's marked new when it goes up.
+    - `item.seen`: the holder looked at it.
+  - **Your intents:** `gm.item.give`, `gm.item.take`, `gm.item.move` and `gm.item.count`. Giving or moving credits to someone who already holds credits adds to their amount.
+  - **The player's intent:** `item.seen`, sent by hovering their own new item for a moment.
+  - **Views:**
+    - A player gets their own pockets, with text, count and the NEW flag. You get every character's pockets, plus the catalogue for giving.
+    - Players never get the catalogue. Item icons are allowlisted through the projection as before.
+  - **Sheet:** the items row draws one R6-style panel above the row, spanning its width, with a caret at the hovered item. It holds the name and then the text, so a tooltip is never clipped by the scrolling column. Each item shows a count badge for credits and a pink NEW tag with a pulsing ring until it is seen.
+  - **GM column:** a Pockets section. Pick a character, see their items, change an amount, move an item to someone else, take it, or give one from the catalogue. M4 redesigns this.
+  - **Tests:**
+    - an item given to Marlo reaches only Marlo and you, and Tally gets zero frames;
+    - its text never appears in another player's projection;
+    - players can't use the GM intents, and can only mark their own items seen;
+    - credits merge;
+    - it survives a replay.
+  - **Also in this round:** a full-screen button in the header, for players and the GM.
+  - **Before the playtest:** load the "Session 1" preset once. A world saved before M3 has credits with no amount, so they show 0.
 - **Why here:** it is small and backend-heavy. It also gives the GM tab its last missing control before that tab is designed.
 - **Later, maybe:** an Items tab at the top for the in-depth view, with images, charts and longer text.
 

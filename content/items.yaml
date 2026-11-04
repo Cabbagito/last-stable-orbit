@@ -1,6 +1,66 @@
-# Things a character can hold. kind: gear | weapon | tool | cash | key | note
-- {id: sidearm, name: Sidearm, icon: icons/items/sidearm.png, kind: weapon}
-- {id: splice-kit, name: Splice kit, icon: icons/items/splice-kit.png, kind: tool}
-- {id: credits, name: 140 credits, icon: icons/items/credits.png, kind: cash}
-- {id: access-chit, name: Access chit, icon: icons/items/access-chit.png, kind: key}
-- {id: note, name: Note, icon: icons/items/note.png, kind: note}
+# Things a character can hold. The GM gives, takes and moves them; players only look.
+#   kind:    gear | weapon | tool | cash | key | note | audio
+#   text:    the tooltip. Only the holder and the GM ever see it. A clue's text says what it is and what it shows.
+#   counted: one entry holding an amount (credits), changed by the GM.
+# DRAFT texts from the campaign bible, for Peter to edit.
+
+# --- the starting kit
+- id: sidearm
+  name: Sidearm
+  icon: icons/items/sidearm.png
+  kind: weapon
+  text: A compact pistol, legal on Ergo with a permit. Loud when it matters.
+
+- id: splice-kit
+  name: Splice kit
+  icon: icons/items/splice-kit.png
+  kind: tool
+  text: Wire, clips and a shim set in a soft roll. Talks a door panel into thinking it's already open.
+
+- id: credits
+  name: Credits
+  icon: icons/items/credits.png
+  kind: cash
+  counted: true
+  text: Station credits. Good anywhere on Ergo.
+
+- id: invitation
+  name: The invitation
+  icon: icons/items/note.png
+  kind: note
+  text: |-
+    A folded paper note, the only paper you've seen on Ergo.
+    "The Event Horizon, tonight. Ask for the table under the mural. Drinks are on me."
+    No name, just a drop of red wax.
+
+- id: tally-notebook
+  name: Tally's notebook
+  icon: icons/items/note.png
+  kind: note
+  text: |-
+    Field notes on human behaviour, in very neat handwriting.
+    Latest entry: "Ergo residents smile more than any population on record. Nobody here complains. Unclear why. Investigate."
+
+# --- clues, handed out during play
+- id: access-chit
+  name: Access chit
+  icon: icons/items/access-chit.png
+  kind: key
+  text: A keyed chit with the founder's ring stamped on it. It opens a door you haven't found yet.
+
+- id: maintenance-log
+  name: Unit 14's maintenance log
+  icon: icons/items/note.png
+  kind: note
+  text: |-
+    CLEANER UNIT 14 · shift log, The Event Horizon.
+    Spills cleaned: 3. Hours within two metres of the table under the mural: 14 of 16.
+    Nothing was spilled at that table.
+
+- id: founder-log-1
+  name: "Founder's audio log #1"
+  icon: icons/items/note.png  # placeholder until an audio-log icon is drawn
+  kind: audio
+  text: |-
+    Summary: Ilija, years ago, laughing. The station's new mind keeps rearranging his calendar "to make him happy", and he keeps putting dinner back in.
+    "Some things you don't optimise. You just show up."

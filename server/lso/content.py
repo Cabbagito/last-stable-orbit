@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import STATS, Character, Item, MapDef, Npc, Preset
+from .models import STATS, Character, Item, MapDef, Npc, Preset, PresetItem
 
 log = logging.getLogger("lso.content")
 
@@ -121,10 +121,23 @@ def check_refs(c: Content) -> None:
                 problems.append(f"{where}: token ref {t.ref!r} is not a known {t.kind}")
             if t.map not in c.maps:
                 problems.append(f"{where}: token {t.ref} on unknown map {t.map!r}")
-        for holder, items in pr.inventory.items():
+        for holder, entries in pr.inventory.items():
             if holder not in c.characters:
                 problems.append(f"{where}: inventory holder {holder!r} is not a character")
-            problems += [f"{where}: unknown item {i!r}" for i in items if i not in c.items]
+            counted: set[str] = set()
+            for e in entries:
+                item_id = e.item if isinstance(e, PresetItem) else e
+                it = c.items.get(item_id)
+                if not it:
+                    problems.append(f"{where}: unknown item {item_id!r}")
+                elif it.counted != isinstance(e, PresetItem):
+                    problems.append(
+                        f"{where}: {holder}'s {item_id} needs " + ("{item, count}" if it.counted else "no count, it isn't counted")
+                    )
+                elif it.counted and item_id in counted:
+                    problems.append(f"{where}: {holder} holds {item_id} twice; give one count instead")
+                else:
+                    counted |= {item_id} if it.counted else set()
         problems += [f"{where}: vitals for unknown character {k!r}" for k in pr.vitals if k not in c.characters]
     if problems:
         raise ContentError("content references are broken:\n  " + "\n  ".join(problems))

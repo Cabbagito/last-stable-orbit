@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import GameState, InvEntry, MapState, Preset, RollState, TokenState, Vitals
+from .models import GameState, InvEntry, MapState, Preset, PresetItem, RollState, TokenState, Vitals
 
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
 
@@ -39,11 +39,22 @@ def state_from_preset(preset: Preset, content: Content) -> dict:
             tid, n = f"{t.id or t.ref}-{n}", n + 1
         tokens[tid] = TokenState(kind=t.kind, ref=t.ref, map=t.map, at=t.at, hidden=t.hidden).model_dump()
     vitals = {c: (preset.vitals.get(c) or Vitals()).model_dump() for c in content.characters}
-    inventory = {
-        holder: [InvEntry(uid=f"{holder}-{i + 1}", item=item).model_dump() for i, item in enumerate(items)]
-        for holder, items in preset.inventory.items()
-    }
+    inventory = {c: [] for c in content.characters}
+    for holder, entries in preset.inventory.items():
+        inventory[holder] = [
+            InvEntry(uid=f"{holder}-{i + 1}", item=e.item, count=e.count).model_dump()
+            if isinstance(e, PresetItem)
+            else InvEntry(uid=f"{holder}-{i + 1}", item=e).model_dump()
+            for i, e in enumerate(entries)
+        ]
     return {"party_map": preset.party_map, "maps": maps, "tokens": tokens, "vitals": vitals, "inventory": inventory}
+
+
+def _entry(s: GameState, holder: str, uid: str) -> InvEntry:
+    e = next((e for e in s.inventory.get(holder, []) if e.uid == uid), None)
+    if e is None:
+        raise ValueError(f"{holder} holds no {uid!r}")
+    return e
 
 
 def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
@@ -67,6 +78,22 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "vitals.set":
         v = s.vitals.setdefault(data["char"], Vitals())
         v.hp, v.entropy = int(data["hp"]), int(data["entropy"])
+    elif ev_type == "item.given":
+        s.inventory.setdefault(data["holder"], []).append(InvEntry.model_validate(data["entry"]))
+    elif ev_type == "item.taken":
+        e = _entry(s, data["holder"], data["uid"])
+        s.inventory[data["holder"]].remove(e)
+    elif ev_type == "item.moved":
+        e = _entry(s, data["holder"], data["uid"])
+        s.inventory[data["holder"]].remove(e)
+        e.new = True  # news to its new holder
+        s.inventory.setdefault(data["to"], []).append(e)
+    elif ev_type == "item.counted":
+        e = _entry(s, data["holder"], data["uid"])
+        e.count = int(data["count"])
+        e.new = e.new or bool(data.get("new"))
+    elif ev_type == "item.seen":
+        _entry(s, data["holder"], data["uid"]).new = False
     elif ev_type == "roll.started":
         s.rolls.append(RollState.model_validate(data["roll"]))
     elif ev_type == "roll.revealed":
