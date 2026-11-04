@@ -5,6 +5,8 @@ body,
 #root {
   height: 100%;
 }
+/* No swipe-to-go-back, and no rubber-band bounce, anywhere in the app (the sheet column scrolls too). */
+html,
 body {
   overscroll-behavior: none;
 }

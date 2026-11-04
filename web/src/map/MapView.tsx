@@ -57,13 +57,57 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
     }
   }, [size, map.id, fit])
 
-  const zoomAt = (z: number, cx: number, cy: number) =>
-    setCam((c) => {
-      if (!c) return c
-      const nz = clamp(z, ZMIN, ZMAX)
-      const k = nz / c.zoom
-      return { zoom: nz, px: cx - (cx - c.px) * k, py: cy - (cy - c.py) * k }
-    })
+  // Trackpad and wheel. The listener is non-passive so preventDefault works: otherwise Chrome on a Mac
+  // reads a sideways two-finger scroll as "go back a page", and a pinch zooms the whole page.
+  //   two-finger scroll -> pan     pinch (ctrlKey wheel, or Safari's gesture events) -> zoom
+  //   mouse wheel -> zoom (coarse, whole-line or 100-ish steps with no sideways part)
+  useEffect(() => {
+    const el = box.current
+    if (!el) return
+    const zoomBy = (f: number, clientX: number, clientY: number) => {
+      const r = el.getBoundingClientRect()
+      const cx = clientX - r.left
+      const cy = clientY - r.top
+      setCam((c) => {
+        if (!c) return c
+        const nz = clamp(c.zoom * f, ZMIN, ZMAX)
+        const k = nz / c.zoom
+        return { zoom: nz, px: cx - (cx - c.px) * k, py: cy - (cy - c.py) * k }
+      })
+    }
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault()
+      const unit = e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 800 : 1
+      const dx = e.deltaX * unit
+      const dy = e.deltaY * unit
+      const mouseWheel = e.deltaMode !== 0 || (e.deltaX === 0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY) >= 50)
+      if (e.ctrlKey) zoomBy(Math.exp(-dy * 0.01), e.clientX, e.clientY)
+      else if (mouseWheel) zoomBy(Math.exp(-dy * 0.0015), e.clientX, e.clientY)
+      else setCam((c) => (c ? { ...c, px: c.px - dx, py: c.py - dy } : c))
+    }
+    type GestureEv = Event & { scale: number; clientX: number; clientY: number }
+    let last = 1
+    const onGestureStart = (e: Event) => {
+      e.preventDefault()
+      last = 1
+    }
+    const onGestureChange = (e: Event) => {
+      e.preventDefault()
+      const g = e as GestureEv
+      zoomBy(g.scale / last, g.clientX, g.clientY)
+      last = g.scale
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    el.addEventListener('gesturestart', onGestureStart)
+    el.addEventListener('gesturechange', onGestureChange)
+    el.addEventListener('gestureend', onGestureStart)
+    return () => {
+      el.removeEventListener('wheel', onWheel)
+      el.removeEventListener('gesturestart', onGestureStart)
+      el.removeEventListener('gesturechange', onGestureChange)
+      el.removeEventListener('gestureend', onGestureStart)
+    }
+  }, [])
 
   const where = (t: TokenView): Vec3 => {
     if (local?.token === t.id) return local.at
@@ -140,10 +184,6 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
-      onWheel={(e) => {
-        const r = e.currentTarget.getBoundingClientRect()
-        if (cam) zoomAt(cam.zoom * Math.exp(-e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top)
-      }}
       onDoubleClick={fit}
     >
       {cam && (
