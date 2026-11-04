@@ -25,7 +25,7 @@
   mood: Patient
   note: Asked nicely.
   codex: the-fixer
-  gm_note: "Uploaded man in a chassis. Thinks a rich client hired him; the client is ISCO. Final boss at the lift: 7 health, d20, Very hard to hit."
+  gm_note: "Uploaded man in a chassis. Thinks a rich client hired him; the client is ISCO. Final boss at the lift: 10 health, d20, Very hard to hit."
 
 - id: cleaner-14
   name: Cleaner Unit 14
@@ -175,4 +175,4 @@
   stats: {body: 20, reflex: 8, tech: 12, intel: 4, cool: 20, empathy: 4}
   mood: Dormant
   note: Six legs, a cluster of red lenses, twin guns under its chin.
-  gm_note: "The company's boss machine; ISCO doesn't run it. Starts on its cradle, dormant during the break-in. Enemy card: 10 health, d12, Hard to hit, fights alone. Heavy guns, so at least 2 damage. At 5 health or less its shell cracks: Normal to hit, and it attacks with a d20. Weak: Tech at Hard, once, blinds its lenses (it loses its next action and is Normal to hit). Strong: too big to grapple, and ISCO can't shut it down for you."
+  gm_note: "The company's boss machine; ISCO doesn't run it. Starts on its cradle, dormant during the break-in. Enemy card: 13 health, d12, Hard to hit, fights alone. Heavy guns, so at least 2 damage. At 6 health or less its shell cracks: Normal to hit, and it attacks with a d20. Weak: Tech at Hard, once, blinds its lenses (it loses its next action and is Normal to hit). Strong: too big to grapple, and ISCO can't shut it down for you."

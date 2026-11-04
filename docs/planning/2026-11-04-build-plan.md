@@ -11,7 +11,8 @@
 | M4: GM tab | **Done** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Peter tried it and is happy. NPC dice are drafts for Peter to set |
 | Stage: the TV and cutscenes | **Done** 2026-11-04. Peter tried it: "looks good and works well". The TV logs in with one click, no passcode. See "How Stage turned out" |
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
-| M6–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
+| M6: Station and Codex tabs | **Next.** The Codex half is designed and approved; the Station needs its design session. Open questions are in M6, under "Before M6" |
+| M7–M9 | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
 - **In the data now:** each character has three skills in one unlabelled list, with what each covers and a downside that happens every time a roll using it fails. The crew's guns are stun pistols. The skill icons come from the Icons canvas, board "Skills".
@@ -456,6 +457,15 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
 - **Station:** the Ergo art with place hotspots, after its design session.
 - **Done when:** locked entries and blocks never reach a player (test), other players' inventories never appear in a page (test), and you sign off on both tabs.
 - **Why here:** you need to have felt the core first. The content comes from the bible.
+- **Before M6, open questions** (2026-11-04, each with the default I'd take):
+  1. **Order:** the Codex first, built from the approved `Cdx3*` boards, then a design round for the Station on the UI canvas, then the Station. Default: yes.
+  2. **The other session.** The session that did the crew rework (2224ab2) owns removing the Crew tab, and has "still to build" rules items (health by character, Burns, the failed skill's downside on the TV, new enemy numbers). Default: this session builds the Codex and removes the Crew tab as part of it, and the rules items stay with that session (or M8). Peter to confirm the other session isn't building the Codex too.
+  3. **Codex texts:** drafted from the live Campaign Bible for every entry (crew, NPCs, items, places, lore, How to play), for Peter to edit, like the item texts. Ves's placeholders stay placeholders. Default: yes.
+  4. **Unlocked at the start of session 1:** the five crew pages, How to play, and the places the crew start in or reach on day one (Patience, the Promenade, the bar). Everything else locked until Peter unlocks it. Default: yes.
+  5. **Item art:** cards for items with no art of their own (each note shares one icon today) use a plain text card for now; separate note icons get drawn later on the Icons canvas. Default: yes.
+  6. **Station, decided in its design round:** can players open places they haven't visited? Default: the cross-section shows all 11 places, but only ones the crew have been to (or Peter reveals) open.
+  - **Not a question:** the local bible copy (`design/reference/campaign-bible.md`) dates from M1. The live doc has the crew rework and new enemy numbers, so re-read it before writing Codex text. The mech's and fixer's GM notes were corrected to 13 and 10 health on 2026-11-04.
+  - **Game day decides M7's place:** if session 1 is soon, or players should read the Codex at home first, move M7 (hosting on Railway, backups, the layout checks) ahead of the Station.
 
 ### M7: Ship for session 1 · S · review fan-out plus your dry run
 - **Goal:** hosted, hardened and rehearsed.
