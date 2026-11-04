@@ -27,8 +27,23 @@
   - Skill and chrome rows without art show a SKILL / CHROME box.
 - **Still placeholders:** starting inventories in `content/presets/session-1.yaml`, for Peter to set.
 
-**Decide before M2:**
-1. **When others see a roll's result.** Either as soon as the dice land, or when the roller reaches their Done screen. The second keeps the suspense but needs an automatic reveal after a timeout.
+**Decided for M2: the roll callout others see.** The design is Round 7 on the UI canvas (`R7Live`, `R7States`).
+- **While rolling:** a spinning ring in the stat's colour around the token head and the rail ring, plus a small chip with the stat name and a looping motion per stat:
+  - Body: a die thumping.
+  - Reflex: a slot reel.
+  - Tech: hex characters decrypting.
+  - Intel: maths symbols cycling.
+  - Cool: a "?" coming into focus.
+  - Empathy: a heartbeat.
+- **Explodes:** a gold "EXPLODES" label and a flash, while it keeps rolling.
+- **When the dice land:** everyone sees the number at once, in the stat's colour, with "×N" when it took more than one die.
+- **Natural 1:** red, with a shake and a crack.
+- **Push:** an amber "+1", the number ticks up, and one Entropy segment goes dark.
+- **Where it sits:** above the token head on the map, and to the left of the ring in the crew rail.
+- **When it goes:** it fades about 4 seconds after the roller closes their roll screen.
+
+**Still to decide before M2:**
+1. (Decided above.)
 2. **Entropy on a failed roll.** Either +1 automatically when the GM has named a difficulty, or only after the GM confirms it.
 3. **Roll requests.** Should the GM be able to send "Cool, Hard 7" to open a player's roll picker?
 
