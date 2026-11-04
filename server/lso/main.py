@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import asyncio
+import contextlib
 import json
 import logging
+import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -23,6 +26,24 @@ from .views import url
 
 log = logging.getLogger("lso")
 PUBLIC_ASSET_DIRS = ("icons/",)  # stat icons, dice, items: no spoilers, any logged-in seat may fetch
+SWEEP_EVERY = 2.0  # seconds between roll housekeeping passes
+AWAY_AFTER = 15.0  # a seat with no socket for this long counts as gone (a Wi-Fi blip doesn't)
+
+
+async def sweeper(engine: Engine, hub: Hub) -> None:
+    """Reveal or close rolls whose roller's screen went quiet (laptop asleep, tab closed)."""
+    last_seen: dict[str, float] = {}
+    while True:
+        await asyncio.sleep(SWEEP_EVERY)
+        try:
+            now = time.time()
+            for c in hub.conns:
+                last_seen[c.viewer.seat] = now
+            online = {seat for seat, t in last_seen.items() if now - t < AWAY_AFTER}
+            if await engine.sweep(online):
+                await hub.broadcast()
+        except Exception:
+            log.exception("roll sweep failed")
 
 
 class LoginBody(BaseModel):
@@ -44,7 +65,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.state.engine = engine
         app.state.hub = Hub(engine)
         log.info("ready: %d maps, %d tokens, seq %d", len(content.maps), len(engine.state.tokens), engine.state.seq)
+        sweep_task = asyncio.create_task(sweeper(engine, app.state.hub))
         yield
+        sweep_task.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await sweep_task
         store.close()
 
     app = FastAPI(title="Last Stable Orbit", lifespan=lifespan, docs_url=None, redoc_url=None)

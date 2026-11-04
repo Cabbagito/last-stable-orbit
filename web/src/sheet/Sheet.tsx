@@ -1,5 +1,7 @@
 import { ring } from '../lib/ring'
+import { STAT_LOOK } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
+import { useGame } from '../store/game'
 import { STATS, type CrewMember, type InvEntry } from '../types'
 
 const STAT_NAME: Record<string, string> = {
@@ -13,6 +15,7 @@ const STAT_NAME: Record<string, string> = {
 
 /** The R6 character sheet: portrait in its ring, name, the 3x2 stat table, skills + chrome, items. */
 export function Sheet({ me, items }: { me: CrewMember; items: InvEntry[] }) {
+  const openPick = useGame((s) => s.openPick)
   return (
     <aside aria-label="Character sheet" className="r4-col">
       <div role="img" aria-label={`${me.short}. HP ${me.hp} of 6, Entropy ${me.entropy} of 6`} style={{ alignSelf: 'center' }}>
@@ -26,8 +29,7 @@ export function Sheet({ me, items }: { me: CrewMember; items: InvEntry[] }) {
         {STATS.map((s) => {
           const die = me.stats[s]
           return (
-            // Rolling arrives in Milestone 2; until then the dice are physical and the tile just wiggles.
-            <button key={s} type="button" className="r5-cell" aria-label={`${STAT_NAME[s]}, d${die}`} title="Rolling in the app comes next">
+            <button key={s} type="button" className="r5-cell" aria-label={`Roll ${STAT_LOOK[s].title}, d${die}`} onClick={() => openPick(s)}>
               <span style={{ display: 'flex' }}>
                 <img src={`/assets/icons/stats/${s}.png`} alt="" className="r3-px" style={{ width: 48, height: 48 }} />
                 <img src={`/assets/icons/dice/${s}-d${die}.png`} alt="" className="r3-px r4-sdie" style={{ width: 48, height: 48 }} />

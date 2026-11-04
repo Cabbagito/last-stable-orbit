@@ -92,3 +92,53 @@ def test_reconnect_gets_current_state(client, seat):
         recv(g, "ack")
     with client.websocket_connect("/ws", headers=gm) as g:
         assert recv(g, "view")["view"]["maps"]["event-horizon"]["mood"] == "after"
+
+
+class Dice:
+    def __init__(self, *rolls):
+        self.rolls = list(rolls)
+
+    def randint(self, a, b):
+        return self.rolls.pop(0)
+
+    def randrange(self, stop):
+        return 0
+
+
+def test_hidden_gm_roll_sends_players_zero_frames(client, seat, app):
+    gm, ves = seat("gm"), seat("ves")
+    app.state.engine.rng = Dice(20, 7)
+    with client.websocket_connect("/ws", headers=gm) as g, client.websocket_connect("/ws", headers=ves) as v:
+        recv(g, "view"), recv(v, "view")
+        intent(g, "gm.roll.start", {"token": None, "sides": 20, "stat": "intel", "hidden": True}, "r1")
+        rolls = recv(g, "view")["view"]["rolls"]
+        assert recv(g, "ack")["ok"] and rolls[-1]["dice"] == [20, 7]
+        rid = rolls[-1]["id"]
+        for i, (kind, args) in enumerate([("roll.reveal", {"roll": rid, "shown": 1}), ("roll.reveal", {"roll": rid, "shown": 2}), ("roll.close", {"roll": rid})]):
+            intent(g, kind, args, f"x{i}")
+            recv(g, "ack")
+        v.send_json({"t": "ping"})
+        assert v.receive_json() == {"t": "pong"}  # not a single frame reached Ves during the whole roll
+
+
+def test_others_see_a_roll_as_it_lands(client, seat, app):
+    ves, marlo = seat("ves"), seat("marlo")
+    app.state.engine.rng = Dice(10, 3)  # Ves's Tech d10 explodes
+    with client.websocket_connect("/ws", headers=ves) as v, client.websocket_connect("/ws", headers=marlo) as m:
+        recv(v, "view"), recv(m, "view")
+        intent(v, "roll.start", {"stat": "tech"}, "s")
+        mine = recv(v, "view")["view"]["rolls"][-1]
+        assert recv(v, "ack")["ok"] and mine["dice"] == [10, 3]
+        f = recv(m, "view")
+        theirs = f["view"]["rolls"][-1]
+        assert theirs["phase"] == "roll" and "dice" not in theirs and '"dice"' not in json.dumps(f)
+
+        intent(v, "roll.reveal", {"roll": mine["id"], "shown": 1}, "a")
+        assert recv(m, "view")["view"]["rolls"][-1]["phase"] == "boom"
+        intent(v, "roll.reveal", {"roll": mine["id"], "shown": 2}, "b")
+        landed = recv(m, "view")["view"]["rolls"][-1]
+        assert (landed["phase"], landed["value"], landed["count"]) == ("land", 13, 2)
+
+        intent(v, "roll.push", {"roll": mine["id"]}, "c")
+        f = recv(m, "view")["view"]
+        assert f["rolls"][-1]["value"] == 15 and next(c for c in f["crew"] if c["id"] == "ves")["entropy"] == 1

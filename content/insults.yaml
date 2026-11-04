@@ -1,0 +1,42 @@
+# Natural 1: the roller's screen cracks red and slams one of these lines over a dim red 1.
+# They're the table mocking you, not ISCO talking. Profanity is fine.
+# Each stat's own lines come up twice as often as the "any" lines. Edit freely; the server picks one
+# when the dice land, so a change shows up on the next roll.
+
+any:
+  - OH YOU FUCKED UP.
+  - DUMBASS.
+  - THAT WAS YOUR PLAN?
+  - EVERYONE SAW THAT.
+  - WOW. NO.
+  - WHAT THE FUCK WAS THAT?
+
+body:
+  - YOU PULLED SOMETHING. SOMETHING IMPORTANT.
+  - YOU LOST TO A DOOR.
+  - YOUR KNEE HAS FILED A COMPLAINT.
+
+reflex:
+  - YOU DODGED INTO IT.
+  - YOU TRIPPED ON NOTHING, DUMBASS.
+  - SO SLOW. SO FUCKING SLOW.
+
+tech:
+  - YOU BRICKED IT, GENIUS.
+  - HAVE YOU TRIED NOT DOING THAT?
+  - ACCESS DENIED, DUMBASS.
+
+intel:
+  - CONFIDENTLY, SPECTACULARLY WRONG.
+  - YOU DID THE MATH. THE MATH LAUGHED.
+  - THAT IS NOT EVEN WRONG.
+
+cool:
+  - YOU BLINKED. A LOT.
+  - YOU SAID THE QUIET PART. LOUDLY.
+  - SWEATING IS NOT A STRATEGY.
+
+empathy:
+  - READ THE ROOM, DUMBASS.
+  - THEY HATE YOU NOW.
+  - YOU MADE IT WORSE. SOMEHOW.

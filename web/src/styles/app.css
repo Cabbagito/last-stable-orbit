@@ -335,3 +335,118 @@ body {
 .app-input:focus {
   border-bottom-color: var(--accent);
 }
+
+/* ---------------------------------------------------------------- the roll screen (R6) */
+.app-rolldlg {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: #000;
+  overflow: hidden;
+}
+.app-rollhead {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+.app-pickstage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+.app-pickstat {
+  position: relative;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 164px;
+}
+.app-beam {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 380px;
+  height: 430px;
+  margin-left: -190px;
+  opacity: 0.24;
+  clip-path: polygon(48.5% 0, 51.5% 0, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+.app-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.app-railring {
+  position: relative;
+  display: block;
+  width: 64px;
+  height: 64px;
+}
+
+/* ---------------------------------------------------------------- roll callouts (Round 7, verbatim) */
+.r7-orbit{position:absolute;left:-7px;top:-7px;width:78px;height:78px;overflow:visible;pointer-events:none;animation:r7-spin .9s linear infinite}
+@keyframes r7-spin{to{transform:rotate(360deg)}}
+.r7-call{position:absolute;top:11px;display:flex;flex-direction:column;align-items:flex-start;gap:3px;pointer-events:none;transition:opacity .6s ease}
+.r7-call.s-r{left:72px}
+.r7-call.s-l{right:74px;align-items:flex-end}
+.r7-call.s-t{top:auto;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);align-items:center}
+.r7-lab{font-family:'Michroma',sans-serif;font-size:6.5px;letter-spacing:.16em;line-height:1;color:var(--c);white-space:nowrap}
+.r7-chip{position:relative;display:flex;align-items:center;justify-content:center;min-width:36px;height:30px;padding:0 7px;box-sizing:border-box;background:#000;box-shadow:0 0 0 1px var(--c);color:var(--fx)}
+.r7-num{display:block;font-family:'VT323',monospace;font-size:28px;line-height:1;color:var(--fx)}
+.r7-win{display:block;height:22px;overflow:hidden}
+.r7-strip{display:flex;flex-direction:column}
+.r7-fr{display:block;height:22px;line-height:22px;text-align:center;font-family:'VT323',monospace;font-size:22px;color:var(--fx)}
+.g-reel{animation:r7-strip .42s linear infinite}
+.g-dec{animation:r7-strip .66s steps(6) infinite}
+.g-sol{animation:r7-strip 1.3s steps(6) infinite}
+.g-sol .r7-fr{font-family:'Jost',sans-serif;font-weight:200;font-size:18px}
+@keyframes r7-strip{from{transform:translateY(0)}to{transform:translateY(-132px)}}
+.r7-body{display:block;color:var(--fx);transform-origin:50% 100%;animation:r7-slam .5s cubic-bezier(.5,0,.5,1) infinite}
+@keyframes r7-slam{0%{transform:translateY(-5px) rotate(-10deg)}45%{transform:translateY(0) scale(1.18,.78)}60%{transform:translateY(0) scale(.95,1.06)}100%{transform:translateY(-5px) rotate(10deg)}}
+.r7-cool{display:block;font-family:'VT323',monospace;font-size:24px;line-height:1;color:var(--fx);animation:r7-focus 1s ease-in-out infinite}
+@keyframes r7-focus{0%,100%{filter:blur(2.5px);text-shadow:-5px 0 0 rgba(199,155,255,.55),5px 0 0 rgba(199,155,255,.55)}50%{filter:blur(0);text-shadow:0 0 0 rgba(199,155,255,0),0 0 0 rgba(199,155,255,0)}}
+.r7-pulse{display:block;color:var(--fx);overflow:visible}
+.r7-pulse path{stroke-dasharray:46;stroke-dashoffset:46;animation:r7-beat .9s linear infinite}
+@keyframes r7-beat{0%{stroke-dashoffset:46;opacity:1}70%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+.p-land .r7-num{animation:r7-pop .34s cubic-bezier(.3,1.6,.5,1)}
+@keyframes r7-pop{0%{transform:scale(1.8);opacity:0}55%{opacity:1}100%{transform:none}}
+.p-boom .r7-lab{font-family:'Silkscreen',monospace;font-size:8px;letter-spacing:.04em;color:#ffd98a}
+.p-boom .r7-chip{box-shadow:0 0 0 1px #ffd98a,0 0 12px rgba(255,217,138,.55);animation:r7-flash .55s ease}
+@keyframes r7-flash{0%{background:#ffd98a}100%{background:#000}}
+.p-nat1 .r7-lab{color:#ff5b4d}
+.p-nat1 .r7-chip{box-shadow:0 0 0 1px #ff5b4d;background:#170506;animation:r7-shake .45s ease}
+.p-nat1 .r7-num{color:#ff5b4d;animation:r7-thud .3s ease-out}
+@keyframes r7-shake{0%,100%{transform:none}15%{transform:translateX(-3px) rotate(-3deg)}30%{transform:translateX(3px) rotate(3deg)}45%{transform:translateX(-2px)}60%{transform:translateX(2px)}}
+@keyframes r7-thud{0%{transform:translateY(-10px);opacity:0}100%{transform:none;opacity:1}}
+.r7-crack{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.r7-crack polyline{stroke-dasharray:48;stroke-dashoffset:48;animation:r7-draw .32s ease .12s forwards}
+@keyframes r7-draw{to{stroke-dashoffset:0}}
+.p-push .r7-lab{color:#f2b544}
+.p-push .r7-num{animation:r7-tick .42s ease}
+.p-push .r7-chip{animation:r7-amber .8s ease}
+@keyframes r7-tick{0%{transform:translateY(9px);opacity:0;color:#f2b544}55%{color:#f2b544}100%{transform:none;opacity:1}}
+@keyframes r7-amber{0%{box-shadow:0 0 0 1px #f2b544,0 0 14px rgba(242,181,68,.6)}100%{box-shadow:0 0 0 1px var(--c)}}
+.r7-plus{position:absolute;top:20px;font-family:'VT323',monospace;font-size:20px;line-height:1;color:#f2b544;opacity:0;animation:r7-rise 1s ease forwards}
+.s-r .r7-plus{left:100%;margin-left:6px}
+.s-l .r7-plus{right:100%;margin-right:6px}
+.s-t .r7-plus{left:100%;margin-left:6px}
+@keyframes r7-rise{0%{transform:translateY(12px);opacity:0}25%{opacity:1}100%{transform:translateY(-14px);opacity:0}}
+.p-fade{opacity:0}
+@media (prefers-reduced-motion:reduce){.r7-orbit,.r7-strip,.r7-body,.r7-cool,.r7-pulse path,.r7-num,.r7-chip,.r7-plus{animation:none}}

@@ -6,14 +6,21 @@ Nothing here touches the database or the network, so every rule is easy to test.
 from __future__ import annotations
 
 import math
+import random
 
+from . import rules
 from .auth import Viewer
 from .content import Content
-from .models import ENTROPY_MAX, HP_MAX, GameState
+from .models import DIE_SIDES, ENTROPY_MAX, HP_MAX, STATS, GameState, RollState
 from .state import state_from_preset
 
 Events = list[tuple[str, dict]]
 COORD_LIMIT = 500.0  # world units; far beyond any map, just stops garbage
+
+# The sweeper, for a roller whose laptop sleeps or whose tab closes mid-roll:
+REVEAL_AFTER = 45.0  # everyone sees the result even if the roller's screen never got there (6 exploding dice with every gate held run about 40 s)
+OFFLINE_CLOSE_AFTER = 30.0  # a roll this old whose roller has gone away is closed
+STALE_CLOSE_AFTER = 600.0  # nothing stays open longer than this
 
 
 class CommandError(Exception):
@@ -64,13 +71,146 @@ def check_drag(viewer: Viewer, state: GameState, args: dict) -> tuple[str, tuple
     return token, _vec3(args.get("at"))
 
 
-def handle(viewer: Viewer, state: GameState, content: Content, kind: str, args: dict) -> Events:
+def _int(args: dict, key: str) -> int:
+    v = args.get(key)
+    if not isinstance(v, int) or isinstance(v, bool):
+        raise _invalid(f"{key} must be a whole number")
+    return v
+
+
+def _stat(args: dict) -> str:
+    stat = _str(args, "stat")
+    if stat not in STATS:
+        raise _invalid(f"stat must be one of {', '.join(STATS)}")
+    return stat
+
+
+def _the_roll(viewer: Viewer, state: GameState, args: dict, gm_too: bool) -> RollState:
+    roll_id = _str(args, "roll")
+    r = next((r for r in state.rolls if r.id == roll_id), None)
+    if r is None:
+        raise _invalid("unknown roll")
+    if r.by != viewer.seat and not (gm_too and viewer.is_gm):
+        raise _forbid("that's someone else's roll")
+    return r
+
+
+def _new_roll(state: GameState, content: Content, rng, now: float, **fields) -> Events:
+    """Roll the dice. A seat has one roll open at a time, so a new one closes the last."""
+    dice = rules.roll_dice(fields["sides"], rng)
+    roll = RollState(
+        id=f"r{state.seq + 1}",
+        dice=dice,
+        seed=rng.randrange(2**31),
+        insult=rules.pick_insult(fields["stat"], content.insults, rng) if rules.is_nat1(dice) else None,
+        started=now,
+        **fields,
+    )
+    events: Events = [("roll.closed", {"roll": r.id}) for r in state.rolls if r.open and r.by == roll.by]
+    events.append(("roll.started", {"roll": roll.model_dump()}))
+    return events
+
+
+def _roll_intent(viewer: Viewer, state: GameState, content: Content, kind: str, args: dict, rng, now: float) -> Events:
+    if kind == "roll.start":
+        if viewer.is_gm:
+            raise _invalid("the GM rolls with gm.roll.start")
+        char = content.characters[viewer.char]
+        stat = _stat(args)
+        entry = args.get("entry")
+        if entry is not None and (not isinstance(entry, int) or isinstance(entry, bool) or not 0 <= entry < len(char.entries)):
+            raise _invalid("entry must be the index of one of your skills or chrome")
+        sides, bonus = rules.effective_die(char.stats[stat], entry is not None)
+        return _new_roll(
+            state, content, rng, now,
+            by=viewer.seat, char=char.id, handle=char.id, stat=stat,
+            entry=char.entries[entry].name if entry is not None else None, sides=sides, bonus=bonus,
+        )
+
+    if kind == "roll.reveal":
+        r = _the_roll(viewer, state, args, gm_too=False)
+        shown = min(_int(args, "shown"), len(r.dice))
+        if not r.open or shown <= r.shown:
+            return []
+        return [("roll.revealed", {"roll": r.id, "shown": shown})]
+
+    if kind == "roll.push":
+        r = _the_roll(viewer, state, args, gm_too=False)
+        if not r.open:
+            raise _invalid("that roll is over")
+        if r.char is None:
+            raise _invalid("only crew rolls can be pushed")
+        v = state.vitals.get(r.char)
+        hp, entropy = (v.hp, v.entropy) if v else (HP_MAX, 2)
+        if why := rules.push_refusal(r.dice, r.pushes, entropy):
+            raise _invalid(why)
+        return [
+            ("roll.pushed", {"roll": r.id, "gain": rules.push_gain(r.dice)}),
+            ("vitals.set", {"char": r.char, "hp": hp, "entropy": entropy - rules.PUSH_COST}),
+        ]
+
+    if kind == "roll.close":
+        r = _the_roll(viewer, state, args, gm_too=True)
+        return [("roll.closed", {"roll": r.id})] if r.open else []
+
+    raise _invalid(f"unknown intent {kind!r}")
+
+
+def _gm_roll(state: GameState, content: Content, args: dict, rng, now: float) -> Events:
+    sides = _int(args, "sides")
+    if sides not in DIE_SIDES:
+        raise _invalid(f"sides must be one of {DIE_SIDES}")
+    stat = _stat(args)
+    token = args.get("token")
+    hidden = bool(args.get("hidden", False))
+    handle = "gm"
+    if token is not None:
+        if not isinstance(token, str):
+            raise _invalid("token must be a token id or null")
+        t = state.tokens.get(token)
+        if t is None or t.kind != "npc":
+            raise _invalid("the GM rolls for NPC tokens")
+        if t.hidden and not hidden:
+            raise _invalid("that token is hidden from players: make the roll hidden, or show the token first")
+        handle = t.ref
+    else:
+        hidden = True  # just a die, with no token to sit on: only the GM sees it
+    return _new_roll(state, content, rng, now, by="gm", token=token, handle=handle, stat=stat, sides=sides, hidden=hidden)
+
+
+def sweep(state: GameState, now: float, online: set[str]) -> Events:
+    """System housekeeping for rolls whose roller's screen stopped talking to us."""
+    events: Events = []
+    for r in state.rolls:
+        if not r.open:
+            continue
+        age = now - r.started
+        if age > STALE_CLOSE_AFTER or (r.by not in online and age > OFFLINE_CLOSE_AFTER):
+            events.append(("roll.closed", {"roll": r.id}))
+        elif r.shown < len(r.dice) and age > REVEAL_AFTER:
+            events.append(("roll.revealed", {"roll": r.id, "shown": len(r.dice)}))
+    return events
+
+
+def handle(
+    viewer: Viewer,
+    state: GameState,
+    content: Content,
+    kind: str,
+    args: dict,
+    rng: rules.Rng | None = None,
+    now: float = 0.0,
+) -> Events:
     if not isinstance(args, dict):
         raise _invalid("args must be an object")
+    rng = rng or random.SystemRandom()
 
     if kind == "token.move":
         token, at = check_drag(viewer, state, args)
         return [("token.moved", {"token": token, "at": list(at)})]
+
+    if kind.startswith("roll."):
+        return _roll_intent(viewer, state, content, kind, args, rng, now)
 
     if not kind.startswith("gm."):
         raise _invalid(f"unknown intent {kind!r}")
@@ -135,6 +275,9 @@ def handle(viewer: Viewer, state: GameState, content: Content, kind: str, args: 
         if not isinstance(hp, int) or not isinstance(en, int) or isinstance(hp, bool) or isinstance(en, bool):
             raise _invalid("hp and entropy must be whole numbers")
         return [("vitals.set", {"char": char, "hp": max(0, min(HP_MAX, hp)), "entropy": max(0, min(ENTROPY_MAX, en))})]
+
+    if kind == "gm.roll.start":
+        return _gm_roll(state, content, args, rng, now)
 
     if kind == "gm.world.load_preset":
         preset = content.presets.get(_str(args, "preset"))

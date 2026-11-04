@@ -36,7 +36,7 @@ test-server:
 	cd server && uv run pytest -q
 
 test-web:
-	docker run --rm -v "$(CURDIR)/web":/app -v lso-web-node-modules:/app/node_modules -w /app node:22-alpine \
+	docker run --rm -v "$(CURDIR)":/repo -v lso-web-node-modules:/repo/web/node_modules -w /repo/web node:22-alpine \
 		sh -c "npm ci --no-audit --no-fund --loglevel=error && npx tsc -b && npx vitest run"
 
 reset-world:

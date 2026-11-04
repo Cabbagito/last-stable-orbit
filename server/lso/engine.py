@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import random
+import time
 
 from .auth import Viewer
-from .commands import CommandError, handle
+from .commands import CommandError, handle, sweep
 from .content import Content
 from .models import GameState
 from .state import apply, state_from_preset
@@ -16,10 +18,12 @@ log = logging.getLogger("lso.engine")
 
 
 class Engine:
-    def __init__(self, content: Content, store: Store):
+    def __init__(self, content: Content, store: Store, rng=None, clock=time.time):
         self.content = content
         self.store = store
         self.lock = asyncio.Lock()
+        self.rng = rng or random.SystemRandom()  # the dice; tests swap in a scripted one
+        self.clock = clock
         snap = store.load_snapshot()
         if snap is None:
             self.state = GameState()
@@ -65,9 +69,17 @@ class Engine:
                 if prior is not None:
                     return prior, False
             try:
-                events = handle(viewer, self.state, self.content, kind, args)
+                events = handle(viewer, self.state, self.content, kind, args, rng=self.rng, now=self.clock())
             except CommandError as e:
                 return {"id": intent_id, "ok": False, "code": e.code, "error": str(e)}, False
             ack = {"id": intent_id, "ok": True}
             self._commit(viewer.seat, intent_id, events, ack)
             return ack, bool(events)
+
+    async def sweep(self, online: set[str]) -> bool:
+        """Housekeeping the server does on its own (rolls whose roller went quiet). True if anything changed."""
+        async with self.lock:
+            events = sweep(self.state, self.clock(), online)
+            if events:
+                self._commit("system", None, events, {})
+            return bool(events)

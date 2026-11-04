@@ -104,6 +104,33 @@ export interface RosterNpc {
   color: string
 }
 
+export type RollPhase = 'roll' | 'boom' | 'land' | 'nat1' | 'push'
+
+/** A roll as this viewer may see it. Others get the dice only as they land on the roller's screen. */
+export interface RollView {
+  id: string
+  by: string // the seat that rolled
+  char: string | null // crew rolls
+  token: string | null // where its callout sits on this viewer's map, if anywhere
+  stat: StatKey
+  sides: number
+  phase: RollPhase
+  open: boolean
+  pushes: number
+  pushed: number
+  value?: number // once landed
+  count?: number // dice it took
+  // the roller and the GM only:
+  dice?: number[]
+  bonus?: number
+  seed?: number
+  insult?: string | null
+  handle?: string
+  entry?: string | null
+  shown?: number
+  hidden?: boolean
+}
+
 export interface View {
   me: Me
   party_map: string
@@ -111,6 +138,7 @@ export interface View {
   maps: Record<string, MapView>
   tokens: Record<string, TokenView>
   inventory: Record<string, InvEntry[]>
+  rolls: RollView[]
   roster?: RosterNpc[] // GM only
   presets?: { id: string; name: string }[] // GM only
 }

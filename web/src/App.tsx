@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Login } from './pages/Login'
+import { RollDialog, preloadRollFonts } from './roll/RollDialog'
 import { Placeholder } from './pages/Placeholder'
 import { Scene } from './pages/Scene'
 import { Header, type Tab } from './shell/Header'
@@ -62,6 +63,7 @@ function Game({ me, onLogout }: { me: Me; onLogout: () => void }) {
   const disconnect = useGame((s) => s.disconnect)
   useEffect(() => {
     connect()
+    preloadRollFonts()
     return disconnect
   }, [connect, disconnect])
 
@@ -69,6 +71,7 @@ function Game({ me, onLogout }: { me: Me; onLogout: () => void }) {
     <div className="r4 th-meridian">
       <Header tab={tab} isGm={isGm} onLogout={onLogout} />
       {tab === 'scene' ? <Scene /> : <Placeholder tab={tab} />}
+      <RollDialog />
     </div>
   )
 }

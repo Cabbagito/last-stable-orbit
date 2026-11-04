@@ -4,15 +4,18 @@ Every frame a client receives is built here for that viewer. A player gets:
 - the one map they are on (their own token's map, else the party map), and only that map's art;
 - the tokens on that map that aren't hidden, with each NPC's public card (never its gm_note);
 - every crew member's public sheet and vitals (the crew rail shows them);
-- their own inventory only.
+- their own inventory only;
+- each crew member's latest roll, and the latest public roll of each NPC they can see. The dice of a
+  roll that isn't theirs arrive only as they land on the roller's screen. Hidden GM rolls never.
 The GM gets everything, plus the NPC roster and the presets.
 """
 
 from __future__ import annotations
 
+from . import rules
 from .auth import Viewer
 from .content import Content
-from .models import GameState
+from .models import GameState, RollState
 
 ASSET_PREFIX = "/assets/"
 
@@ -84,6 +87,66 @@ def _inventory_view(content: Content, entries) -> list[dict]:
     return out
 
 
+def roll_phase(r: RollState) -> str:
+    """What everyone else sees: still rolling, exploded and rolling again, or landed."""
+    n = len(r.dice)
+    if r.shown == 0:
+        return "roll"
+    if r.shown < n:
+        return "boom"
+    if rules.is_nat1(r.dice):
+        return "nat1"
+    return "push" if r.pushes else "land"
+
+
+def _roll_view(state: GameState, r: RollState, viewer: Viewer, visible_tokens: set[str]) -> dict:
+    full = viewer.is_gm or r.by == viewer.seat
+    phase = roll_phase(r)
+    crew_token = next((tid for tid, t in state.tokens.items() if t.kind == "crew" and t.ref == r.char), None) if r.char else None
+    token = crew_token if r.char else r.token
+    out = {
+        "id": r.id,
+        "by": r.by,
+        "char": r.char,
+        "token": token if token in visible_tokens else None,
+        "stat": r.stat,
+        "sides": r.sides,
+        "phase": phase,
+        "open": r.open,
+        "pushes": r.pushes,
+        "pushed": r.pushed,
+    }
+    if phase == "nat1":
+        out |= {"value": 1, "count": len(r.dice)}  # it fails, whatever the bonus: everyone sees the red 1
+    elif phase in ("land", "push"):
+        out |= {"value": rules.total(r.dice, r.bonus, r.pushed), "count": len(r.dice)}
+    if full:
+        out |= {
+            "dice": list(r.dice),
+            "bonus": r.bonus,
+            "seed": r.seed,
+            "insult": r.insult,
+            "handle": r.handle,
+            "entry": r.entry,
+            "shown": r.shown,
+            "hidden": r.hidden,
+        }
+    return out
+
+
+def _rolls_view(state: GameState, viewer: Viewer, visible_tokens: set[str]) -> list[dict]:
+    if viewer.is_gm:
+        return [_roll_view(state, r, viewer, visible_tokens) for r in state.rolls]
+    latest: dict[str, RollState] = {}  # one callout per crew member or NPC token: their newest roll
+    for r in state.rolls:
+        if r.hidden:
+            continue
+        if r.char is None and r.token not in visible_tokens:
+            continue  # an NPC this player can't see
+        latest[r.char or r.token] = r
+    return [_roll_view(state, r, viewer, visible_tokens) for r in latest.values()]
+
+
 def viewer_map(state: GameState, viewer: Viewer) -> str:
     """Split party: a player looks at the map their own token stands on."""
     if not viewer.is_gm:
@@ -110,6 +173,7 @@ def project(state: GameState, content: Content, viewer: Viewer) -> dict:
         "maps": {m: _map_view(content, state, m) for m in map_ids},
         "tokens": tokens,
         "inventory": {h: _inventory_view(content, state.inventory[h]) for h in holders},
+        "rolls": _rolls_view(state, viewer, set(tokens)),
     }
     if gm:
         view["roster"] = [

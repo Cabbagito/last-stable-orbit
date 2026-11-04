@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { unproj } from '../lib/proj'
 import { ring } from '../lib/ring'
+import { STAT_LOOK } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
 import { send, useGame } from '../store/game'
-import type { MapView } from '../types'
+import { STATS, type MapView, type RollView, type StatKey, type View } from '../types'
+
+const DICE = [4, 6, 8, 10, 12, 20]
 
 /**
  * The GM's left column on the Scene, in place of a character sheet: crew vitals, the map's mood and
@@ -15,6 +18,10 @@ export function GmPanel({ map }: { map: MapView | undefined }) {
   const select = useGame((s) => s.select)
   const [preset, setPreset] = useState('')
   const [err, setErr] = useState('')
+  const [rollWho, setRollWho] = useState('')
+  const [rollSides, setRollSides] = useState(20)
+  const [rollStat, setRollStat] = useState<StatKey>('reflex')
+  const [rollHidden, setRollHidden] = useState(false)
   if (!view) return null
 
   const run = async (type: string, args: Record<string, unknown>) => {
@@ -30,6 +37,17 @@ export function GmPanel({ map }: { map: MapView | undefined }) {
   const placed = new Set(onMap.filter((t) => t.kind === 'npc').map((t) => t.ref))
   const switches = map ? map.switches.filter((s) => !s.moods.length || s.moods.includes(map.mood)) : []
   const centre = map ? unproj(map.origin, [map.display[0] / 2, map.display[1] / 2], 0) : null
+  const npcsHere = onMap.filter((t) => t.kind === 'npc')
+  const who = npcsHere.find((t) => t.id === rollWho)
+  const mustHide = !who || !!who.hidden // just a die, or a hidden NPC: only the GM can see it
+  const gmRoll = async () => {
+    const ack = await send('gm.roll.start', { token: who?.id ?? null, sides: rollSides, stat: rollStat, hidden: mustHide || rollHidden })
+    setErr(ack.ok ? '' : ack.error || ack.code || 'That did not work')
+    if (!ack.ok) return
+    const v = useGame.getState().view
+    const mine = v?.rolls.filter((r) => r.by === 'gm' && r.open).pop()
+    if (mine) useGame.getState().openRoll(mine.id)
+  }
 
   return (
     <aside aria-label="Game master controls" className="r4-col app-gm">
@@ -116,6 +134,75 @@ export function GmPanel({ map }: { map: MapView | undefined }) {
       )}
 
       {map && (
+        <section aria-label="Roll">
+          <div className="r5-sec">Roll</div>
+          <select className="app-select" value={who ? who.id : ''} onChange={(e) => setRollWho(e.target.value)} aria-label="Who rolls">
+            <option value="">Just a die (only you see it)</option>
+            {npcsHere.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name}
+                {t.hidden ? ' (hidden)' : ''}
+              </option>
+            ))}
+          </select>
+          <div className="app-btnrow" role="group" aria-label="Die">
+            {DICE.map((d) => (
+              <button key={d} type="button" className={'r4-btn app-toggle app-small' + (rollSides === d ? ' on' : '')} aria-pressed={rollSides === d} onClick={() => setRollSides(d)}>
+                d{d}
+              </button>
+            ))}
+          </div>
+          <div className="app-btnrow" role="group" aria-label="Look of the roll">
+            {STATS.map((st) => (
+              <button
+                key={st}
+                type="button"
+                className={'r4-btn app-toggle app-small' + (rollStat === st ? ' on' : '')}
+                aria-pressed={rollStat === st}
+                onClick={() => setRollStat(st)}
+                style={rollStat === st ? { borderColor: STAT_LOOK[st].col } : undefined}
+              >
+                {STAT_LOOK[st].title}
+              </button>
+            ))}
+          </div>
+          <div className="app-btnrow">
+            <button
+              type="button"
+              className={'r4-btn app-toggle app-small' + (mustHide || rollHidden ? ' on' : '')}
+              aria-pressed={mustHide || rollHidden}
+              disabled={mustHide}
+              onClick={() => setRollHidden(!rollHidden)}
+              title={mustHide ? 'Only you can see this one' : 'Players see nothing at all'}
+            >
+              Hidden: {mustHide || rollHidden ? 'yes' : 'no'}
+            </button>
+            <button type="button" className="r4-btn app-small" style={{ marginLeft: 'auto' }} onClick={gmRoll}>
+              Roll d{rollSides}
+            </button>
+          </div>
+          {view.rolls.length > 0 && (
+            <div className="r5-rows" aria-label="Recent rolls">
+              {view.rolls
+                .slice(-6)
+                .reverse()
+                .map((r) => (
+                  <div key={r.id} className={'r5-row app-gmrow' + (r.open ? '' : ' app-dim')}>
+                    <span className="app-grow">
+                      {rollerName(view, r)} · {STAT_LOOK[r.stat].title} d{r.sides}
+                      {r.hidden ? ' · hidden' : ''}
+                    </span>
+                    <span className="app-num" style={{ width: 'auto', color: r.phase === 'nat1' ? '#ff5b4d' : STAT_LOOK[r.stat].fx }}>
+                      {r.value ?? '…'}
+                    </span>
+                  </div>
+                ))}
+            </div>
+          )}
+        </section>
+      )}
+
+      {map && (
         <section aria-label="Tokens on this map">
           <div className="r5-sec">On the map</div>
           <div className="r5-rows">
@@ -189,6 +276,12 @@ export function GmPanel({ map }: { map: MapView | undefined }) {
       )}
     </aside>
   )
+}
+
+function rollerName(view: View, r: RollView): string {
+  if (r.char) return view.crew.find((c) => c.id === r.char)?.short ?? r.char
+  if (r.token) return view.tokens[r.token]?.name ?? r.token
+  return 'Just a die'
 }
 
 function Stepper({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {

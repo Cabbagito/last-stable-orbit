@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import Character, Item, MapDef, Npc, Preset
+from .models import STATS, Character, Item, MapDef, Npc, Preset
 
 log = logging.getLogger("lso.content")
 
@@ -25,6 +25,7 @@ class Content:
     items: dict[str, Item] = field(default_factory=dict)
     maps: dict[str, MapDef] = field(default_factory=dict)
     presets: dict[str, Preset] = field(default_factory=dict)
+    insults: dict[str, list[str]] = field(default_factory=dict)  # "any" plus one pool per stat
     missing_assets: list[str] = field(default_factory=list)
 
     @property
@@ -70,6 +71,8 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
     for p in sorted((content_dir / "presets").glob("*.yaml")):
         pr = _parse(Preset, _read(p), f"presets/{p.name}")
         c.presets[pr.id] = pr
+    ins = content_dir / "insults.yaml"
+    c.insults = _insults((_read(ins) or {}) if ins.is_file() else {})
     if clash := set(c.characters) & set(c.npcs):
         raise ContentError(f"ids used by both a character and an NPC: {clash}")
     check_refs(c)
@@ -78,6 +81,20 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
         for a in c.missing_assets:
             log.warning("missing asset: %s", a)
     return c
+
+
+def _insults(raw) -> dict[str, list[str]]:
+    if not isinstance(raw, dict):
+        raise ContentError("insults.yaml: expected a mapping of stat -> list of lines")
+    allowed = {"any", *STATS}
+    out: dict[str, list[str]] = {}
+    for k, lines in raw.items():
+        if k not in allowed:
+            raise ContentError(f"insults.yaml: unknown key {k!r} (use any, {', '.join(STATS)})")
+        if not isinstance(lines, list) or not all(isinstance(x, str) and x.strip() for x in lines):
+            raise ContentError(f"insults.yaml: {k} must be a list of lines")
+        out[k] = [x.strip() for x in lines]
+    return out
 
 
 def check_refs(c: Content) -> None:

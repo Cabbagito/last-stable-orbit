@@ -172,6 +172,33 @@ class InvEntry(Strict):
     item: str
 
 
+class RollState(Strict):
+    """One roll, from the moment the dice are rolled (on the server) until the roller closes their roll screen.
+
+    The roller's screen gets every die at once to play the animation; everyone else learns them as they
+    land there (`shown`), so the result appears on the token and in the crew rail at the same moment.
+    """
+
+    id: str
+    by: str  # the seat that rolled: a character id, or "gm"
+    char: str | None = None  # crew rolls: whose Entropy a push spends
+    token: str | None = None  # GM rolls: the NPC token the callout sits on (None: just a die, always hidden)
+    handle: str  # the name in the roll screen's terminal prompt
+    stat: str  # body..empathy: the animation and colour
+    entry: str | None = None  # the skill or chrome picked, if any
+    sides: int
+    bonus: int = 0
+    dice: list[int]
+    seed: int  # the animation's randomness, so a reload paints the same scene
+    insult: str | None = None  # natural 1 only
+    hidden: bool = False  # GM rolls only: players never hear of it
+    shown: int = 0  # dice that have landed on the roller's screen
+    pushes: int = 0
+    pushed: int = 0  # total added by pushes
+    open: bool = True
+    started: float = 0.0  # server time, for the sweeper
+
+
 class GameState(Strict):
     seq: int = 0  # seq of the last applied event
     party_map: str = ""  # where viewers without a token on a map look
@@ -179,4 +206,4 @@ class GameState(Strict):
     tokens: dict[str, TokenState] = {}
     vitals: dict[str, Vitals] = {}
     inventory: dict[str, list[InvEntry]] = {}
-    rolls: list[dict] = Field(default_factory=list)  # filled in by Milestone 2
+    rolls: list[RollState] = Field(default_factory=list)  # open rolls, then the most recent closed ones

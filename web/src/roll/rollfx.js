@@ -1,0 +1,619 @@
+// RollFX, ported from the R6 board (design/reference/ui/R6.dc.html, "Meridian, ruled"). Keep it verbatim.
+// The changes, each marked PORT:
+//   1. the terminal prompt says the roller's handle (o.handle) instead of always "ves";
+//   2. the natural-1 insults moved to content/insults.yaml; the server picks one and it arrives as o.insult.
+// The dice themselves come from the server (R6 rolled them with Math.random in its Component).
+// src/roll/rollfx.test.ts replays R6's original against this file, draw call by draw call.
+
+// prettier-ignore
+export const RollFX = (function () {
+  // ---------- small helpers ----------
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+  const sat = (x) => clamp(x, 0, 1);
+  const easeOut3 = (x) => 1 - Math.pow(1 - x, 3);
+  const easeOut5 = (x) => 1 - Math.pow(1 - x, 5);
+  const easeIO = (x) => (x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
+  function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const hexrgb = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+  const rgba = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+  const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  const mul = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const norm = (a) => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+  const qmul = (a, b) => [a[0] * b[0] - a[1] * b[1] - a[2] * b[2] - a[3] * b[3], a[0] * b[1] + a[1] * b[0] + a[2] * b[3] - a[3] * b[2], a[0] * b[2] - a[1] * b[3] + a[2] * b[0] + a[3] * b[1], a[0] * b[3] + a[1] * b[2] - a[2] * b[1] + a[3] * b[0]];
+  const qrot = (q, v) => { const u = [q[1], q[2], q[3]]; const t = mul(cross(u, v), 2); return add(add(v, mul(t, q[0])), cross(u, t)); };
+  const qconj = (q) => [q[0], -q[1], -q[2], -q[3]];
+
+  // ---------- dice: real convex polyhedra ----------
+  const PHI = (1 + Math.sqrt(5)) / 2;
+  function dieVerts(sides) {
+    const V = [];
+    if (sides === 4) return [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]].map((v) => mul(norm(v), 1.12));
+    if (sides === 6) { for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) V.push(mul([x, y, z], .66)); return V; }
+    if (sides === 8) return [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]].map((v) => mul(v, 1.08));
+    if (sides === 10) {
+      const c = Math.cos(Math.PI / 5), h = .105, a = h * (1 + c) / (1 - c);
+      V.push([0, 0, a], [0, 0, -a]);
+      for (let i = 0; i < 10; i++) { const th = i * Math.PI / 5; V.push([Math.cos(th), Math.sin(th), (i % 2 ? h : -h)]); }
+      return V.map((v) => mul(v, 1.05));
+    }
+    if (sides === 12) {
+      for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) V.push([x, y, z]);
+      for (const a of [-1 / PHI, 1 / PHI]) for (const b of [-PHI, PHI]) { V.push([0, a, b], [a, b, 0], [b, 0, a]); }
+      return V.map((v) => mul(norm(v), 1.02));
+    }
+    for (const a of [-1, 1]) for (const b of [-PHI, PHI]) { V.push([0, a, b], [a, b, 0], [b, 0, a]); }
+    return V.map((v) => mul(norm(v), 1.02));
+  }
+  const MESH = {};
+  function mesh(sides) {
+    if (MESH[sides]) return MESH[sides];
+    const V = dieVerts(sides), F = [], eps = 1e-3;
+    for (let i = 0; i < V.length; i++) for (let j = i + 1; j < V.length; j++) for (let k = j + 1; k < V.length; k++) {
+      let n = cross(sub(V[j], V[i]), sub(V[k], V[i]));
+      if (Math.hypot(n[0], n[1], n[2]) < 1e-6) continue;
+      n = norm(n);
+      let d = dot(n, V[i]);
+      if (d < 0) { n = mul(n, -1); d = -d; }
+      let ok = true; const on = [];
+      for (let m = 0; m < V.length; m++) { const s = dot(n, V[m]) - d; if (s > eps * 12) { ok = false; break; } if (Math.abs(s) < eps * 12) on.push(m); }
+      if (!ok) continue;
+      if (F.some((f) => dot(f.n, n) > .999)) continue;
+      const c = mul(on.reduce((a, m) => add(a, V[m]), [0, 0, 0]), 1 / on.length);
+      const u = norm(sub(V[on[0]], c)), w = cross(n, u);
+      on.sort((a, b) => Math.atan2(dot(sub(V[a], c), w), dot(sub(V[a], c), u)) - Math.atan2(dot(sub(V[b], c), w), dot(sub(V[b], c), u)));
+      let inr = 9;
+      for (let e = 0; e < on.length; e++) { const A = V[on[e]], B = V[on[(e + 1) % on.length]], ed = norm(sub(B, A)), cp = sub(c, A), per = sub(cp, mul(ed, dot(cp, ed))); inr = Math.min(inr, Math.hypot(per[0], per[1], per[2])); }
+      F.push({ idx: on, n, c, u, inr });
+    }
+    MESH[sides] = { V, F };
+    return MESH[sides];
+  }
+
+  // ---------- physics: impulses on vertices against the deck and walls ----------
+  function simulate(sides, value, seed, aspect, power) {
+    power = power || 1;
+    const R = rng(seed), M = mesh(sides);
+    const BX = Math.min(4.6, aspect * 2.6), BY = 2.5, G = 46, dt = 1 / 360;
+    const I = .42;
+    const dir = R() < .5 ? -1 : 1;
+    let p = [dir * (BX - 1.2), -1.4 + R() * 1.6, 5.2 + R() * 1.4];
+    let v = [-dir * (7 + R() * 3.5) * power, (.8 + R() * 2.2) * power, (-9 - R() * 4) * power];
+    let q = norm4([R() - .5, R() - .5, R() - .5, R() - .5]);
+    let w = [(R() - .5) * 38, (R() - .5) * 38, (R() - .5) * 26];
+    const frames = [], impacts = [];
+    let time = 0, still = 0, nextFrame = 0, lastImp = -1;
+    for (let step = 0; step < 360 * 7; step++) {
+      v[2] -= G * dt;
+      // a shallow bowl keeps the die in frame
+      v[0] -= p[0] * 3.2 * dt; v[1] -= p[1] * 3.6 * dt;
+      p = add(p, mul(v, dt));
+      const dq = qmul([0, w[0], w[1], w[2]], q);
+      q = norm4([q[0] + dq[0] * dt / 2, q[1] + dq[1] * dt / 2, q[2] + dq[2] * dt / 2, q[3] + dq[3] * dt / 2]);
+      let contact = false, deepest = 0;
+      for (let i = 0; i < M.V.length; i++) {
+        const r = qrot(q, M.V[i]), P = add(p, r);
+        const planes = [];
+        if (P[2] < 0) planes.push([[0, 0, 1], -P[2]]);
+        if (P[0] > BX) planes.push([[-1, 0, 0], P[0] - BX]);
+        if (P[0] < -BX) planes.push([[1, 0, 0], -BX - P[0]]);
+        if (P[1] > BY) planes.push([[0, -1, 0], P[1] - BY]);
+        if (P[1] < -BY) planes.push([[0, 1, 0], -BY - P[1]]);
+        for (const [n, depth] of planes) {
+          const vp = add(v, cross(w, r)), vn = dot(vp, n);
+          if (n[2] === 1) { contact = true; deepest = Math.max(deepest, depth); } else { p = add(p, mul(n, depth * .8)); }
+          if (vn >= 0) continue;
+          const e = Math.abs(vn) < 2.2 ? 0 : .42;
+          const rn = cross(r, n), den = 1 + dot(rn, rn) / I, j = -(1 + e) * vn / den;
+          v = add(v, mul(n, j));
+          w = add(w, mul(rn, j / I));
+          if (Math.abs(vn) > 5 && time - lastImp > .08) { impacts.push({ t: time, s: Math.min(1, Math.abs(vn) / 18), p: [P[0], P[1]], wall: n[2] !== 1 }); lastImp = time; }
+          const vp2 = add(v, cross(w, r)), vt = sub(vp2, mul(n, dot(vp2, n))), vtl = Math.hypot(vt[0], vt[1], vt[2]);
+          if (vtl > 1e-5) {
+            const t = mul(vt, 1 / vtl), rt = cross(r, t), dent = 1 + dot(rt, rt) / I, jt = Math.min(vtl / dent, .55 * j);
+            v = sub(v, mul(t, jt));
+            w = sub(w, mul(rt, jt / I));
+          }
+        }
+      }
+      if (deepest > 0) p[2] += deepest * .7;
+      if (contact) { w = mul(w, .9975); v[0] *= .9985; v[1] *= .9985; }
+      time += dt;
+      if (time >= nextFrame) { frames.push({ p: p.slice(), q: q.slice() }); nextFrame += 1 / 60; }
+      const e2 = dot(v, v) + dot(w, w);
+      still = (e2 < .35 && contact) ? still + dt : 0;
+      if (still > .12) break;
+    }
+    // settle exactly flat: rotate the most-downward face onto the deck
+    const last = frames[frames.length - 1];
+    let down = 0, best = 2;
+    M.F.forEach((f, i) => { const nz = qrot(last.q, f.n)[2]; if (nz < best) { best = nz; down = i; } });
+    const nw = qrot(last.q, M.F[down].n), ax = cross(nw, [0, 0, -1]), axl = Math.hypot(ax[0], ax[1], ax[2]);
+    if (axl > 1e-5) {
+      const ang = Math.atan2(axl, dot(nw, [0, 0, -1])), s = Math.sin(ang / 2), ka = mul(ax, s / axl);
+      const qf = norm4(qmul([Math.cos(ang / 2), ka[0], ka[1], ka[2]], last.q));
+      const planeD = dot(M.F[down].n, M.F[down].c);
+      const pf = [last.p[0], last.p[1], planeD];
+      for (let i = 0; i < 9; i++) { const k = (i + 1) / 9, g = norm4(lerp4(last.q, qf, k)); frames.push({ p: [pf[0], pf[1], lerp(last.p[2], pf[2], k)], q: g }); }
+    }
+    const fin = frames[frames.length - 1];
+    let up = 0, top = -2;
+    M.F.forEach((f, i) => { const nz = qrot(fin.q, f.n)[2]; if (nz > top) { top = nz; up = i; } });
+    const n = M.F.length;
+    const labels = M.F.map((f, i) => ((i - up + n) % n + value - 1) % n + 1);
+    // the resting number reads upright on screen
+    const uLocal = norm((() => { const x = qrot(qconj(fin.q), [1, 0, 0]), fn = M.F[up].n; return sub(x, mul(fn, dot(x, fn))); })());
+    // d4: numbers sit by the vertices, the top vertex shows the result
+    let vlabels = null;
+    if (sides === 4) {
+      let tv = 0, tz = -9;
+      M.V.forEach((vv, i) => { const z = qrot(fin.q, vv)[2]; if (z > tz) { tz = z; tv = i; } });
+      vlabels = M.V.map((_, i) => ((i - tv + 4) % 4 + value - 1) % 4 + 1);
+    }
+    return { sides, frames, impacts, labels, vlabels, up, uLocal, T: frames.length / 60, BX, BY };
+  }
+  function norm4(q) { const l = Math.hypot(q[0], q[1], q[2], q[3]) || 1; return [q[0] / l, q[1] / l, q[2] / l, q[3] / l]; }
+  function lerp4(a, b, k) { const s = (a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3]) < 0 ? -1 : 1; return [lerp(a[0], s * b[0], k), lerp(a[1], s * b[1], k), lerp(a[2], s * b[2], k), lerp(a[3], s * b[3], k)]; }
+
+  // ---------- terminal text: invented, in-world, harmless ----------
+  const TERM = [
+    'ves@ergo:~$ jack --port 7 --quiet', '[ok] handshake promenade.deck2.node14', '[ok] session 0x3f91 opened, no audit trail',
+    'ves@ergo:~$ cat /proc/splice/map | grep -v cleaner', 'seg 00a1  rw-  diag.loop     owner=guest', 'seg 00a2  r--  booking.queue owner=exec', 'seg 00a3  ---  vault.annex   owner=null',
+    'ves@ergo:~$ vim patch.c', 'for (seg = head; seg; seg = seg->next) {', '    if (seg->owner != UID_GUEST) continue;', '    if (crc32(seg->data, seg->len) == seg->sum) {', '        seg->flags |= F_QUIET;', '        retime(seg, tether_clock() * 0.31);', '    }', '}', ':wq',
+    'ves@ergo:~$ cc -O2 patch.c -o patch && ./patch', 'patching 2048 segments ........................ done', 'ves@ergo:~$ tail -f /var/log/kiosk.log', '21:13:58 satisfaction 99.97%', '21:13:59 satisfaction 99.97%', '21:14:00 satisfaction 99.97%', '^C',
+    'ves@ergo:~$ ssh -J dock7 maint@deck1 uptime', ' 21:14:02 up 19 years, 4 users, load 0.00', 'ves@ergo:~$ strings /dev/tether | head -3', 'SPIN_RATE=0.998', 'DT_FACTOR=0.31', 'HORIZON=2400km'
+  ];
+  const HEX = '0123456789ABCDEF#%&@/<>*!?';
+  const MATH = ['∑', '∫', 'π', '√', '∆', 'λ', 'θ', '∞', '≈', '±', '∂', 'φ', '∇', '⊗', 'ψ', 'Ω', '(', ')', '²', '=', '·', '/'];
+  function chars(set, n, r) { let s = ''; for (let i = 0; i < n; i++) s += set[Math.floor(r() * set.length)]; return s; }
+
+  // ---------- natural 1: the screen makes fun of you. PORT: the lines are in content/insults.yaml, picked by the server ----------
+
+  // ---------- shared drawing ----------
+  function txt(ctx, s, x, y, font, fill, opt) {
+    opt = opt || {};
+    ctx.save();
+    ctx.font = font; ctx.fillStyle = fill; ctx.textAlign = opt.align || 'center'; ctx.textBaseline = opt.base || 'middle';
+    if (opt.glow) { ctx.shadowColor = opt.glowC || fill; ctx.shadowBlur = opt.glow; }
+    if (opt.a != null) ctx.globalAlpha = opt.a;
+    if (opt.sx) { ctx.translate(x, y); ctx.scale(opt.sx, 1); ctx.fillText(s, 0, 0); } else ctx.fillText(s, x, y);
+    ctx.restore();
+  }
+  // soft text without ctx.filter: draw off-canvas and keep only the shadow
+  function blurTxt(ctx, s, x, y, font, color, blur, a) {
+    ctx.save();
+    ctx.font = font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.globalAlpha = a;
+    ctx.shadowColor = color; ctx.shadowBlur = blur; ctx.shadowOffsetX = 20000 * (ctx.getTransform ? ctx.getTransform().a : 1); ctx.fillStyle = '#000';
+    ctx.fillText(s, x - 20000, y);
+    ctx.restore();
+  }
+  function bigNum(ctx, env, s, a, scale, x, y) {
+    const F = env.F * (scale == null ? 1 : scale), fill = env.fill || '#ffffff', gc = env.glowC || env.css;
+    txt(ctx, s, x == null ? env.cx : x, y == null ? env.cy : y, F + "px 'VT323', monospace", fill, { glow: F * .14, glowC: gc, a: a == null ? 1 : a });
+    txt(ctx, s, x == null ? env.cx : x, y == null ? env.cy : y, F + "px 'VT323', monospace", fill, { glow: F * .4, glowC: gc, a: (a == null ? 1 : a) * .55 });
+  }
+
+  // ---------- scenes. each is a pure function of u in [0,1] ----------
+  const SCENES = {
+    // TECH: a terminal fills at typing-mash speed, one command's output lands centred and collapses to the number
+    term(ctx, W, H, P, u, env, t) {
+      const fs = Math.max(11, H / 31), lh = fs * 1.02, top = H * .12, rows = Math.floor(H * .78 / lh), mx = W * .05;
+      const typed = sat(u / .7) * P.total;
+      let left = typed, shown = [];
+      for (const l of P.lines) { if (left <= 0) break; shown.push(l.slice(0, Math.ceil(left))); left -= l.length; }
+      const dim = u < .72 ? 1 : lerp(1, .13, sat((u - .72) / .1));
+      const vis = shown.slice(-rows), font = fs + "px 'VT323', monospace";
+      vis.forEach((l, i) => {
+        const prompt = l.indexOf(P.handle + '@') === 0; // PORT: the roller's handle
+        txt(ctx, l, mx, top + i * lh, font, env.css, { align: 'left', a: dim * (i === vis.length - 1 ? 1 : (prompt ? .85 : .55)) });
+      });
+      if (u < .72 && Math.floor(t * 8) % 2 === 0 && vis.length) {
+        const l = vis[vis.length - 1]; ctx.save(); ctx.font = font; const w = ctx.measureText(l).width; ctx.restore();
+        ctx.fillStyle = env.css; ctx.fillRect(mx + w + 2, top + (vis.length - 1) * lh - fs * .42, fs * .42, fs * .82);
+      }
+      if (u > .73) {
+        const k = sat((u - .73) / .27), e = easeIO(sat(k / .88));
+        const v = String(P.value), L0 = Math.max(v.length + 8, Math.min(48, Math.floor(W / (H * .056 * .42))));
+        const n = Math.round(lerp(L0, v.length, e));
+        const size = lerp(H * .056, env.F, Math.pow(k, 3.4));
+        const r = rng(Math.floor(t * 28) + 11);
+        const s = (k >= .88) ? v : chars(HEX, Math.max(n, v.length), r);
+        if (k < 1) txt(ctx, P.handle + '@ergo:~$ ./roll --die d' + P.sides, env.cx, env.cy - Math.max(size * .95, H * .07), fs * 1.05 + "px 'VT323', monospace", env.css, { a: (1 - k) * .9 });
+        txt(ctx, s, env.cx, env.cy, size + "px 'VT323', monospace", k >= .88 ? '#ffffff' : env.css, { glow: size * .22, glowC: env.css });
+      }
+    },
+    // INTEL: a derivation that simplifies line by line, each shorter, symmetric about the centre, down to the number
+    math(ctx, W, H, P, u, env, t) {
+      const K = P.steps.length, fi = u < .93 ? u / .93 * (K - 1) : Math.min(K - .001, K - 1 + (u - .93) / .07), i = Math.floor(fi), ul = fi - i;
+      for (let j = Math.max(0, i - 4); j <= i; j++) {
+        const age = i - j + (j < i ? 0 : 0), L = P.steps[j];
+        const q = j / (K - 1), size = Math.min(lerp(H * .05, env.F, Math.pow(q, 3.2)), W * .94 / (L * .56));
+        const last = j === K - 1;
+        let y = env.cy;
+        for (let m = j; m < i; m++) { const q2 = m / (K - 1), L2 = P.steps[m + 1]; y -= Math.min(lerp(H * .05, env.F, Math.pow((m + 1) / (K - 1), 3.2)), W * .94 / (L2 * .56)) * .58 + H * .036; }
+        if (j === i) y -= 0;
+        const a = age === 0 ? 1 : Math.pow(.46, age);
+        let s = P.lines[j];
+        if (j === i && ul < .55 && !last) s = (j === 0 && P.prefix ? P.prefix : '') + chars(MATH, L, rng(Math.floor(t * 26) + j * 7));
+        if (last) { if (j === i) bigNum(ctx, env, s, sat(ul / .25), lerp(.82, 1, easeOut3(sat(ul / .4)))); else txt(ctx, s, env.cx, y, size + "px 'VT323',monospace", '#fff', { a }); }
+        else txt(ctx, s, env.cx, y, size + "px 'Cambria Math','STIX Two Math','Times New Roman',serif", j === i ? '#ffffff' : env.css, { a, glow: j === i ? size * .25 : 0, glowC: env.css });
+      }
+    },
+    // REFLEX: a horizontal reel, stretched by speed, brackets closing in from both sides
+    reel(ctx, W, H, P, u, env) {
+      const S = env.F * .78, travel = P.spins * S, rem = Math.pow(sat(1 - u / .975), 2.3);
+      const off = travel * rem, speed = travel * 2.3 * Math.pow(sat(1 - u / .975), 1.3) / W * .28;
+      const stretch = 1 + Math.min(1.1, speed * 1.4);
+      const sides = P.sides, v = P.value, n = Math.ceil(W / S) + 2;
+      const base = Math.round(off / S);
+      for (let k = -n; k <= n; k++) {
+        const idx = base + k, x = env.cx + idx * S - off, dist = Math.abs(x - env.cx) / (W / 2);
+        if (dist > 1.1) continue;
+        const val = ((v - 1 + idx) % sides + sides * 1000) % sides + 1;
+        const sc = lerp(1, .3, Math.pow(sat(dist), .55));
+        const isHit = idx === 0 && u > .975;
+        txt(ctx, String(val), x, env.cy, env.F * sc + "px 'VT323', monospace", isHit ? '#ffffff' : env.css, { sx: stretch, a: lerp(1, .18, sat(dist)) * (u > .975 && idx !== 0 ? sat((1 - u) / .025) : 1), glow: isHit ? env.F * .18 : 0, glowC: env.css });
+      }
+      // gate
+      const gw = (P.again && u < .1) ? lerp(env.F * .62, W * .47, easeOut3(u / .1)) : lerp(W * .47, env.F * .62, easeIO(sat((u - .1) / .875))), gh = env.F * .6;
+      ctx.save(); ctx.strokeStyle = env.css; ctx.lineWidth = 2; ctx.globalAlpha = .9; ctx.shadowColor = env.css; ctx.shadowBlur = 12;
+      for (const sgn of [-1, 1]) { ctx.beginPath(); ctx.moveTo(env.cx + sgn * (gw - 16), env.cy - gh); ctx.lineTo(env.cx + sgn * gw, env.cy - gh); ctx.lineTo(env.cx + sgn * gw, env.cy + gh); ctx.lineTo(env.cx + sgn * (gw - 16), env.cy + gh); ctx.stroke(); }
+      ctx.restore();
+      // speed lines
+      const lr = rng(5);
+      ctx.save(); ctx.strokeStyle = env.css; ctx.globalAlpha = Math.min(.5, speed);
+      for (let i = 0; i < 14; i++) { const y = env.cy + (lr() - .5) * env.F * 1.3, l = W * (.2 + lr() * .5), x0 = ((lr() * W + off * (1 + lr())) % (W + l)) - l; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + l, y); ctx.stroke(); }
+      ctx.restore();
+    },
+    // COOL: double vision. ghosts far apart and out of focus converge from both sides; a polygraph calms down
+    cool(ctx, W, H, P, u, env, t) {
+      const e = easeIO(sat(u / .93)), split = P.again ? easeOut3(sat(u / .14)) : 1, spread = lerp(W * .36, 0, e) * split;
+      const foc = easeIO(sat((u - .8) / .15)), blur = env.F * .42 * (1 - foc) * split;
+      const s = u < .86 ? String(1 + Math.floor(rng(Math.floor(t * 5) + 3)() * P.sides)) : String(P.value);
+      const font = env.F + "px 'VT323', monospace";
+      if (u < .95) {
+        const ga = lerp(1, .9, foc);
+        for (let pass = 0; pass < 3; pass++) {
+          blurTxt(ctx, s, env.cx - spread, env.cy, font, env.css, blur + 3, ga);
+          blurTxt(ctx, s, env.cx + spread, env.cy, font, '#7fd8ff', blur + 3, ga);
+        }
+        blurTxt(ctx, s, env.cx, env.cy, font, '#ffffff', blur * 1.1 + 3, lerp(.12, .7, e));
+      } else bigNum(ctx, env, String(P.value), 1, lerp(.97, 1, (u - .95) / .05));
+      // polygraph
+      const y = env.cy + env.F * .72, half = lerp(W * .46, env.F * .55, easeOut3(u)), amp = lerp(H * .075, 0, Math.pow(sat(u / .88), .7));
+      ctx.save(); ctx.strokeStyle = env.css; ctx.lineWidth = 1.5; ctx.shadowColor = env.css; ctx.shadowBlur = 8; ctx.beginPath();
+      for (let x = -half; x <= half; x += 4) {
+        const d = Math.abs(x) / half, n = Math.sin(x * .05 + t * 13) * .5 + Math.sin(x * .13 - t * 21) * .3 + Math.sin(x * .31 + t * 37) * .2;
+        const py = y + n * amp * (1 - d * d);
+        if (x === -half) ctx.moveTo(env.cx + x, py); else ctx.lineTo(env.cx + x, py);
+      }
+      ctx.stroke(); ctx.restore();
+    },
+    // EMPATHY: two heartbeats run in from the edges, out of step. each beat they meet closer to centre; when they lock, the number
+    pulse(ctx, W, H, P, u, env, t) {
+      const beats = P.beats, n = beats.length, y0 = env.cy + env.F * .74;
+      const half = lerp(W * .47, env.F * .9, Math.pow(sat(u / .97), 1.3));
+      const off = (i) => (n > 1 ? (1 - i / (n - 1)) * W * .17 * (i % 2 ? -1 : 1) : 0);
+      let bi = 0;
+      for (let i = 0; i < n; i++) if (t >= beats[i]) bi = i + 1;
+      const from = bi === 0 ? 0 : beats[bi - 1], to = bi < n ? beats[bi] : from + 1, k = sat((t - from) / (to - from));
+      const ecg = (d) => {
+        const q = d / (H * .035);
+        if (q < -1 || q > 5) return 0;
+        if (q < 0) return -.12 * Math.sin((q + 1) * Math.PI);
+        if (q < 1) return -1.0 * Math.sin(q * Math.PI);
+        if (q < 2) return .42 * Math.sin((q - 1) * Math.PI);
+        return -.14 * Math.sin((q - 2) / 3 * Math.PI);
+      };
+      const amp = H * .12, active = bi < n, target = active ? off(bi) : 0;
+      const L = lerp(-half, target, k), R = lerp(half, target, k);
+      ctx.save(); ctx.strokeStyle = env.css; ctx.lineWidth = 2; ctx.shadowColor = env.css; ctx.shadowBlur = 10; ctx.beginPath();
+      for (let x = -half; x <= half; x += 2) {
+        const py = y0 + (active ? (ecg(L - x) + ecg(x - R)) * amp : 0);
+        if (x === -half) ctx.moveTo(env.cx + x, py); else ctx.lineTo(env.cx + x, py);
+      }
+      ctx.stroke(); ctx.restore();
+      const lastT = beats[n - 1], locked = t >= lastT;
+      // the reticle tightens each beat
+      const prog = sat(bi / n), rr0 = lerp(env.F * 1.02, env.F * .66, easeOut3(prog));
+      ctx.save(); ctx.strokeStyle = env.css; ctx.globalAlpha = locked ? sat(1 - (t - lastT) / .3) * .6 : .55; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(env.cx, env.cy, rr0, 0, Math.PI * 2); ctx.stroke();
+      for (let a2 = 0; a2 < 4; a2++) { const an = a2 * Math.PI / 2; ctx.beginPath(); ctx.moveTo(env.cx + Math.cos(an) * rr0, env.cy + Math.sin(an) * rr0); ctx.lineTo(env.cx + Math.cos(an) * (rr0 + H * .022), env.cy + Math.sin(an) * (rr0 + H * .022)); ctx.stroke(); }
+      ctx.restore();
+      // each meeting sends out a ring from where the beats met
+      for (let i = 0; i < n; i++) {
+        const dt = t - beats[i];
+        if (dt < 0) continue;
+        const al = sat(1 - dt / .85) * .75;
+        if (al > 0) { ctx.save(); ctx.strokeStyle = env.css; ctx.globalAlpha = al; ctx.lineWidth = 2; ctx.shadowColor = env.css; ctx.shadowBlur = 14; ctx.beginPath(); ctx.arc(env.cx + off(i), env.cy, env.F * (.3 + dt * 1.15), 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
+      }
+      // a heart beats in the reticle until the lock
+      if (!locked || t - lastT < .14) {
+        const dt = bi ? t - beats[bi - 1] : 9, p = Math.exp(-dt * 7);
+        const s = env.F * .46 / 24 * (1 + .2 * p);
+        ctx.save(); ctx.translate(env.cx, env.cy); ctx.scale(s, s); ctx.translate(-12, -13);
+        ctx.globalAlpha = locked ? sat(1 - (t - lastT) / .14) : lerp(.4, 1, p);
+        ctx.strokeStyle = env.css; ctx.lineWidth = 1.3; ctx.lineJoin = 'round'; ctx.shadowColor = env.css; ctx.shadowBlur = 16;
+        ctx.stroke(new Path2D('M12 20.5s-8.5-5.2-8.5-11.4A4.6 4.6 0 0 1 12 6.6a4.6 4.6 0 0 1 8.5 2.5c0 6.2-8.5 11.4-8.5 11.4z'));
+        ctx.restore();
+      }
+      if (locked) bigNum(ctx, env, String(P.value), sat((t - lastT) / .1), lerp(1.14, 1, easeOut3(sat((t - lastT) / .3))));
+    },
+    // BODY (or any stat, via the tweak): the actual die, thrown onto a deck plate. rigid body sim, lands where it lands
+    phys(ctx, W, H, P, u, env, t) {
+      const S = P.sim, M = mesh(S.sides);
+      const simT = Math.min(t, S.T);
+      const f = S.frames[Math.min(S.frames.length - 1, Math.floor(simT * 60))];
+      // camera
+      const Cam = [0, -11.5, 14], Tg = [0, .2, .3], fw = norm(sub(Tg, Cam)), rt = norm(cross(fw, [0, 0, 1])), upv = cross(rt, fw);
+      const focal = H * 2.75, ox = env.cx, oy = H * .52;
+      const pr = (p) => { const d = sub(p, Cam), z = dot(d, fw); return [ox + dot(d, rt) * focal / z, oy - dot(d, upv) * focal / z, z]; };
+      // shake from impacts
+      let sx = 0, sy = 0, flash = 0;
+      for (const im of S.impacts) {
+        const d = simT - im.t; if (d < 0 || d > .5) continue;
+        const dec = Math.exp(-d * 11) * im.s;
+        sx += Math.sin(d * 90 + im.t * 50) * dec * H * .022; sy += Math.cos(d * 75) * dec * H * .03; flash = Math.max(flash, dec);
+      }
+      const zoomK = sat((t - S.T) / P.outro);
+      ctx.save(); ctx.translate(sx, sy);
+      // deck plate
+      const pool = pr([f.p[0], f.p[1], 0]);
+      const glow = ctx.createRadialGradient(ox, oy, 0, ox, oy, H * .62);
+      glow.addColorStop(0, rgba(env.rgb, .13 + flash * .25)); glow.addColorStop(1, rgba(env.rgb, 0));
+      ctx.fillStyle = glow; ctx.fillRect(-20, -20, W + 40, H + 40);
+      ctx.lineWidth = 1;
+      const gridA = (1 - zoomK * .6);
+      for (let i = -9; i <= 9; i++) {
+        const a = pr([i, -6, 0]), b = pr([i, 6, 0]);
+        const gr = ctx.createRadialGradient(ox, oy, 0, ox, oy, H * .62); gr.addColorStop(0, rgba(env.rgb, .42 * gridA)); gr.addColorStop(1, rgba(env.rgb, 0)); ctx.strokeStyle = gr;
+        ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      }
+      for (let j = -6; j <= 6; j++) {
+        const a = pr([-11, j, 0]), b = pr([11, j, 0]);
+        const gr = ctx.createRadialGradient(ox, oy, 0, ox, oy, H * .62); gr.addColorStop(0, rgba(env.rgb, .42 * gridA)); gr.addColorStop(1, rgba(env.rgb, 0)); ctx.strokeStyle = gr;
+        ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      }
+      // impact: ring on the deck and a shock line that shortens symmetrically
+      for (const im of S.impacts) {
+        const d = simT - im.t; if (d < 0 || d > .55 || im.wall) continue;
+        const k = d / .55, c = pr([im.p[0], im.p[1], 0]), rr = H * (.05 + k * .3) * (.5 + im.s);
+        ctx.save(); ctx.strokeStyle = env.css; ctx.globalAlpha = (1 - k) * im.s; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(c[0], c[1], rr, rr * .62, 0, 0, Math.PI * 2); ctx.stroke();
+        const hw = W * .46 * (1 - easeOut3(k)) * im.s; ctx.globalAlpha = (1 - k) * .9; ctx.shadowColor = env.css; ctx.shadowBlur = 12; ctx.beginPath(); ctx.moveTo(c[0] - hw, c[1]); ctx.lineTo(c[0] + hw, c[1]); ctx.stroke(); ctx.restore();
+        const sr = rng(Math.floor(im.t * 1000));
+        ctx.save(); ctx.fillStyle = env.css;
+        for (let i = 0; i < 18; i++) { const an = sr() * Math.PI * 2, sp = (60 + sr() * 260) * im.s, l = d * sp * (H / 800); const px = c[0] + Math.cos(an) * l, py = c[1] + Math.sin(an) * l * .6 - d * 40 + d * d * 260; ctx.globalAlpha = (1 - k) * .9; ctx.fillRect(px, py, 2, 2); }
+        ctx.restore();
+      }
+      // contact shadow
+      const hgt = Math.max(0, f.p[2] - 1);
+      const sc = pr([f.p[0] + hgt * .12, f.p[1] + hgt * .1, 0]), srad = H * .13 * (1 + hgt * .09);
+      const sh = ctx.createRadialGradient(sc[0], sc[1], 0, sc[0], sc[1], srad);
+      sh.addColorStop(0, 'rgba(0,0,0,' + (.75 / (1 + hgt * .22)) + ')'); sh.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = sh; ctx.save(); ctx.translate(sc[0], sc[1]); ctx.scale(1, .62); ctx.translate(-sc[0], -sc[1]); ctx.beginPath(); ctx.arc(sc[0], sc[1], srad, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      // the die
+      const dieA = lerp(1, .5, zoomK);
+      const key = norm([-.45, -.55, .85]), side = norm([.85, -.25, .3]), side2 = norm([-.9, .2, .2]);
+      const drawDie = (SS, ff, A, numA) => {
+        const faces = [];
+        M.F.forEach((F, i) => {
+          const n = qrot(ff.q, F.n), c = add(ff.p, qrot(ff.q, F.c));
+          if (dot(n, sub(Cam, c)) <= 0) return;
+          faces.push({ F, i, n, c, z: dot(sub(c, Cam), fw) });
+        });
+        faces.sort((a, b) => b.z - a.z);
+        ctx.save(); ctx.globalAlpha = A; ctx.lineJoin = 'round';
+        for (const g of faces) {
+          const pts = g.F.idx.map((vi) => pr(add(ff.p, qrot(ff.q, M.V[vi]))));
+          const l1 = Math.max(0, dot(g.n, key)), l2 = Math.max(0, dot(g.n, side)), l3 = Math.max(0, dot(g.n, side2));
+          const R = Math.min(255, 13 + 34 * l1 + env.rgb[0] * .3 * l2 + 255 * .08 * l3), Gr = Math.min(255, 14 + 35 * l1 + env.rgb[1] * .3 * l2 + 79 * .08 * l3), B = Math.min(255, 18 + 42 * l1 + env.rgb[2] * .3 * l2 + 163 * .08 * l3);
+          ctx.fillStyle = 'rgb(' + Math.round(R) + ',' + Math.round(Gr) + ',' + Math.round(B) + ')';
+          ctx.strokeStyle = rgba(env.rgb, .9); ctx.lineWidth = Math.max(1, H / 500);
+          ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.closePath(); ctx.fill(); ctx.stroke();
+          if (numA <= 0) continue;
+          if (SS.vlabels) {
+            g.F.idx.forEach((vi) => {
+              const lp = add(g.F.c, mul(sub(M.V[vi], g.F.c), .58)), sp = pr(add(ff.p, qrot(ff.q, lp)));
+              txt(ctx, String(SS.vlabels[vi]), sp[0], sp[1], (H * .03) + "px 'Doto', 'VT323', monospace", '#ffffff', { a: A * numA });
+            });
+          } else {
+            const lab = String(SS.labels[g.i]);
+            const uL = g.i === SS.up ? SS.uLocal : g.F.u, wL = cross(g.F.n, uL);
+            const c0 = add(ff.p, qrot(ff.q, g.F.c)), e = .1;
+            const p0 = pr(c0), pu = pr(add(c0, mul(qrot(ff.q, uL), e))), pv = pr(add(c0, mul(qrot(ff.q, wL), -e)));
+            const size = g.F.inr * (lab.length > 1 ? .98 : 1.3);
+            const ux = (pu[0] - p0[0]) / e, uy = (pu[1] - p0[1]) / e, vx = (pv[0] - p0[0]) / e, vy = (pv[1] - p0[1]) / e;
+            ctx.save(); ctx.globalAlpha = A * numA; ctx.transform(ux / 100, uy / 100, vx / 100, vy / 100, p0[0], p0[1]);
+            ctx.font = "800 " + (size * 100) + "px 'Doto', 'VT323', monospace"; ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(lab, 0, size * 3);
+            ctx.restore();
+          }
+        }
+        ctx.restore();
+      };
+      // the die that exploded sits there until the new one hits the deck, then gets knocked out of frame
+      if (P.prevSim) {
+        const pf = P.prevSim.frames[P.prevSim.frames.length - 1];
+        const ti = S.impacts.length ? S.impacts[0].t : 0, d0 = simT - ti;
+        if (d0 < .7) {
+          const away = norm([pf.p[0] - (S.impacts.length ? S.impacts[0].p[0] : 0) + .01, pf.p[1] - (S.impacts.length ? S.impacts[0].p[1] : 0), 0]);
+          const dk = Math.max(0, d0);
+          const qs = norm4(qmul([Math.cos(dk * 5), Math.sin(dk * 5) * .6, Math.sin(dk * 5) * .6, Math.sin(dk * 5) * .5], pf.q));
+          drawDie(P.prevSim, { p: [pf.p[0] + away[0] * dk * 17, pf.p[1] + away[1] * dk * 17, pf.p[2] + Math.max(0, dk * 7 - dk * dk * 12)], q: d0 > 0 ? qs : pf.q }, sat(1 - dk / .7), 1);
+        }
+      }
+      const zk = easeOut3(zoomK), ctr = pr(f.p), zs = lerp(1, 2.1, zk);
+      ctx.save(); ctx.translate(lerp(ctr[0], env.cx, zk), lerp(ctr[1], env.cy, zk)); ctx.scale(zs, zs); ctx.translate(-ctr[0], -ctr[1]);
+      drawDie(S, f, dieA, 1 - zoomK);
+      ctx.restore();
+      ctx.restore();
+      if (t > S.T) {
+        const k = easeOut3(zoomK);
+        bigNum(ctx, env, String(P.value), sat(zoomK * 2.4), lerp(.34, 1, k));
+      }
+    }
+  };
+
+  // ---------- plan: which scenes play, how long, exploding included ----------
+  const MODE = { slam: 'phys', reel: 'reel', decrypt: 'term', solve: 'math', fade: 'cool', pulse: 'pulse' };
+  function plan(o) {
+    // o: mode, rolls, sides, bonus, seed, color, style, aspect
+    const R = rng(o.seed || 1), passes = [];
+    let time = 0, sofar = 0;
+    const fail = o.rolls[0] === 1;
+    R(); // PORT: R6 picked the insult here; keep the draw so every later random number matches R6
+    const insult = o.insult || 'DUMBASS.';
+    o.rolls.forEach((val, i) => {
+      const scene = o.style === 'physics' ? 'phys' : MODE[o.mode];
+      const speed = i === 0 ? 1 : .62;
+      const P = { scene, value: val, sides: o.sides, start: time, again: i > 0, index: i, handle: o.handle || 'ves' }; // PORT: handle
+      if (scene === 'phys') {
+        P.sim = simulate(o.sides, val, Math.floor(R() * 1e9), o.aspect || 1.6, i ? 1.4 : 1);
+        if (i > 0 && passes[i - 1].sim) P.prevSim = passes[i - 1].sim;
+        P.outro = .5;
+        P.dur = P.sim.T + P.outro;
+      } else if (scene === 'term') {
+        const start = Math.floor(R() * 8);
+        const a = TERM.slice(start).concat(TERM.slice(0, start));
+        P.lines = a.slice(0, i === 0 ? 26 : 10).map((l) => (l.indexOf('ves@') === 0 ? P.handle + l.slice(3) : l)); // PORT
+        if (i > 0) P.lines = ['[!] stack overflow at 0x7ffe' + (4096 + Math.floor(R() * 60000)).toString(16) + ', value kept: ' + sofar, '[!] shell re-entered, uid=0'].concat(P.lines);
+        P.total = P.lines.reduce((s, l) => s + l.length, 0);
+        P.dur = 3.6 * speed;
+      } else if (scene === 'math') {
+        const v = String(val);
+        const lens = i === 0 ? [46, 36, 28, 20, 13, 7, v.length] : [30, 18, 9, v.length];
+        P.steps = lens;
+        P.prefix = i > 0 ? sofar + ' + ' : '';
+        P.lines = lens.map((L, j) => (j === lens.length - 1 ? v : (j === 0 ? P.prefix : '') + chars(MATH, L, R)));
+        P.dur = 3.2 * speed;
+      } else if (scene === 'reel') {
+        P.spins = Math.min(90, (24 + Math.floor(R() * 8)) * o.sides);
+        P.dur = 2.6 * speed;
+      } else if (scene === 'cool') {
+        P.dur = 2.7 * speed;
+      } else if (scene === 'pulse') {
+        const n = i === 0 ? 4 : 3;
+        const beats = []; let tb = .15;
+        for (let b = 0; b < n; b++) { tb += (i === 0 ? .52 + b * .14 : .34 + b * .06); beats.push(tb); }
+        P.beats = beats;
+        P.dur = tb + .42;
+      }
+      P.star = val === o.sides && i < o.rolls.length - 1;
+      // how surprising is this chain? a d4 explosion is common, a d20 or a second in a row is not
+      P.big = P.star ? clamp((i + 1) * Math.log(o.sides) / Math.log(20), .4, 1.7) : 0;
+      P.fail = fail && i === 0;
+      P.hold = P.star ? lerp(.45, .8, sat(P.big / 1.7)) : (P.fail ? 1.15 : 0);
+      time += P.dur + P.hold;
+      P.gateAt = P.star ? time - .001 : null;
+      sofar += val;
+      passes.push(P);
+    });
+    const total = o.rolls.reduce((a, b) => a + b, 0) + (o.bonus || 0);
+    const needFinal = !fail && (o.rolls.length > 1 || (o.bonus || 0) !== 0);
+    return { passes, total, fail, insult, bonus: o.bonus || 0, rolls: o.rolls, sides: o.sides, css: o.color, rgb: hexrgb(o.color), T: time + (needFinal ? .55 : 0), endPasses: time, needFinal, gates: passes.filter((p) => p.star).map((p) => p.gateAt) };
+  }
+
+  function clearCentre(ctx, W, H, env) {
+    ctx.save(); ctx.globalCompositeOperation = 'destination-out';
+    const hole = ctx.createRadialGradient(env.cx, env.cy, env.F * .5, env.cx, env.cy, env.F * 1.05);
+    hole.addColorStop(0, 'rgba(0,0,0,1)'); hole.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = hole; ctx.fillRect(0, 0, W, H); ctx.restore();
+  }
+
+  function draw(ctx, W, H, pl, t, extra) {
+    ctx.clearRect(0, 0, W, H);
+    const GOLD = '#ffd98a', RED = '#ff5b4d';
+    const env = { cx: W / 2, cy: H * .47, F: Math.min(H * .44, W * .3), css: pl.css, rgb: pl.rgb };
+    const pushed = (extra && extra.spent) || 0, wait = (extra && extra.wait) || 0;
+    let P = pl.passes[pl.passes.length - 1], pi = pl.passes.length - 1;
+    for (let i = 0; i < pl.passes.length; i++) { const q = pl.passes[i]; if (t < q.start + q.dur + q.hold) { P = q; pi = i; break; } }
+    const lt = t - P.start, u = sat(lt / P.dur);
+    const settled = t >= pl.T;
+    // ---- final frame: the scene stays as a dim ghost, the total on top
+    if (!pl.fail && ((t >= pl.endPasses && pl.needFinal) || (settled && pushed))) {
+      SCENES[P.scene](ctx, W, H, P, 1, env, P.dur);
+      ctx.save(); ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = 'rgba(0,0,0,.8)'; ctx.fillRect(-40, -40, W + 80, H + 80); ctx.restore();
+      clearCentre(ctx, W, H, env);
+      const k = sat((t - pl.endPasses) / .4);
+      bigNum(ctx, env, String(pl.total + pushed), 1, settled ? 1 : lerp(1.16, 1, easeOut3(k)));
+      return;
+    }
+    SCENES[P.scene](ctx, W, H, P, u, env, Math.min(lt, P.dur));
+    // ---- banked dice at the top; the newest flies up from the centre first
+    if (pi > 0) {
+      const fly = sat(lt / .42), last = pl.rolls[pi - 1], earlier = pl.rolls.slice(0, pi - 1);
+      const shown = (fly < 1 ? earlier : earlier.concat([last]));
+      if (shown.length) txt(ctx, shown.join(' + ') + ' +', env.cx, H * .1, H * .07 + "px 'VT323', monospace", GOLD, { glow: 12 });
+      if (fly < 1) {
+        const e = easeIO(fly);
+        txt(ctx, String(last), env.cx, lerp(env.cy, H * .1, e), lerp(env.F, H * .07, e) + "px 'VT323', monospace", GOLD, { glow: 18, a: 1 });
+      }
+    }
+    // ---- it exploded: number goes gold and waits
+    if (lt > P.dur && P.star) {
+      const k = sat((lt - P.dur) / P.hold), big = P.big, age = lt - P.dur;
+      clearCentre(ctx, W, H, env);
+      const f2 = Object.assign({}, env, { fill: GOLD, glowC: '#ffb040' });
+      const sh = Math.exp(-age * 7) * big * H * .018;
+      const pulse = wait ? 1 + Math.sin(wait * 5) * .022 : lerp(1.1 + big * .1, 1, easeOut3(sat(age / .3)));
+      bigNum(ctx, f2, String(P.value), 1, pulse, env.cx + Math.sin(age * 70) * sh, env.cy + Math.cos(age * 60) * sh);
+      const fl = Math.exp(-age * 5) * .3 * big;
+      if (fl > .01) { ctx.save(); ctx.fillStyle = 'rgba(255,225,170,' + fl + ')'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+      const sr = rng(P.index * 17 + 3), count = Math.round(14 + big * 34), reach = Math.min(age, .9);
+      ctx.save(); ctx.fillStyle = GOLD;
+      for (let i = 0; i < count; i++) { const an = sr() * Math.PI * 2, sp = (140 + sr() * 460) * (.6 + big * .5) * (H / 800); ctx.globalAlpha = sat(1 - age / 1.1); ctx.fillRect(env.cx + Math.cos(an) * sp * easeOut3(reach), env.cy + Math.sin(an) * sp * easeOut3(reach) + reach * reach * 60, 2.5, 2.5); }
+      ctx.strokeStyle = GOLD; ctx.globalAlpha = sat(1 - age / .8) * .8; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(env.cx, env.cy, env.F * (.5 + age * 1.5 * (.6 + big * .4)), 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+      txt(ctx, 'EXPLODES', env.cx, env.cy + env.F * .66, H * (.034 + .012 * big) + "px 'Silkscreen', monospace", GOLD, { glow: 14 });
+    }
+    // ---- natural 1: a hard cut, the glass cracks, and the screen tells you what it thinks of you
+    if (P.fail && lt > P.dur) {
+      const age = lt - P.dur;
+      ctx.save(); ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = 'rgba(0,0,0,1)'; ctx.fillRect(-40, -40, W + 80, H + 80); ctx.restore();
+      const slam = sat(age / .13), kick = Math.exp(-age * 8) * H * .05;
+      ctx.save();
+      ctx.translate(Math.sin(age * 83) * kick, Math.cos(age * 67) * kick);
+      // the 1, huge, behind everything
+      const f1 = env.F * 1.75;
+      txt(ctx, '1', env.cx, H * .42, f1 + "px 'VT323', monospace", '#7a1414', { a: .6, glow: f1 * .1, glowC: RED });
+      // cracked glass from the point of impact
+      const cr = rng(41), ix = env.cx + W * .03, iy = H * .34;
+      ctx.strokeStyle = RED; ctx.lineWidth = 1.2; ctx.globalAlpha = .55;
+      for (let i = 0; i < 17; i++) {
+        let an = (i / 17) * Math.PI * 2 + cr() * .3, x = ix, y = iy; const seg = 5 + Math.floor(cr() * 4), len = Math.max(W, H) * (.07 + cr() * .1);
+        ctx.beginPath(); ctx.moveTo(x, y);
+        for (let k = 0; k < seg; k++) { an += (cr() - .5) * .55; x += Math.cos(an) * len * slam; y += Math.sin(an) * len * slam; ctx.lineTo(x, y); }
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      // the line: as big as it can be, slammed in
+      const words = (pl.insult || 'DUMBASS.').split(' ');
+      let size = H * .24, lines = [];
+      for (; size > H * .05; size *= .94) {
+        ctx.font = "700 " + size + "px 'Archivo', 'Arial Narrow', sans-serif";
+        if ('fontStretch' in ctx) ctx.fontStretch = 'condensed';
+        lines = []; let cur = '';
+        for (const w of words) { const t2 = cur ? cur + ' ' + w : w; if (ctx.measureText(t2).width > W * .88 && cur) { lines.push(cur); cur = w; } else cur = t2; }
+        lines.push(cur);
+        if (lines.every((l) => ctx.measureText(l).width <= W * .88) && lines.length * size * .98 <= H * .56) break;
+      }
+      const sc = lerp(2.5, 1, easeOut5(slam)), lh = size * .98, y0 = H * .42 - (lines.length - 1) * lh / 2;
+      ctx.save(); ctx.translate(env.cx, H * .42); ctx.scale(sc, sc); ctx.translate(-env.cx, -H * .42);
+      ctx.font = "700 " + size + "px 'Archivo', 'Arial Narrow', sans-serif"; if ('fontStretch' in ctx) ctx.fontStretch = 'condensed';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.globalAlpha = sat(age / .06);
+      ctx.shadowColor = '#000'; ctx.shadowBlur = size * .2;
+      lines.forEach((l, i) => { ctx.fillStyle = '#000'; ctx.fillText(l, env.cx + size * .035, y0 + i * lh + size * .035); });
+      ctx.shadowColor = RED; ctx.shadowBlur = size * .16; ctx.fillStyle = '#ffffff';
+      lines.forEach((l, i) => ctx.fillText(l, env.cx, y0 + i * lh));
+      ctx.restore();
+      ctx.restore();
+      // white, then red, right in the face
+      const fl = Math.exp(-age * 9);
+      if (fl > .01) { ctx.save(); ctx.fillStyle = age < .05 ? 'rgba(255,255,255,.95)' : 'rgba(220,30,30,' + fl * .85 + ')'; ctx.fillRect(-40, -40, W + 80, H + 80); ctx.restore(); }
+    }
+  }
+  return { plan, draw, dieMesh: mesh };
+})();

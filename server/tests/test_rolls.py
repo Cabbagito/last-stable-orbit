@@ -1,0 +1,401 @@
+"""The roll: dice rules, roll intents, who sees what and when, and the sweeper."""
+
+import json
+
+import pytest
+
+from lso import rules
+from lso.auth import Viewer
+from lso.commands import sweep
+from lso.config import ROOT
+from lso.content import load_content
+from lso.engine import Engine
+from lso.models import GameState
+from lso.state import KEEP_CLOSED_ROLLS, apply
+from lso.store import Store
+from lso.views import project
+
+GM = Viewer("gm", "gm")
+VES = Viewer("ves", "player")  # body d4, reflex d20, tech d10, intel d8, cool d12, empathy d6; 5 entries
+MARLO = Viewer("marlo", "player")
+
+
+class Dice:
+    """Scripted randomness: randint hands out the next die, randrange always picks 0."""
+
+    def __init__(self, *rolls: int):
+        self.rolls = list(rolls)
+
+    def push(self, *rolls: int) -> None:
+        self.rolls += rolls
+
+    def randint(self, a: int, b: int) -> int:
+        v = self.rolls.pop(0)
+        assert a <= v <= b, f"scripted {v} isn't on a d{b}"
+        return v
+
+    def randrange(self, stop: int) -> int:
+        return 0
+
+
+class Clock:
+    def __init__(self):
+        self.t = 1000.0
+
+    def __call__(self) -> float:
+        return self.t
+
+
+@pytest.fixture(scope="module")
+def content():
+    return load_content(ROOT / "content", ROOT / "assets")
+
+
+@pytest.fixture
+def dice():
+    return Dice()
+
+
+@pytest.fixture
+def clock():
+    return Clock()
+
+
+@pytest.fixture
+def engine(content, tmp_path, dice, clock):
+    return Engine(content, Store(tmp_path / "t.db"), rng=dice, clock=clock)
+
+
+async def run(engine, viewer, kind, args):
+    ack, _ = await engine.run(viewer, None, kind, args)
+    return ack
+
+
+def roll(engine, roll_id):
+    return next(r for r in engine.state.rolls if r.id == roll_id)
+
+
+def latest(engine):
+    return engine.state.rolls[-1]
+
+
+def their(view, char):
+    return next(r for r in view["rolls"] if r["char"] == char)
+
+
+# ---------------------------------------------------------------- the rules
+
+
+def test_skill_steps_the_die_up():
+    assert [rules.effective_die(d, True) for d in (4, 6, 8, 10, 12)] == [(6, 0), (8, 0), (10, 0), (12, 0), (20, 0)]
+    assert rules.effective_die(20, True) == (20, 2)  # a d20 can't step up: +2 instead
+    assert rules.effective_die(10, False) == (10, 0)
+    with pytest.raises(ValueError):
+        rules.effective_die(7, False)
+
+
+def test_dice_explode_and_stop_at_six():
+    assert rules.roll_dice(10, Dice(7)) == [7]
+    assert rules.roll_dice(6, Dice(6, 6, 2)) == [6, 6, 2]
+    assert rules.roll_dice(4, Dice(4, 4, 4, 4, 4, 4, 4)) == [4] * 6  # the seventh die is never rolled
+
+
+def test_natural_1_is_only_the_first_die():
+    assert rules.is_nat1([1])
+    assert not rules.is_nat1([6, 1])  # a 1 after an explosion just adds 1
+    assert not rules.is_nat1([2])
+
+
+def test_push_rules():
+    assert rules.push_gain([7]) == 1 and rules.push_gain([10, 3]) == 2
+    assert rules.push_refusal([7], 0, 1) is None
+    assert rules.push_refusal([1], 0, 6) == "a natural 1 can't be pushed"
+    assert rules.push_refusal([7], 2, 6) == "a roll can be pushed at most 2 times"
+    assert rules.push_refusal([7], 0, 0) == "no Entropy left"
+    assert rules.total([10, 3], 2, 4) == 19
+
+
+def test_insults_come_from_the_stat_or_any(content):
+    assert rules.pick_insult("tech", content.insults, Dice()) == content.insults["tech"][0]
+    pool = content.insults["body"] * 2 + content.insults["any"]
+    assert rules.pick_insult("body", {"body": ["A"], "any": ["B"]}, Dice()) == "A"
+    assert len(pool) == 12
+    assert rules.pick_insult("cool", {}, Dice()) == "DUMBASS."
+
+
+# ---------------------------------------------------------------- player rolls
+
+
+async def test_player_rolls_their_own_stat(engine, dice):
+    dice.push(7)
+    assert (await run(engine, VES, "roll.start", {"stat": "tech"}))["ok"]
+    r = latest(engine)
+    assert (r.by, r.char, r.stat, r.sides, r.bonus, r.dice, r.shown, r.open) == ("ves", "ves", "tech", 10, 0, [7], 0, True)
+    assert r.entry is None and r.insult is None and r.handle == "ves"
+
+    dice.push(11)
+    await run(engine, VES, "roll.start", {"stat": "tech", "entry": 0})  # Been in worse vents: d10 -> d12
+    r = latest(engine)
+    assert r.sides == 12 and r.entry == "Been in worse vents"
+
+    dice.push(15)
+    await run(engine, VES, "roll.start", {"stat": "reflex", "entry": 3})  # a d20 with chrome: +2
+    assert (latest(engine).sides, latest(engine).bonus) == (20, 2)
+
+
+async def test_bad_roll_starts(engine):
+    for args in ({"stat": "luck"}, {}, {"stat": "tech", "entry": 99}, {"stat": "tech", "entry": True}, {"stat": "tech", "entry": "0"}):
+        assert (await run(engine, VES, "roll.start", args))["code"] == "invalid", args
+    assert (await run(engine, GM, "roll.start", {"stat": "tech"}))["code"] == "invalid"
+    assert engine.state.rolls == []
+
+
+async def test_a_new_roll_closes_your_last(engine, dice):
+    dice.push(3, 2)
+    await run(engine, VES, "roll.start", {"stat": "body"})
+    first = latest(engine).id
+    await run(engine, VES, "roll.start", {"stat": "body"})
+    assert not roll(engine, first).open and latest(engine).open
+    assert [r.open for r in engine.state.rolls] == [False, True]
+
+
+async def test_reveal_push_close(engine, dice):
+    dice.push(10, 3)  # tech d10 explodes: 10 + 3
+    await run(engine, VES, "roll.start", {"stat": "tech"})
+    rid = latest(engine).id
+    assert (await run(engine, MARLO, "roll.reveal", {"roll": rid, "shown": 1}))["code"] == "forbidden"
+
+    ack, changed = await engine.run(VES, None, "roll.reveal", {"roll": rid, "shown": 1})
+    assert ack["ok"] and changed and roll(engine, rid).shown == 1
+    _, changed = await engine.run(VES, None, "roll.reveal", {"roll": rid, "shown": 0})  # never goes back
+    assert not changed and roll(engine, rid).shown == 1
+
+    assert engine.state.vitals["ves"].entropy == 2
+    assert (await run(engine, MARLO, "roll.push", {"roll": rid}))["code"] == "forbidden"
+    assert (await run(engine, GM, "roll.push", {"roll": rid}))["code"] == "forbidden"  # players spend their own
+    assert (await run(engine, VES, "roll.push", {"roll": rid}))["ok"]
+    r = roll(engine, rid)
+    assert (r.pushes, r.pushed, r.shown) == (1, 2, 2)  # exploded: +2, and pushing shows the dice
+    assert engine.state.vitals["ves"].entropy == 1 and engine.state.vitals["ves"].hp == 6
+    assert (await run(engine, VES, "roll.push", {"roll": rid}))["ok"]
+    assert roll(engine, rid).pushed == 4 and engine.state.vitals["ves"].entropy == 0
+    ack = await run(engine, VES, "roll.push", {"roll": rid})
+    assert ack["code"] == "invalid" and "at most 2" in ack["error"]
+
+    assert (await run(engine, MARLO, "roll.close", {"roll": rid}))["code"] == "forbidden"
+    assert (await run(engine, VES, "roll.close", {"roll": rid}))["ok"]
+    assert not roll(engine, rid).open
+    assert (await run(engine, VES, "roll.push", {"roll": rid}))["code"] == "invalid"
+
+
+async def test_push_needs_entropy(engine, dice):
+    await run(engine, GM, "gm.vitals.set", {"char": "ves", "entropy": 0})
+    dice.push(5)
+    await run(engine, VES, "roll.start", {"stat": "empathy"})
+    ack = await run(engine, VES, "roll.push", {"roll": latest(engine).id})
+    assert ack["code"] == "invalid" and ack["error"] == "no Entropy left"
+
+
+async def test_natural_1_cracks_and_cannot_be_pushed(engine, dice, content):
+    dice.push(1)
+    await run(engine, VES, "roll.start", {"stat": "tech"})
+    r = latest(engine)
+    assert r.insult in content.insults["tech"] + content.insults["any"]
+    ack = await run(engine, VES, "roll.push", {"roll": r.id})
+    assert ack["code"] == "invalid" and "natural 1" in ack["error"]
+    assert engine.state.vitals["ves"].entropy == 2  # and nothing awards Entropy by itself
+    assert (await run(engine, VES, "roll.close", {"roll": r.id}))["ok"]
+
+
+async def test_closing_mid_roll_reveals_it(engine, dice):
+    dice.push(6, 6, 2)
+    await run(engine, VES, "roll.start", {"stat": "empathy"})
+    rid = latest(engine).id
+    await run(engine, VES, "roll.close", {"roll": rid})
+    assert roll(engine, rid).shown == 3
+    assert their(project(engine.state, engine.content, MARLO), "ves")["value"] == 14
+
+
+async def test_gm_can_close_any_roll(engine, dice):
+    dice.push(2)
+    await run(engine, VES, "roll.start", {"stat": "cool"})
+    assert (await run(engine, GM, "roll.close", {"roll": latest(engine).id}))["ok"]
+    assert not latest(engine).open
+
+
+# ---------------------------------------------------------------- GM rolls
+
+
+async def test_gm_rolls_for_npcs(engine, dice):
+    dice.push(9)
+    assert (await run(engine, GM, "gm.roll.start", {"token": "dax", "sides": 12, "stat": "cool", "hidden": False}))["ok"]
+    r = latest(engine)
+    assert (r.by, r.token, r.char, r.handle, r.sides, r.hidden, r.bonus) == ("gm", "dax", None, "dax", 12, False, 0)
+
+    dice.push(3)
+    await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20, "stat": "intel", "hidden": False})
+    assert latest(engine).hidden  # just a die, nowhere to show it: GM only
+    assert not engine.state.rolls[0].open  # the GM has one roll open at a time too
+
+    await run(engine, GM, "gm.token.hide", {"token": "cleaner-14", "hidden": True})
+    ack = await run(engine, GM, "gm.roll.start", {"token": "cleaner-14", "sides": 6, "stat": "body"})
+    assert ack["code"] == "invalid" and "hidden" in ack["error"]
+    dice.push(4)
+    assert (await run(engine, GM, "gm.roll.start", {"token": "cleaner-14", "sides": 6, "stat": "body", "hidden": True}))["ok"]
+
+    for bad in ({"token": "ves", "sides": 6, "stat": "body"}, {"token": "nobody", "sides": 6, "stat": "body"},
+                {"token": "dax", "sides": 7, "stat": "body"}, {"token": "dax", "sides": 6, "stat": "luck"}):
+        assert (await run(engine, GM, "gm.roll.start", bad))["code"] == "invalid", bad
+    assert (await run(engine, VES, "gm.roll.start", {"token": "dax", "sides": 6, "stat": "body"}))["code"] == "forbidden"
+
+
+async def test_gm_rolls_can_be_pushed_by_no_one(engine, dice):
+    dice.push(5)
+    await run(engine, GM, "gm.roll.start", {"token": "dax", "sides": 6, "stat": "body"})
+    ack = await run(engine, GM, "roll.push", {"roll": latest(engine).id})
+    assert ack["code"] == "invalid"
+
+
+# ---------------------------------------------------------------- who sees what
+
+
+async def test_others_see_the_dice_only_as_they_land(engine, dice):
+    dice.push(10, 3)
+    await run(engine, VES, "roll.start", {"stat": "tech"})
+    rid = latest(engine).id
+
+    def marlo():
+        v = project(engine.state, engine.content, MARLO)
+        return their(v, "ves"), json.dumps(v["rolls"])
+
+    seen, raw = marlo()
+    assert seen["phase"] == "roll" and seen["token"] == "ves" and seen["stat"] == "tech"
+    for secret in ("dice", "value", "seed", "insult", "bonus"):
+        assert f'"{secret}"' not in raw, secret
+
+    mine = their(project(engine.state, engine.content, VES), "ves")
+    assert mine["dice"] == [10, 3] and mine["seed"] == 0 and mine["handle"] == "ves"
+    assert their(project(engine.state, engine.content, GM), "ves")["dice"] == [10, 3]
+
+    await run(engine, VES, "roll.reveal", {"roll": rid, "shown": 1})
+    seen, raw = marlo()
+    assert seen["phase"] == "boom" and '"value"' not in raw  # it exploded, and it's still rolling
+
+    await run(engine, VES, "roll.reveal", {"roll": rid, "shown": 2})
+    seen, _ = marlo()
+    assert (seen["phase"], seen["value"], seen["count"]) == ("land", 13, 2)
+
+    await run(engine, VES, "roll.push", {"roll": rid})
+    seen, _ = marlo()
+    assert (seen["phase"], seen["value"], seen["pushed"]) == ("push", 15, 2)
+    assert next(c for c in project(engine.state, engine.content, MARLO)["crew"] if c["id"] == "ves")["entropy"] == 1
+
+    await run(engine, VES, "roll.close", {"roll": rid})
+    seen, _ = marlo()
+    assert seen["open"] is False and seen["value"] == 15
+
+
+async def test_natural_1_shows_red_to_everyone(engine, dice):
+    dice.push(1)
+    await run(engine, VES, "roll.start", {"stat": "body"})
+    await run(engine, VES, "roll.reveal", {"roll": latest(engine).id, "shown": 1})
+    seen = their(project(engine.state, engine.content, MARLO), "ves")
+    assert (seen["phase"], seen["value"]) == ("nat1", 1) and "insult" not in seen
+
+
+async def test_natural_1_shows_1_whatever_the_bonus(engine, dice):
+    tally = Viewer("tally", "player")  # Tech d20: with a skill, +2
+    dice.push(1)
+    await run(engine, tally, "roll.start", {"stat": "tech", "entry": 0})
+    await run(engine, tally, "roll.reveal", {"roll": latest(engine).id, "shown": 1})
+    seen = their(project(engine.state, engine.content, MARLO), "tally")
+    assert (latest(engine).bonus, seen["phase"], seen["value"]) == (2, "nat1", 1)
+
+
+async def test_hidden_gm_rolls_never_reach_players(engine, dice):
+    before = {v.seat: project(engine.state, engine.content, v) for v in (VES, MARLO)}
+    dice.push(20, 20, 4)
+    await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20, "stat": "intel", "hidden": True})
+    rid = latest(engine).id
+    await run(engine, GM, "roll.reveal", {"roll": rid, "shown": 3})
+    for v in (VES, MARLO):
+        assert project(engine.state, engine.content, v) == before[v.seat]  # not one byte changed
+    gm_view = project(engine.state, engine.content, GM)
+    assert gm_view["rolls"][-1]["hidden"] is True and gm_view["rolls"][-1]["value"] == 44
+    await run(engine, GM, "roll.close", {"roll": rid})
+    for v in (VES, MARLO):
+        assert project(engine.state, engine.content, v) == before[v.seat]
+
+
+async def test_npc_rolls_follow_their_token(engine, dice):
+    dice.push(5)
+    await run(engine, GM, "gm.roll.start", {"token": "dax", "sides": 8, "stat": "empathy"})
+    rolls = project(engine.state, engine.content, VES)["rolls"]
+    assert [r["token"] for r in rolls] == ["dax"]
+    await run(engine, GM, "gm.token.hide", {"token": "dax", "hidden": True})
+    assert project(engine.state, engine.content, VES)["rolls"] == []  # Dax is gone, and so is his roll
+
+
+async def test_players_get_one_callout_per_roller(engine, dice):
+    dice.push(2, 3, 1)
+    for _ in range(3):
+        await run(engine, VES, "roll.start", {"stat": "body"})
+    rolls = project(engine.state, engine.content, MARLO)["rolls"]
+    assert len(rolls) == 1 and rolls[0]["id"] == latest(engine).id
+    assert len(project(engine.state, engine.content, GM)["rolls"]) == 3  # the GM keeps the history
+
+
+async def test_closed_rolls_are_trimmed(engine, dice):
+    dice.push(*([2] * (KEEP_CLOSED_ROLLS + 5)))
+    for _ in range(KEEP_CLOSED_ROLLS + 5):
+        await run(engine, VES, "roll.start", {"stat": "body"})
+    await run(engine, VES, "roll.close", {"roll": latest(engine).id})
+    assert len(engine.state.rolls) == KEEP_CLOSED_ROLLS and not any(r.open for r in engine.state.rolls)
+
+
+# ---------------------------------------------------------------- the sweeper
+
+
+async def test_sweeper_reveals_then_closes(engine, dice, clock):
+    dice.push(10, 4)
+    await run(engine, VES, "roll.start", {"stat": "tech"})
+    rid = latest(engine).id
+    clock.t += 40
+    assert not await engine.sweep({"ves"})
+    clock.t += 6  # 46 s: everyone sees it, even if Ves's screen never gets there
+    assert await engine.sweep({"ves"})
+    assert roll(engine, rid).shown == 2 and roll(engine, rid).open
+
+    dice.push(3)
+    await run(engine, VES, "roll.start", {"stat": "tech"})
+    rid = latest(engine).id
+    clock.t += 25  # Ves gone, but too soon to close
+    assert not await engine.sweep(set())
+    clock.t += 6  # 31 s
+    assert await engine.sweep(set())
+    assert not roll(engine, rid).open and roll(engine, rid).shown == 1
+
+
+def test_sweeper_closes_anything_stale(engine):
+    from lso.models import RollState
+
+    st = engine.state.model_copy(deep=True)
+    st.rolls.append(RollState(id="r9", by="ves", char="ves", handle="ves", stat="body", sides=4, dice=[2], seed=0, shown=1, started=0))
+    assert sweep(st, 599, {"ves"}) == []
+    assert sweep(st, 601, {"ves"}) == [("roll.closed", {"roll": "r9"})]
+
+
+async def test_replay_with_rolls_rebuilds_snapshot(engine, dice):
+    dice.push(10, 3, 1, 6)
+    await run(engine, VES, "roll.start", {"stat": "tech"})
+    rid = latest(engine).id
+    await run(engine, VES, "roll.reveal", {"roll": rid, "shown": 1})
+    await run(engine, VES, "roll.push", {"roll": rid})
+    await run(engine, VES, "roll.start", {"stat": "tech"})  # closes the first
+    await run(engine, GM, "gm.roll.start", {"token": "dax", "sides": 8, "stat": "body"})
+    state = GameState()
+    for seq, ev_type, data in engine.store.events():
+        state = apply(state, seq, ev_type, json.loads(data))
+    _, snap = engine.store.load_snapshot()
+    assert state.model_dump(mode="json") == snap
+    assert [r.dice for r in state.rolls] == [[10, 3], [1], [6]]

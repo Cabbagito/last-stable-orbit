@@ -3,11 +3,27 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import GameState, InvEntry, MapState, Preset, TokenState, Vitals
+from .models import GameState, InvEntry, MapState, Preset, RollState, TokenState, Vitals
+
+KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
 
 
 class UnknownEvent(ValueError):
     pass
+
+
+def _roll(s: GameState, roll_id: str) -> RollState:
+    r = next((r for r in s.rolls if r.id == roll_id), None)
+    if r is None:
+        raise ValueError(f"no roll {roll_id!r}")
+    return r
+
+
+def _trim_rolls(s: GameState) -> None:
+    closed = [r for r in s.rolls if not r.open]
+    drop = {r.id for r in closed[: max(0, len(closed) - KEEP_CLOSED_ROLLS)]}
+    if drop:
+        s.rolls = [r for r in s.rolls if r.id not in drop]
 
 
 def state_from_preset(preset: Preset, content: Content) -> dict:
@@ -51,6 +67,18 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "vitals.set":
         v = s.vitals.setdefault(data["char"], Vitals())
         v.hp, v.entropy = int(data["hp"]), int(data["entropy"])
+    elif ev_type == "roll.started":
+        s.rolls.append(RollState.model_validate(data["roll"]))
+    elif ev_type == "roll.revealed":
+        r = _roll(s, data["roll"])
+        r.shown = max(r.shown, min(len(r.dice), int(data["shown"])))
+    elif ev_type == "roll.pushed":
+        r = _roll(s, data["roll"])
+        r.shown, r.pushes, r.pushed = len(r.dice), r.pushes + 1, r.pushed + int(data["gain"])
+    elif ev_type == "roll.closed":
+        r = _roll(s, data["roll"])
+        r.shown, r.open = len(r.dice), False
+        _trim_rolls(s)
     else:
         raise UnknownEvent(ev_type)
     return s

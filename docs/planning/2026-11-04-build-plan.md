@@ -5,7 +5,8 @@
 | Milestone | Status |
 |---|---|
 | M1: Tokens at The Event Horizon | **Done** (commits 05cddc2, 4901ce3, 9a51d7c) |
-| M2: The roll | **Next** |
+| M2: The roll | **Done** (see "How M2 turned out") |
+| Playtest | **Next:** 20 minutes of the bar scene with 2–3 people |
 | M3–M9 | Not started |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -46,6 +47,27 @@
 - **No difficulty in the app.** Peter says it out loud. The roll screen keeps R6's Easy-to-Heroic ladder as a reference, so the player can judge whether to push. The app never decides pass or fail.
 - **Entropy is earned by hand:** Peter adds it with the GM column's Entropy +/−, and nothing awards it automatically. Players spend it themselves with Push.
 - **No roll requests.** Players open their own roll screen.
+
+**How M2 turned out** (this wins over the M2 section below):
+- **Dice are rolled on the server** (`server/lso/rules.py`, called from `commands.py`). The event records the values, so a replay never re-rolls.
+- **Others learn the dice as they land:** the roller's screen gets every die at once to play the animation. It tells the server as each one lands (`roll.reveal`), and only then do other screens get the value.
+- **Natural 1:** everyone sees a red 1, whatever the skill bonus.
+- **Insults:** they live in `content/insults.yaml`, keyed by stat. The server picks the line when the dice are rolled.
+- **RollFX** is in `web/src/roll/rollfx.js`, generated from R6 with two marked changes: the roller's handle in the terminal prompt, and the insult passed in.
+- **The parity test** replays R6's original and the port against a canvas that records every draw call. This replaces a pixel diff: identical calls mean identical pixels.
+- **GM rolls** come from the GM column's Roll section.
+  - The GM picks an NPC on this map, or "Just a die", which is always hidden.
+  - The die is d4–d20. A stat picks the look, and there is a Hidden toggle.
+  - NPC rolls can't be pushed.
+  - A public roll on a hidden NPC is refused.
+  - The column lists the last 6 rolls.
+- **One roll open per seat.** Starting a new roll closes your last one.
+- **A sweeper covers a roller who vanishes mid-roll:**
+  - after 45 s, everyone sees the result;
+  - a roll is closed once it is 30 s old and its roller has had no socket for 15 s;
+  - nothing stays open past 10 minutes.
+- **Reloading mid-roll** reopens the roll screen on its result, so the player can still push or close it.
+- **The callout** stays about 4 s after the roller closes their screen, then fades. A screen that connects after a roll ended never shows it.
 
 **On ultracode:** writing the keyword in a message does turn it on for that message; that's how this plan was made. The paragraph on ultracode further down is outdated.
 
