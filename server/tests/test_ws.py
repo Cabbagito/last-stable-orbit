@@ -110,7 +110,7 @@ def test_hidden_gm_roll_sends_players_zero_frames(client, seat, app):
     app.state.engine.rng = Dice(20, 7)
     with client.websocket_connect("/ws", headers=gm) as g, client.websocket_connect("/ws", headers=ves) as v:
         recv(g, "view"), recv(v, "view")
-        intent(g, "gm.roll.start", {"token": None, "sides": 20, "stat": "intel", "hidden": True}, "r1")
+        intent(g, "gm.roll.start", {"token": None, "sides": 20, "hidden": True}, "r1")
         rolls = recv(g, "view")["view"]["rolls"]
         assert recv(g, "ack")["ok"] and rolls[-1]["dice"] == [20, 7]
         rid = rolls[-1]["id"]

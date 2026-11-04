@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import type { RollView, StatKey } from '../types'
-import { STAT_LOOK } from './stats'
+import { lookOf } from './stats'
 
 // Round 7 on the UI canvas: what everyone else sees while someone rolls. A spinning ring in the stat's
 // colour, and a small chip: a looping glyph while rolling, "EXPLODES" in gold, then the number.
@@ -14,16 +14,16 @@ const STRIPS: Partial<Record<StatKey, { cls: string; frames: string[] }>> = {
 export const isSpinning = (r: RollView) => r.phase === 'roll' || r.phase === 'boom'
 
 /** The dashed ring that spins around a head while its roll is in the air. */
-export function Orbit({ stat }: { stat: StatKey }) {
+export function Orbit({ stat }: { stat: StatKey | null }) {
   return (
     <svg className="r7-orbit" viewBox="0 0 100 100" aria-hidden="true">
-      <circle cx="50" cy="50" r="48" fill="none" stroke={STAT_LOOK[stat].col} strokeWidth="2.2" strokeDasharray="46 256" strokeLinecap="round" />
+      <circle cx="50" cy="50" r="48" fill="none" stroke={lookOf(stat).col} strokeWidth="2.2" strokeDasharray="46 256" strokeLinecap="round" />
     </svg>
   )
 }
 
-function Glyph({ stat }: { stat: StatKey }) {
-  const strip = STRIPS[stat]
+function Glyph({ stat }: { stat: StatKey | null }) {
+  const strip = stat ? STRIPS[stat] : undefined
   if (strip)
     return (
       <span className="r7-win">
@@ -36,7 +36,7 @@ function Glyph({ stat }: { stat: StatKey }) {
         </span>
       </span>
     )
-  if (stat === 'body')
+  if (stat === 'body' || stat === null) // a die thumping; "just a die" has no stat, so it thumps too
     return (
       <svg className="r7-body" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
         <rect x="4" y="4" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.6" />
@@ -52,7 +52,7 @@ function Glyph({ stat }: { stat: StatKey }) {
 }
 
 export function calloutLabel(r: RollView): string {
-  const name = STAT_LOOK[r.stat].name
+  const name = r.stat ? lookOf(r.stat).name : `D${r.sides}`
   if (r.phase === 'boom') return 'EXPLODES'
   if (r.phase === 'nat1') return 'NATURAL 1'
   if (r.phase === 'push') return `PUSHED +${r.pushed}`
@@ -62,7 +62,7 @@ export function calloutLabel(r: RollView): string {
 
 /** Spoken version, for the token's and the rail's accessible names. */
 export function calloutSpeech(r: RollView): string {
-  const title = STAT_LOOK[r.stat].title
+  const title = r.stat ? lookOf(r.stat).title : `a d${r.sides}`
   if (isSpinning(r)) return `rolling ${title}${r.phase === 'boom' ? ', it exploded' : ''}`
   if (r.phase === 'nat1') return `rolled ${title}: natural 1`
   return `rolled ${title}: ${r.value}`
@@ -70,7 +70,7 @@ export function calloutSpeech(r: RollView): string {
 
 /** side: "s-t" above a token's head on the map, "s-l" left of a ring in the crew rail. */
 export function Callout({ r, side, fading }: { r: RollView; side: 's-t' | 's-l'; fading: boolean }) {
-  const L = STAT_LOOK[r.stat]
+  const L = lookOf(r.stat)
   const spinning = isSpinning(r)
   return (
     <div

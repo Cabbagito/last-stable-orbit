@@ -122,6 +122,7 @@ def test_insults_come_from_the_stat_or_any(content):
     assert rules.pick_insult("body", {"body": ["A"], "any": ["B"]}, Dice()) == "A"
     assert len(pool) == 12
     assert rules.pick_insult("cool", {}, Dice()) == "DUMBASS."
+    assert rules.pick_insult(None, {"body": ["A"], "any": ["B"]}, Dice()) == "B"  # just a die: only the "any" lines
 
 
 # ---------------------------------------------------------------- player rolls
@@ -249,8 +250,9 @@ async def test_gm_rolls_for_npcs(engine, dice):
     assert latest(engine).sides == 6  # and his Reflex a d6
 
     dice.push(3)
-    await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20, "stat": "intel", "hidden": False})
-    assert latest(engine).hidden  # just a die, nowhere to show it: GM only
+    await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20, "hidden": False})
+    r = latest(engine)
+    assert r.hidden and r.stat is None and r.sides == 20  # just a die: no stat, nowhere to show it, GM only
     assert not engine.state.rolls[0].open  # the GM has one roll open at a time too
 
     await run(engine, GM, "gm.token.hide", {"token": "cleaner-14", "hidden": True})
@@ -262,7 +264,7 @@ async def test_gm_rolls_for_npcs(engine, dice):
 
     for bad in ({"token": "ves", "stat": "body"}, {"token": "nobody", "stat": "body"}, {"token": "dax", "stat": "luck"},
                 {"token": "dax", "sides": 20, "stat": "body"},  # an NPC's die is on its sheet, not picked
-                {"token": None, "sides": 7, "stat": "body"}, {"token": None, "stat": "body"}):
+                {"token": None, "sides": 7}, {"token": None}, {"token": "dax"}):
         assert (await run(engine, GM, "gm.roll.start", bad))["code"] == "invalid", bad
     assert (await run(engine, VES, "gm.roll.start", {"token": "dax", "stat": "body"}))["code"] == "forbidden"
 
@@ -333,7 +335,7 @@ async def test_natural_1_shows_1_whatever_the_bonus(engine, dice):
 async def test_hidden_gm_rolls_never_reach_players(engine, dice):
     before = {v.seat: project(engine.state, engine.content, v) for v in (VES, MARLO)}
     dice.push(20, 20, 4)
-    await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20, "stat": "intel", "hidden": True})
+    await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20, "hidden": True})
     rid = latest(engine).id
     await run(engine, GM, "roll.reveal", {"roll": rid, "shown": 3})
     for v in (VES, MARLO):

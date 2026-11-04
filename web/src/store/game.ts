@@ -59,11 +59,15 @@ export const useGame = create<GameStore>((set, get) => {
         window.setTimeout(() => set({ callTick: get().callTick + 1 }), LINGER + FADE + 20)
       }
       let dialog = get().dialog
-      if (get().resumeCheck && !dialog) {
+      const isGm = f.view.me.role === 'gm'
+      const resume = get().resumeCheck
+      if (resume && !dialog && !isGm) {
         const mine = f.view.rolls.find((r) => r.by === f.view.me.seat && r.open && !get().dismissed[r.id])
         if (mine) dialog = { kind: 'roll', rollId: mine.id, resume: true }
       }
       set({ view: f.view, remote, selected: stillThere(f.view, sel) ? sel : null, calls: memo, dialog, resumeCheck: false })
+      // the GM reloaded mid-roll: finish landing it on the map
+      if (resume && isGm) for (const r of f.view.rolls) if (r.by === 'gm' && r.open) playOnMap(r.id)
     } else if (f.t === 'drag') {
       const t = Date.now()
       set({ remote: { ...get().remote, [f.token]: { at: f.at, t } } })
@@ -140,10 +144,37 @@ export async function gmRun(type: string, args: Record<string, unknown>): Promis
   return ack
 }
 
-/** Roll for an NPC by its stat (its die is on its sheet), or "just a die". The animation plays here. */
-export async function gmRoll(args: { token: string; stat: StatKey; hidden: boolean } | { token: null; stat: StatKey; sides: number }) {
+/**
+ * Roll for an NPC by its stat (its die is on its sheet), or "just a die" (only a die, no stat). No roll screen
+ * opens: the roll plays on the NPC's chip, for players too unless it's hidden, and "just a die" lands in the GM
+ * column. This screen lands the dice on a timer, explosions included, then closes the roll.
+ */
+export async function gmRoll(args: { token: string; stat: StatKey; hidden: boolean } | { token: null; sides: number }) {
   const ack = await gmRun('gm.roll.start', args)
   if (!ack.ok) return
   const mine = useGame.getState().view?.rolls.filter((r) => r.by === 'gm' && r.open).pop()
-  if (mine) useGame.getState().openRoll(mine.id)
+  if (mine) playOnMap(mine.id)
+}
+
+const GM_FIRST = 1800 // ms the dice spin on the chip before the first one lands
+const GM_NEXT = 1300 // each die an explosion adds
+const GM_HOLD = 2500 // after the last die lands, before the roll closes; its callout then lingers and fades
+const playing = new Set<string>()
+
+/** Land a GM roll's dice one by one, as a roll screen would, then close it. */
+function playOnMap(rollId: string) {
+  const r = useGame.getState().view?.rolls.find((x) => x.id === rollId)
+  if (!r?.open || !r.dice || playing.has(rollId)) return
+  playing.add(rollId)
+  const from = r.shown ?? 0
+  let t = from === 0 ? GM_FIRST : 600
+  for (let shown = from + 1; shown <= r.dice.length; shown++) {
+    const n = shown
+    window.setTimeout(() => void send('roll.reveal', { roll: rollId, shown: n }), t)
+    t += GM_NEXT
+  }
+  window.setTimeout(() => {
+    playing.delete(rollId)
+    void send('roll.close', { roll: rollId })
+  }, t - GM_NEXT + GM_HOLD)
 }

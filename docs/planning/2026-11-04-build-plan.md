@@ -267,10 +267,17 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
 - **How M4 turned out** (built 2026-11-04; this wins over M2's "GM rolls" notes):
   - **NPC sheets:** every NPC in `content/npcs.yaml` has `stats:`, validated like the crew's. The dice are Round 12's drafts, for Peter to set.
     - `gm.roll.start` for an NPC takes only a stat and rolls the die on its sheet. Sending `sides` with an NPC is refused.
-    - "Just a die" takes a stat and a die, and is always hidden.
+    - "Just a die" is only a die: it has no stat (`stat` is null), and is always hidden.
     - An NPC's dice go to the GM only, in its token view; a leak test checks players never get them.
   - **The GM's Scene** (`web/src/gm/GmScene.tsx`): the "In this scene" list, the roster faces and "Just a die". The mood bar sits above the map's name (`MoodBar.tsx`). Hidden tokens get an eye badge on the map.
-  - **Cards** (`web/src/map/InspectCard.tsx`): an NPC's six stat rolls with the Hidden switch, and a crew card with steppers, pockets and the Give row. Every Give item names itself on hover and focus.
+    - The roster faces show the NPC's name and role on hover and focus.
+    - "Just a die" picks only the die. Its result lands in a box beside its Roll button, in a plain grey look.
+  - **GM rolls play on the map, never in a roll screen** (Peter, after the first build). The NPC's chip shows the roll as everyone else sees it, and a hidden roll shows only on the GM's map. The GM's screen lands the dice on a timer, as a roller's screen does (`playOnMap` in `store/game.ts`):
+    - the dice spin for 1.8 s, and each die an explosion adds takes 1.3 s more;
+    - the roll closes 2.5 s after the last die lands, and its callout then lingers about 4 s and fades;
+    - a GM reload mid-roll picks up where it left off.
+  - **Cards** (`web/src/map/InspectCard.tsx`): an NPC's six stat rolls with the Hidden switch, and a crew card with steppers, pockets and the Give row.
+  - **Item tooltips for the GM:** every item in a crew card and in the GM tab shows Round 9's inspector on hover and focus, exactly as its holder sees it on their sheet (`web/src/inspect/ItemTip.tsx`, which the sheet now uses too). On a card it opens to the card's left. In the Give row, credits show the +50 they'd add.
   - **Crew rail:** hovering a ring shows HP and Entropy steppers. While you're on the rail it sits above an open card, because Round 12 had the steppers open behind the card. In the walk a click meant for a stepper rolled Dax's Reflex.
   - **The GM tab** (`web/src/pages/GmTab.tsx`):
     - Crew and pockets: pick up and hand over, or drag onto a row; type an amount for credits.

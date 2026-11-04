@@ -159,15 +159,15 @@ def _roll_intent(viewer: Viewer, state: GameState, content: Content, kind: str, 
 
 
 def _gm_roll(state: GameState, content: Content, args: dict, rng, now: float) -> Events:
-    """An NPC rolls the die on its sheet for the stat. "Just a die" names its own die and is always hidden."""
-    stat = _stat(args)
+    """An NPC rolls the die on its sheet for a stat. "Just a die" is only a die, with no stat, and always hidden."""
     token = args.get("token")
     if token is None:
         sides = _int(args, "sides")
         if sides not in DIE_SIDES:
             raise _invalid(f"sides must be one of {DIE_SIDES}")
         # no token to sit on, so nobody else could see it: GM only
-        return _new_roll(state, content, rng, now, by="gm", token=None, handle="gm", stat=stat, sides=sides, hidden=True)
+        return _new_roll(state, content, rng, now, by="gm", token=None, handle="gm", stat=None, sides=sides, hidden=True)
+    stat = _stat(args)
     if not isinstance(token, str):
         raise _invalid("token must be a token id or null")
     t = state.tokens.get(token)

@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { anchorOf, anchorStyle, type Anchor } from '../inspect/anchor'
 import { InspectBlock, InspectIcon, Inspector } from '../inspect/Inspector'
+import { ItemInspector } from '../inspect/ItemTip'
 import { ring } from '../lib/ring'
 import { STAT_LOOK } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
 import { useGame } from '../store/game'
 import { ItemRow } from './ItemRow'
-import { STATS, type CrewMember, type InvEntry, type Item } from '../types'
+import { STATS, type CrewMember, type InvEntry } from '../types'
 
 const STAT_NAME: Record<string, string> = {
   body: 'BODY',
@@ -15,16 +16,6 @@ const STAT_NAME: Record<string, string> = {
   intel: 'INTEL',
   cool: 'COOL',
   empathy: 'EMPATHY',
-}
-
-const KIND_LABEL: Record<Item['kind'], string> = {
-  gear: 'GEAR',
-  weapon: 'WEAPON',
-  tool: 'TOOL',
-  cash: 'CASH',
-  key: 'KEY',
-  note: 'NOTE',
-  audio: 'AUDIO LOG',
 }
 
 /** The R6 character sheet: portrait in its ring, name, the 3x2 stat table, skills + chrome, items. */
@@ -91,18 +82,7 @@ function SheetTip({ hover, me, items }: { hover: Anchor; me: CrewMember; items: 
   const at = { id: 'app-sheettip', role: 'tooltip', className: 'app-sheettip ' + side, style }
   if (hover.key.startsWith('item:')) {
     const e = items.find((i) => `item:${i.uid}` === hover.key)
-    if (!e) return null
-    return (
-      <Inspector
-        {...at}
-        label={KIND_LABEL[e.item.kind]}
-        name={e.item.name}
-        media={<InspectIcon src={e.item.icon} fallback="ITEM" />}
-        sub={e.item.counted ? <span className="app-ins-num">{(e.count ?? 0).toLocaleString('en-US')}</span> : undefined}
-      >
-        {e.item.text && <div className="app-ins-txt">{e.item.text}</div>}
-      </Inspector>
-    )
+    return e ? <ItemInspector id="app-sheettip" item={e.item} count={e.count} at={{ style, side }} /> : null
   }
   const k = me.list[Number(hover.key.slice('row:'.length))]
   if (!k) return null

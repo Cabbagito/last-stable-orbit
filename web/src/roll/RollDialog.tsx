@@ -5,7 +5,7 @@ import { send, useGame } from '../store/game'
 import { STATS, type CrewMember, type RollView, type StatKey } from '../types'
 import { RollClock } from './clock'
 import { RollFX } from './rollfx'
-import { LADDER, STAT_LOOK, dieIcon, effectiveDie, statIcon } from './stats'
+import { LADDER, STAT_LOOK, dieIcon, effectiveDie, lookOf, statIcon } from './stats'
 
 // The R6 roll screen, on the roller's laptop only: Pick -> Rolling -> Done. The dice come from the server;
 // this screen tells the server as each one lands, so everyone else sees the result at the same moment.
@@ -33,7 +33,7 @@ export function RollDialog() {
   )
 }
 
-/** R6's top row: the roller's ring, their name, and Close. A GM roll also names the stat and die (Round 12). */
+/** R6's top row: the roller's ring, their name, and Close. Only crew rolls open this screen: the GM's play on the map. */
 function Head({ roll, me, onClose }: { roll?: RollView; me?: CrewMember; onClose: () => void }) {
   const view = useGame((s) => s.view)
   const crew = roll?.char ? view?.crew.find((c) => c.id === roll.char) : me
@@ -48,8 +48,6 @@ function Head({ roll, me, onClose }: { roll?: RollView; me?: CrewMember; onClose
       <span className="r4-h" style={{ fontSize: 14 }}>
         {crew?.short ?? tok?.name ?? 'Just a die'}
       </span>
-      {roll && !roll.char && <span className="r10-dimtxt">{STAT_LOOK[roll.stat].title} · d{roll.sides}</span>}
-      {roll?.hidden && <span className="r12-tag">HIDDEN · ONLY YOU SEE IT</span>}
       <button type="button" className="r4-btn" onClick={onClose} style={{ marginLeft: 'auto', pointerEvents: 'auto' }}>
         Close
       </button>
@@ -171,7 +169,7 @@ function Stage({ rollId, resume }: { rollId: string; resume: boolean }) {
   const diceKey = roll?.dice?.join(',')
   const plan = useMemo(() => {
     if (!roll?.dice) return null
-    const L = STAT_LOOK[roll.stat]
+    const L = lookOf(roll.stat)
     return RollFX.plan({
       mode: L.mode,
       rolls: roll.dice,
@@ -273,14 +271,14 @@ function Stage({ rollId, resume }: { rollId: string; resume: boolean }) {
     if (roll.open) void send('roll.close', { roll: rollId })
     const entry = crew?.list.findIndex((e) => e.name === roll.entry) ?? -1
     closeDialog()
-    openPick(roll.stat, entry)
+    openPick(roll.stat ?? 'body', entry)
   }
   const skip = () => clock.current?.skip()
   const release = () => clock.current?.release(performance.now())
 
   if (!roll?.dice) return null
   const dice = roll.dice
-  const L = STAT_LOOK[roll.stat]
+  const L = lookOf(roll.stat)
   const nat1 = dice[0] === 1
   const exploded = dice.length > 1
   const gain = exploded ? 2 : 1

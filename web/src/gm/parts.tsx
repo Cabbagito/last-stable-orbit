@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import type { TipBind } from '../inspect/ItemTip'
 import { gmRun } from '../store/game'
 import type { CrewMember, InvEntry, Item } from '../types'
 
@@ -67,19 +68,16 @@ export function Vitals({ c, showLabels = true }: { c: CrewMember; showLabels?: b
 export const itemAria = (e: InvEntry) => e.item.name + (e.item.counted ? `, ${e.count ?? 0}` : '') + (e.new ? ', not looked at yet' : '')
 
 /**
- * One pocket: the icon, its name on hover or focus, NEW until its holder has looked, the amount on a counted
- * item, and × to take it back. `button` makes the icon a button (the GM tab picks items up with it); `badge`
- * off leaves the amount to a field beside it.
+ * One pocket: the icon, NEW until its holder has looked, the amount on a counted item, and × to take it back.
+ * Hover or focus shows the item as its holder sees it (`tip`). `button` makes the icon a button (the GM tab
+ * picks items up with it); `badge` off leaves the amount to a field beside it.
  */
-export function Pocket({ e, holder, button, carry, badge = true }: { e: InvEntry; holder: CrewMember; button?: ReactNode; carry?: boolean; badge?: boolean }) {
+export function Pocket({ e, holder, tip, button, carry, badge = true }: { e: InvEntry; holder: CrewMember; tip: TipBind; button?: ReactNode; carry?: boolean; badge?: boolean }) {
   return (
-    <span className={'r10-pk' + (e.new ? ' new' : '') + (carry ? ' carry' : '')}>
+    <span className={'r10-pk' + (e.new ? ' new' : '') + (carry ? ' carry' : '')} {...tip(`pk:${e.uid}`, e.item, e.count)}>
       {button ?? <img src={e.item.icon} alt={itemAria(e)} className="r3-px" style={{ width: 48, height: 48, display: 'block' }} tabIndex={0} />}
       {badge && e.item.counted && <span className="r9-count">{e.count ?? 0}</span>}
       {e.new && <span className="r9-newtag">NEW</span>}
-      <span className="r10-pkname" aria-hidden="true">
-        {e.item.name}
-      </span>
       <button type="button" className="r10-take" aria-label={`Take ${e.item.name} from ${holder.short}`} title="Take it back" onClick={() => void gmRun('gm.item.take', { holder: holder.id, uid: e.uid })}>
         <Cross />
       </button>
@@ -87,23 +85,24 @@ export function Pocket({ e, holder, button, carry, badge = true }: { e: InvEntry
   )
 }
 
-/** Every item in the catalogue, to hand to `to`. Each shows its name on hover and focus. */
-export function GiveRow({ to, items }: { to: CrewMember; items: Item[] }) {
+/** Every item in the catalogue, to hand to `to`. Hover or focus shows each one as its holder would see it. */
+export function GiveRow({ to, items, tip }: { to: CrewMember; items: Item[]; tip: TipBind }) {
   const give = (it: Item) =>
     void gmRun('gm.item.give', it.counted ? { holder: to.id, item: it.id, count: GIVE_COUNTED } : { holder: to.id, item: it.id })
   return (
     <>
-      {items.map((it) => {
-        const name = it.name + (it.counted ? ` (+${GIVE_COUNTED})` : '')
-        return (
-          <button key={it.id} type="button" className="r10-gv" aria-label={`Give ${to.short} ${it.name}` + (it.counted ? `, ${GIVE_COUNTED}` : '')} onClick={() => give(it)}>
-            <img src={it.icon} alt="" className="r3-px" />
-            <span className="r10-pkname" aria-hidden="true">
-              {name}
-            </span>
-          </button>
-        )
-      })}
+      {items.map((it) => (
+        <button
+          key={it.id}
+          type="button"
+          className="r10-gv"
+          aria-label={`Give ${to.short} ${it.name}` + (it.counted ? `, ${GIVE_COUNTED}` : '')}
+          onClick={() => give(it)}
+          {...tip(`give:${to.id}:${it.id}`, it, null, it.counted ? <span className="app-ins-num">+{GIVE_COUNTED}</span> : undefined)}
+        >
+          <img src={it.icon} alt="" className="r3-px" />
+        </button>
+      ))}
     </>
   )
 }

@@ -77,15 +77,10 @@
 .r10-take{position:absolute;right:-8px;top:-8px;width:22px;height:22px;display:none;place-items:center;padding:0;border:0;border-radius:50%;background:#000;box-shadow:0 0 0 1px #5e626a;color:#fff;cursor:pointer;z-index:2}
 .r10-pk:hover .r10-take,.r10-pk:focus-within .r10-take{display:grid}
 .r10-take:hover{background:#ff5b4d;color:#000}
-.r10-pkname{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);display:none;background:#000;box-shadow:0 0 0 1px #2f3238;color:#fff;padding:5px 9px;font-size:13px;white-space:nowrap;pointer-events:none;z-index:3}
-.r10-pk:hover .r10-pkname,.r10-pk:focus-within .r10-pkname{display:block}
 .r10-give{display:flex;flex-wrap:wrap;gap:2px;margin-top:4px}
-.r10-gv{position:relative;width:34px;height:34px;padding:1px;border:1px solid transparent;background:none;cursor:pointer;flex:none}
+.r10-gv{width:34px;height:34px;padding:1px;border:1px solid transparent;background:none;cursor:pointer;flex:none}
 .r10-gv img{width:30px;height:30px;display:block}
 .r10-gv:hover{border-color:#5e626a}
-/* app: every item in the Give row shows its name on hover and focus, since many share an icon */
-.r10-gv .r10-pkname{bottom:calc(100% + 6px)}
-.r10-gv:hover .r10-pkname,.r10-gv:focus-visible .r10-pkname{display:block}
 .r10-warn{font-family:'Michroma',sans-serif;font-size:7.5px;letter-spacing:.14em;color:#f2b544;margin-bottom:8px}
 .r10-gmn{margin-top:9px;padding-top:8px;border-top:1px solid var(--line)}
 .r10-gmn .r4-lab{display:block;margin-bottom:4px;color:#f2b544}
@@ -147,6 +142,14 @@
 .r10-crow.over{background:#180c13;box-shadow:inset 2px 0 0 #ff4fa3}
 .r10-pkb[draggable='true']{cursor:grab}
 .app-pkcount{width:72px}
+
+/* app: an item's tooltip, as its holder sees it, placed left of what it points at */
+.app-sheettip.pt-r::after{left:auto;right:-5px;transform:rotate(225deg)}
+/* app: a name tag for the roster faces, fixed so the column doesn't clip it */
+.app-hovertag{position:fixed;z-index:40;transform:translateY(-100%);background:#000;box-shadow:0 0 0 1px #2f3238;color:#fff;padding:5px 9px;font-size:13px;white-space:nowrap;pointer-events:none}
+/* app: where "just a die" lands, beside its Roll button */
+.app-dieres{position:relative;flex:none;width:96px;min-height:44px;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px #1e2024}
+.app-dieres .r7-call{position:static;transform:none;align-items:center}
 
 /* view as player: the player's own screen, read-only, under a pink banner */
 .r10-va{position:absolute;inset:0;z-index:30;background:#000;display:flex;flex-direction:column}

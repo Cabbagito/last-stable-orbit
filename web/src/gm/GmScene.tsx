@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { objectKey } from '../inspect/objects'
 import { unproj } from '../lib/proj'
-import { STAT_LOOK, statIcon } from '../roll/stats'
+import { Callout, calloutKey, calloutSpeech } from '../roll/Callout'
+import { calloutsBy } from '../roll/callouts'
 import { gmRoll, gmRun, useGame } from '../store/game'
-import { STATS, type MapView, type StatKey } from '../types'
+import type { MapView, RosterNpc } from '../types'
 import { Cross, Diamond, Eye } from './parts'
 
 const DICE = [4, 6, 8, 10, 12, 20]
@@ -22,16 +23,20 @@ interface Here {
 /**
  * Round 12's left column on the GM's Scene: one list of everything in the scene (things to inspect, NPCs, the
  * crew), each with show/hide and its card a click away; the roster as faces, to add an NPC hidden; and
- * "Just a die". Everything else about a character is on its card, which its map chip also opens.
+ * "Just a die", only a die, which lands beside its button. Everything else about a character is on its card,
+ * which its map chip also opens.
  */
 export function GmScene({ map }: { map: MapView | undefined }) {
   const view = useGame((s) => s.view)
   const select = useGame((s) => s.select)
   const setGmMap = useGame((s) => s.setGmMap)
   const gmError = useGame((s) => s.gmError)
-  const [look, setLook] = useState<StatKey>('reflex')
+  const calls = useGame((s) => s.calls)
+  useGame((s) => s.callTick) // re-render when the die's result fades
   const [sides, setSides] = useState(20)
+  const [face, setFace] = useState<{ n: RosterNpc; x: number; y: number } | null>(null)
   if (!view) return null
+  const die = calloutsBy(view.rolls, calls, Date.now(), (r) => (r.by === 'gm' && !r.token ? 'die' : null)).die
 
   const here: Here[] = []
   if (map) {
@@ -124,41 +129,41 @@ export function GmScene({ map }: { map: MapView | undefined }) {
             Add an NPC <span style={{ letterSpacing: '.08em' }}>· placed hidden</span>
           </div>
           <div className="r10-roster">
-            {view.roster.map((n) => (
-              <button
-                key={n.id}
-                type="button"
-                className="r10-face"
-                aria-label={`Place ${n.name}`}
-                title={`Place ${n.name}, hidden, in the middle of the map. Drag it, then show it.`}
-                onClick={() => void gmRun('gm.token.place', { ref: n.id, map: map.id, at: centre, hidden: true })}
-              >
-                <img src={n.portrait} alt="" className="r3-px" style={{ boxShadow: `0 0 0 1.5px ${n.color}` }} />
-              </button>
-            ))}
+            {view.roster.map((n) => {
+              const show = (el: HTMLElement) => {
+                const r = el.getBoundingClientRect()
+                setFace({ n, x: r.left, y: r.top - 4 })
+              }
+              const hide = () => setFace((f) => (f?.n.id === n.id ? null : f))
+              return (
+                <button
+                  key={n.id}
+                  type="button"
+                  className="r10-face"
+                  aria-label={`Place ${n.name}` + (n.role ? `, ${n.role}` : '') + ', hidden, in the middle of the map'}
+                  onClick={() => void gmRun('gm.token.place', { ref: n.id, map: map.id, at: centre, hidden: true })}
+                  onMouseEnter={(e) => show(e.currentTarget)}
+                  onMouseLeave={hide}
+                  onFocus={(e) => show(e.currentTarget)}
+                  onBlur={hide}
+                >
+                  <img src={n.portrait} alt="" className="r3-px" style={{ boxShadow: `0 0 0 1.5px ${n.color}` }} />
+                </button>
+              )
+            })}
           </div>
+          {face && (
+            <div className="app-hovertag" style={{ left: face.x, top: face.y }} aria-hidden="true">
+              {face.n.name}
+              {face.n.role && <span className="r10-dimtxt"> · {face.n.role}</span>}
+            </div>
+          )}
         </section>
       )}
 
       <section aria-label="Just a die">
         <div className="r5-sec">
           Just a die <span style={{ letterSpacing: '.08em' }}>· only you see it</span>
-        </div>
-        <div className="r10-seg r10-looks" role="group" aria-label="Look of the roll">
-          {STATS.map((s) => (
-            <button
-              key={s}
-              type="button"
-              className={look === s ? 'on' : ''}
-              aria-pressed={look === s}
-              aria-label={STAT_LOOK[s].title}
-              title={STAT_LOOK[s].title}
-              onClick={() => setLook(s)}
-              style={{ boxShadow: look === s ? `inset 0 -2px 0 ${STAT_LOOK[s].col}` : 'none' }}
-            >
-              <img src={statIcon(s)} alt="" className="r3-px" />
-            </button>
-          ))}
         </div>
         <div className="r10-seg" role="group" aria-label="Die">
           {DICE.map((d) => (
@@ -167,9 +172,15 @@ export function GmScene({ map }: { map: MapView | undefined }) {
             </button>
           ))}
         </div>
-        <button type="button" className="r10-roll" onClick={() => void gmRoll({ token: null, stat: look, sides })}>
-          Roll d{sides}
-        </button>
+        <div className="r10-go">
+          <button type="button" className="r10-roll" onClick={() => void gmRoll({ token: null, sides })}>
+            Roll d{sides}
+          </button>
+          <div className="app-dieres" aria-live="polite">
+            {die && <Callout key={calloutKey(die.r)} r={die.r} side="s-l" fading={die.fading} />}
+            <span className="app-sr">{die ? calloutSpeech(die.r) : ''}</span>
+          </div>
+        </div>
       </section>
     </aside>
   )

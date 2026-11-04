@@ -4,6 +4,7 @@ import { liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
 import { ViewAs } from '../gm/ViewAs'
 import { ring } from '../lib/ring'
 import { RingPortrait } from '../shell/RingPortrait'
+import { useItemTip, type TipBind } from '../inspect/ItemTip'
 import { gmRun, useGame } from '../store/game'
 import type { CrewMember, InvEntry, View } from '../types'
 
@@ -74,6 +75,7 @@ function CrewSection({ view, onView }: { view: View; onView: (id: string) => voi
   const [carry, setCarry] = useState<Carry>(null)
   const [giveTo, setGiveTo] = useState<string | null>(null)
   const [over, setOver] = useState<string | null>(null) // the row a dragged item is over
+  const { bind: tip, tip: itemTip } = useItemTip() // each item as its holder sees it
   const held = (holder: string, uid: string) => (view.inventory[holder] ?? []).find((e) => e.uid === uid)
   const carried = carry ? held(carry.holder, carry.uid) : undefined
   useEffect(() => {
@@ -138,7 +140,7 @@ function CrewSection({ view, onView }: { view: View; onView: (id: string) => voi
               <Step who={c.short} label="EN" tone="en" value={c.entropy} max={ENTROPY_MAX} showLabel={false} onChange={(entropy) => void gmRun('gm.vitals.set', { char: c.id, entropy })} />
               <div className="r10-pkrow" role="group" aria-label={`${c.short}'s pockets`}>
                 {items.map((e) => (
-                  <CrewPocket key={e.uid} e={e} c={c} carry={carry} setCarry={setCarry} />
+                  <CrewPocket key={e.uid} e={e} c={c} carry={carry} setCarry={setCarry} tip={tip} />
                 ))}
                 {items.length === 0 && <span className="r10-dimtxt">Nothing.</span>}
               </div>
@@ -161,25 +163,27 @@ function CrewSection({ view, onView }: { view: View; onView: (id: string) => voi
               {giveTo === c.id && (
                 <div className="r10-givebar">
                   <span className="r4-lab">GIVE TO {c.short.toUpperCase()}</span>
-                  <GiveRow to={c} items={view.items ?? []} />
+                  <GiveRow to={c} items={view.items ?? []} tip={tip} />
                 </div>
               )}
             </div>
           )
         })}
       </div>
+      {itemTip}
     </section>
   )
 }
 
 /** A pocket in the crew table: click to pick it up, drag it onto someone, and type a new amount for credits. */
-function CrewPocket({ e, c, carry, setCarry }: { e: InvEntry; c: CrewMember; carry: Carry; setCarry: (c: Carry) => void }) {
+function CrewPocket({ e, c, carry, setCarry, tip }: { e: InvEntry; c: CrewMember; carry: Carry; setCarry: (c: Carry) => void; tip: TipBind }) {
   const on = !!carry && carry.holder === c.id && carry.uid === e.uid
   return (
     <>
       <Pocket
         e={e}
         holder={c}
+        tip={tip}
         carry={on}
         badge={!e.item.counted}
         button={

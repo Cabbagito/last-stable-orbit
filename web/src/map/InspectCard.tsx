@@ -1,6 +1,7 @@
 import { useEffect, useState, type CSSProperties } from 'react'
 import { GiveRow, Pocket, Vitals, Eye } from '../gm/parts'
 import { Closeup, CodexButton, InspectBlock, Inspector } from '../inspect/Inspector'
+import { useItemTip } from '../inspect/ItemTip'
 import { findObject } from '../inspect/objects'
 import { ring } from '../lib/ring'
 import { STAT_LOOK, statIcon } from '../roll/stats'
@@ -19,6 +20,7 @@ export function InspectCard() {
   const select = useGame((s) => s.select)
   const found = view ? findObject(view, selected) : null
   const isGm = view?.me.role === 'gm'
+  const { bind: tip, tip: itemTip } = useItemTip() // the GM sees each item as its holder does
 
   // a player who opens an object's card has looked at it: its marker goes quiet, for them only
   const unseen = !!found && !isGm && !found.obj.seen
@@ -125,7 +127,7 @@ export function InspectCard() {
           <InspectBlock label="ON HAND">
             <div className="r10-pkrow" style={{ marginTop: 6 }}>
               {pockets.map((e) => (
-                <Pocket key={e.uid} e={e} holder={crew} />
+                <Pocket key={e.uid} e={e} holder={crew} tip={tip} />
               ))}
               {pockets.length === 0 && <span className="r10-dimtxt">Nothing yet.</span>}
             </div>
@@ -133,10 +135,11 @@ export function InspectCard() {
               GIVE
             </span>
             <div className="r10-give">
-              <GiveRow to={crew} items={view.items ?? []} />
+              <GiveRow to={crew} items={view.items ?? []} tip={tip} />
             </div>
           </InspectBlock>
         )}
+        {itemTip}
       </Inspector>
     </aside>
   )

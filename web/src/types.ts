@@ -133,7 +133,7 @@ export interface RollView {
   by: string // the seat that rolled
   char: string | null // crew rolls
   token: string | null // where its callout sits on this viewer's map, if anywhere
-  stat: StatKey
+  stat: StatKey | null // null: the GM's "just a die", which has no stat
   sides: number
   phase: RollPhase
   open: boolean

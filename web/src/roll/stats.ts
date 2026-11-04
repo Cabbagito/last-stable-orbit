@@ -18,6 +18,11 @@ export const STAT_LOOK: Record<StatKey, StatLook> = {
   empathy: { name: 'EMPATHY', title: 'Empathy', col: '#ff5fb0', fx: '#ff7dbc', mode: 'pulse' },
 }
 
+/** "Just a die" has no stat: a plain grey look for its result. */
+export const DIE_LOOK: StatLook = { name: 'DIE', title: 'Die', col: '#b4b8c0', fx: '#ffffff', mode: 'slam' }
+
+export const lookOf = (stat: StatKey | null): StatLook => (stat ? STAT_LOOK[stat] : DIE_LOOK)
+
 export const STEP_UP: Record<number, number> = { 4: 6, 6: 8, 8: 10, 10: 12, 12: 20 }
 
 /** The die a stat rolls, with or without a skill or chrome pick. Mirrors server/lso/rules.py. */

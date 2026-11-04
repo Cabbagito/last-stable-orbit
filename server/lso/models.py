@@ -231,7 +231,7 @@ class RollState(Strict):
     char: str | None = None  # crew rolls: whose Entropy a push spends
     token: str | None = None  # GM rolls: the NPC token the callout sits on (None: just a die, always hidden)
     handle: str  # the name in the roll screen's terminal prompt
-    stat: str  # body..empathy: the animation and colour
+    stat: str | None  # body..empathy: the look and colour. None: "just a die", which has no stat
     entry: str | None = None  # the skill or chrome picked, if any
     sides: int
     bonus: int = 0

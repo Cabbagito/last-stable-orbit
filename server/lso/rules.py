@@ -79,10 +79,11 @@ def push_refusal(dice: list[int], pushes: int, entropy: int) -> str | None:
     return None
 
 
-def pick_insult(stat: str, insults: dict[str, list[str]], rng: Rng) -> str:
-    """The line a natural 1 slams on the roller's screen. The stat's own lines count double, as in R6."""
-    if stat not in STATS:
+def pick_insult(stat: str | None, insults: dict[str, list[str]], rng: Rng) -> str:
+    """The line a natural 1 slams on the roller's screen. The stat's own lines count double, as in R6.
+    A roll with no stat ("just a die") draws from the "any" lines only."""
+    if stat is not None and stat not in STATS:
         raise ValueError(f"unknown stat {stat!r}")
-    own = insults.get(stat, [])
+    own = insults.get(stat, []) if stat else []
     pool = own + own + insults.get("any", [])
     return pool[rng.randrange(len(pool))] if pool else "DUMBASS."
