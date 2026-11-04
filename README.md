@@ -48,4 +48,4 @@ docs/         the build plan
 
 ## Not built yet
 
-Rolls are physical dice for now (Milestone 2). Inventories, notes, the designed GM tab, the other 10 maps, and the Station, Crew and Codex tabs follow. See `docs/planning/2026-11-04-build-plan.md`.
+Rolls are physical dice for now (Milestone 2). Inventories, notes, the designed GM tab, the other 10 maps, and the Station and Codex tabs follow. See `docs/planning/2026-11-04-build-plan.md`.

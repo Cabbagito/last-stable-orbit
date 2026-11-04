@@ -9,7 +9,7 @@
 | Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
 | M4: GM tab | **In progress.** Round 12 (the Scene run from the chips, the GM tab, the TV) is on the UI canvas for Peter; the server half (New session, view as player) is built |
-| M5–M9 | Not started |
+| M5–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
 - **Login:** players pick their character on a picker screen, and only the GM types a passcode (`LSO_GM_PASSCODE`). This replaces the per-player passcodes in "Auth flow".
@@ -123,7 +123,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
 - **Decided 2026-11-04** (replaces the earlier note reader and live note-writing):
   - **Items are predefined** in `content/items.yaml`. Nobody types notes in the app, neither players nor you.
   - **A note is just an item:** a note icon whose text says what it is. An audio log is an item too, whose text is the transcript or a summary of it, whichever holds what matters.
-  - **Text only, in a tooltip.** Hovering an item shows its name and text. Images and charts (the eval plots) wait for a possible Items tab later.
+  - **Text only, in a tooltip.** Hovering an item shows its name and text. Images and charts (the eval plots) wait for their Codex pages (M6).
   - **Only you move items.** You give, take and move them from the GM column. Players can't pass items to each other.
   - **Players see only their own pockets** (decision 6). An item's text never reaches anyone but its holder and you.
 - **In it:**
@@ -161,7 +161,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **Also in this round:** a full-screen button in the header, for players and the GM.
   - **Before the playtest:** load the "Session 1" preset once. A world saved before M3 has credits with no amount, so they show 0.
 - **Why here:** it is small and backend-heavy. It also gives the GM tab its last missing control before that tab is designed.
-- **Later, maybe:** an Items tab at the top for the in-depth view, with images, charts and longer text.
+- **Dropped (2026-11-04): the Items tab.** The in-depth view, with images, charts and longer text, is the item's Codex page (M6).
 - **Decided after M3 (2026-11-04): one inspector for everything you can look at.**
   - **The style:** Round 8's T3 ("Inspector"): the icon at 2×, a kind label, the name, then the text. It may take room, because it only shows while you look.
   - **Where it applies:**
@@ -170,7 +170,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - crew and NPCs;
     - objects in the world, such as the mural.
   - **Codex buttons:** characters, objects, items and maybe skills will have Codex entries. A card shows a Codex button only when there is an entry.
-  - **Later:** clicking an item or a skill opens an Items tab (name not settled) with it selected. That waits until the tooltips are done.
+  - **Later:** clicking an item or a skill opens its Codex page, when it has one (M6).
   - **Built (Round 9, approved 2026-11-04):**
     - **Your sheet:** items, skills and chrome open the inspector on hover, to the right of the sheet and over the map, with a caret at the row.
     - **The map and rail:** hovering a token shows only its name, so passing the mouse over a crowded map pops nothing. Clicking a token or a rail portrait opens its card, docked at the map's top right as now.
@@ -189,7 +189,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **No undo.** You fix mistakes by hand.
   - **No group playtest first.** You test alone as we go.
 - **In it:**
-  - **Design:** 2–3 R6-style variants on the UI canvas first (Round 11; Round 10 on the canvas is the Codex); you pick one.
+  - **Design:** 2–3 R6-style variants on the UI canvas first (Round 11); you pick one.
   - **On your Scene, beside the map:**
     - rolls for NPCs, public or hidden, with recent history;
     - the tokens on this map (show, hide, remove) and the roster to place NPCs;
@@ -244,13 +244,30 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
 - **Done when:** a screenshot of each map in each mood matches its board, and a token placed on a key point lands on it.
 - **Why here:** it depends only on M1's map schema. It can run in parallel with M3–M4.
 
-### M6: Station, Crew and Codex tabs · M · design session, then fan-out
-- **Goal:** the three undesigned tabs, with no spoilers.
-- **In it:**
-  - **Crew:** dossiers. Each player sees only their own private brief.
-  - **Codex:** "How to play" from the Rules board (with Humanity and the meter removed), world entries and a glossary. You unlock entries; the NPC card's Codex button links to them.
-  - **Station:** the Ergo art with place hotspots.
-- **Done when:** locked entries and other players' briefs never reach a player (test), and you sign off on all three tabs.
+### M6: Station and Codex tabs · M · the Codex is designed; the Station still needs its design session
+- **Goal:** the two remaining tabs, with no spoilers.
+- **Decided 2026-11-04:**
+  - **No Crew tab.** Crew pages live in the Codex. It comes back only if we add crew-to-crew interaction.
+  - **No Items tab.** Items get Codex pages (some of them, not all).
+  - **No private briefs in the app.** Peter hands them over with the character, so nothing here stores or sends them.
+- **Codex design (approved):** UI canvas (https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff), page "Codex, pinned", boards `Cdx3*`. The boards are generated by `ui/codex_cards_build.py` and `ui/codex_cards_data.js` in the claude.ai Project.
+  - **Landing:** five full-width rows that fill the screen height: Characters, Items, Places and objects, Lore, How to play. Art on the left 40%, ending in a hard diagonal slash. Title centred in Jost; every other title in the Codex is Michroma. Each row shows its entry count and how many are new.
+  - **Section page:** an art strip with links to the other sections, then a plain grid of playing cards (5:7), 3 per row, no groups. The name sits on the art, across the slash, with a hard black pixel shadow (board `Cdx3On`, not `Cdx3Band`).
+  - **Content page:** the whole sprite pinned on the left, at the largest whole-number zoom that fits and leaves room for its strip. Crew show their stats in the strip, NPCs their mood. Beside it are a big centred name and two scrolling columns: text, skills and gallery in the main one, "At a glance" and "See also" in the other. Previous and next links run along the top.
+  - **Hover:** the art brightens and the slash moves out, with pink corner marks and one pink sweep.
+- **Who sees what:**
+  - **You unlock entries for the whole crew.** A locked entry stays hidden, with no redacted row and no count.
+  - **You can unlock blocks inside a page,** so a page grows (Ilija: the saint, then the man, then the truth; ISCO's name meaning comes late).
+  - **"New" is per player:** entries and blocks stay marked until that player has read them, the same way as `object.seen`.
+  - **A page never lists what a character is carrying,** because players don't know each other's items. Crew stats and skills are public.
+- **Sections and content:**
+  - **Glossary:** terms are short Lore entries, not a section of their own.
+  - **How to play:** from the Rules board, with Humanity and the meter removed.
+  - **Content is YAML in `content/`.** Text on the boards is draft. Ves's intro, history, "how she works" and "Job" are placeholders, not canon.
+  - **Links from the Scene:** the Codex button goes to the entry, and only shows when that entry is unlocked. So `views.py` must not send a locked entry's id. Crew get entries too (they send `codex: None` today). The mural gets its own entry linking to the founder, instead of `codex: the-founder`.
+  - **Art still needed:** Items cards, starting with a separate icon for each note, since all of them share one today. Most other cards can use existing art.
+- **Station:** the Ergo art with place hotspots, after its design session.
+- **Done when:** locked entries and blocks never reach a player (test), other players' inventories never appear in a page (test), and you sign off on both tabs.
 - **Why here:** you need to have felt the core first. The content comes from the bible.
 
 ### M7: Ship for session 1 · S · review fan-out plus your dry run
@@ -263,7 +280,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
 - **Done when:**
   - A scripted walk works on the hosted URL: Patience → Promenade CALM → Event Horizon OPEN.
   - A restore from backup reproduces the exact state.
-- **Why here:** it is the last gate before session 1. Move Railway earlier if players read briefs at home first (open decision 7).
+- **Why here:** it is the last gate before session 1. Move Railway earlier if players should read the Codex at home first.
 
 ### M8: Fights and big moments · M · single session (one subagent for the rules tests)
 - **Goal:** the rest of the Entropy economy, and fights.
@@ -460,9 +477,9 @@ Every client intent has the shape `{t: "intent", id: <uuid>, type, args}`. A ret
 - **R6 → React without visual drift.** The board uses its own template runtime, heavy inline styles and cascade overrides. `support.js` wasn't saved, so the board can't be rendered offline, and reference screenshots must come from the live canvas.
 - **Roll timing around server dice.** Cases to handle: the gate, Skip, a push after the reveal, and the roller's laptop sleeping mid-roll.
 - **Map speed and sharpness.** Layers up to 3600×2160, with blend modes, flicker and about 16 animated GIF tokens, run under a CSS transform. Sharpness differs between Chrome and Safari.
-- **Not leaking secrets.** Hidden tokens, GM rolls, note bodies, briefs and locked entries must never reach a player. This is the classic bug in apps like this; the single filter and the leak tests prevent it.
+- **Not leaking secrets.** Hidden tokens, GM rolls, note bodies and locked entries must never reach a player. This is the classic bug in apps like this; the single filter and the leak tests prevent it.
 - **Collecting the art.** About 89 single downloads for M1 and about 250 in total, deduplicated by hash, because the same image has a different id in each artifact.
-- **Five undesigned surfaces.** The GM tab, Station, Crew, Codex, and the roll callout for non-rollers. Each needs a review loop with you.
+- **Undesigned surfaces.** The Station, plus whatever of the GM tab is still open. Each needs a review loop with you.
 - **Missing art.** 18 skill and chrome icons, and only one generic CLUE icon for notes.
 
 ---
@@ -482,7 +499,7 @@ Ultracode is a Claude Code session setting (`/effort ultracode`). It uses extra-
 | Milestone | Fit |
 |---|---|
 | M1, M2, M3, M8 | Single focused session. One subagent can write the rules tests, and one reviewer can check auth and leaks. |
-| M4, M6 | Fan out the design variants, then you pick. M6 content (codex entries, briefs) can also fan out, with a spoiler reviewer. |
+| M4, M6 | Fan out the design variants, then you pick. M6 content (codex entries) can also fan out, with a spoiler reviewer. |
 | M5 maps | Best fit: one agent per map, plus a verifier that compares screenshots with the boards. |
 | M7 | Parallel reviewers for leaks, reconnects and browsers, plus Playwright tests. The dry run is yours. |
 
@@ -505,5 +522,5 @@ To use it per task, put "ultracode" in that milestone's prompt rather than leavi
 **Later:**
 
 6. ~~**Item privacy.**~~ **Decided:** players see only their own items, and only you move them.
-7. **Briefs before session 1.** Will players read their briefs at home through the app? If yes, Railway and the Crew tab must land earlier.
+7. ~~**Briefs before session 1.**~~ **Decided:** briefs aren't in the app, and Peter hands them over with the character.
 8. **Station tab.** Can players open maps of places they haven't visited yet? Decide at the M6 design pass.

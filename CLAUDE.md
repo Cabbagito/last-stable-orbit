@@ -6,6 +6,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 
 - **Story, world and rules:** `design/reference/campaign-bible.md`, a copy of the claude.ai Campaign Bible (https://claude.ai/artifact/M1yC81nP1if8VLKYnviCHp). The live doc may be newer.
 - **UI:** `design/reference/ui/R6.dc.html`, the latest round ("Meridian, ruled", modified from round 4's Meridian). Always build from the latest round.
+- **Codex:** the UI canvas (https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff), page "Codex, pinned". The decisions are in the plan's M6.
 - **Maps:** `design/reference/maps/*.dc.html` (Main = The Event Horizon). Every board shares one isometric formula; see `web/src/lib/proj.ts`.
 - **Cutscenes and the TV ("Stage"):** the claude.ai doc LSO — Cutscenes and Stage (https://claude.ai/artifact/8Bh5PsiSBjLaJaHyJfNUz8, read it with the Claude Docs connector), plus one canvas per cutscene (the first is The shotgun, https://claude.ai/artifact/ExqP99kRwpzUP9Funyg7Sv).
 - **Art:** imported from the claude.ai artifacts. `assets/manifest.yaml` lists each file's store and asset id. Fetch more with the Artifact tool's read action, using the asset id as the path, one call per asset.
@@ -13,7 +14,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 ## Scope decisions (override the artifacts)
 
 - No Humanity, no ISCO compute meter, no Comms, no AI features for now.
-- Tabs: Scene / Station / Crew / Codex, plus a GM-only tab.
+- Tabs: Scene / Station / Codex, plus a GM-only tab. There is no Crew tab (crew pages are in the Codex) and no Items tab. Private briefs aren't in the app.
 - **Rolls:** the full animation shows only on the roller's screen. Everyone else sees the result on the token and in the crew rail.
 - **The GM controls:** map moods and switches, HP and Entropy, rolls (including hidden ones), NPCs, and every inventory. Clues are handed out as items, such as a note.
 - **Login:** players pick their character; only the GM has a passcode.
