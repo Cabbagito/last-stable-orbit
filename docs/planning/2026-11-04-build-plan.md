@@ -67,6 +67,8 @@
   - a roll is closed once it is 30 s old and its roller has had no socket for 15 s;
   - nothing stays open past 10 minutes.
 - **Reloading mid-roll** reopens the roll screen on its result, so the player can still push or close it.
+- **A roll keeps going in a background tab.** The roll's clock (`web/src/roll/clock.ts`) runs on wall-clock time. A background tab gets no animation frames, so a timer drives the clock there instead, and the dice land for everyone on time, at most about a second late. Explosion gates still let go after 4 s.
+- **Reroll** on the result screen goes back to the picker with the same stat and skill picked. It's for players only; a natural 1 keeps just "Yeah. Okay.".
 - **The callout** stays about 4 s after the roller closes their screen, then fades. A screen that connects after a roll ended never shows it.
 
 **On ultracode:** writing the keyword in a message does turn it on for that message; that's how this plan was made. The paragraph on ultracode further down is outdated.

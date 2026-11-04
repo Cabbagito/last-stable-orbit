@@ -4,7 +4,7 @@ import { FADE, LINGER, emptyMemo, remember, type CallMemo } from '../roll/callou
 import type { Ack, ServerFrame, StatKey, Vec3, View } from '../types'
 
 /** The roll screen: picking a stat, or playing (or showing the end of) one roll. */
-export type Dialog = { kind: 'pick'; stat: StatKey } | { kind: 'roll'; rollId: string; resume: boolean }
+export type Dialog = { kind: 'pick'; stat: StatKey; entry?: number } | { kind: 'roll'; rollId: string; resume: boolean }
 
 interface RemoteDrag {
   at: Vec3
@@ -34,7 +34,7 @@ interface GameStore {
   select: (id: string | null) => void
   setLocal: (l: { token: string; at: Vec3 } | null) => void
   setGmMap: (m: string) => void
-  openPick: (stat: StatKey) => void
+  openPick: (stat: StatKey, entry?: number) => void
   openRoll: (rollId: string, resume?: boolean) => void
   closeDialog: () => void
 }
@@ -103,7 +103,7 @@ export const useGame = create<GameStore>((set, get) => {
     select: (selected) => set({ selected }),
     setLocal: (local) => set({ local }),
     setGmMap: (gmMap) => set({ gmMap }),
-    openPick: (stat) => set({ dialog: { kind: 'pick', stat } }),
+    openPick: (stat, entry = -1) => set({ dialog: { kind: 'pick', stat, entry } }),
     openRoll: (rollId, resume = false) => set({ dialog: { kind: 'roll', rollId, resume } }),
     closeDialog: () => {
       const d = get().dialog

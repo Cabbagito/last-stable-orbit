@@ -3,7 +3,8 @@ import { plainRing, ring } from '../lib/ring'
 import { RingPortrait } from '../shell/RingPortrait'
 import { send, useGame } from '../store/game'
 import { STATS, type CrewMember, type RollView, type StatKey } from '../types'
-import { RollFX, type RollPlan } from './rollfx'
+import { RollClock } from './clock'
+import { RollFX } from './rollfx'
 import { LADDER, STAT_LOOK, dieIcon, effectiveDie, statIcon } from './stats'
 
 // The R6 roll screen, on the roller's laptop only: Pick -> Rolling -> Done. The dice come from the server;
@@ -24,7 +25,7 @@ export function RollDialog() {
   return (
     <div role="dialog" aria-label="Roll" aria-modal="true" className="app-rolldlg">
       {dialog.kind === 'pick' ? (
-        me && <Pick me={me} initial={dialog.stat} />
+        me && <Pick me={me} initial={dialog.stat} initialEntry={dialog.entry ?? -1} />
       ) : (
         <Stage key={dialog.rollId} rollId={dialog.rollId} resume={dialog.resume} />
       )}
@@ -55,11 +56,11 @@ function Head({ roll, me, onClose }: { roll?: RollView; me?: CrewMember; onClose
   )
 }
 
-function Pick({ me, initial }: { me: CrewMember; initial: StatKey }) {
+function Pick({ me, initial, initialEntry }: { me: CrewMember; initial: StatKey; initialEntry: number }) {
   const closeDialog = useGame((s) => s.closeDialog)
   const openRoll = useGame((s) => s.openRoll)
   const [pick, setPick] = useState<StatKey>(initial)
-  const [entry, setEntry] = useState(-1)
+  const [entry, setEntry] = useState(initialEntry)
   const [jig, setJig] = useState(1)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
@@ -152,25 +153,15 @@ function Pick({ me, initial }: { me: CrewMember; initial: StatKey }) {
   )
 }
 
-interface Anim {
-  t0: number
-  gates: number[]
-  waiting: boolean
-  gateAt: number
-  raf: number
-  revealed: number
-}
-
-/** How many dice have landed by time t: each pass shows its number at start + dur. */
-const landedBy = (plan: RollPlan, t: number) => plan.passes.filter((p) => t >= p.start + p.dur).length
-
 function Stage({ rollId, resume }: { rollId: string; resume: boolean }) {
   const roll = useGame((s) => s.view?.rolls.find((r) => r.id === rollId))
   const crew = useGame((s) => (roll?.char ? s.view?.crew.find((c) => c.id === roll.char) : undefined))
   const entryKind = crew?.list.find((e) => e.name === roll?.entry)?.kind ?? 'skill'
   const closeDialog = useGame((s) => s.closeDialog)
+  const openPick = useGame((s) => s.openPick)
   const cv = useRef<HTMLCanvasElement | null>(null)
-  const a = useRef<Anim>({ t0: 0, gates: [], waiting: false, gateAt: 0, raf: 0, revealed: 0 })
+  const clock = useRef<RollClock | null>(null)
+  const sent = useRef(0) // dice the server has been told have landed
   const [phase, setPhase] = useState<'rolling' | 'done'>(resume ? 'done' : 'rolling')
   const [gate, setGate] = useState(false)
   const [pushing, setPushing] = useState(false)
@@ -218,60 +209,38 @@ function Stage({ rollId, resume }: { rollId: string; resume: boolean }) {
   }
 
   const reveal = (k: number) => {
-    if (k > a.current.revealed) {
-      a.current.revealed = k
+    if (k > sent.current) {
+      sent.current = k
       void send('roll.reveal', { roll: rollId, shown: k })
     }
   }
 
-  const release = () => {
-    const s = a.current
-    if (!s.waiting) return
-    const g = s.gates.shift() ?? 0
-    s.t0 = performance.now() - g * 1000
-    s.waiting = false
-    setGate(false)
-  }
-
-  // the animation loop, R6's Component.loop(), plus telling the server as each die lands
+  // The animation: frames paint while the tab is visible. A background tab gets no animation frames, so a
+  // timer keeps the clock going there, and the dice still land for everyone on time.
   useEffect(() => {
     if (!plan || phase !== 'rolling') return
-    const s = a.current
-    s.t0 = performance.now()
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) s.t0 -= 1e6
-    s.gates = plan.gates.slice()
-    s.waiting = false
-    const step = () => {
-      const now = performance.now()
-      const t = (now - s.t0) / 1000
-      const g = s.gates.length ? s.gates[0] : null
-      if (g != null && t >= g) {
-        // exploded: hold on the gold number until the player presses, or 4 seconds pass
-        if (!s.waiting) {
-          s.waiting = true
-          s.gateAt = now
-          setGate(true)
-        }
-        reveal(landedBy(plan, g))
-        const w = (now - s.gateAt) / 1000
-        const c = ctx2d()
-        if (c) RollFX.draw(c.x, c.w, c.h, plan, g, { wait: w || 0.001 })
-        if (w > 4) release()
-        s.raf = requestAnimationFrame(step)
-        return
-      }
-      reveal(landedBy(plan, t))
-      const c = ctx2d()
-      if (c) RollFX.draw(c.x, c.w, c.h, plan, t, { spent: 0 })
-      if (t < plan.T) {
-        s.raf = requestAnimationFrame(step)
-        return
-      }
-      reveal(plan.passes.length)
-      setPhase('done')
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    const c = new RollClock(plan, performance.now() - (reduced ? 1e6 : 0), {
+      land: reveal,
+      gate: setGate,
+      done: () => setPhase('done'),
+    })
+    clock.current = c
+    let raf = 0
+    const frame = () => {
+      const f = c.tick(performance.now())
+      const g = ctx2d()
+      if (f && g) RollFX.draw(g.x, g.w, g.h, plan, f.t, f.wait ? { wait: f.wait } : { spent: 0 })
+      if (!c.done) raf = requestAnimationFrame(frame)
     }
-    s.raf = requestAnimationFrame(step)
-    return () => cancelAnimationFrame(s.raf)
+    raf = requestAnimationFrame(frame)
+    const background = window.setInterval(() => {
+      if (document.hidden) c.tick(performance.now())
+    }, 250)
+    return () => {
+      cancelAnimationFrame(raf)
+      clearInterval(background)
+    }
   }, [plan])
 
   // Done: the settled frame, repainted for pushes, resizes and late fonts
@@ -294,17 +263,19 @@ function Stage({ rollId, resume }: { rollId: string; resume: boolean }) {
   }, [plan, phase, pushed])
 
   const close = () => {
-    cancelAnimationFrame(a.current.raf)
     if (roll?.open) void send('roll.close', { roll: rollId })
     closeDialog()
   }
-  const skip = () => {
-    const s = a.current
-    s.gates = []
-    s.waiting = false
-    s.t0 -= 1e6
-    setGate(false)
+  /** Back to the picker for another roll, with the same stat and skill picked. */
+  const reroll = () => {
+    if (!roll) return
+    if (roll.open) void send('roll.close', { roll: rollId })
+    const entry = crew?.list.findIndex((e) => e.name === roll.entry) ?? -1
+    closeDialog()
+    openPick(roll.stat, entry)
   }
+  const skip = () => clock.current?.skip()
+  const release = () => clock.current?.release(performance.now())
 
   if (!roll?.dice) return null
   const dice = roll.dice
@@ -376,6 +347,11 @@ function Stage({ rollId, resume }: { rollId: string; resume: boolean }) {
             {!nat1 && roll.char && (
               <button type="button" className="r4-btn" onClick={push} disabled={noPush}>
                 Push +{gain} for 1 Entropy, {entropy} left
+              </button>
+            )}
+            {!nat1 && roll.char && (
+              <button type="button" className="r4-btn" onClick={reroll}>
+                Reroll
               </button>
             )}
             <button type="button" className="r4-btn" onClick={close}>
