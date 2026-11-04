@@ -6,9 +6,10 @@
 |---|---|
 | M1: Tokens at The Event Horizon | **Done** (commits 05cddc2, 4901ce3, 9a51d7c) |
 | M2: The roll | **Done** (see "How M2 turned out") |
-| Playtest | **Next:** 20 minutes of the bar scene with 2–3 people |
-| M3: Pockets and items | **Built**; waiting on Peter to approve the tooltip and edit the drafted item texts (see "How M3 is built") |
-| M4–M9 | Not started |
+| Playtest | **Dropped as a gate.** Peter tests alone as we go; the first group test is game day |
+| M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
+| M4: GM tab | **Next** (decided 2026-11-04, see M4) |
+| M5–M9 | Not started |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
 - **Login:** players pick their character on a picker screen, and only the GM types a passcode (`LSO_GM_PASSCODE`). This replaces the per-player passcodes in "Auth flow".
@@ -181,16 +182,29 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - **Codex button:** `codex` on NPCs, items and objects. The button shows but is disabled until M6 builds the Codex.
 
 ### M4: GM tab · M · design fan-out, then a single build session
-- **Goal:** one designed GM tab that replaces the plain dock.
+- **Goal:** designed GM controls, replacing today's plain GM column.
+- **Decided 2026-11-04:**
+  - **Scene plus a back office.** The live controls stay beside the map on your Scene, redesigned. The GM tab holds what you do between scenes.
+  - **No difficulty anywhere,** and no margin-to-damage helper. You say "Heroic Body check" out loud and everyone watches the roll.
+  - **No undo.** You fix mistakes by hand.
+  - **No group playtest first.** You test alone as we go.
 - **In it:**
-  - **Design:** 2–3 R6-style variants first; you pick one.
-  - **Crew table:** HP, Entropy and inventory, with give, take and drag between characters.
-  - **Map control:** mood and switches for every map, and send the crew to a map.
-  - **Token roster:** spawn, hide and reveal, remove.
-  - **Roll board:** public or hidden rolls, difficulty, history, and a margin-to-damage helper.
-  - **Session controls:** "New session" sets Entropy to 2, plus awarding Entropy.
-  - Undo last, as a compensating event, and a "view as player" preview.
-- **Done when:** you can run the bar scene without touching the dock, undo works on every screen, and no player snapshot ever contains a hidden token (test).
+  - **Design:** 2–3 R6-style variants on the UI canvas first (Round 10); you pick one.
+  - **On your Scene, beside the map:**
+    - rolls for NPCs, public or hidden, with recent history;
+    - the tokens on this map (show, hide, remove) and the roster to place NPCs;
+    - things to inspect (show, hide);
+    - quick HP and Entropy.
+  - **In the GM tab:**
+    - **Crew table:** HP, Entropy and every pocket, with give, take, move and drag between characters.
+    - **Every map:** its mood and switches.
+    - **Presets.**
+    - **Session controls:** "New session" sets everyone's Entropy to 2.
+    - **View as player:** see exactly what one seat sees, built from that seat's projection.
+- **Done when:**
+  - you can run the bar scene from your Scene, and set it up from the GM tab;
+  - "view as player" never shows a hidden token, object or someone else's pocket (test).
+- **Moved to M5:** "send the crew to a map", since there is only one map until then.
 - **Why here:** after M1–M3 every GM function exists, so one design pass can lay them all out.
 
 ### M5: The other 10 maps · M · best ultracode fan-out
@@ -201,6 +215,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - Executive deck support, with `oy = 150 + (9 − deck) × 450`, where the deck jump keeps X,Y;
     - point-of-interest pins that only you see;
     - inspectable objects for each new map (built for The Event Horizon after M3: the mural, the slot machines).
+    - "send the crew to a map" for you (moved from M4).
   - **Per-map files:** one `content/maps/<id>.yaml` per map, with assets deduplicated by sha256.
   - **Order:** Patience and Promenade CALM (session 1), Executive decks (session 2), then the rest.
 - **Done when:** a screenshot of each map in each mood matches its board, and a token placed on a key point lands on it.
@@ -231,7 +246,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
 - **Goal:** the rest of the Entropy economy, and fights.
 - **In it:**
   - Enemy cards (health, attack die, check to hit), and GM attack rolls.
-  - Damage by margin (0–4 = 1, 5–9 = 2, 10+ = 3), applied when you confirm it.
+  - Damage by margin (0–4 = 1, 5–9 = 2, 10+ = 3), applied when you confirm it. Revisit before M8: Peter wants no difficulty in the app, so the number to beat may stay spoken too.
   - Team-up: each person rolls on their own screen and the totals add on a shared full-screen roll.
   - "I know a guy" (2 Entropy), Last stand (3, once per fight), and an "out" state at 0 HP.
 - **Done when:** the damage tiers pass a table-driven test, and Last stand is refused the second time in a fight.
@@ -384,7 +399,7 @@ Every client intent has the shape `{t: "intent", id: <uuid>, type, args}`. A ret
 - **Tabs:** Station, Crew, Codex and the GM tab are empty R6-styled panels. GM powers live in the plain dock.
 - **Items:** icons with tooltips only. No notes, no give or take.
 - **NPC card:** the Codex button is disabled.
-- **Maps:** only The Event Horizon. Undo values are stored, but there is no button.
+- **Maps:** only The Event Horizon. (No undo: decided against in M4.)
 - **Icons:** Lale, Marlo, Tally and Tomo get placeholder skill and chrome icons until decision 2 below.
 - **Not built at all:** Railway, Comms, AI features, the ISCO compute meter, Humanity.
 
