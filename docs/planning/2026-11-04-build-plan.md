@@ -42,10 +42,10 @@
 - **Where it sits:** above the token head on the map, and to the left of the ring in the crew rail.
 - **When it goes:** it fades about 4 seconds after the roller closes their roll screen.
 
-**Still to decide before M2:**
-1. (Decided above.)
-2. **Entropy on a failed roll.** Either +1 automatically when the GM has named a difficulty, or only after the GM confirms it.
-3. **Roll requests.** Should the GM be able to send "Cool, Hard 7" to open a player's roll picker?
+**Also decided for M2:**
+- **No difficulty in the app.** Peter says it out loud. The roll screen keeps R6's Easy-to-Heroic ladder as a reference, so the player can judge whether to push. The app never decides pass or fail.
+- **Entropy is earned by hand:** Peter adds it with the GM column's Entropy +/−, and nothing awards it automatically. Players spend it themselves with Push.
+- **No roll requests.** Players open their own roll screen.
 
 **On ultracode:** writing the keyword in a message does turn it on for that message; that's how this plan was made. The paragraph on ultracode further down is outdated.
 
@@ -83,7 +83,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - the insults (around lines 351–359, including "YOU BRICKED IT, GENIUS.") move to `content/insults.yaml`.
   - **Dialog:** Pick → Rolling (the "Roll again" gate releases itself after 4 s; Skip) → Done (difficulty ladder, Push, and "Yeah. Okay." on a nat 1).
   - **Result callout** on the token and the rail. This needs a small design step: the restyled Round 2 `.t2-evt` logic.
-  - **GM dock:** set the difficulty, and make public or hidden GM rolls for NPCs.
+  - **GM column:** public or hidden GM rolls for NPCs. There's no difficulty setting; Peter says it out loud.
 - **Done when:**
   - Only the roller's laptop shows the scene.
   - A nat 1 cracks red, shows an insult and offers no push.
