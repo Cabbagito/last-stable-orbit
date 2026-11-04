@@ -8,6 +8,7 @@ import type { MapView as MapDef, MapObject, TokenView, Vec3 } from '../types'
 import { RingPortrait } from '../shell/RingPortrait'
 import { Callout, Orbit, calloutKey, calloutSpeech, isSpinning } from '../roll/Callout'
 import { calloutsBy } from '../roll/callouts'
+import { BurnCallout, Flare, burnSpeech, useBurnMark } from '../stage/BurnMark'
 import { Eye } from '../gm/parts'
 import { MapLayers } from './MapLayers'
 
@@ -42,6 +43,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
   const rolls = useGame((s) => s.view?.rolls)
   const calls = useGame((s) => s.calls)
   useGame((s) => s.callTick) // re-render when a callout fades
+  const burning = useBurnMark()
   const isGm = useGame((s) => s.view?.me.role === 'gm')
   const showPins = useGame((s) => s.pins && !s.preview)
   const [hover, setHover] = useState<string | null>(null) // a token or object under the mouse: it shows its name
@@ -248,29 +250,32 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
             const foot = on ? '#ffffff' : t.color
             const crew = t.kind === 'crew' ? crewList?.find((c) => c.id === t.ref) : undefined
             const r = crew ? ring(crew.hp, crew.entropy, 64, 9, crew.health) : plainRing(t.color, 64, 5)
-            const call = callouts[t.id]
+            const burn = burning && t.kind === 'crew' && t.ref === burning.char ? burning : null
+            const call = burn ? undefined : callouts[t.id] // a Burn's mark takes the roll callout's place
             return (
               <button
                 key={t.id}
                 type="button"
                 className={'r3-tok' + (t.hidden ? ' app-hiddentok' : '') + (canMove(t) ? '' : ' app-fixedtok')}
-                aria-label={t.name + (t.hidden ? ' (hidden from players)' : '') + (call ? `, ${calloutSpeech(call.r)}` : '')}
+                aria-label={t.name + (t.hidden ? ' (hidden from players)' : '') + (call ? `, ${calloutSpeech(call.r)}` : '') + (burn ? `, ${burnSpeech(burn)}` : '')}
                 onPointerDown={(e) => onTokenDown(e, t)}
                 onPointerEnter={() => setHover(t.id)}
                 onPointerLeave={() => setHover((h) => (h === t.id ? null : h))}
-                style={{ left: x, top: y, transform: `scale(${scale * (t.size ?? 1)})`, zIndex: Math.round(y) + (call || hover === t.id ? 3000 : 0) }}
+                style={{ left: x, top: y, transform: `scale(${scale * (t.size ?? 1)})`, zIndex: Math.round(y) + (call || burn || hover === t.id ? 3000 : 0) }}
               >
                 <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${foot}`, background: 'rgba(0,0,0,.35)' }} />
                 <span style={{ position: 'absolute', left: '50%', bottom: 8, width: 1.5, height: 36, marginLeft: -0.75, background: foot }} />
                 <RingPortrait src={t.portrait} ring={r} size={64} style={{ position: 'absolute', left: 0, top: 0 }} />
                 {call && isSpinning(call.r) && <Orbit stat={call.r.stat} />}
                 {call && <Callout key={calloutKey(call.r)} r={call.r} side="s-t" fading={call.fading} />}
+                {burn && <Flare m={burn} />}
+                {burn && <BurnCallout key={burn.at} m={burn} side="s-t" />}
                 {t.hidden && (
                   <b className="r10-eyeb" aria-hidden="true">
                     <Eye off size={14} />
                   </b>
                 )}
-                {!call && hover === t.id && !on && local?.token !== t.id && (
+                {!call && !burn && hover === t.id && !on && local?.token !== t.id && (
                   <span className="app-tag" aria-hidden="true">
                     {t.name}
                   </span>

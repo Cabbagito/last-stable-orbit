@@ -1,8 +1,10 @@
 import { create } from 'zustand'
 import { GameSocket, type Status } from '../net/socket'
 import { stillThere } from '../inspect/objects'
+import { serverClock } from '../net/clock'
 import { FADE, LINGER, emptyMemo, remember, type CallMemo } from '../roll/callouts'
-import type { Ack, ServerFrame, StatKey, Vec3, View } from '../types'
+import { burnTicks } from '../stage/burntime'
+import type { Ack, BurnView, ServerFrame, StatKey, Vec3, View } from '../types'
 
 /** The roll screen: picking a stat, or playing (or showing the end of) one roll. */
 export type Dialog = { kind: 'pick'; stat: StatKey; entry?: number } | { kind: 'roll'; rollId: string; resume: boolean }
@@ -34,6 +36,8 @@ interface GameStore {
   resumeCheck: boolean
   calls: CallMemo
   callTick: number
+  /** The newest Burn this screen saw, kept after the server clears it so its mark can linger (BurnMark). */
+  burnSeen: BurnView | null
   /** The GM looking at one player's screen, read-only (`/?as=tally`): nothing here may act as them. */
   preview: string | null
   /** The last GM action the server refused, shown in the GM column and the GM tab until the next one works. */
@@ -73,6 +77,13 @@ export const useGame = create<GameStore>((set, get) => {
         window.setTimeout(() => set({ callTick: get().callTick + 1 }), LINGER + 20)
         window.setTimeout(() => set({ callTick: get().callTick + 1 }), LINGER + FADE + 20)
       }
+      let burnSeen = get().burnSeen
+      const b = f.view.stage.burn
+      if (b && (b.at !== burnSeen?.at || b.char !== burnSeen?.char)) {
+        burnSeen = b
+        // re-render when its film ends, when its mark starts to fade, and when it's gone
+        for (const d of burnTicks(b, serverClock.now())) window.setTimeout(() => set({ callTick: get().callTick + 1 }), d + 20)
+      }
       let dialog = get().dialog
       const isGm = f.view.me.role === 'gm'
       const resume = get().resumeCheck
@@ -80,7 +91,7 @@ export const useGame = create<GameStore>((set, get) => {
         const mine = f.view.rolls.find((r) => r.by === f.view.me.seat && r.open && !get().dismissed[r.id])
         if (mine) dialog = { kind: 'roll', rollId: mine.id, resume: true }
       }
-      set({ view: f.view, remote, selected: stillThere(f.view, sel) ? sel : null, calls: memo, dialog, resumeCheck: false })
+      set({ view: f.view, remote, selected: stillThere(f.view, sel) ? sel : null, calls: memo, burnSeen, dialog, resumeCheck: false })
       // the GM reloaded mid-roll: finish landing it on the map
       if (resume && isGm) for (const r of f.view.rolls) if (r.by === 'gm' && r.open) playOnMap(r.id)
     } else if (f.t === 'drag') {
@@ -112,6 +123,7 @@ export const useGame = create<GameStore>((set, get) => {
     resumeCheck: false,
     calls: emptyMemo(),
     callTick: 0,
+    burnSeen: null,
     preview: previewSeat(),
     gmError: '',
     connect: () => {
@@ -128,7 +140,7 @@ export const useGame = create<GameStore>((set, get) => {
     },
     disconnect: () => {
       get().socket?.stop()
-      set({ socket: null, view: null, dialog: null, calls: emptyMemo() })
+      set({ socket: null, view: null, dialog: null, calls: emptyMemo(), burnSeen: null })
     },
     select: (selected) => set({ selected }),
     setLocal: (local) => set({ local }),

@@ -46,7 +46,7 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
       {(view.stage.films ?? []).map((src) => (
         <FilmPlayer key={src} src={src} film={view.stage.film} sound={!preview} />
       ))}
-      <BurnFilms tv />
+      <BurnFilms />
       {!started && (
         <div className="app-tvstart">
           <button type="button" className="app-tvgo" onClick={start}>

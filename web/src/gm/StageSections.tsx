@@ -103,7 +103,7 @@ const SETUPS: [Setup, string][] = [
   ['online', 'Online'],
 ]
 const SETUP_LINE: Record<Setup, string> = {
-  tv: 'Films and all the sound play on the TV. Laptops go dark during a film, so everyone looks up.',
+  tv: 'Films and all the sound play on the TV. Laptops go dark during a cutscene, so everyone looks up; a Burn leaves them on the game.',
   notv: 'Laptops play films muted and in sync, and the sound comes from your laptop.',
   online: 'Every laptop plays films and sound in sync, since everyone is in a different room.',
 }

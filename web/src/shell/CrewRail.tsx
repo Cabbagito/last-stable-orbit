@@ -2,6 +2,7 @@ import { Vitals } from '../gm/parts'
 import { ring } from '../lib/ring'
 import { Callout, Orbit, calloutKey, calloutSpeech, isSpinning } from '../roll/Callout'
 import { calloutsBy } from '../roll/callouts'
+import { BurnCallout, Flare, burnSpeech, useBurnMark } from '../stage/BurnMark'
 import { gmRun, useGame } from '../store/game'
 import { RingPortrait } from './RingPortrait'
 
@@ -15,6 +16,7 @@ export function CrewRail() {
   const selected = useGame((s) => s.selected)
   const calls = useGame((s) => s.calls)
   useGame((s) => s.callTick) // re-render when a callout fades
+  const burning = useBurnMark()
   if (!view) return null
   const isGm = view.me.role === 'gm'
   const callouts = calloutsBy(view.rolls, calls, Date.now(), (r) => r.char)
@@ -24,7 +26,8 @@ export function CrewRail() {
     <nav aria-label="Crew" className="app-rail">
       {view.crew.map((c) => {
         const tok = tokenOf(c.id)
-        const call = callouts[c.id]
+        const burn = burning?.char === c.id ? burning : null
+        const call = burn ? undefined : callouts[c.id] // a Burn's mark takes the roll callout's place
         // the GM calls their newest skill roll a failure once it has landed, and its downside shows on the TV
         const last = isGm ? view.rolls.filter((r) => r.char === c.id).pop() : undefined
         const canFail = last && last.entry && !last.failed && last.phase !== 'roll' && last.phase !== 'boom' ? last : null
@@ -33,13 +36,15 @@ export function CrewRail() {
             <button
               type="button"
               className="app-railbtn"
-              aria-label={`${c.short}, HP ${c.hp} of ${c.health}, Entropy ${c.entropy} of 6` + (call ? `, ${calloutSpeech(call.r)}` : '')}
+              aria-label={`${c.short}, HP ${c.hp} of ${c.health}, Entropy ${c.entropy} of 6` + (call ? `, ${calloutSpeech(call.r)}` : '') + (burn ? `, ${burnSpeech(burn)}` : '')}
               onClick={() => tok && select(selected === tok ? null : tok)}
             >
               <span className="app-railring">
                 <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 64, 9, c.health)} size={64} />
                 {call && isSpinning(call.r) && <Orbit stat={call.r.stat} />}
                 {call && <Callout key={calloutKey(call.r)} r={call.r} side="s-l" fading={call.fading} />}
+                {burn && <Flare m={burn} />}
+                {burn && <BurnCallout key={burn.at} m={burn} side="s-l" />}
               </span>
               <span className={c.id === view.me.char ? 'r4-rail-name me' : 'r4-rail-name'}>{c.short}</span>
             </button>

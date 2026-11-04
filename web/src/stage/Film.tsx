@@ -13,8 +13,9 @@ type Phase = 'idle' | 'wait' | 'play' | 'over'
  * One film, in step with every other screen that plays it: it starts at the server moment `film.at`. A screen
  * that's late (it fetched the file slowly, or joined mid-film) jumps to where everyone else is. Full screen,
  * with no controls; it fades back to the map at the end. Mounted ahead with `film` null, it just fetches.
+ * `hold`: when the video runs out, its last frame stays up until `ends` (a Burn: the server adds the hold to `ends`).
  */
-export function FilmPlayer({ src, film, sound, hard = false }: { src: string; film: FilmView | null | undefined; sound: boolean; hard?: boolean }) {
+export function FilmPlayer({ src, film, sound, hard = false, hold = false }: { src: string; film: FilmView | null | undefined; sound: boolean; hard?: boolean; hold?: boolean }) {
   const v = useRef<HTMLVideoElement>(null)
   const [phase, setPhase] = useState<Phase>('idle')
   const [blocked, setBlocked] = useState(false) // the browser wouldn't start the sound by itself
@@ -32,11 +33,12 @@ export function FilmPlayer({ src, film, sound, hard = false }: { src: string; fi
     }
     let starting = false
     let ran = false // this run has started (a replay begins with the last run's end still on the element)
+    let played = false // this run has started the video playing
     let timer = 0
     const tick = () => {
       const now = serverClock.now() / 1000
       const pos = now - at
-      if (now >= ends || (ran && el.ended)) {
+      if (now >= ends || (!hold && ran && el.ended)) {
         el.pause()
         setPhase('over')
         return
@@ -50,12 +52,19 @@ export function FilmPlayer({ src, film, sound, hard = false }: { src: string; fi
       }
       setPhase('play')
       ran = true
+      if (hold && ((el.duration > 0 && pos >= el.duration) || (played && el.ended))) {
+        // the video has run out: its last frame stays up until `ends`. Joined after the end: just that frame.
+        if (!played && !el.paused) el.pause()
+        if (!played && el.currentTime < el.duration) el.currentTime = el.duration
+        return
+      }
       if (!el.paused) {
         if (Math.abs(el.currentTime - pos) > DRIFT) el.currentTime = pos
         return
       }
       if (starting) return
       starting = true
+      played = true
       if (Math.abs(el.currentTime - pos) > 0.1) el.currentTime = pos
       el.muted = !sound
       el.play()
@@ -75,7 +84,7 @@ export function FilmPlayer({ src, film, sound, hard = false }: { src: string; fi
       window.clearTimeout(timer)
       el.pause()
     }
-  }, [active, at, ends, sound])
+  }, [active, at, ends, sound, hold])
 
   const showing = active && (phase === 'wait' || phase === 'play')
   return (
@@ -118,22 +127,20 @@ export function LaptopFilm() {
 
 /**
  * The Burn films. Every screen loads all of them ahead (they're small), so a Burn starts at once wherever it plays:
- * on the TV when there is one, while the players' laptops go dark; otherwise on every laptop. The GM's laptop keeps
- * working while the TV plays it, as for cutscenes. `tv`: this is the TV, which never goes dark.
+ * on the TV when there is one, otherwise on every laptop. Unlike a cutscene, a Burn never takes a laptop over while
+ * the TV plays it: every laptop stays on the game, and the map and the crew rail show who is burning (BurnMark).
  */
-export function BurnFilms({ tv = false }: { tv?: boolean }) {
+export function BurnFilms() {
   const crew = useGame((s) => s.view?.crew)
   const burn = useGame((s) => s.view?.stage.burn)
-  const role = useGame((s) => s.view?.me.role)
   const preview = useGame((s) => s.preview)
   const key = (crew ?? []).flatMap((c) => c.burn?.cuts.map((x) => x.src) ?? []).join('|')
   const srcs = useMemo(() => (key ? [...new Set(key.split('|'))] : []), [key])
   return (
     <>
       {srcs.map((src) => (
-        <FilmPlayer key={src} src={src} film={burn?.src === src ? burn : null} sound={!!burn?.sound && !preview} hard />
+        <FilmPlayer key={src} src={src} film={burn?.src === src ? burn : null} sound={!!burn?.sound && !preview} hard hold />
       ))}
-      {!tv && burn && !burn.src && role === 'player' && <HoleScreen key={burn.at} ends={burn.ends} />}
     </>
   )
 }

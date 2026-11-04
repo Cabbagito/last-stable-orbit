@@ -7,6 +7,7 @@ from lso.auth import Viewer
 from lso.config import ROOT
 from lso.content import load_content
 from lso.engine import Engine
+from lso.commands import BURN_HOLD
 from lso.models import RULES, GameState
 from lso.store import Store
 from lso.views import project, referenced_assets
@@ -92,7 +93,7 @@ async def test_a_burn_spends_two_entropy_and_plays_on_the_tv(engine, clock):
     assert ack["ok"], ack
     assert engine.state.vitals["ves"].entropy == 0
     b = engine.state.stage.burn
-    assert (b.char, b.cut) == ("ves", "fight") and b.ends - b.at == 2.5
+    assert (b.char, b.cut) == ("ves", "fight") and b.ends - b.at == pytest.approx(2.5 + BURN_HOLD)  # the film, then its last frame held
     tv = project(engine.state, engine.content, STAGE)["stage"]["burn"]
     assert tv["src"] == "/assets/films/burns/gone.mp4" and tv["sound"] and tv["name"] == "Gone"
     # with a TV, the laptops go dark instead of playing it
@@ -122,7 +123,10 @@ async def test_a_burn_needs_two_entropy_and_a_quiet_screen(engine, clock):
     assert (await run(engine, TALLY, "burn.use", {}))["ok"]
     ack = await run(engine, GM, "gm.burn.use", {"char": "lale"})
     assert not ack["ok"] and "Burn is playing" in ack["error"]
-    clock.t += 3
+    clock.t = engine.state.stage.burn.ends - 0.1  # still holding its last frame
+    ack = await run(engine, GM, "gm.film.play", {"cue": "shotgun"})
+    assert not ack["ok"] and "Burn is playing" in ack["error"]
+    clock.t += 0.1
     ack = await run(engine, GM, "gm.film.play", {"cue": "shotgun"})
     assert ack["ok"], ack
     clock.t += 2

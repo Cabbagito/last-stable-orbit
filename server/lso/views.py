@@ -29,6 +29,8 @@ crew stands, but only on lit places, and never a hidden token.
 
 Films: a player's laptop gets a film's file only while it plays, and only when its laptop plays it (no TV, or
 online). With a TV it gets only when the film starts and ends, and shows the black hole meanwhile.
+A Burn's film plays on the same screens, but with a TV the laptops never go dark for one: they get who is
+burning (not the file) and stay on the game, with the Burn's mark on the burner's token and rail ring.
 """
 
 from __future__ import annotations

@@ -79,3 +79,25 @@
 .app-down-say{font-size:calc(26px * var(--k,1));line-height:1.35;color:#eceef1}
 @keyframes app-down-in{from{opacity:0;transform:translate(-50%,-12px)}to{opacity:1;transform:translate(-50%,0)}}
 @media (prefers-reduced-motion:reduce){.app-down{animation:none}}
+
+/* ---------- the Burn mark: on the burner's token and crew-rail ring while a Burn plays, then 4 s more ---------- */
+/* around the head (where a roll's orbit goes): a ring in the Burn's colour throwing out shock waves */
+.app-flare{position:absolute;left:-7px;top:-7px;width:78px;height:78px;overflow:visible;pointer-events:none;transition:opacity .6s ease}
+.app-flare.b-on{filter:drop-shadow(0 0 4px var(--c))}
+.app-flare circle{fill:none;stroke:var(--c);transform-box:fill-box;transform-origin:center}
+.app-flare-ring{stroke-width:2.6}
+.app-flare.b-on .app-flare-ring{animation:app-flare-beat 1.1s ease-in-out infinite}
+.app-flare.b-after .app-flare-ring{stroke-width:1.6;opacity:.55}
+.app-flare-wave{stroke-width:2;opacity:0;animation:app-flare-wave 1.4s cubic-bezier(.2,.6,.3,1) infinite}
+.app-flare-wave.w2{animation-delay:.7s}
+@keyframes app-flare-wave{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+@keyframes app-flare-beat{0%,100%{stroke-width:2.6}50%{stroke-width:4.2}}
+/* the callout (where a roll's goes): BURN over the Burn's icon and name; it flashes in, glows while the film plays */
+.app-bmk.s-l{top:8px}
+.app-bmk-chip{display:flex;align-items:center;gap:6px;height:34px;padding:0 10px 0 3px;box-sizing:border-box;background:#000;box-shadow:0 0 0 1px var(--c);white-space:nowrap}
+.app-bmk-chip img{display:block;width:28px;height:28px;flex:none;image-rendering:pixelated}
+.app-bmk-name{font-family:var(--body);font-size:12.5px;line-height:1;color:#eceef1}
+.app-bmk.b-on .app-bmk-chip{animation:app-bmk-in .55s ease-out,app-bmk-glow 1.1s ease-in-out .55s infinite}
+@keyframes app-bmk-in{0%{background:var(--c);transform:scale(1.3)}100%{background:#000;transform:none}}
+@keyframes app-bmk-glow{0%,100%{box-shadow:0 0 0 1px var(--c)}50%{box-shadow:0 0 0 1px var(--c),0 0 16px -2px var(--c)}}
+@media (prefers-reduced-motion:reduce){.app-flare-ring,.app-bmk-chip{animation:none!important}.app-flare-wave{display:none}}

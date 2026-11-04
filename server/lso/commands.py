@@ -28,6 +28,7 @@ STALE_CLOSE_AFTER = 600.0  # nothing stays open longer than this
 # every film already; laptops fetch theirs when the cue fires, so they get longer.
 FILM_LEAD = {"tv": 1.5, "notv": 3.0, "online": 3.0}
 BURN_LEAD = 0.4  # every screen has the Burn films already, so a Burn starts almost at once
+BURN_HOLD = 0.75  # seconds a Burn film's last frame stays up before the hard cut back
 
 
 class CommandError(Exception):
@@ -292,7 +293,7 @@ def _burn(state: GameState, content: Content, char: str, cut_id, now: float) -> 
     at = round(now + BURN_LEAD, 3)
     return events + [
         ("vitals.set", {"char": char, "hp": hp, "entropy": entropy - BURN_COST}),
-        ("burn.started", {"char": char, "cut": cut.id, "at": at, "ends": round(at + cut.length, 3)}),
+        ("burn.started", {"char": char, "cut": cut.id, "at": at, "ends": round(at + cut.length + BURN_HOLD, 3)}),
     ]
 
 
