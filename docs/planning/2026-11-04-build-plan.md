@@ -10,7 +10,7 @@
 | M3: Pockets and items | **Done**, with Round 9's inspector (commits 1ad1e25, bbcea7b). Item and chrome texts are drafts for Peter to edit |
 | M4: GM tab | **Done** 2026-11-04, from Round 12 (see "How M4 turned out" in M4). Peter tried it and is happy. NPC dice are drafts for Peter to set |
 | Stage: the TV and cutscenes | **Done** 2026-11-04. Peter tried it: "looks good and works well". The TV logs in with one click, no passcode. See "How Stage turned out" |
-| M5: The other 10 maps | **In progress.** Peter took the defaults (2026-11-04). The shared features, Patience and the Promenade (Calm and Hunted) are built, for Peter to check before the other eight. See "How M5 is going" |
+| M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
 | M6–M9 | Not started. The Codex half of M6 is designed and approved (see M6) |
 
 **How M1 differs from the plan below** (this section wins where they disagree):
@@ -406,7 +406,19 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **New preset, "Session 1: arrival on the Patience":** the crew aboard, the steward, the Promenade's people in place, the bar waiting as in "the pitch at the bar", and the same pockets. `session-1` stays the default for an empty database. The intro cue now sets Patience behind its film.
   - **Drafts for Peter:** the new things-to-inspect texts, the new NPCs' cards and dice, the pin labels, and every position.
   - **Not done:** Patience's passengers (the board used other NPCs' portraits as stand-ins, so there's no passenger art). Moving a single crew member to another map (only the whole crew moves).
-  - **Next:** Peter checks Patience and the Promenade, then the other eight: the Executive floors (with the deck jump), the Secure floor, the Lift station, then the small maps.
+  - **Part 2, the other eight (2026-11-04),** after Peter said "Yes, the other eight":
+    - **Built here, one at a time** (no workflow was asked for): the Executive floors, the Secure floor, the Lift station, the founder's vault, the Bot bays, the crawler cab, the Terminal room and the Med Bay. Every board, key and its art came from the live Maps canvas; the art is 31 map layers (two Terminal glows were byte-identical, so they share one file).
+    - **The Executive floors are a tower.** The board's `oy = 150 + (9 − deck) × 450` is height here: each deck is 12.5 Z above the one below (450 / 36), so deck 6's floor is Z 0 and deck 9's is Z 37.5, with origin (360, 1500). A test checks this matches the board's formula on every deck. Positions stay world X, Y, Z.
+      - **Deck buttons** on the map (Deck 9 to Deck 6, and All) bring one deck into view. A tower opens on the deck your own token is on.
+      - **The deck jump** is on a token's card, for whoever may move it (the GM, or that player): it's an ordinary move that changes only Z, and the camera follows.
+    - **Cameras:** the company's are steel blue, drawn per deck on the Executive floors, with each cone's own walls on the Secure floor and the Lift station. The presets turn them on.
+    - **Alert pulses:** the Executive's and Secure floor's Alert glows pulse, as on their boards. No new map flickers otherwise.
+    - **The Terminal room:** Many Faces is a decal over the glow, faint in ISCO and full with the Seal in, fading in over 2.4 s. The station feed is on its wall screen, driven by two level switches in the mood bar: "Minutes down here" (0–30; up top is ×3.2) and "Station feed" (the five events, in the bible's order).
+    - **The Lift station's blast door** is the mood (Door shut, Door open), as the board draws it, rather than a switch.
+    - **The spider mech** is a double-size token (`size: 2` on the NPC), on the map and on the TV.
+    - **New NPCs (drafts):** the scientist, the spider mech (its enemy card in its GM note), and the old man with the steward's portrait as a stand-in (the board's own stand-in; there's no art for him). The security guard's GM note gained its enemy card.
+    - **Arrival spots,** checked against the art: deck 6 out of the lift, inside the Secure floor's door from deck 8, the Lift station's old wood passage, the vault's rug inside the bronze door, the foot of the ladder from Dax's hatch in the Bot bays, the cab's seats, the glass by the Terminal room's crawler door, and one to a bed in the Med Bay.
+    - **Not done:** art for the old man, reviewers, managers and executives (the boards used other portraits as stand-ins); presets for sessions 2 to 5; a single crew member sent to another map. The Executive floors' deck buttons sit under a card on a narrow window.
 
 ### M6: Station and Codex tabs · M · the Codex is designed; the Station still needs its design session
 - **Goal:** the two remaining tabs, with no spoilers.

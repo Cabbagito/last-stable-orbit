@@ -1,0 +1,36 @@
+# The founder's vault, from the Maps canvas (board "SmallVault", key in "SmallKey").
+# Art is 740x520, drawn at 2x. The shared isometric formula, with origin (340, 150).
+id: vault
+name: The founder's vault
+subtitle: Behind the vault door on the Secure floor
+description: >-
+  The founder's vault seen from above at an angle: a small old wood room, with bronze doors open at the front,
+  empty shelves, a red rug, a gold ring and black disc on the back wall, and a desk with a lamp, a framed photo
+  and an old recorder.
+display: [1480, 1040]
+origin: [340, 150]
+order: 6
+hum: none
+moods:
+  - {id: open, label: Open, base: maps/vault/base.png, glow: maps/vault/glow.png}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: photo
+    name: The photo
+    at: [4.55, 1.6, 1.0]
+    closeup: [857, 413]
+    text: A framed photo on the desk, turned to face the chair. A girl, laughing at whoever is holding the camera.
+  - id: recorder
+    name: The recorder
+    at: [6.46, 2.06, 1.0]
+    closeup: [944, 484]
+    text: An old recorder, the kind with a real button. There's one recording on it.
+# The Key's "what's where". Only the GM sees these.
+pins:
+  - {k: "1", label: The bronze door you came through, at: [5.28, 9.28, 1.2]}
+  - {k: "2", label: "Nada's photo on his desk", at: [4.55, 1.6, 1.0]}
+  - {k: "3", label: "His message: an old recorder plays it", at: [6.46, 2.06, 1.0]}
+  - {k: A, label: "Shelves, emptied", at: [1.8, -0.6, 2.5]}
+  - {k: B, label: His ring and disc on the wall, at: [4.74, -1.26, 2.5]}
+  - {k: C, label: Bench, at: [-0.56, 6.04, 0.5]}
+# Where the crew land when you send them here: on the rug, just inside the bronze door, in crew order.
+arrive: [[3.67, 6.33, 0], [4.83, 6.5, 0], [2.5, 5.5, 0], [4.0, 5.33, 0], [5.25, 7.42, 0]]

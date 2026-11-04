@@ -7,6 +7,9 @@ party_map: patience
 maps:
   event-horizon: {mood: open, shown: [mural, slots]}
   promenade: {mood: calm, switches: {cameras: 1}}
+  executive: {mood: office, switches: {cameras: 1}}
+  secure: {mood: quiet, switches: {cameras: 1}}
+  lift: {mood: shut, switches: {cameras: 1}}
 tokens:
   # aboard the Patience
   - {kind: crew, ref: lale, map: patience, at: [10.0, 7.4, 0]}

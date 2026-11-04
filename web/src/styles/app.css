@@ -723,9 +723,71 @@ body {
   pointer-events: none;
 }
 .app-cones polygon {
-  fill: rgba(201, 188, 255, 0.2);
-  stroke: #c9bcff;
+  fill-opacity: 0.2;
   stroke-width: 3;
+}
+/* The Executive's and Secure floor's Alert: red beacons pulsing (their boards' e-beat). */
+.app-hum-beat {
+  animation: app-hum-beat 1.7s ease-in-out infinite;
+}
+@keyframes app-hum-beat {
+  0%, 100% { opacity: 1 }
+  50% { opacity: 0.35 }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-hum-beat { animation: none }
+}
+/* The Terminal room's station feed, set into the wall as on its board. */
+.app-feed {
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  padding: 9px 11px;
+  overflow: hidden;
+  transform-origin: 0 0;
+  font: 12px/19px 'Silkscreen', monospace;
+  color: #cfc4ff;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.app-feed-h {
+  color: #fff;
+}
+/* A tower map's decks (the Executive floors): buttons that bring one deck into view. */
+.app-floors {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  z-index: 5;
+  display: flex;
+  gap: 4px;
+}
+.app-floors button {
+  font: 11px 'Silkscreen', monospace;
+  color: var(--ink);
+  background: rgba(5, 6, 8, 0.88);
+  border: 1px solid var(--btnline);
+  min-height: 36px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.app-floors button:hover {
+  border-color: var(--hover);
+}
+.app-floors button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
+}
+.app-floors button.on {
+  border-color: var(--accent);
+  color: #fff;
+}
+.app-decks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
 }
 /* The Key board's pins, on the GM's map only: a number or letter in a small white disc, its label on hover. */
 .app-pin {

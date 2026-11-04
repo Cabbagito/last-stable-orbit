@@ -5,6 +5,9 @@ party_map: event-horizon
 maps:
   event-horizon: {mood: after, switches: {seals_box: 0}, shown: [mural, slots]}
   promenade: {mood: calm, switches: {cameras: 1}}
+  executive: {mood: office, switches: {cameras: 1}}
+  secure: {mood: quiet, switches: {cameras: 1}}
+  lift: {mood: shut, switches: {cameras: 1}}
 tokens:
   - {kind: crew, ref: ves, map: event-horizon, at: [9.7, 6.2, 0]}
   - {kind: crew, ref: tomo, map: event-horizon, at: [9.4, 3.9, 0]}

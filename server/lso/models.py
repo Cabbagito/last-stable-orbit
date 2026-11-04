@@ -69,6 +69,7 @@ class Npc(Strict):
     note: str = ""
     gm_note: str = ""  # never sent to players
     codex: str | None = None  # its Codex entry, once the Codex exists (M6)
+    size: float = 1  # token size: the spider mech is a double-size token
 
     @field_validator("stats")
     @classmethod
@@ -91,11 +92,15 @@ class Item(Strict):
     codex: str | None = None
 
 
+Hum = Literal["bar", "street", "none", "beat"]  # how a glow flickers: the bar's 7 s, the street's 9 s, none, or Alert's pulse
+
+
 class Mood(Strict):
     id: str
     label: str
     base: str
     glow: str | None = None
+    hum: Hum | None = None  # this mood's own flicker, else the map's
 
 
 class Switch(Strict):
@@ -140,16 +145,46 @@ class Decal(Strict):
     img: tuple[float, float, float, float]
     filter: str | None = None
     moods: list[str] = []  # moods it shows in; empty = all
+    opacity: dict[str, float] = {}  # or its opacity in each mood (missing moods: hidden), as the Terminal room's face
+    over: bool = False  # drawn over the glow, not under it
+    blend: str | None = None  # a CSS mix-blend-mode
+    clip: str | None = None  # a CSS clip-path on the image
+    pixelated: bool = False
+    fade: float = 0.7  # seconds it takes to fade between moods
+
+
+class Feed(Strict):
+    """The Terminal room's wall screen: the two clocks and the station's events, set into the wall by a CSS matrix
+    (display px). Two level switches drive it: minutes down here, and how many of the events have happened."""
+
+    box: tuple[float, float]
+    matrix: tuple[float, float, float, float, float, float]
+    title: str
+    minutes: str  # switch: crew minutes at the core
+    factor: float  # station minutes per crew minute
+    events: str  # switch: how many lines of `lines` show
+    lines: list[str]
+
+
+class Floor(Strict):
+    """One deck of a map drawn as a tower (the Executive floors). Its floor is at height `z`; a deck jump moves a
+    token straight up or down, keeping X and Y. `centre` (world X, Y) is where its camera button looks."""
+
+    label: str
+    z: float
+    centre: tuple[float, float]
 
 
 class Cone(Strict):
     """One camera's view on the floor: from `at` (world X, Y), facing `deg`, `spread` degrees wide, `reach` long."""
 
-    mood: str
+    mood: str | None = None  # the mood it belongs to; none = every mood
     at: tuple[float, float]
     deg: float
     spread: float
     reach: float
+    z: float = 0  # the floor it's drawn on (a deck of the Executive floors)
+    bounds: tuple[float, float, float, float] | None = None  # its own walls, else the map's
 
 
 class Cameras(Strict):
@@ -157,14 +192,16 @@ class Cameras(Strict):
 
     switch: str
     bounds: tuple[float, float, float, float]  # x0, y0, x1, y1: cones stop at the walls
+    steps: int = 6  # arc segments, as the board draws them
+    color: str = "#c9bcff"  # ISCO's white-violet; the company's cameras are steel blue
     cones: list[Cone]
 
     def polygon(self, c: Cone) -> list[list[float]]:
         """The cone as world X, Y points on the floor, the way the Maps boards draw it."""
-        x0, y0, x1, y1 = self.bounds
+        x0, y0, x1, y1 = c.bounds or self.bounds
         pts = [[c.at[0], c.at[1]]]
-        for i in range(7):
-            a = math.radians(c.deg - c.spread / 2 + c.spread * i / 6)
+        for i in range(self.steps + 1):
+            a = math.radians(c.deg - c.spread / 2 + c.spread * i / self.steps)
             pts.append([round(max(x0, min(x1, c.at[0] + c.reach * math.cos(a))), 3), round(max(y0, min(y1, c.at[1] + c.reach * math.sin(a))), 3)])
         return pts
 
@@ -185,12 +222,14 @@ class MapDef(Strict):
     display: tuple[int, int]  # world div size in px (art drawn at 2x)
     origin: tuple[float, float]  # proj(X,Y,Z) = [((X-Y)*30+ox)*2, ((X+Y)*15 - Z*36 + oy)*2]
     order: int = 100  # where it comes in the GM's lists: the order the story reaches it
-    hum: Literal["bar", "street", "none"] = "bar"  # how its glow flickers, as on its board
+    hum: Hum = "bar"  # how its glow flickers, as on its board
     moods: list[Mood]
     switches: list[Switch] = []
     overlays: list[Overlay] = []
     decals: list[Decal] = []
     cameras: Cameras | None = None
+    feed: Feed | None = None
+    floors: list[Floor] = []  # a tower of decks, bottom first
     objects: list[MapObject] = []
     pins: list[Pin] = []
     arrive: list[Vec3] = []  # where the crew land when the GM sends them here, in crew order
@@ -211,14 +250,22 @@ class MapDef(Strict):
             if o.switch not in sw:
                 raise ValueError(f"overlay {o.id} names unknown switch {o.switch}")
         for d in self.decals:
-            if unknown := set(d.moods) - mood_ids:
+            if unknown := (set(d.moods) | set(d.opacity)) - mood_ids:
                 raise ValueError(f"decal {d.id} names unknown moods {unknown}")
+        if self.feed:
+            for k in (self.feed.minutes, self.feed.events):
+                if not sw.get(k) or sw[k].type != "level":
+                    raise ValueError(f"the feed needs a level switch {k!r}")
+            if sw[self.feed.events].max > len(self.feed.lines):
+                raise ValueError("the feed's events switch goes past its lines")
+        if [f.z for f in self.floors] != sorted(f.z for f in self.floors):
+            raise ValueError("floors go bottom first")
         if self.cameras:
             s = sw.get(self.cameras.switch)
             if not s or s.type != "bool":
                 raise ValueError(f"cameras need a bool switch {self.cameras.switch!r}")
             for c in self.cameras.cones:
-                if c.mood not in mood_ids:
+                if c.mood is not None and c.mood not in mood_ids:
                     raise ValueError(f"a camera cone names unknown mood {c.mood}")
         return self
 

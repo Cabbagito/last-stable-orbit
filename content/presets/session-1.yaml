@@ -8,6 +8,9 @@ party_map: event-horizon
 maps:
   event-horizon: {mood: open, shown: [mural, slots]}
   promenade: {mood: calm, switches: {cameras: 1}}
+  executive: {mood: office, switches: {cameras: 1}}
+  secure: {mood: quiet, switches: {cameras: 1}}
+  lift: {mood: shut, switches: {cameras: 1}}
 tokens:
   - {kind: npc, ref: fixer, map: event-horizon, at: [4.203, 2.89, 0.24]}
   - {kind: crew, ref: lale, map: event-horizon, at: [4.203, 4.51, 0.24]}

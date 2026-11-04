@@ -1,0 +1,90 @@
+# The Executive floors, from the Maps canvas (boards "Executive" and "ExecutiveKey"). Layout and style are locked.
+# Art is 840x1880, drawn at 2x: four decks drawn as a tower, 450 art px apart. The gaps aren't real space.
+# The board writes proj(X, Y, Z, deck) with oy = 150 + (9 - deck) * 450. Here the deck is height instead: each deck
+# is 12.5 Z above the one below (450 / 36), so deck 6's floor is Z 0 and deck 9's is Z 37.5, with origin (360, 1500).
+# A deck jump changes Z only, keeping X and Y.
+id: executive
+name: The Executive floors
+subtitle: Decks 6 to 9
+description: >-
+  The Executive floors as a tower seen from above at an angle: four identical floors stacked straight up with gaps
+  between them, from deck 6 at the bottom with rows of reviewers' desks, through deck 7 with glass-walled managers'
+  offices and a scientist's room, deck 8 with a boardroom, a wall of green lights and a guarded door, to deck 9 at
+  the top with an old wood study and a cryo pod. Main stairs in a steel tower and a vent duct with a hatch on each
+  floor connect the floors.
+display: [1680, 3760]
+origin: [360, 1500]
+order: 4
+hum: none
+moods:
+  - {id: office, label: Office hours, base: maps/executive/base-office.png, glow: maps/executive/glow-office.png}
+  - {id: night, label: Night, base: maps/executive/base-night.png, glow: maps/executive/glow-night.png}
+  - {id: alert, label: Alert, base: maps/executive/base-alert.png, glow: maps/executive/glow-alert.png, hum: beat}
+floors:
+  - {label: Deck 6, z: 0, centre: [7, 5]}
+  - {label: Deck 7, z: 12.5, centre: [7, 5]}
+  - {label: Deck 8, z: 25, centre: [7, 5]}
+  - {label: Deck 9, z: 37.5, centre: [7, 5]}
+switches:
+  - {id: cameras, label: Cameras, type: bool}
+cameras:  # six, two per floor on decks 6 to 8; none on deck 9, in her room or on the duct. The company's steel blue.
+  switch: cameras
+  bounds: [0, 0, 14, 10]
+  steps: 12
+  color: "#7fb4ff"
+  cones:
+    - {at: [10.9, 0.3], z: 0, deg: 90, spread: 120, reach: 12}
+    - {at: [0.3, 7.4], z: 0, deg: -15, spread: 40, reach: 12}
+    - {at: [11.2, 0.3], z: 12.5, deg: 85, spread: 110, reach: 12}
+    - {at: [0.3, 7.4], z: 12.5, deg: -10, spread: 40, reach: 12}
+    - {at: [10.6, 0.3], z: 25, deg: 90, spread: 120, reach: 12}
+    - {at: [0.3, 6.9], z: 25, deg: -30, spread: 40, reach: 12}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: throughput
+    name: The throughput board
+    at: [0, 2.6, 2.0]
+    closeup: [564, 2934]
+    text: "THROUGHPUT, in bars that only climb. Reviews closed per hour. Under it, small: review time counts as waiting."
+  - id: plots
+    name: Her plots
+    at: [2.6, 0, 14.2]
+    closeup: [876, 2056]
+    text: Plots pinned edge to edge, in her own hand. One curve has a jump in it that nobody can explain, circled twice, and a number beside it, 0.49.
+  - id: dashboard
+    name: The dashboard
+    at: [0, 2.5, 26.9]
+    closeup: [570, 1138]
+    text: A wall of evals, every one of them green. Every single one.
+  - id: cryo-pod
+    name: The cryo pod
+    at: [1.05, 1.05, 40.3]
+    closeup: [720, 161]
+    text: A cryo pod beside the desk, lid up, its lights still on. Someone sleeps in it most of the year.
+# The Key board's "what's where", each on its deck. Only the GM sees these.
+pins:
+  - {k: "1", label: "Lift from the Promenade, guard desk", at: [7, 0.1, 1.4]}
+  - {k: "2", label: "Deck 6: reviewers' rows", at: [6.7, 7, 1.2]}
+  - {k: "3", label: Throughput board, at: [0, 2.6, 2.0]}
+  - {k: "4", label: "Deck 7: managers in glass", at: [8.9, 7.1, 15.2]}
+  - {k: "5", label: The scientist's room and plots, at: [2.6, 0, 14.2]}
+  - {k: "6", label: "Deck 8: boardroom", at: [5.9, 7.1, 26.6]}
+  - {k: "7", label: "Dashboard, every eval green", at: [0, 2.5, 26.9]}
+  - {k: "8", label: Guarded door to the Secure floor, at: [7.1, 0.1, 26.4]}
+  - {k: "9", label: "Deck 9: the old man's study", at: [5.3, 5, 37.9]}
+  - {k: "10", label: His cryo pod, at: [1.05, 1.05, 40.3]}
+  - {k: "11", label: "Vent duct, a hatch on every floor (off camera)", at: [0.25, 5.4, 31]}
+  - {k: A, label: "Main stairs in a steel tower: open, on camera", at: [12.7, 0.6, 1.4]}
+  - {k: B, label: The duct's last hatch opens inside the study, at: [0.5, 5.4, 38.5]}
+  - {k: C, label: Deck number on each floor's wall, at: [10.9, 0, 40.75]}
+  - {k: D, label: "Study door: frame, brass threshold, standing open", at: [5.7, 8.05, 40.1]}
+  - {k: E, label: Landing and bench outside the study, at: [10.5, 6.3, 38.3]}
+  - {k: F, label: Waiting area and water cooler, at: [10.3, 0.6, 1.7]}
+  - {k: G, label: Lounge with armchairs, at: [2.85, 2.2, 26.2]}
+  - {k: H, label: One wall screen in each manager's office, at: [8.9, 5.5, 14.9]}
+  - {k: I, label: Her cot and bookshelf, at: [0.9, 3.2, 13.4]}
+  - {k: J, label: "Filing cabinets, copier, archive boxes", at: [0.3, 8.6, 1.7]}
+  - {k: J, label: "Sofa, stool, plant", at: [0.5, 8.4, 13.65]}
+  - {k: J, label: "Drinks cabinet, plant", at: [0.3, 8.4, 26.7]}
+  - {k: J, label: "Long-case clock, old trunk", at: [0.2, 8.7, 40.25]}
+# Where the crew land when you send them here: deck 6, out of the lift from the Promenade, in crew order.
+arrive: [[8.4, 0.8, 0], [9.0, 1.6, 0], [9.8, 1.0, 0], [9.6, 2.4, 0], [10.4, 1.8, 0]]

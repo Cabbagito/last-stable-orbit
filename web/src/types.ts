@@ -31,11 +31,14 @@ export interface CrewMember {
   entropy: number
 }
 
+export type Hum = 'bar' | 'street' | 'none' | 'beat'
+
 export interface MoodDef {
   id: string
   label: string
   base: string
   glow: string | null
+  hum: Hum // how this mood's glow flickers
 }
 
 export interface SwitchDef {
@@ -64,12 +67,37 @@ export interface DecalDef {
   img: [number, number, number, number]
   filter: string | null
   moods: string[]
+  opacity: Record<string, number> // when set, its opacity in each mood (missing: hidden)
+  over: boolean // drawn over the glow
+  blend: string | null
+  clip: string | null
+  pixelated: boolean
+  fade: number // seconds
+}
+
+/** The Terminal room's wall screen: two clocks and the station's events, driven by two level switches. */
+export interface FeedDef {
+  box: [number, number]
+  matrix: [number, number, number, number, number, number]
+  title: string
+  minutes: string
+  factor: number
+  events: string
+  lines: string[]
+}
+
+/** One deck of a tower map: its floor height, and where its camera button looks. */
+export interface FloorDef {
+  label: string
+  z: number
+  centre: [number, number]
 }
 
 /** The cameras on a map's walls: each cone as world X, Y points on the floor, shown while `switch` is on. */
 export interface CamerasDef {
   switch: string
-  cones: { mood: string; pts: [number, number][] }[]
+  color: string
+  cones: { mood: string | null; z: number; pts: [number, number][] }[]
 }
 
 /** A labelled point from the map's Key board ("what's where"). GM only. */
@@ -86,13 +114,15 @@ export interface MapView {
   description: string
   display: [number, number]
   origin: [number, number]
-  hum: 'bar' | 'street' | 'none'
+  hum: Hum
   order: number // where it comes in the GM's lists: the order the story reaches it
   moods: MoodDef[]
   switches: SwitchDef[]
   overlays: OverlayDef[]
   decals: DecalDef[]
   cameras: CamerasDef | null
+  feed: FeedDef | null
+  floors: FloorDef[]
   mood: string
   values: Record<string, number>
   objects: MapObject[]
@@ -125,6 +155,7 @@ export interface TokenView {
   mood: string
   note: string
   codex: string | null
+  size?: number // NPCs: the spider mech is a double-size token
   hidden?: boolean // GM only
   gm_note?: string // GM only
   stats?: Record<StatKey, number> // GM only, NPCs: the die for each stat

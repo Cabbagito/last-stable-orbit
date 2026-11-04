@@ -1,0 +1,67 @@
+# The Terminal room, from the Maps canvas (board "SmallTerminal", key in "SmallKey"). The most elaborate art in
+# the game. Art is 950x845, drawn at 2x. The shared isometric formula, with origin (430, 380).
+id: terminal
+name: The Terminal room
+subtitle: At the core
+description: >-
+  The Terminal room seen from above at an angle: a dark ribbed room whose floor is glass over the black hole, with
+  huge clamps under the glass and the terminal on a dais in the middle. A wall screen shows the station feed. When
+  ISCO is revealed, an enormous face inside a prism ring looms over the back corner.
+display: [1900, 1690]
+origin: [430, 380]
+order: 10
+hum: none
+moods:  # Seal in: white-violet room, gold slot lit, clamp lamps red to white
+  - {id: empty, label: Empty, base: maps/terminal/base-empty.png, glow: maps/terminal/glow-dark.png}
+  - {id: isco, label: ISCO, base: maps/terminal/base-isco.png, glow: maps/terminal/glow-dark.png}
+  - {id: seal, label: Seal in, base: maps/terminal/base-seal.png, glow: maps/terminal/glow-seal.png}
+switches:
+  - {id: minutes, label: Minutes down here, type: level, max: 30}
+  - {id: feed, label: Station feed, type: level, max: 5}
+decals:  # Many Faces, over the back corner: faint once ISCO shows, full with the Seal in, fading in slowly
+  - id: face
+    src: maps/terminal/face.gif
+    box: [960, 960]
+    matrix: [1, 0, 0, 1, 424, 40]
+    img: [0, 0, 960, 960]
+    over: true
+    blend: screen
+    clip: circle(45.5% at 50.6% 43%)
+    pixelated: true
+    opacity: {isco: 0.68, seal: 1}
+    fade: 2.4
+feed:  # the wall screen: each crew minute down here is 3.2 up top, and the station's five events as they happen
+  box: [348, 201]
+  matrix: [1, 0.5, 0, 1, 1425, 774]
+  title: STATION FEED
+  minutes: minutes
+  factor: 3.2
+  events: feed
+  lines:
+    - CLEANERS FREEZE MID-WIPE
+    - SLOTS START LOSING
+    - DOCK 7 QUEUE PASSES 11:00
+    - SATISFACTION FALLS FROM 99.97%
+    - PATIENCE STARTS ITS ENGINES
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: terminal
+    name: The terminal
+    at: [7.16, 5.66, 1.2]
+    closeup: [950, 1058]
+    text: The terminal on its dais, in the middle of the glass. One slot in it, the shape of the Seal.
+  - id: clamps
+    name: The clamps
+    at: [3.98, 6.38, 0]
+    closeup: [716, 1071]
+    text: Huge clamps under the glass, holding the core to the cable. Their lamps glow red.
+# The Key's "what's where". Only the GM sees these.
+pins:
+  - {k: "1", label: The terminal and its Seal slot, at: [7.16, 5.66, 1.2]}
+  - {k: "2", label: "Clamps holding the core, under the glass", at: [3.98, 6.38, 0]}
+  - {k: "3", label: "Many Faces, huge, on the back wall", at: [-6.24, -6.24, 4]}
+  - {k: "4", label: "Station feed: two clocks and the five events (the Minutes and Station feed switches)", at: [10.36, -2.04, 2.5]}
+  - {k: "5", label: "The hole, enormous, below", at: [13.14, 9.74, 0]}
+  - {k: A, label: Crawler door behind you, at: [11.62, 13.12, 1.2]}
+  - {k: B, label: Ribs that light up when the Seal goes in, at: [2.4, -2.4, 3]}
+# Where the crew land when you send them here: on the glass, in from the crawler door, in crew order.
+arrive: [[9.0, 11.0, 0], [9.0, 10.0, 0], [10.33, 10.33, 0], [7.83, 10.17, 0], [9.5, 9.17, 0]]

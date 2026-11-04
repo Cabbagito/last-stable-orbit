@@ -1,6 +1,8 @@
 """M5: more maps. Their camera cones and decals, the GM-only pins, sending the crew to a map, the TV following one
 of the crew across maps, and a saved game gaining maps the content didn't have when it was saved."""
 
+import json
+
 import pytest
 
 from lso.auth import Viewer
@@ -149,3 +151,76 @@ def test_a_saved_game_gains_the_new_maps(content, tmp_path):
     from lso.commands import handle
 
     assert handle(GM, e.state, content, "gm.map.mood", {"map": "promenade", "mood": "hunted"}) == [("map.mood_set", {"map": "promenade", "mood": "hunted"})]
+
+
+ALL = ["patience", "promenade", "event-horizon", "executive", "secure", "vault", "bots", "lift", "cab", "terminal", "med"]
+
+
+def test_all_eleven_maps_in_story_order(content):
+    assert list(content.maps) == ALL
+
+
+async def test_no_map_leaks_its_pins(engine):
+    for m in ALL:
+        await ok(engine, GM, "gm.crew.send", {"map": m})
+        gm = project(engine.state, engine.content, GM)["maps"][m]
+        assert gm["pins"], m
+        for viewer in (VES, STAGE):
+            v = project(engine.state, engine.content, viewer)
+            assert list(v["maps"]) == [m]
+            assert "pins" not in v["maps"][m]
+            sent = json.dumps(v)
+            assert [p["label"] for p in gm["pins"] if len(p["label"]) > 20 and p["label"] in sent] == []
+
+
+async def test_the_executive_floors_are_a_tower(engine):
+    """Four decks, 12.5 height apart: deck 6's floor is Z 0. A deck jump is a move that keeps X and Y."""
+    await ok(engine, GM, "gm.crew.send", {"map": "executive"})
+    m = project(engine.state, engine.content, VES)["maps"]["executive"]
+    assert [f["label"] for f in m["floors"]] == ["Deck 6", "Deck 7", "Deck 8", "Deck 9"]
+    assert [f["z"] for f in m["floors"]] == [0, 12.5, 25, 37.5]
+    cams = m["cameras"]
+    assert cams["color"] == "#7fb4ff" and sorted({c["z"] for c in cams["cones"]}) == [0, 12.5, 25]
+    assert all(c["mood"] is None and len(c["pts"]) == 14 for c in cams["cones"])
+    # the board's own projection, proj(X, Y, Z, deck) with oy = 150 + (9 - deck) * 450, lands on the same spot
+    from lso.models import MapDef
+
+    d: MapDef = engine.content.maps["executive"]
+    ox, oy = d.origin
+    for deck in (6, 7, 8, 9):
+        X, Y, Z = 7, 1.5, 0.4
+        board = ((X - Y) * 30 + 360, (X + Y) * 15 - Z * 36 + 150 + (9 - deck) * 450)
+        ours = ((X - Y) * 30 + ox, (X + Y) * 15 - (Z + (deck - 6) * 12.5) * 36 + oy)
+        assert board == pytest.approx(ours)
+    ves = next(tid for tid, t in engine.state.tokens.items() if t.ref == "ves")
+    x, y, _ = engine.state.tokens[ves].at
+    await ok(engine, VES, "token.move", {"token": ves, "at": [x, y, 37.5]})  # up to deck 9
+    assert tuple(engine.state.tokens[ves].at) == (x, y, 37.5)
+
+
+async def test_the_terminal_rooms_face_and_feed(engine):
+    await ok(engine, GM, "gm.crew.send", {"map": "terminal"})
+    m = project(engine.state, engine.content, VES)["maps"]["terminal"]
+    face = next(d for d in m["decals"] if d["id"] == "face")
+    assert face["opacity"] == {"isco": 0.68, "seal": 1} and face["over"] and face["blend"] == "screen"
+    assert m["feed"]["factor"] == 3.2 and len(m["feed"]["lines"]) == 5
+    await ok(engine, GM, "gm.map.switch", {"map": "terminal", "switch": "feed", "value": 5})
+    ack, _ = await engine.run(GM, None, "gm.map.switch", {"map": "terminal", "switch": "feed", "value": 6})
+    assert not ack["ok"]
+    await ok(engine, GM, "gm.map.switch", {"map": "terminal", "switch": "minutes", "value": 10})
+    assert project(engine.state, engine.content, VES)["maps"]["terminal"]["values"] == {"feed": 5, "minutes": 10}
+
+
+async def test_the_alert_moods_pulse(engine):
+    gm = project(engine.state, engine.content, GM)["maps"]
+    assert {m["id"]: m["hum"] for m in gm["executive"]["moods"]} == {"office": "none", "night": "none", "alert": "beat"}
+    assert {m["id"]: m["hum"] for m in gm["secure"]["moods"]} == {"quiet": "none", "alert": "beat"}
+    assert {m["hum"] for m in gm["event-horizon"]["moods"]} == {"bar"}
+
+
+async def test_the_spider_mech_is_a_double_size_token(engine):
+    await ok(engine, GM, "gm.crew.send", {"map": "secure"})
+    await ok(engine, GM, "gm.token.place", {"ref": "spider-mech", "map": "secure", "at": [23.6, 2.25, 0.3]})
+    v = project(engine.state, engine.content, VES)
+    mech = v["tokens"]["spider-mech"]
+    assert mech["size"] == 2 and "stats" not in mech and "gm_note" not in mech

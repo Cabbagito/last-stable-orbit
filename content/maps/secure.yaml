@@ -1,0 +1,60 @@
+# The Secure floor, from the Maps canvas (boards "Secure" and "SecureKey"). Layout and style are locked.
+# Art is 1460x890, drawn at 2x. The shared isometric formula, with origin (640, 150).
+id: secure
+name: The Secure floor
+subtitle: Behind the guarded door on deck 8
+description: >-
+  The Secure floor seen from above at an angle: a checkpoint with a scanner arch inside the door from deck 8, a
+  guard room, a big mech hall with crates and barriers for cover and a charging cradle, a lockup of caged racks
+  with the probe in one lit case, and at the back an old gold vault door with flowers and a brass rail. A vent
+  comes out in the wall behind the cradle.
+display: [2920, 1780]
+origin: [640, 150]
+order: 5
+hum: none
+moods:
+  - {id: quiet, label: Quiet, base: maps/secure/base-quiet.png, glow: maps/secure/glow-quiet.png}
+  - {id: alert, label: Alert, base: maps/secure/base-alert.png, glow: maps/secure/glow-alert.png, hum: beat}
+switches:
+  - {id: cameras, label: Cameras, type: bool}
+cameras:  # four: the checkpoint, the hall and the probe's case. A blind spot at the vent, none in the guard room.
+  switch: cameras
+  bounds: [0, 0, 26, 20]
+  steps: 12
+  color: "#7fb4ff"
+  cones:
+    - {at: [14.2, 0.5], deg: 65, spread: 80, reach: 14, bounds: [9, 0, 26, 15]}
+    - {at: [17.5, 14.4], deg: -90, spread: 64, reach: 15, bounds: [9, 0, 26, 15]}
+    - {at: [17.5, 15.6], deg: 90, spread: 100, reach: 6, bounds: [9, 15, 26, 20]}
+    - {at: [0.5, 8.2], deg: -40, spread: 90, reach: 9, bounds: [0, 0, 9, 10]}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: vault-door
+    name: The vault door
+    at: [17.5, 0.3, 3.0]
+    closeup: [2312, 618]
+    text: Old gold, with the founder's ring and black disc, on a raised floor of old wood behind a brass rope rail. A hand plate in the door, and a systems panel beside it.
+  - id: probe
+    name: The probe
+    at: [1.4, 1.4, 2.0]
+    closeup: [1280, 240]
+    text: In one lit case at the back of the lockup, among racks of confiscated gear. A sleek instrument, tagged and sealed.
+# The Key board's "what's where". Only the GM sees these.
+pins:
+  - {k: "1", label: "Vault door, kept like a shrine, the ring on the door", at: [17.5, 0.3, 3.0]}
+  - {k: "2", label: "Probe, locked in one lit case", at: [1.4, 1.4, 2.0]}
+  - {k: "3", label: "Mech hall, where the fight happens", at: [17, 11, 0.9]}
+  - {k: "4", label: Guarded door from deck 8, at: [17.5, 20, 0.7]}
+  - {k: "5", label: "Vent from the duct, behind the cradle, off camera", at: [25.65, 0.1, 1.7]}
+  - {k: A, label: "Checkpoint: booth, bag scanner, bench", at: [22.5, 17, 2.9]}
+  - {k: B, label: "Scanner arch, with two cameras on it", at: [15.9, 15, 3.0]}
+  - {k: C, label: "Guard room: bunks, lockers, table, gun rack", at: [4.8, 14.3, 1.4]}
+  - {k: D, label: "The mech's cradle: the mech is a token on it", at: [23.6, 2.25, 0.8]}
+  - {k: E, label: "Cover: crates, barriers, two stub columns", at: [21.3, 10.4, 1.5]}
+  - {k: F, label: "Old wood floor, runner and founder's ring", at: [15.2, 2.2, 0.4]}
+  - {k: G, label: "Flowers, candles and a brass rope rail", at: [14.45, 0.6, 1.4]}
+  - {k: H, label: "Hand plate on the door, for Lale", at: [19.0, 0.3, 1.9]}
+  - {k: I, label: "Systems panel beside the door, for Tally", at: [20.65, 0.1, 2.4]}
+  - {k: J, label: Caged racks of confiscated gear, at: [6, 0, 2.9]}
+  - {k: K, label: "SECURE on the wall, DECK 8 on the floor", at: [12, 0, 3.55]}
+# Where the crew land when you send them here: inside the guarded door from deck 8, in crew order.
+arrive: [[16.6, 17.6, 0], [17.6, 18.4, 0], [18.6, 17.6, 0], [16.4, 18.8, 0], [17.8, 16.8, 0]]

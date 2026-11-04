@@ -174,7 +174,7 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
             const c = t.kind === 'crew' ? view.crew.find((m) => m.id === t.ref) : undefined
             const r = c ? ring(c.hp, c.entropy, 64, 9) : plainRing(t.color, 64, 5)
             return (
-              <span key={t.id} className="r3-tok app-fixedtok" role="img" aria-label={t.name} style={{ left: x, top: y, zIndex: Math.round(y) }}>
+              <span key={t.id} className="r3-tok app-fixedtok" role="img" aria-label={t.name} style={{ left: x, top: y, zIndex: Math.round(y), transform: t.size && t.size !== 1 ? `scale(${t.size})` : undefined }}>
                 <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${t.color}`, background: 'rgba(0,0,0,.35)' }} />
                 <span style={{ position: 'absolute', left: '50%', bottom: 8, width: 1.5, height: 36, marginLeft: -0.75, background: t.color }} />
                 <RingPortrait src={t.portrait} ring={r} size={64} style={{ position: 'absolute', left: 0, top: 0 }} />

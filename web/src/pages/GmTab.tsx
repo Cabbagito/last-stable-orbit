@@ -290,7 +290,6 @@ function MapsSection({ view }: { view: View }) {
           </div>
         )
       })}
-      <div className="r10-hint">The other eight maps are still to come.</div>
     </section>
   )
 }

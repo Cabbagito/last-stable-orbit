@@ -133,7 +133,7 @@
   stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
   mood: Bored
   note: Stands where the company's lift starts.
-  gm_note: "The company's, not ISCO's: ISCO's reach stops at the guard post by the lift."
+  gm_note: "The company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, d8, Normal to hit; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Hard ends one without a fight. They radio: if a fight runs long, more come."
 
 - id: cleaner-bot
   name: Cleaner bot
@@ -144,3 +144,35 @@
   mood: Busy
   note: Already cleaning where you're about to step.
   gm_note: ISCO's eyes and hands below the line. They scrubbed the side alley before anyone reported the death there.
+
+# The Executive floors, the Secure floor and the Bot bays (M5). DRAFTS, for Peter to set.
+- id: scientist
+  name: The scientist
+  role: Scientist, the company
+  portrait: portraits/scientist.gif
+  color: "#f2b544"
+  stats: {body: 4, reflex: 6, tech: 12, intel: 20, cool: 8, empathy: 8}
+  mood: Tired
+  note: Talks to her plots more than to people.
+  gm_note: "Decades of ISCO's answers trace back to a handful of events, and the 0.49 plot. She can't prove it; she filed it once and got promoted. She built the probe, and the company confiscated it. Keeps her findings in a hidden folder in her room, and is quietly friends with Dax. After the bar, she finds the crew in the Bot bays."
+
+- id: old-man
+  name: The old man
+  role: The founder's assistant
+  portrait: portraits/steward.gif
+  color: "#8f88a3"
+  stats: {body: 4, reflex: 4, tech: 6, intel: 12, cool: 12, empathy: 12}
+  mood: Awake, for now
+  note: Remembers the founder as a young man remembers his boss.
+  gm_note: "STAND-IN PORTRAIT (the steward's, as on the Maps board); there's no art for him yet. Ilija's young assistant, kept in cryo and thawed two months a year for the charter session, so awake about 50 years. Knows the vault exists, not what's in it. One vote; he has proposed a pause three times and lost. Gives the crew stories of the man behind the saint."
+
+- id: spider-mech
+  name: Spider mech
+  role: Security, the company
+  portrait: portraits/spider-mech.gif
+  color: "#7fb4ff"
+  size: 2
+  stats: {body: 20, reflex: 8, tech: 12, intel: 4, cool: 20, empathy: 4}
+  mood: Dormant
+  note: Six legs, a cluster of red lenses, twin guns under its chin.
+  gm_note: "The company's boss machine; ISCO doesn't run it. Starts on its cradle, dormant during the break-in. Enemy card: 10 health, d12, Hard to hit, fights alone. Heavy guns, so at least 2 damage. At 5 health or less its shell cracks: Normal to hit, and it attacks with a d20. Weak: Tech at Hard, once, blinds its lenses (it loses its next action and is Normal to hit). Strong: too big to grapple, and ISCO can't shut it down for you."

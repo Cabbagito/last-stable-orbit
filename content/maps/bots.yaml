@@ -1,0 +1,37 @@
+# The Bot bays, from the Maps canvas (board "SmallBots", key in "SmallKey").
+# Art is 800x540, drawn at 2x. The shared isometric formula, with origin (340, 150).
+id: bots
+name: The Bot bays
+subtitle: Deck 1, Maintenance
+description: >-
+  The Bot bays seen from above at an angle: a dark maintenance deck with pipes, a boiler and drums. A spotless
+  white strip holds a row of empty charging cradles numbered 2, 3, 5, 7, 11, 13 and 14. A ladder comes down from
+  a wooden hatch, and a service door leads out.
+display: [1600, 1080]
+origin: [340, 150]
+order: 7
+hum: none
+moods:
+  - {id: dark, label: Dark, base: maps/bots/base.png, glow: maps/bots/glow.png}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: cradles
+    name: The cradles
+    at: [3.14, -2.16, 1]
+    closeup: [998, 257]
+    text: "A row of charging cradles on a strip scrubbed spotless, in a deck that isn't. All empty, numbered 2, 3, 5, 7, 11, 13."
+  - id: cradle-14
+    name: Cradle 14
+    at: [10.44, -2.16, 1]
+    closeup: [1436, 476]
+    text: The last cradle is 14. Every other number on the strip is a prime.
+# The Key's "what's where". Only the GM sees these.
+pins:
+  - {k: "1", label: "Charging cradles, primes only, empty so cleaners can be tokens", at: [3.14, -2.16, 1]}
+  - {k: "2", label: "Ladder down from Dax's hatch", at: [-1.62, 6.08, 2]}
+  - {k: "3", label: "Service door: the way around", at: [13.76, 4.76, 1.2]}
+  - {k: "4", label: "Cradle 14, the exception", at: [10.44, -2.16, 1]}
+  - {k: A, label: The spotless strip in a dirty deck, at: [9.44, 2.14, 0]}
+  - {k: B, label: Boiler and pipes, at: [-0.44, 3.16, 1.5]}
+  - {k: C, label: Drums, at: [10.84, 7.24, 0.6]}
+# Where the crew land when you send them here: at the foot of the ladder from Dax's hatch, in crew order.
+arrive: [[-0.25, 6.92, 0], [0.83, 6.83, 0], [1.17, 8.17, 0], [2.17, 7.17, 0], [2.58, 8.42, 0]]

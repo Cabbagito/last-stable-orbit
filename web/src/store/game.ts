@@ -23,6 +23,8 @@ interface GameStore {
   gmMap: string | null
   /** The GM's map shows the Key board's pins ("what's where"). Remembered on this browser. */
   pins: boolean
+  /** A request for the map to bring a tower's deck into view, around a spot: after a deck jump. */
+  lookAt: { map: string; floor: number; at: Vec3; n: number } | null
   socket: GameSocket | null
   authLost: boolean
   dialog: Dialog | null
@@ -42,6 +44,7 @@ interface GameStore {
   setLocal: (l: { token: string; at: Vec3 } | null) => void
   setGmMap: (m: string) => void
   setPins: (on: boolean) => void
+  look: (map: string, floor: number, at: Vec3) => void
   openPick: (stat: StatKey, entry?: number) => void
   openRoll: (rollId: string, resume?: boolean) => void
   closeDialog: () => void
@@ -101,6 +104,7 @@ export const useGame = create<GameStore>((set, get) => {
     selected: null,
     gmMap: null,
     pins: readPins(),
+    lookAt: null,
     socket: null,
     authLost: false,
     dialog: null,
@@ -129,6 +133,7 @@ export const useGame = create<GameStore>((set, get) => {
     select: (selected) => set({ selected }),
     setLocal: (local) => set({ local }),
     setGmMap: (gmMap) => set({ gmMap }),
+    look: (map, floor, at) => set({ lookAt: { map, floor, at, n: (get().lookAt?.n ?? 0) + 1 } }),
     setPins: (pins) => {
       try {
         localStorage.setItem(PINS_KEY, pins ? '1' : '0')

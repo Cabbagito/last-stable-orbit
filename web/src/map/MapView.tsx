@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { objectKey } from '../inspect/objects'
+import { floorOf } from '../lib/floors'
 import { proj, unproj } from '../lib/proj'
 import { plainRing, ring } from '../lib/ring'
 import { send, useGame } from '../store/game'
@@ -44,6 +45,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
   const isGm = useGame((s) => s.view?.me.role === 'gm')
   const showPins = useGame((s) => s.pins && !s.preview)
   const [hover, setHover] = useState<string | null>(null) // a token or object under the mouse: it shows its name
+  const [deck, setDeck] = useState<number | null>(null) // the deck a tower map's camera last brought into view
   const [W, H] = map.display
 
   useLayoutEffect(() => {
@@ -59,14 +61,43 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
     if (!w || !h) return
     const zoom = clamp(Math.min(w / W, h / H), ZMIN, ZMAX)
     setCam({ zoom, px: (w - W * zoom) / 2, py: (h - H * zoom) / 2 })
+    setDeck(null)
   }, [size, W, H])
+
+  // A tower map (the Executive floors): bring one deck into view, about one deck tall
+  const floors = map.floors
+  const frameFloor = useCallback(
+    (i: number, near?: Vec3) => {
+      const [w, h] = size
+      const f = floors[i]
+      if (!w || !h || !f) return
+      const tall = floors.length > 1 ? (floors[1].z - floors[0].z) * 72 + 120 : H
+      const zoom = clamp(Math.min(w / W, h / tall), ZMIN, ZMAX)
+      // the deck's middle, or a token on it, pulled halfway back to the middle so the deck stays in frame
+      const [x, y] = near ? [(near[0] + f.centre[0]) / 2, (near[1] + f.centre[1]) / 2] : f.centre
+      const [cx, cy] = proj(map.origin, [x, y, f.z + 1])
+      setCam({ zoom, px: w / 2 - cx * zoom, py: h / 2 - cy * zoom })
+      setDeck(i)
+    },
+    [size, floors, W, H, map.origin],
+  )
+  const me = useGame((s) => s.view?.me.char)
+  const home = tokens.find((t) => t.kind === 'crew' && t.ref === me) ?? tokens.find((t) => t.kind === 'crew')
 
   useEffect(() => {
     if (size[0] && fittedFor.current !== map.id) {
       fittedFor.current = map.id
-      fit()
+      // a tower opens on the deck your own token is on (the GM's: the crew's)
+      if (floors.length && home) frameFloor(floorOf(floors, home.at[2]), home.at)
+      else fit()
     }
-  }, [size, map.id, fit])
+  }, [size, map.id, fit, floors, home, frameFloor])
+
+  // after a deck jump, follow the token to its new deck
+  const lookAt = useGame((s) => s.lookAt)
+  useEffect(() => {
+    if (lookAt && lookAt.map === map.id) frameFloor(lookAt.floor, lookAt.at)
+  }, [lookAt?.n]) // only when a new request arrives
 
   // Trackpad and wheel. The listener is non-passive so preventDefault works: otherwise Chrome on a Mac
   // reads a sideways two-finger scroll as "go back a page", and a pinch zooms the whole page.
@@ -227,7 +258,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
                 onPointerDown={(e) => onTokenDown(e, t)}
                 onPointerEnter={() => setHover(t.id)}
                 onPointerLeave={() => setHover((h) => (h === t.id ? null : h))}
-                style={{ left: x, top: y, transform: `scale(${scale})`, zIndex: Math.round(y) + (call || hover === t.id ? 3000 : 0) }}
+                style={{ left: x, top: y, transform: `scale(${scale * (t.size ?? 1)})`, zIndex: Math.round(y) + (call || hover === t.id ? 3000 : 0) }}
               >
                 <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${foot}`, background: 'rgba(0,0,0,.35)' }} />
                 <span style={{ position: 'absolute', left: '50%', bottom: 8, width: 1.5, height: 36, marginLeft: -0.75, background: foot }} />
@@ -274,6 +305,18 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
               onHover={(on) => setHover((h) => (on ? objectKey(map.id, o.id) : h === objectKey(map.id, o.id) ? null : h))}
             />
           ))}
+        </div>
+      )}
+      {floors.length > 0 && (
+        <div className="app-floors" role="group" aria-label="Decks" onPointerDown={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
+          {[...floors.keys()].reverse().map((i) => (
+            <button key={i} type="button" className={deck === i ? 'on' : ''} aria-pressed={deck === i} onClick={() => frameFloor(i)}>
+              {floors[i].label}
+            </button>
+          ))}
+          <button type="button" className={deck === null ? 'on' : ''} aria-pressed={deck === null} onClick={fit}>
+            All
+          </button>
         </div>
       )}
     </div>

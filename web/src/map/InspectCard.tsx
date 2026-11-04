@@ -3,6 +3,7 @@ import { GiveRow, Pocket, Vitals, Eye } from '../gm/parts'
 import { Closeup, CodexButton, InspectBlock, Inspector } from '../inspect/Inspector'
 import { useItemTip } from '../inspect/ItemTip'
 import { findObject } from '../inspect/objects'
+import { floorOf, onFloor } from '../lib/floors'
 import { ring } from '../lib/ring'
 import { STAT_LOOK, statIcon } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
@@ -116,6 +117,7 @@ export function InspectCard() {
         )}
         {t.hidden && <div className="r10-warn">HIDDEN FROM PLAYERS</div>}
         {t.note && <div className="app-ins-txt">{t.note}</div>}
+        <DeckJump t={t} />
         {isGm && t.gm_note && (
           <div className="r10-gmn">
             <span className="r4-lab">ONLY YOU SEE THIS</span>
@@ -177,6 +179,42 @@ function NpcRolls({ t, stats }: { t: TokenView; stats: NonNullable<TokenView['st
         <Eye off={hidden} />
         <span>{lock ? 'Hidden NPC, so only you see the roll' : hidden ? 'Hidden roll: only you see it' : 'Public roll: everyone sees it'}</span>
       </button>
+    </InspectBlock>
+  )
+}
+
+/**
+ * On a tower map (the Executive floors), move a token to another deck: straight up or down the stairs or the
+ * duct, keeping where it stands. For whoever may move it: the GM, or the player whose token it is.
+ */
+function DeckJump({ t }: { t: TokenView }) {
+  const view = useGame((s) => s.view)
+  const preview = useGame((s) => s.preview)
+  const look = useGame((s) => s.look)
+  const floors = view?.maps[t.map]?.floors ?? []
+  const mine = view?.me.role === 'gm' || (t.kind === 'crew' && t.ref === view?.me.char && !t.hidden)
+  if (!floors.length || !mine || preview) return null
+  const cur = floorOf(floors, t.at[2])
+  return (
+    <InspectBlock label="DECK">
+      <div className="app-decks" role="group" aria-label={`Move ${t.name} to another deck`}>
+        {floors.map((f, i) => (
+          <button
+            key={i}
+            type="button"
+            className={'r10-btn' + (i === cur ? ' on' : '')}
+            aria-pressed={i === cur}
+            disabled={i === cur}
+            onClick={() => {
+              const at = onFloor(floors, t.at, i)
+              look(t.map, i, at)
+              void send('token.move', { token: t.id, at })
+            }}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
     </InspectBlock>
   )
 }

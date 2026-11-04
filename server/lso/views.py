@@ -61,13 +61,21 @@ def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer) -
         "description": d.description,
         "display": list(d.display),
         "origin": list(d.origin),
-        "moods": [{"id": m.id, "label": m.label, "base": url(m.base), "glow": url(m.glow)} for m in d.moods],
+        "moods": [{"id": m.id, "label": m.label, "base": url(m.base), "glow": url(m.glow), "hum": m.hum or d.hum} for m in d.moods],
         "switches": [s.model_dump() for s in d.switches],
         "overlays": [{**o.model_dump(), "src": url(o.src)} for o in d.overlays],
         "decals": [{**x.model_dump(), "src": url(x.src)} for x in d.decals],
         "hum": d.hum,
         "order": d.order,  # frames go out with sorted keys, so the GM's lists sort by this
-        "cameras": {"switch": d.cameras.switch, "cones": [{"mood": c.mood, "pts": d.cameras.polygon(c)} for c in d.cameras.cones]} if d.cameras else None,
+        "cameras": {
+            "switch": d.cameras.switch,
+            "color": d.cameras.color,
+            "cones": [{"mood": c.mood, "z": c.z, "pts": d.cameras.polygon(c)} for c in d.cameras.cones],
+        }
+        if d.cameras
+        else None,
+        "feed": d.feed.model_dump() if d.feed else None,
+        "floors": [f.model_dump() for f in d.floors],
         "mood": ms.mood if ms else d.moods[0].id,
         "values": dict(ms.switches) if ms else {},
         "objects": _objects_view(state, d, ms, viewer),
@@ -106,7 +114,7 @@ def _token_view(content: Content, tid: str, t, gm: bool) -> dict:
         base |= {"name": c.short, "role": c.role, "portrait": url(c.portrait), "color": c.color, "mood": "", "note": "", "codex": None}
     else:
         n = content.npcs[t.ref]
-        base |= {"name": n.name, "role": n.role, "portrait": url(n.portrait), "color": n.color, "mood": n.mood, "note": n.note, "codex": n.codex}
+        base |= {"name": n.name, "role": n.role, "portrait": url(n.portrait), "color": n.color, "mood": n.mood, "note": n.note, "codex": n.codex, "size": n.size}
         if gm:
             base |= {"gm_note": n.gm_note, "stats": n.stats}  # an NPC's dice are the GM's secret
     if gm:

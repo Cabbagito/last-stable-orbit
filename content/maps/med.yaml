@@ -1,0 +1,36 @@
+# The Med Bay, from the Maps canvas (board "SmallMed", key in "SmallKey"). Where a lost fight ends.
+# Art is 770x525, drawn at 2x. The shared isometric formula, with origin (340, 150).
+id: med
+name: The Med Bay
+subtitle: Deck 2, the Promenade
+description: >-
+  The Med Bay seen from above at an angle: a white, spotless room with five beds with straps down the left wall,
+  a violet cross, a screen asking how are you feeling above 99.97 percent, a nurse's counter and a sedation cart.
+display: [1540, 1050]
+origin: [340, 150]
+order: 11
+hum: none
+moods:
+  - {id: white, label: White, base: maps/med/base.png, glow: maps/med/glow.png}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: screen
+    name: The screen
+    at: [7.4, -1.2, 2.5]
+    closeup: [1196, 306]
+    text: "HOW ARE YOU FEELING? Under it, in soft white-violet: 99.97%."
+  - id: sedation-cart
+    name: The cart
+    at: [3.84, 6.54, 0.8]
+    closeup: [518, 554]
+    text: A tidy cart of sedatives. Several vials are already drawn.
+# The Key's "what's where". Only the GM sees these.
+pins:
+  - {k: "1", label: Violet cross, at: [1.7, -1.2, 2.5]}
+  - {k: "2", label: "99.97%, and the screen asking how you feel", at: [7.4, -1.2, 2.5]}
+  - {k: "3", label: Beds where they wake up, at: [0.68, 3.98, 0.6]}
+  - {k: "4", label: "The nurse's counter", at: [7.64, 4.04, 1]}
+  - {k: A, label: Straps on each bed, at: [0.78, 5.18, 0.6]}
+  - {k: B, label: Sedation cart, at: [3.84, 6.54, 0.8]}
+  - {k: C, label: PROMENADE on the floor by the door, at: [9.84, 7.44, 0]}
+# Where the crew land when you send them here: one to a bed, waking up, in crew order.
+arrive: [[1.4, 1.1, 0.6], [1.4, 2.9, 0.6], [1.4, 4.7, 0.6], [1.4, 6.5, 0.6], [1.4, 8.3, 0.6]]

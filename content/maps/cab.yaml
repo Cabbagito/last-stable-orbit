@@ -1,0 +1,33 @@
+# The crawler cab, from the Maps canvas (board "SmallCab", key in "SmallKey"). Bigger inside than the cab drawn
+# on the Lift map. Art is 560x410, drawn at 2x. The shared isometric formula, with origin (250, 140).
+id: cab
+name: The crawler cab
+subtitle: Down the cable
+description: >-
+  The inside of the crawler cab seen from above at an angle: a row of seats under a long window on the black
+  hole, a glowing panel with a clock on the left wall, hand poles and an open door. The hole grows in the window
+  as you descend.
+display: [1120, 820]
+origin: [250, 140]
+order: 9
+hum: none
+moods:  # how far down: the clock reads 1.00×, 0.58× (an estimate), then 0.31×
+  - {id: top, label: Top, base: maps/cab/base-top.png, glow: maps/cab/glow-top.png}
+  - {id: mid, label: Halfway, base: maps/cab/base-mid.png, glow: maps/cab/glow-mid.png}
+  - {id: bottom, label: Bottom, base: maps/cab/base-bottom.png, glow: maps/cab/glow-bottom.png}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: clock
+    name: The clock
+    at: [-1.44, 2.06, 2.5]
+    closeup: [290, 119]
+    text: The cab's clock against the station's. It reads 1.00× at the top of the cable, and it falls the further down you go.
+# The Key's "what's where". Only the GM sees these.
+pins:
+  - {k: "1", label: "Clock: 1.00×, 0.58×, 0.31× (0.58× is an estimate)", at: [-1.44, 2.06, 2.5]}
+  - {k: "2", label: Window on the hole; the mood is the depth, at: [2.46, -2.04, 2]}
+  - {k: "3", label: "Door, open behind you", at: [8.16, 2.66, 1.2]}
+  - {k: A, label: "Seats and panel, matching the cab outside", at: [1.84, -0.56, 0.8]}
+  - {k: B, label: Hand poles, at: [1.84, 0.64, 1.5]}
+  - {k: C, label: The cable rushing past in the window, at: [5.06, -2.04, 2]}
+# Where the crew land when you send them here: the board's places, in crew order.
+arrive: [[2.4, 2.4, 0], [4.8, 2.0, 0], [6.8, 3.0, 0], [2.4, 4.8, 0], [5.0, 5.0, 0]]

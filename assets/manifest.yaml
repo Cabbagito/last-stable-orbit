@@ -679,3 +679,241 @@ assets:
     bytes: 31522
     width: 96
     height: 96
+  - path: maps/executive/base-office.png
+    store: MAPS
+    asset_id: "064450cbfb7574ef8c2309d94e42de36"
+    sha256: "73ed55cea2ba214352892e8d85313676432d42135eb45b8b251f40a3ed423db3"
+    bytes: 253095
+    width: 840
+    height: 1880
+  - path: maps/executive/glow-office.png
+    store: MAPS
+    asset_id: "3470a4b828eb08660f0b624cae509f96"
+    sha256: "d0df8fc8b52fa9fec4540107dcc59aa1b870c9f5fd8426b32d1c742be10e1b06"
+    bytes: 87541
+    width: 840
+    height: 1880
+  - path: maps/executive/base-night.png
+    store: MAPS
+    asset_id: "e865157c597e4c208a29a860e6470b76"
+    sha256: "be7a3de3f3d1792ac7bc8adf835549a97be1b45217a53b1e6af22b6f4ac5cbe4"
+    bytes: 227825
+    width: 840
+    height: 1880
+  - path: maps/executive/glow-night.png
+    store: MAPS
+    asset_id: "9b34477bb0c45a8313b1b4735cb3225e"
+    sha256: "53fc53e5843da53294a240c366bb7c5e4ba10afb5a4352d19cf1e81526cd5d00"
+    bytes: 67588
+    width: 840
+    height: 1880
+  - path: maps/executive/base-alert.png
+    store: MAPS
+    asset_id: "5110994211bb4f831c4903426310ceb6"
+    sha256: "3baed144d59f74c609eee502af2494a36b81ebd4770513bc82846310d4a2b546"
+    bytes: 278943
+    width: 840
+    height: 1880
+  - path: maps/executive/glow-alert.png
+    store: MAPS
+    asset_id: "002a50feb29b3b3bac7b56771403021e"
+    sha256: "aff467781078d9268c2ebf3e01aea538387227fd85b9be8176e9c0f5cb0d9384"
+    bytes: 95071
+    width: 840
+    height: 1880
+  - path: maps/secure/base-quiet.png
+    store: MAPS
+    asset_id: "78dd28e91dbae05fda50336e7943eb51"
+    sha256: "84370f7cc7b41e2ab6f89717d8c41df9c935ad76f6bf1079a07d6d200cc43820"
+    bytes: 165212
+    width: 1460
+    height: 890
+  - path: maps/secure/glow-quiet.png
+    store: MAPS
+    asset_id: "c52596a119084898b7910ab2cf47ad0d"
+    sha256: "53ea173f2f0ceb0f81b4b7fec521902d575df159569aa7c0c1bcf674b5af30bf"
+    bytes: 31520
+    width: 1460
+    height: 890
+  - path: maps/secure/base-alert.png
+    store: MAPS
+    asset_id: "3cc019bd80f2dc462bc67555458cdf60"
+    sha256: "deb53cb820400c5d148e4afeb06c28720ac4a214d5f47bff9cb704bbf4c4e217"
+    bytes: 174851
+    width: 1460
+    height: 890
+  - path: maps/secure/glow-alert.png
+    store: MAPS
+    asset_id: "2d9fce3ddf7de882b8a85062678505ab"
+    sha256: "85be67747ca642e61e3edbd9dcc3867e8420b7a5011e348a677edd2a3bd15e2d"
+    bytes: 45775
+    width: 1460
+    height: 890
+  - path: maps/lift/base-shut.png
+    store: MAPS
+    asset_id: "32e181ffe538a454a2f6b5735af1a00c"
+    sha256: "068cd46a18760b35737e26b290c0d5f16167d66d8b15d88b225aa3e085c055e0"
+    bytes: 196631
+    width: 1760
+    height: 1020
+  - path: maps/lift/glow-shut.png
+    store: MAPS
+    asset_id: "cf39c4cef870849f73cbb9f314499e0f"
+    sha256: "fe6c22ec11cfb3f3bb84892adf30ce502ed806bfe427fff2686adfb05c0d53f6"
+    bytes: 117067
+    width: 1760
+    height: 1020
+  - path: maps/lift/base-open.png
+    store: MAPS
+    asset_id: "d6fdf44bf23147b3b9b413e603a28c1d"
+    sha256: "1c87823abdb6001d7f45caa3293b13d95b185a0180a813cc7a4711a497d91728"
+    bytes: 199969
+    width: 1760
+    height: 1020
+  - path: maps/lift/glow-open.png
+    store: MAPS
+    asset_id: "e8d066cc1ef5cfc2dffbf5e70d76f214"
+    sha256: "eff7b05d5121dfdece341bdc6b4d50fc90af72a67e54fc6e15d016f468c3e62f"
+    bytes: 119647
+    width: 1760
+    height: 1020
+  - path: maps/vault/base.png
+    store: MAPS
+    asset_id: "57b825c4b52cca81a58025ee9f015dd3"
+    sha256: "45da068ae5b5d302c2847e7ac59424385b9fcf3016145f2d20dcf6c3fb3ee856"
+    bytes: 112359
+    width: 740
+    height: 520
+  - path: maps/vault/glow.png
+    store: MAPS
+    asset_id: "79ac2f7c80e25824a191871c173b5fc5"
+    sha256: "b3d8be657eedeb3f1674f3f62d89af5255629b41c04463fbd8cb428d75e7229a"
+    bytes: 12649
+    width: 740
+    height: 520
+  - path: maps/terminal/base-empty.png
+    store: MAPS
+    asset_id: "52fd9f21fe95941cda5285abd7156218"
+    sha256: "961eb549b6a60d7e627e7139be11756f216843224425253c7f6942442bde0740"
+    bytes: 49359
+    width: 950
+    height: 845
+  - path: maps/terminal/base-isco.png
+    store: MAPS
+    asset_id: "75144b680620a0b51d467acfc0e4373c"
+    sha256: "9a88f25f376cb55f2b39ebf0f598bb201fa73abb792e7796ce93d48eb9c4dc3f"
+    bytes: 50679
+    width: 950
+    height: 845
+  - path: maps/terminal/base-seal.png
+    store: MAPS
+    asset_id: "cd21c7c40b9c70de685dc56f5940ada7"
+    sha256: "c5da929bdcb3f7f7e55c0e623e6bf3a6deac8cefdce9ab3a7740122e958ce54d"
+    bytes: 50697
+    width: 950
+    height: 845
+  - path: maps/terminal/glow-dark.png
+    store: MAPS
+    asset_id: "6c2c1a143da3d0e8f3f3d2f7e1502154"
+    sha256: "b19f5a59eea6539b4c9e35478feb820c3f038c8b74b95d249aff15aa1d291f2e"
+    bytes: 50288
+    width: 950
+    height: 845
+  - path: maps/terminal/glow-seal.png
+    store: MAPS
+    asset_id: "a3adcdcd8a6ab33c68291a3cfaf6d8ca"
+    sha256: "dddf10b7be94113b94056d8d2c6de39659deffc9d4de39a4095b12c99642b269"
+    bytes: 78017
+    width: 950
+    height: 845
+  - path: maps/terminal/face.gif
+    store: MAPS
+    asset_id: "d71a9765839e411c5f5bbabd2cb73296"
+    sha256: "7111155a6fefa8c3b59c1f7fab535447d5972dfda03fb2c16381a7e9f6374127"
+    bytes: 82425
+    width: 96
+    height: 96
+  - path: maps/bots/base.png
+    store: MAPS
+    asset_id: "e7c62a971ba10a29b67a91d1016b3139"
+    sha256: "2c21f97f5fce9397e9afd53fa3de60b81a73248a56b83a628302b3b7a0c229c1"
+    bytes: 52826
+    width: 800
+    height: 540
+  - path: maps/bots/glow.png
+    store: MAPS
+    asset_id: "ed52e252fcf9d3d3efac32979f47112a"
+    sha256: "c0ae4dc7fb7e2912ecf2a90d44279666d60bade9fe1314b7662e8a6b96f4d241"
+    bytes: 15827
+    width: 800
+    height: 540
+  - path: maps/cab/base-top.png
+    store: MAPS
+    asset_id: "8efc02491851c68a4accee84a32f0722"
+    sha256: "03062f7f42e2591b9e873779e22379f6e08c6ceefbaf87aa0ab22d09be7d7d3c"
+    bytes: 26209
+    width: 560
+    height: 410
+  - path: maps/cab/glow-top.png
+    store: MAPS
+    asset_id: "6d1913fd9df145c0d0cff2c834374b47"
+    sha256: "2991db3ff05bec383a77d6013c6244290d6eff05b738dc0852387cde04329f25"
+    bytes: 31121
+    width: 560
+    height: 410
+  - path: maps/cab/base-mid.png
+    store: MAPS
+    asset_id: "f5fd7339a9ab57344a2cc23e4e1d625d"
+    sha256: "656b254cd59c1559feac1e083b3f45b91586d90d2059621ccc98f28737ab67d0"
+    bytes: 29174
+    width: 560
+    height: 410
+  - path: maps/cab/glow-mid.png
+    store: MAPS
+    asset_id: "99e34ca1e81492c9c400bfa9989a5833"
+    sha256: "c8d3b4a1997b45e775db05596cdb6f7a6f78624420cf3a32a787e69050446d98"
+    bytes: 31796
+    width: 560
+    height: 410
+  - path: maps/cab/base-bottom.png
+    store: MAPS
+    asset_id: "a7385f4d6878f53dcf0fb332911653bc"
+    sha256: "9e0fc18245085f823a38b91939ff507103f57ef14cc9333a834860ff591b96df"
+    bytes: 24651
+    width: 560
+    height: 410
+  - path: maps/cab/glow-bottom.png
+    store: MAPS
+    asset_id: "f89912ee531392f080fbbb076896ae76"
+    sha256: "db0083e112aacde702f40ca49be2c839748e728d6c6bb4a9e7912b8d28483ac8"
+    bytes: 23608
+    width: 560
+    height: 410
+  - path: maps/med/base.png
+    store: MAPS
+    asset_id: "7fe9fc9dfd84cfee16c5dd7b9f46ff4d"
+    sha256: "36c5f7b6bdcd87b18dd6bd5a6e2c8aeac7c305d9bb47317505e6707d1f4ec93b"
+    bytes: 26962
+    width: 770
+    height: 525
+  - path: maps/med/glow.png
+    store: MAPS
+    asset_id: "fa9054ebd5346cf7bd958be0d94f0857"
+    sha256: "78e92b582781cafd7a14d79c5e920e17f9d825517a0634d8fe5849a5cf678d79"
+    bytes: 42537
+    width: 770
+    height: 525
+  - path: portraits/scientist.gif
+    store: PORTRAITS
+    asset_id: "1be6c12756f05593abc24b335575075a"
+    sha256: "b08cb9760e7dfc185bbcc704486c5a27f113dd8d5bd53ee6c503a81eda0336dc"
+    bytes: 53597
+    width: 96
+    height: 96
+  - path: portraits/spider-mech.gif
+    store: PORTRAITS
+    asset_id: "2799faf7bd8e9ee5c221b7749b41e32b"
+    sha256: "88aed322e195e66b68c98a9bd93dcd387c0f7f635eb54b6c92321341f4292ce6"
+    bytes: 34401
+    width: 128
+    height: 128
