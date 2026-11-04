@@ -19,13 +19,15 @@ from .content import load_content
 from .engine import Engine
 from .hub import Hub
 from .store import Store
+from .views import url
 
 log = logging.getLogger("lso")
 PUBLIC_ASSET_DIRS = ("icons/",)  # stat icons, dice, items: no spoilers, any logged-in seat may fetch
 
 
 class LoginBody(BaseModel):
-    passcode: str
+    seat: str | None = None  # a character id: players just pick who they are
+    passcode: str | None = None  # the GM's passcode
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -34,12 +36,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         content = load_content(settings.content_dir, settings.assets_dir)
-        unknown = [s.id for s in settings.seats if s.role == "player" and s.id not in content.characters]
-        if unknown:
-            raise RuntimeError(f"LSO_PASSCODES has seats with no character: {unknown}")
         store = Store(settings.data_dir / "lso.db")
         engine = Engine(content, store)
-        app.state.auth = Auth(settings)
+        app.state.auth = Auth(settings, content.characters)
+        # the character picker shows the crew before anyone is logged in
+        app.state.login_assets = {c.portrait for c in content.characters.values()}
         app.state.engine = engine
         app.state.hub = Hub(engine)
         log.info("ready: %d maps, %d tokens, seq %d", len(content.maps), len(engine.state.tokens), engine.state.seq)
@@ -58,11 +59,30 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def healthz():
         return {"ok": True}
 
+    @app.get("/api/seats")
+    async def seats(request: Request):
+        """The character picker: who can be chosen, and who is already on board."""
+        engine: Engine = request.app.state.engine
+        online = {c.viewer.seat for c in request.app.state.hub.conns}
+        return {
+            "crew": [
+                {"id": c.id, "name": c.name, "short": c.short, "role": c.role, "portrait": url(c.portrait), "color": c.color, "online": c.id in online}
+                for c in engine.content.characters.values()
+            ],
+            "gm_online": "gm" in online,
+        }
+
     @app.post("/api/login")
     async def login(body: LoginBody, request: Request, response: Response):
-        v = request.app.state.auth.check_passcode(body.passcode)
-        if not v:
-            raise HTTPException(401, "That passcode doesn't open anything.")
+        auth: Auth = request.app.state.auth
+        if body.seat and body.seat != "gm":
+            v = auth.player(body.seat)
+            if not v:
+                raise HTTPException(404, "No one by that name is on this crew.")
+        else:
+            v = auth.check_gm(body.passcode or "")
+            if not v:
+                raise HTTPException(401, "That passcode doesn't open anything.")
         response.set_cookie(
             COOKIE,
             request.app.state.auth.issue(v),
@@ -89,13 +109,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/assets/{path:path}")
     async def asset(path: str, request: Request):
         v = viewer_from(request)
-        if not v:
-            raise HTTPException(401)
         root = settings.assets_dir.resolve()
         f = (root / path).resolve()
-        if not f.is_relative_to(root) or not f.is_file():
+        rel = f.relative_to(root).as_posix() if f.is_relative_to(root) else ""
+        if not v:
+            if rel in request.app.state.login_assets and f.is_file():
+                return FileResponse(f, headers={"Cache-Control": "private, max-age=86400"})
+            raise HTTPException(401)
+        if not rel or not f.is_file():
             raise HTTPException(404)
-        rel = f.relative_to(root).as_posix()
         if not v.is_gm and not rel.startswith(PUBLIC_ASSET_DIRS) and rel not in request.app.state.hub.allowed_assets(v):
             raise HTTPException(404)  # same answer as a missing file: guessing a URL tells you nothing
         return FileResponse(f, headers={"Cache-Control": "private, max-age=86400"})

@@ -2,19 +2,19 @@
 
 Companion app for *Last Stable Orbit*, a sci-fi tabletop campaign: a crew hired to break into a dead man's vault on Ergo, a station hanging above a black hole.
 
-One server holds the game state. Every player's laptop shows a live view of it through a WebSocket, and the GM gets a view with extra controls. Players log in with a passcode and stay logged in.
+One server holds the game state. Every player's laptop shows a live view of it through a WebSocket, and the GM gets a view with extra controls. Players pick their character on the login screen and stay logged in; only the GM types a passcode.
 
 ## Run it
 
 You need Docker. The server tests also need [uv](https://docs.astral.sh/uv/).
 
 ```bash
-make env     # once: writes .env with a random secret and a passcode per seat
-make up      # builds and starts the app on http://localhost:8070
-make passcodes
+make env       # once: writes .env with a random secret and the GM passcode
+make up        # builds and starts the app on http://localhost:8070
+make passcode  # shows the GM passcode
 ```
 
-Open http://localhost:8070 and type a passcode. To try two seats on one machine, use two browsers, or http://localhost:8070 and http://127.0.0.1:8070 (they keep separate logins). Laptops on your network can use `http://<your-mac's-ip>:8070`.
+Open http://localhost:8070 and click a character, or choose "I'm the GM" and type the passcode. To try two seats on one machine, use http://localhost:8070 for one and http://127.0.0.1:8070 for the other (they keep separate logins), or a private window. Laptops on your network can use `http://<your-mac's-ip>:8070`. "Change character" in the header goes back to the picker.
 
 | Command | What it does |
 |---|---|

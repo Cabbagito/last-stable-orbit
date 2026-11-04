@@ -41,7 +41,7 @@ export function Header({ tab, isGm, onLogout }: { tab: Tab; isGm: boolean; onLog
         </span>
         {me && <span className="r4-lab">{me.role === 'gm' ? 'GM' : me.seat.toUpperCase()}</span>}
         <button type="button" className="app-link" onClick={onLogout}>
-          Log out
+          {isGm ? 'Log out' : 'Change character'}
         </button>
       </div>
     </header>

@@ -1,9 +1,9 @@
 # Last Stable Orbit. Everything runs in Docker except the server tests (uv).
-.PHONY: help env passcodes up down logs dev test test-server test-web reset-world
+.PHONY: help env passcode passcodes up down logs dev test test-server test-web reset-world
 
 help:
-	@echo "make env          write .env with a random secret and passcodes (once)"
-	@echo "make passcodes    show the passcodes in .env"
+	@echo "make env          write .env with a random secret and a GM passcode (once)"
+	@echo "make passcode     show the GM passcode (players just pick their character)"
 	@echo "make up           build and run the app on http://localhost:8070"
 	@echo "make logs         follow the app's logs"
 	@echo "make down         stop everything"
@@ -14,8 +14,8 @@ help:
 env:
 	python3 scripts/make_env.py
 
-passcodes:
-	@grep '^LSO_PASSCODES=' .env | cut -d= -f2- | tr ',' '\n' | sed 's/=/   /'
+passcode passcodes:
+	@grep '^LSO_GM_PASSCODE=' .env | cut -d= -f2-
 
 up:
 	docker compose up --build -d app

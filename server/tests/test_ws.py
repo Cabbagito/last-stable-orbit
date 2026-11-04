@@ -26,7 +26,7 @@ def test_ws_requires_login(client):
 
 
 def test_ws_rejects_foreign_origin(client, seat):
-    h = seat("ves-code") | {"origin": "http://evil.example"}
+    h = seat("ves") | {"origin": "http://evil.example"}
     with client.websocket_connect("/ws", headers=h) as ws:
         with pytest.raises(WebSocketDisconnect) as e:
             ws.receive_json()
@@ -34,7 +34,7 @@ def test_ws_rejects_foreign_origin(client, seat):
 
 
 def test_move_reaches_everyone_and_hidden_never_leaks(client, seat):
-    gm, ves = seat("gm-code"), seat("ves-code")
+    gm, ves = seat("gm"), seat("ves")
     with client.websocket_connect("/ws", headers=gm) as g, client.websocket_connect("/ws", headers=ves) as v:
         gv = recv(g, "view")["view"]
         vv = recv(v, "view")["view"]
@@ -72,7 +72,7 @@ def test_move_reaches_everyone_and_hidden_never_leaks(client, seat):
 
 
 def test_hidden_moves_send_players_nothing(client, seat):
-    gm, ves = seat("gm-code"), seat("ves-code")
+    gm, ves = seat("gm"), seat("ves")
     with client.websocket_connect("/ws", headers=gm) as g, client.websocket_connect("/ws", headers=ves) as v:
         recv(g, "view"), recv(v, "view")
         intent(g, "gm.token.hide", {"token": "cleaner-14", "hidden": True}, "a")
@@ -85,7 +85,7 @@ def test_hidden_moves_send_players_nothing(client, seat):
 
 
 def test_reconnect_gets_current_state(client, seat):
-    gm = seat("gm-code")
+    gm = seat("gm")
     with client.websocket_connect("/ws", headers=gm) as g:
         recv(g, "view")
         intent(g, "gm.map.mood", {"map": "event-horizon", "mood": "after"}, "x")

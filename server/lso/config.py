@@ -1,7 +1,7 @@
 """Settings, read once from the environment.
 
-Every player seat is named after its character id (lale, marlo, ...); the GM seat is "gm".
-Passcodes live only in the environment (.env locally, Railway variables later), never in git.
+Players pick their character on the login screen; the seats are the characters in content/.
+Only the GM seat has a passcode, and it lives in the environment (.env locally, Railway later).
 """
 
 from __future__ import annotations
@@ -14,16 +14,9 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 @dataclass(frozen=True)
-class Seat:
-    id: str  # "gm" or a character id
-    role: str  # "gm" | "player"
-    passcode: str
-
-
-@dataclass(frozen=True)
 class Settings:
     secret: str
-    seats: tuple[Seat, ...]
+    gm_passcode: str
     data_dir: Path
     content_dir: Path
     assets_dir: Path
@@ -32,38 +25,22 @@ class Settings:
     auth_epoch: int = 1
     allowed_origins: tuple[str, ...] = ()
 
-    def seat(self, seat_id: str) -> Seat | None:
-        return next((s for s in self.seats if s.id == seat_id), None)
-
 
 class SettingsError(RuntimeError):
     pass
 
 
-def parse_passcodes(raw: str) -> tuple[Seat, ...]:
-    """Parse "gm=ember-1234,lale=quiet-5678" into seats."""
-    seats: list[Seat] = []
-    seen: set[str] = set()
-    for part in raw.split(","):
-        part = part.strip()
-        if not part:
-            continue
-        seat_id, _, code = part.partition("=")
-        seat_id, code = seat_id.strip().lower(), code.strip()
-        if not seat_id or not code:
-            raise SettingsError(f"LSO_PASSCODES entry {part!r} must look like seat=passcode")
-        if seat_id in seen:
-            raise SettingsError(f"LSO_PASSCODES lists seat {seat_id!r} twice")
-        seen.add(seat_id)
-        seats.append(Seat(seat_id, "gm" if seat_id == "gm" else "player", code))
-    codes = [s.passcode.lower() for s in seats]
-    if len(set(codes)) != len(codes):
-        raise SettingsError("LSO_PASSCODES: two seats share a passcode")
-    return tuple(seats)
-
-
 def _flag(value: str | None) -> bool:
     return (value or "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _legacy_gm(raw: str) -> str:
+    """Older .env files had LSO_PASSCODES=gm=...,lale=...; only the gm entry still matters."""
+    for part in raw.split(","):
+        seat, _, code = part.partition("=")
+        if seat.strip().lower() == "gm":
+            return code.strip()
+    return ""
 
 
 def load_settings(env: dict[str, str] | None = None) -> Settings:
@@ -71,13 +48,13 @@ def load_settings(env: dict[str, str] | None = None) -> Settings:
     secret = env.get("LSO_SECRET", "").strip()
     if len(secret) < 16:
         raise SettingsError("LSO_SECRET is missing or shorter than 16 characters. Run `make env`.")
-    seats = parse_passcodes(env.get("LSO_PASSCODES", ""))
-    if not any(s.role == "gm" for s in seats):
-        raise SettingsError("LSO_PASSCODES needs a gm=... entry. Run `make env`.")
+    gm = env.get("LSO_GM_PASSCODE", "").strip() or _legacy_gm(env.get("LSO_PASSCODES", ""))
+    if not gm:
+        raise SettingsError("LSO_GM_PASSCODE is missing. Run `make env`.")
     origins = tuple(o.strip().rstrip("/") for o in env.get("LSO_ALLOWED_ORIGINS", "").split(",") if o.strip())
     return Settings(
         secret=secret,
-        seats=seats,
+        gm_passcode=gm,
         data_dir=Path(env.get("LSO_DATA_DIR", ROOT / "data")),
         content_dir=Path(env.get("LSO_CONTENT_DIR", ROOT / "content")),
         assets_dir=Path(env.get("LSO_ASSETS_DIR", ROOT / "assets")),
