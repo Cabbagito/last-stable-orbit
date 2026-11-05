@@ -13,7 +13,7 @@
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
 | M6: Station and Codex tabs | **Built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex and Station texts, and the Codex's card crops, are drafts for Peter, who hasn't tried either tab yet |
 | M7: Ship for session 1 | Not started. Peter is leaving it for later; it has to happen before game day, when the app first goes online |
-| M8: Fights | **Designing** 2026-11-05: Peter cut it down (see M8). Next: the change animations and maybe a turn order |
+| M8: Fights | **Designing** 2026-11-05: Peter cut it down (see M8). Round 14 on the UI canvas draws the change animations, enemy rings and a spotlight; waiting on Peter's picks |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -506,6 +506,16 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
      - credits gained, credits lost;
      - and an enemy's ring losing or regaining HP.
   3. **Maybe a turn order:** a way to show whose turn it is in a fight. Whether it's worth having, and where it goes, is part of the design.
+- **Round 14 on the UI canvas** (page "Round 14", drawn 2026-11-05, waiting on Peter's picks):
+  - **Changes on the chip,** three looks. Each board plays the same ten changes in the crew rail and on the map, on a loop:
+    - `R14ChipRing` (A): the ring itself tells it. Lost segments flash and break off, new ones light up, and a number floats away. An item drops into the portrait, or rises out of it struck through;
+    - `R14ChipCallout` (B): a callout beside the ring in the roll callout's language (HIT −1, HEALED +3, ENTROPY +1, GOT and the item, CREDITS +50, DOWN), fading after about 3 s;
+    - `R14ChipReact` (C): the chip reacts. A hit shakes it with a red flash (and a crack for 3), a heal or a spend sends out a wave, Entropy orbits in, and an item lands on it as a badge.
+  - **Enemy rings** (`R14Enemies`): the faction ring outside a fight; switched on, one segment per health in the faction colour (a tweak tries green). Hits take segments off; the guard goes down; the spider mech's notch at 6, which only the GM sees, and its shell cracking at 6. A tweak gives the fixer an Entropy ring. The GM's card on the right works: Health ring on/off and a health stepper.
+  - **Whose turn it is** (the bible has no initiative: Peter moves the spotlight, and an enemy acts after each player). Each board loops a round: Ves, an enemy, Tomo, an enemy, and so on:
+    - `R14SpotA`: a pool of light under whoever has the spotlight, a white rim on their ring, and everyone else dims;
+    - `R14SpotB`: the same without dimming, plus a tick on the crew who've had a go this round, and a GM-only New round button;
+    - `R14SpotC`: a turn strip along the top (NOW, NEXT, then the rest), with an enemy slot after each player.
 - **To decide at the design pass:**
   - **Where the animations play:** the crew rail ring, the token's head on the map, the sheet, the TV.
   - **Who sees the item and credit animations.** Players see only their own pockets, so the default is that only the holder and the GM see those; HP and Entropy changes are public.
