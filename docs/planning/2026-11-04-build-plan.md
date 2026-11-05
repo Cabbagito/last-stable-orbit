@@ -12,7 +12,9 @@
 | Stage: the TV and cutscenes | **Done** 2026-11-04. Peter tried it: "looks good and works well". The TV logs in with one click, no passcode. See "How Stage turned out" |
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
 | M6: Station and Codex tabs | **Built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex and Station texts, and the Codex's card crops, are drafts for Peter, who hasn't tried either tab yet |
-| M7–M9 | Not started |
+| M7: Ship for session 1 | Not started. Peter is leaving it for later; it has to happen before game day, when the app first goes online |
+| M8: Fights | **Designing** 2026-11-05: Peter cut it down (see M8). Next: the change animations and maybe a turn order |
+| M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
 - **In the data now:** each character has three skills in one unlabelled list, with what each covers and a downside that happens every time a roll using it fails. Ves carries a stun pistol and Marlo carries stun rings; both roll Reflex and put people down without killing them. Everyone starts with one signature item: Lale's fob watch, Marlo's rings, Tally's notebook, Ves's pistol, Tomo's sourdough starter. The skill icons come from the Icons canvas, board "Skills".
@@ -21,7 +23,7 @@
   - Burns, from the Burn animations canvas (https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg): the Burn row under the name, held for half a second, spends 2 Entropy and plays the character's film, on the TV or on every laptop when there's no TV. Ves picks between her two cuts. Tally's Recount also sits on his roll screen beside Push. Tomo's row pulses for 5 s after one of the others is hurt, Tally's after a die lands. A film's last frame holds for 0.75 s. With a TV the laptops stay on the game (no black hole, unlike a cutscene); every laptop marks the burner's token and rail ring (BURN, the icon and the name, in the Burn's colour, with a flare ring) until 4 s after the film. Peter applies what a Burn does by hand;
   - a failed skill's downside on the TV: Peter presses Failed on the crew ring (a natural 1 always fails). Without a TV it shows on every laptop;
   - enemy cards: the spider mech has 13 health and cracks at 6, and the fixer has 10.
-- **Not built:** what happens at the target's token after a Burn's film (+3 for On your feet, the pink mark for Cheap shot, Ves going faint). The Burn board calls these the target's part; they need a target, so they wait for a design.
+- **Dropped 2026-11-05:** what happens at the target's token after a Burn's film (+3 for On your feet, the pink mark for Cheap shot, Ves going faint). Peter applies a Burn by hand, for example +3 HP, and M8's change animations show it on the chip.
 
 **How M1 differs from the plan below** (this section wins where they disagree):
 - **Login:** players pick their character on a picker screen, and only the GM types a passcode (`LSO_GM_PASSCODE`). This replaces the per-player passcodes in "Auth flow".
@@ -488,15 +490,30 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - A restore from backup reproduces the exact state.
 - **Why here:** it is the last gate before session 1. Move Railway earlier if players should read the Codex at home first.
 
-### M8: Fights and big moments · M · single session (one subagent for the rules tests)
-- **Goal:** the rest of the Entropy economy, and fights.
+### M8: Fights · M · design first (the change animations, maybe a turn order), then a single session
+- **Goal:** Peter runs a fight with the controls he already has, and the table sees every change happen.
+- **Decided 2026-11-05 (Peter). This replaces the earlier M8:**
+  - **The app knows nothing about the fight.** There is no number to beat, no damage by margin, no attack roll against a target, no "who hits whom", and no fight on/off. Peter names the check out loud ("that's a Very hard Reflex check") and the table plays it out. Enemy rolls stay as they are: the GM rolls the NPC's stat.
+  - **Peter applies every result by hand** with the HP and Entropy steppers, as he already does. On your feet's +3 is him raising the number; damage landing on Tomo (Not them) is him lowering it.
+  - **Players spend Entropy and Burn whenever they want.** Nothing is locked to a fight, so there's no "once per fight". If someone spends by mistake, Peter refunds it.
+  - **The other Entropy spends** (I know a guy 2, Last stand 3, and Team-up if it costs any): Peter leans towards the GM taking them off with the Entropy stepper, with no player buttons. Push and the Burn row keep their player buttons. Confirm at the design pass.
 - **In it:**
-  - Enemy cards (health, attack die, check to hit), and GM attack rolls.
-  - Damage by margin (0–4 = 1, 5–9 = 2, 10+ = 3), applied when you confirm it. Revisit before M8: Peter wants no difficulty in the app, so the number to beat may stay spoken too.
-  - Team-up: each person rolls on their own screen and the totals add on a shared full-screen roll.
-  - "I know a guy" (2 Entropy), Last stand (3, once per fight), and an "out" state at 0 HP.
-- **Done when:** the damage tiers pass a table-driven test, and Last stand is refused the second time in a fight.
-- **Why here:** session 1 has no fight. It is needed before the first fight, session 2 at the earliest.
+  1. **Enemy rings.** An NPC token can carry an HP ring like the crew's (maybe Entropy too). The GM switches it on per NPC, so nobody has a ring outside a fight. Enemies need a health in `content/npcs.yaml`: today it's only in the GM notes (guard 1, hired gun 4, spider mech 13 that cracks at 6, the fixer 10). Players see a ring once it's on.
+  2. **Change animations on the chips.** Every change the GM makes plays an animation on that character's chip, so it isn't just a number going up or down:
+     - HP lost, HP healed;
+     - Entropy gained, Entropy spent;
+     - an item received, an item taken;
+     - credits gained, credits lost;
+     - and an enemy's ring losing or regaining HP.
+  3. **Maybe a turn order:** a way to show whose turn it is in a fight. Whether it's worth having, and where it goes, is part of the design.
+- **To decide at the design pass:**
+  - **Where the animations play:** the crew rail ring, the token's head on the map, the sheet, the TV.
+  - **Who sees the item and credit animations.** Players see only their own pockets, so the default is that only the holder and the GM see those; HP and Entropy changes are public.
+  - **0 HP:** whether the ring and token get a "down" look.
+  - **Team-up:** whether it needs anything in the app, or the players just add their totals out loud.
+  - **The turn order:** who sets it (the GM drags the order, or it follows a roll), and whether the TV shows it.
+- **Done when:** set after the design pass.
+- **Why here:** session 1 has no fight. It's needed before the first fight, session 2 at the earliest.
 
 ### M9: Finale screen · S · single session after a design review
 - **Goal:** Terminal SEAL IN, with a station feed you type or queue and two clocks (the station runs about 3.2× faster).
