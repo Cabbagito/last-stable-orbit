@@ -338,6 +338,12 @@ def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: fl
             return []
         return [("stage.camera_set", {"camera": camera, "follow": follow})]
 
+    if kind == "gm.stage.join":
+        show = args.get("show")
+        if not isinstance(show, bool):
+            raise _invalid("show must be true or false")
+        return [] if show == state.stage.join else [("stage.join_set", {"show": show})]
+
     raise _invalid(f"unknown intent {kind!r}")
 
 

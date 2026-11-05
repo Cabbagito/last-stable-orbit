@@ -270,6 +270,22 @@ export interface CueView {
   played: boolean
 }
 
+export interface JoinQr {
+  size: number // modules a side
+  path: string // an SVG path
+}
+
+/** The join card: only the TV and the GM get it, and only when the server has one. */
+export interface JoinView {
+  show: boolean // on the TV
+  url: string
+  url_qr: JoinQr
+  fallback: string
+  ssid?: string
+  password?: string
+  wifi_qr?: JoinQr
+}
+
 export interface StageView {
   setup: Setup
   camera: Camera
@@ -279,6 +295,7 @@ export interface StageView {
   tv?: boolean // GM only: the TV is connected
   cues?: CueView[] // GM only
   films?: string[] // the TV only: every film, fetched ahead
+  join?: JoinView
 }
 
 /** Someone in a fight (M8). An NPC's health is sent only here, while it's in a fight. */

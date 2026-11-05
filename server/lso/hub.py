@@ -34,8 +34,9 @@ def _dump(obj) -> str:
 
 
 class Hub:
-    def __init__(self, engine: Engine):
+    def __init__(self, engine: Engine, join: dict | None = None):
         self.engine = engine
+        self.join = join  # the join card, from the environment; project() decides who gets it
         self.conns: set[Conn] = set()
         self._asset_cache: dict[str, tuple[int, set[str]]] = {}
 
@@ -58,7 +59,7 @@ class Hub:
             log.debug("send to %s failed", c.viewer.seat)
 
     async def send_view(self, c: Conn, force: bool = False) -> None:
-        view = project(self.engine.state, self.engine.content, c.viewer, frozenset(self.online()))
+        view = project(self.engine.state, self.engine.content, c.viewer, frozenset(self.online()), self.join)
         body = _dump(view)
         h = hashlib.sha256(body.encode()).hexdigest()
         if h == c.last_hash and not force:

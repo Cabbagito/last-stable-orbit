@@ -12,7 +12,7 @@
 | Stage: the TV and cutscenes | **Done** 2026-11-04. Peter tried it: "looks good and works well". The TV logs in with one click, no passcode. See "How Stage turned out" |
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
 | M6: Station and Codex tabs | **Built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex and Station texts, and the Codex's card crops, are drafts for Peter, who hasn't tried either tab yet |
-| M7: Ship for session 1 | Not started. Peter is leaving it for later; it has to happen before game day, when the app first goes online |
+| M7: Ship for session 1 | **Hosting decided** 2026-11-05: parker at http://parker.local instead of Railway, with a join card on the TV (the README's "Hosting it at the table"). Backups and the layout checks are not started |
 | M8: Fights | **Built** 2026-11-05 and checked on :8071 with four seats (the GM, Tomo, Ves and the TV); see "How M8 turned out" in M8. Deployed to 8070 the same day. NPC health beyond the bible's enemy cards is drafts |
 | M9: Finale screen | Not started |
 

@@ -24,6 +24,11 @@ class Settings:
     secure_cookies: bool = False
     auth_epoch: int = 1
     allowed_origins: tuple[str, ...] = ()
+    # the join card on the TV (see join.py): nothing shows without a url
+    join_url: str = ""
+    join_fallback: str = ""
+    wifi_ssid: str = ""
+    wifi_password: str = ""
 
 
 class SettingsError(RuntimeError):
@@ -62,4 +67,8 @@ def load_settings(env: dict[str, str] | None = None) -> Settings:
         secure_cookies=_flag(env.get("LSO_SECURE_COOKIES")),
         auth_epoch=int(env.get("LSO_AUTH_EPOCH", "1") or 1),
         allowed_origins=origins,
+        join_url=env.get("LSO_JOIN_URL", "").strip(),
+        join_fallback=env.get("LSO_JOIN_FALLBACK", "").strip(),
+        wifi_ssid=env.get("LSO_WIFI_SSID", "").strip(),
+        wifi_password=env.get("LSO_WIFI_PASSWORD", ""),  # as typed: a password's spaces are part of it
     )

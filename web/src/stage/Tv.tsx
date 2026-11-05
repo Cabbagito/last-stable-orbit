@@ -9,6 +9,7 @@ import { useGame } from '../store/game'
 import type { MapView, TokenView, Vec3, View } from '../types'
 import { Downside } from './Downside'
 import { BurnFilms, FilmPlayer } from './Film'
+import { JoinCard } from './JoinCard'
 import { TvBand } from './TvBand'
 
 /**
@@ -43,6 +44,11 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
           {mood && <div className="r12-tvmood">{mood.label}</div>}
           <TvFights view={view} />
         </div>
+      )}
+      {view.stage.join?.show && (
+        <aside className="app-tvjoin" aria-label="How to join the game">
+          <JoinCard join={view.stage.join} />
+        </aside>
       )}
       <TvBand onFocus={setFocus} />
       <Downside where="tv" />

@@ -625,6 +625,7 @@ class StageState(Strict):
     film: FilmState | None = None
     burn: BurnState | None = None
     played: list[str] = []  # cues played this campaign, for the GM's list
+    join: bool = True  # the join card is on the TV, if the server has one, until the GM hides it
 
 
 class GameState(Strict):

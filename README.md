@@ -26,6 +26,24 @@ Open http://localhost:8070 and click a character, or choose "I'm the GM" and typ
 
 The GM can also load a preset from the GM column (Session 1 at the bar, or the bar after hours), which resets positions, moods, vitals and inventories without wiping anything.
 
+## Hosting it at the table
+
+Players join the wifi and open one short URL. Nobody needs an IP address or an app. On parker (the NixOS desktop) it runs from this checkout, and `system/lso.nix` in the parker repo gives it the name `parker.local` and brings it up on every boot. To update it: `git pull && make up`.
+
+Add these to `.env`, then `make up`:
+
+```bash
+LSO_PORT=80                            # so the URL needs no port
+LSO_JOIN_URL=http://parker.local
+LSO_JOIN_FALLBACK=http://192.168.1.4   # for a device that can't resolve .local; reserve this IP on the router
+LSO_WIFI_SSID=YourNetwork
+LSO_WIFI_PASSWORD='your password'      # single quotes keep $ and # as typed
+```
+
+Those values make the **join card**: the wifi and the URL, as words and QR codes. Nobody can load a page before they're on the wifi, so the card sits on the TV, and in the GM tab under The TV, where the GM can hide it once everyone's in. Only the TV and the GM's screens get it, never a player's feed or the login screen. Leave `LSO_JOIN_URL` out and there is no card, as on a public server.
+
+Everyone must be on the same network as the server: a guest wifi usually stops devices reaching each other.
+
 ## How it fits together
 
 ```
@@ -35,6 +53,7 @@ server/lso/   FastAPI app
   store.py      SQLite: append-only event log + snapshot, one transaction per intent
   views.py      project(state, viewer): the ONLY way state leaves the server
   hub.py        live sockets; each gets its own projection, only when it changed
+  join.py       the join card, from the environment
 content/      characters, NPCs, items, maps and presets as YAML (edit these, not code)
 assets/       art imported from the claude.ai design artifacts (see assets/manifest.yaml)
 web/          React + TypeScript + Vite; styles copied from the R6 "Meridian, ruled" board

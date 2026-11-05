@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { serverClock } from '../net/clock'
+import { JoinCard } from '../stage/JoinCard'
 import { gmRun } from '../store/game'
 import type { Camera, CueView, Setup, View } from '../types'
 
@@ -118,7 +119,7 @@ const CAMS: [Camera, string][] = [
  * and what the TV shows right now (the TV's own screen, small and silent).
  */
 export function TvSection({ view }: { view: View }) {
-  const { setup, camera, follow, tv, film } = view.stage
+  const { setup, camera, follow, tv, film, join } = view.stage
   const busy = !!film && serverClock.now() / 1000 < film.ends
   useTick(busy)
   const followed = view.crew.find((c) => c.id === follow)
@@ -192,6 +193,21 @@ export function TvSection({ view }: { view: View }) {
           <div className="r10-hint">The TV gets only what everyone may see: the party's map, no pockets, nothing hidden.</div>
         </div>
       </div>
+      {join && (
+        <div className="app-gmjoin">
+          <span className="r5-sec">Getting everyone in</span>
+          <div className="r12-seg3 app-gmjoinseg" role="group" aria-label="The join card on the TV">
+            <button type="button" className={join.show ? 'on' : ''} aria-pressed={join.show} disabled={busy} onClick={() => void gmRun('gm.stage.join', { show: true })}>
+              On the TV
+            </button>
+            <button type="button" className={join.show ? '' : 'on'} aria-pressed={!join.show} disabled={busy} onClick={() => void gmRun('gm.stage.join', { show: false })}>
+              Hidden
+            </button>
+          </div>
+          <div className="r10-hint">Shows the wifi password. Hide it once everyone's in. No TV? Turn this screen around.</div>
+          <JoinCard join={join} />
+        </div>
+      )}
     </section>
   )
 }

@@ -12,7 +12,7 @@ help:
 	@echo "make reset-world  wipe the app's saved game and reload the default preset"
 
 env:
-	python3 scripts/make_env.py
+	$(shell command -v python3 || echo uv run --no-project python) scripts/make_env.py
 
 passcode passcodes:
 	@grep '^LSO_GM_PASSCODE=' .env | cut -d= -f2-

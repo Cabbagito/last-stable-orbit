@@ -21,6 +21,7 @@ from .config import Settings, load_settings
 from .content import load_content
 from .engine import Engine
 from .hub import Hub
+from .join import join_card
 from .store import Store
 from .views import url
 
@@ -63,7 +64,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         # the character picker shows the crew before anyone is logged in
         app.state.login_assets = {c.portrait for c in content.characters.values()}
         app.state.engine = engine
-        app.state.hub = Hub(engine)
+        app.state.hub = Hub(engine, join_card(settings))
         log.info("ready: %d maps, %d tokens, seq %d", len(content.maps), len(engine.state.tokens), engine.state.seq)
         sweep_task = asyncio.create_task(sweeper(engine, app.state.hub))
         yield

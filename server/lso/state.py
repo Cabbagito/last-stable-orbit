@@ -187,6 +187,8 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         s.stage.setup = data["setup"]
     elif ev_type == "stage.camera_set":
         s.stage.camera, s.stage.follow = data["camera"], data.get("follow")
+    elif ev_type == "stage.join_set":
+        s.stage.join = data["show"]
     elif ev_type == "fight.started":
         at = float(data["at"])
         s.fights[data["map"]] = Fight(order=list(data["order"]), rolled=list(data["rolled"]), ini=dict(data["ini"]),
