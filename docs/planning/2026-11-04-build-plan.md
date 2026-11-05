@@ -13,7 +13,7 @@
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
 | M6: Station and Codex tabs | **Built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex and Station texts, and the Codex's card crops, are drafts for Peter, who hasn't tried either tab yet |
 | M7: Ship for session 1 | Not started. Peter is leaving it for later; it has to happen before game day, when the app first goes online |
-| M8: Fights | **Designing** 2026-11-05. Not ready to build: Peter wants it dialled in on the real screens first. Round 16 draws the fight over screenshots of the app, revised to Peter's notes; waiting on Peter |
+| M8: Fights | **Planned** 2026-11-05: designed in Rounds 14 to 16 (Peter's picks are in M8), with a build plan in M8. Next: build it in one session |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -560,7 +560,73 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **A hidden NPC** can be ticked, and is shown to everyone when the fight starts, so the strip never shows a slot for something players can't see.
   - **Ves's Burn:** when she's in a fight, her row could pick the In a fight cut by itself.
 - **Still open:** Team-up: whether it needs anything in the app, or the players just add their totals out loud.
-- **Done when:** set once Peter is happy with Round 16.
+- **Build plan** (Peter said "plan the build" on 2026-11-05, after Round 16). This is one session in the usual order: content and server with tests first, then the web build, then a check on :8071.
+  1. **Content and models.**
+     - `Npc.health` (1 to 20) for every NPC in `content/npcs.yaml`. From the bible: guard 1, hired gun 4, spider mech 13, the fixer 10. Drafts for Peter: 2 for the bots and droids, 2 to 3 for bystanders.
+     - `TokenState.hp`: an NPC's health left, or None while it's full. It stays after a fight, so a hurt guard stays hurt.
+     - `Fight` holds `map`, `order` (token ids, first to last), `ini` (each fighter's Reflex total), `turn`, `round` and `started` (server time, so the dice land at the same moment on every screen).
+     - `GameState.fights` maps a map id to its fight, one per map.
+     - The new fields have defaults, so old saves load as they are, with no rules bump.
+  2. **Server** (`commands.py` → events → `state.apply`, as always):
+     - `gm.fight.start {map, tokens}`:
+       - every token must be on that map; at least two of them;
+       - a hidden one is shown;
+       - each fighter's Reflex is rolled with `rules.roll_dice` (explosions included): the crew's die from their sheet, an NPC's from its stats;
+       - the order is highest total first, ties to the bigger die, then the crew, then the token id;
+       - it emits `fight.started`.
+     - `gm.fight.next {map}`: the next fighter who isn't down (crew HP 0, or an NPC's 0), wrapping into the next round.
+     - `gm.fight.add {map, token}` rolls them and slots them in, and whoever's turn it is keeps it. `gm.fight.remove {map, token}`. `gm.fight.end {map}`.
+     - `gm.npc.hp {token, hp}`, clamped to 0 up to the NPC's health.
+     - In `state.apply`: a fighter whose token is removed, or ends up on another map (Send the crew here), drops out of that fight.
+     - Not in this build: dragging the order. Ties follow the rule above, and Peter can end the fight and roll again. Add dragging only if the tie rule isn't enough at the table.
+  3. **Views** (`views.project()`, the only way out):
+     - A new `fights` entry. Each fight has its map and name, `round`, `turn`, `started`, and its fighters in order with `token`, `kind`, name, portrait, colour, `hp` and `health`, and `ini`. An NPC's health is sent only here, only while it's in a fight. Its stats and GM note never are.
+     - The GM gets every fight. A player gets only the fight on the map they're looking at. The TV gets every fight, one row each, without `turn` or `ini`.
+     - A hidden token never appears in a player's or the TV's fight (if the GM hides a fighter mid-fight, it drops out of their view).
+  4. **Server tests** (`server/tests/test_fights.py`, with the scripted dice from `test_burns.py`):
+     - the order and the tie rule, table-driven;
+     - hidden fighters are shown at the start, and tokens from another map are refused;
+     - only the GM can run any of it;
+     - Next skips whoever is down and wraps the round;
+     - adding mid-fight keeps the turn; removing, ending, and a token leaving the map;
+     - two fights on two maps at once;
+     - NPC health is clamped, and kept after the fight;
+     - an old save loads.
+     - **Leak tests:**
+       - a player never gets another map's fight;
+       - the TV gets no turn or initiative;
+       - no NPC stats or GM note in any fight view;
+       - no hidden token in a player's or the TV's fight.
+  5. **Rings** (`web/src/lib/ring.ts`): an NPC's HP ring in its colour, outside only, one slice per point filling the whole ring with the crew's breaks. `MapView` draws it on an NPC in a fight on that map, and the plain ring otherwise. Web test: 1 health is one arc of 353°; 2 are halves.
+  6. **The fight on the Scene** (web):
+     - Start a fight beside the moods (`MoodBar`). During a fight that spot reads "Fight · round n | End fight".
+     - `fight/StartDialog.tsx`: everyone on the map, with ticks. The crew start ticked, hidden NPCs are marked, there are no dice. It reopens during a fight to add or take out fighters.
+     - `fight/Strip.tsx`, the looping strip at the top of the map:
+       - the current fighter in the middle, larger, with NOW and a bar under them, and NEXT over the next one;
+       - the rest fade to either side, with R2 where the next round starts;
+       - while the dice land, each slot spins a Reflex reel and its number lands, timed from `started` on the server clock, then the strip sorts and the numbers fade;
+       - no white rings.
+     - Next turn, for the GM, just left of the strip.
+     - Health on an NPC's card (`InspectCard`) while it's in a fight. The crew keep theirs on the rail.
+     - The GM's map list marks each map with a fight ("Fight · round 2").
+  7. **The TV** (`Tv.tsx`): under the map's name at the top-left, a "Fights" list with one row per fight, the map's name and its fighters' heads with HP rings. The party map's fight comes first.
+  8. **Changes on the chips** (look C, `R14ChipReact`):
+     - The store compares each new view with the last one, and for every crew member, NPC in a fight and pocket entry marks a change: hit, heal, Entropy up, Entropy down, item received, item taken, credits up, credits down, down at 0.
+     - The rail ring, the map token and the TV's tokens play it.
+     - Items and credits only play where that pocket is in the view, which is the holder and the GM, so nobody learns about anyone else's pockets.
+     - A Burn's own mark takes the place of its Entropy spend.
+     - Everything stays still for anyone with reduced motion on.
+     - Web tests: the change detection, table-driven, and the strip's slot positions through a round wrap.
+  9. **Small things:**
+     - Ves's Burn row picks its "In a fight" cut by itself while she's in a fight.
+     - Update the plan's Progress and M8 at the end.
+  10. **Check on :8071** before deploying, with the Round 16 test game (`scripts/fight_test_game.py`: two hired guns at the founder's table, a hidden guard, Ves alone on the Promenade with a guard), the GM, two players and the TV:
+     - start the Event Horizon fight: everyone's strip lands and sorts at the same moment, Next turn moves NOW on every laptop, and the TV lists the fight;
+     - start the Promenade fight: Ves sees only hers, the others only theirs, and the TV lists both;
+     - take health off a hired gun and off Tomo, give an item and credits: each plays on the right screens;
+     - end both fights: the rings go back to plain.
+     Then `make up` to 8070 once Peter says so; he's using it live.
+- **Done when:** the check on :8071 above passes, and the server tests (with the leak tests) and the web tests pass.
 - **Why here:** session 1 has no fight. It's needed before the first fight, session 2 at the earliest.
 
 ### M9: Finale screen · S · single session after a design review
