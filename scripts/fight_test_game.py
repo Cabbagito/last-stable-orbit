@@ -1,4 +1,4 @@
-"""A test game for Round 16's screenshots: session 1 at the Event Horizon, two hired guns in from the street (shown) and
+"""A test game for Round 16's screenshots: session 1 at the Event Horizon, two hired guns at the founder's table (shown) and
 a guard by the door (still hidden); Ves split off on the Promenade with a guard of her own. Run from server/: PYTHONPATH=. uv run python ../scripts/fight_test_game.py <data dir>, then start a test server on that data dir (see CLAUDE.md for the two-seat trick)."""
 
 import asyncio
