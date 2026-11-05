@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { anchorOf, anchorStyle, type Anchor } from '../inspect/anchor'
 import { InspectBlock, InspectIcon, Inspector } from '../inspect/Inspector'
 import { ItemInspector } from '../inspect/ItemTip'
@@ -24,6 +24,11 @@ export function Sheet({ me, items }: { me: CrewMember; items: InvEntry[] }) {
   const openPick = useGame((s) => s.openPick)
   const [hover, setHover] = useState<Anchor | null>(null)
   const [cut, setCut] = useState<string | null>(null)
+  // M8: in a fight, Ves's Burn goes back to its first cut, the one for a fight
+  const fighting = useGame((s) => !!s.view?.fights?.some((f) => f.fighters.some((x) => x.kind === 'crew' && x.ref === me.id)))
+  useEffect(() => {
+    if (fighting) setCut(null)
+  }, [fighting])
   const onHover = (key: string, el: HTMLElement) => setHover(anchorOf(key, el))
   const onLeave = (key: string) => setHover((h) => (h?.key === key ? null : h))
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react'
-import { GiveRow, Pocket, Vitals, Eye } from '../gm/parts'
+import { GiveRow, Pocket, Step, Vitals, Eye } from '../gm/parts'
 import { Closeup, CodexButton, InspectBlock, Inspector } from '../inspect/Inspector'
 import { useItemTip } from '../inspect/ItemTip'
 import { findObject } from '../inspect/objects'
@@ -8,6 +8,7 @@ import { ring } from '../lib/ring'
 import { STAT_LOOK, statIcon } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
 import { gmRoll, gmRun, send, useGame } from '../store/game'
+import { fighterIn, fightOn } from '../fight/fights'
 import { STATS, type TokenView } from '../types'
 
 /**
@@ -115,6 +116,7 @@ export function InspectCard() {
             <Vitals c={crew} />
           </div>
         )}
+        {isGm && !crew && <NpcHealth token={t.id} map={t.map} name={t.name} />}
         {t.hidden && <div className="r10-warn">HIDDEN FROM PLAYERS</div>}
         {t.note && <div className="app-ins-txt">{t.note}</div>}
         <DeckJump t={t} />
@@ -187,6 +189,17 @@ function NpcRolls({ t, stats }: { t: TokenView; stats: NonNullable<TokenView['st
  * On a tower map (the Executive floors), move a token to another deck: straight up or down the stairs or the
  * duct, keeping where it stands. For whoever may move it: the GM, or the player whose token it is.
  */
+/** M8: an NPC's health, on its card, while it's in a fight (the crew's is on the rail). */
+function NpcHealth({ token, map, name }: { token: string; map: string; name: string }) {
+  const x = useGame((s) => fighterIn(fightOn(s.view, map), token))
+  if (!x) return null
+  return (
+    <div className="r10-cvit">
+      <Step who={name} label="HP" tone="hp" value={x.hp} max={x.health} onChange={(hp) => void gmRun('gm.npc.hp', { token, hp })} />
+    </div>
+  )
+}
+
 function DeckJump({ t }: { t: TokenView }) {
   const view = useGame((s) => s.view)
   const preview = useGame((s) => s.preview)

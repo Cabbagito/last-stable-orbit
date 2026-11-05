@@ -97,6 +97,7 @@ class Npc(Strict):
     gm_note: str = ""  # never sent to players
     codex: str | None = None  # its Codex entry, once the Codex exists (M6)
     size: float = 1  # token size: the spider mech is a double-size token
+    health: int = Field(ge=1, le=20)  # the enemy card's health. Players see it only as the HP ring, while it's in a fight
 
     @field_validator("stats")
     @classmethod
@@ -543,6 +544,20 @@ class TokenState(Strict):
     map: str
     at: Vec3
     hidden: bool = False
+    hp: int | None = None  # NPCs: health left once hurt (None: full). It stays after a fight: a hurt guard stays hurt
+
+
+class Fight(Strict):
+    """A fight on one map (M8). The GM picks who's in it, and everyone's Reflex, rolled once when it starts, sets the
+    turn order. The app never knows the number to beat or who attacks whom."""
+
+    order: list[str]  # token ids, first to last
+    rolled: list[str] = []  # the order the GM picked them in: the strip shows them so while the dice land, then sorts
+    ini: dict[str, int] = {}  # each fighter's Reflex total
+    joined: dict[str, float] = {}  # server time each fighter's dice were rolled, for the landing on every screen
+    turn: int = 0  # index into order
+    round: int = 1
+    started: float = 0.0
 
 
 class InvEntry(Strict):
@@ -626,3 +641,4 @@ class GameState(Strict):
     codex: list[str] = []  # unlocked for the whole crew: entry ids, and "entry/block" for a locked block
     codex_read: dict[str, list[str]] = {}  # character -> the unlocked keys they've read; the rest are new to them
     station: list[str] = []  # maps lit on the Station for the crew: they've been there, or the GM showed them
+    fights: dict[str, Fight] = {}  # map id -> the fight on it: one per map, so a split party can have two

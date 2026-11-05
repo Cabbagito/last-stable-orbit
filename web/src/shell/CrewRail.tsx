@@ -1,4 +1,5 @@
 import { Vitals } from '../gm/parts'
+import { ChipFx } from '../fx/ChipFx'
 import { ring } from '../lib/ring'
 import { Callout, Orbit, calloutKey, calloutSpeech, isSpinning } from '../roll/Callout'
 import { calloutsBy } from '../roll/callouts'
@@ -40,7 +41,9 @@ export function CrewRail() {
               onClick={() => tok && select(selected === tok ? null : tok)}
             >
               <span className="app-railring">
-                <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 64, 9, c.health)} size={64} />
+                <ChipFx id={`c:${c.id}`} down={c.hp <= 0} style={{ position: 'relative', display: 'block', width: 64, height: 64 }}>
+                  <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 64, 9, c.health)} size={64} />
+                </ChipFx>
                 {call && isSpinning(call.r) && <Orbit stat={call.r.stat} />}
                 {call && <Callout key={calloutKey(call.r)} r={call.r} side="s-l" fading={call.fading} />}
                 {burn && <Flare m={burn} />}

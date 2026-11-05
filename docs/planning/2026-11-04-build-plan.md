@@ -13,7 +13,7 @@
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
 | M6: Station and Codex tabs | **Built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex and Station texts, and the Codex's card crops, are drafts for Peter, who hasn't tried either tab yet |
 | M7: Ship for session 1 | Not started. Peter is leaving it for later; it has to happen before game day, when the app first goes online |
-| M8: Fights | **Planned** 2026-11-05: designed in Rounds 14 to 16 (Peter's picks are in M8), with a build plan in M8. Next: build it in one session |
+| M8: Fights | **Built** 2026-11-05 and checked on :8071 with four seats (the GM, Tomo, Ves and the TV); see "How M8 turned out" in M8. **Not on 8070 yet:** deploy when Peter says. NPC health beyond the bible's enemy cards is drafts |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -627,6 +627,27 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
      - end both fights: the rings go back to plain.
      Then `make up` to 8070 once Peter says so; he's using it live.
 - **Done when:** the check on :8071 above passes, and the server tests (with the leak tests) and the web tests pass.
+- **How M8 turned out (2026-11-05):** built as planned. 171 server tests pass (19 in `test_fights.py`, the leak tests among them) and 44 web tests (the ring slices, the landing and the looping strip, and the change detection).
+  - **The check on :8071** (a Playwright walk with the Round 16 test game, four seats at once):
+    - the dialog listed everyone on the Event Horizon, with the hidden guard marked;
+    - every laptop's dice landed and sorted together, and the strip read the same on the GM's and Tomo's screens;
+    - Next turn moved NOW, and Tomo's and a hired gun's hits played look C;
+    - the GM's map list showed "fight, round 1" for both maps;
+    - Ves saw only her fight, and the TV listed both fights;
+    - ending both cleared the strips, the TV's list and the NPCs' rings.
+  - **Changes from the plan:**
+    - the strip keeps four copies of the order, not three, so the slide into the next round never shows an empty end;
+    - the dialog renders at the app's root, because the map's name block it's opened from takes no clicks;
+    - End fight asks once more ("End it?");
+    - Next turn appears once the dice have landed;
+    - the reels start out of step, so they look like separate dice.
+  - **Where things are:**
+    - server: `Fight` and `GameState.fights` (`models.py`), `rules.turn_order`, `_gm_fight` and `gm.npc.hp` (`commands.py`), `_fights_view` (`views.py`);
+    - web: `web/src/fight/` (the strip, the dialog and `fights.ts`), `web/src/fx/` (look C), `styles/fight.css`.
+  - **For Peter:**
+    - NPC health in `content/npcs.yaml`: the guard, the hired gun, the spider mech and the fixer come from the bible, and the rest are drafts;
+    - the bible still says "no initiative".
+  - **Not done:** dragging the order, and Team-up.
 - **Why here:** session 1 has no fight. It's needed before the first fight, session 2 at the earliest.
 
 ### M9: Finale screen · S · single session after a design review

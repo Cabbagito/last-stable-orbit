@@ -422,6 +422,53 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
     return out
 
 
+def _place_name(state: GameState, content: Content, map_id: str, viewer: Viewer) -> str:
+    """A map's name, as the Station tells it: a dark place keeps its dark name for anyone but the GM."""
+    name = content.maps[map_id].name
+    if viewer.is_gm or not content.station or map_id in state.station:
+        return name
+    p = next((p for p in content.station.places if p.map == map_id), None)
+    return p.dark_name if p and p.dark_name else name
+
+
+def _fights_view(state: GameState, content: Content, viewer: Viewer, here: str) -> list[dict]:
+    """M8. The GM gets every fight; a player only the fight on the map they're looking at; the TV every fight, one row
+    each, saying who's in it and nothing about whose turn it is. A hidden token is never anyone's but the GM's to see.
+    An NPC's health goes out only here, while it's in a fight; its dice and notes never do."""
+    gm, tv = viewer.is_gm, viewer.is_stage
+    maps = [m for m in content.maps if m in state.fights]
+    if not gm and not tv:
+        maps = [m for m in maps if m == here]
+    elif tv:
+        maps.sort(key=lambda m: m != here)  # the map the TV shows comes first
+    out = []
+    for m in maps:
+        f = state.fights[m]
+        fighters = []
+        for tid in f.order:
+            t = state.tokens.get(tid)
+            if t is None or (t.hidden and not gm):
+                continue
+            if t.kind == "crew":
+                c = content.characters[t.ref]
+                v = state.vitals.get(c.id)
+                d = {"name": c.short, "portrait": url(c.portrait), "color": c.color, "hp": v.hp if v else c.health, "health": c.health}
+            else:
+                n = content.npcs[t.ref]
+                d = {"name": n.name, "portrait": url(n.portrait), "color": n.color, "hp": n.health if t.hp is None else t.hp, "health": n.health}
+            d |= {"token": tid, "kind": t.kind, "ref": t.ref}
+            if not tv:
+                d |= {"ini": f.ini.get(tid, 0), "joined": f.joined.get(tid, f.started)}
+            fighters.append(d)
+        v = {"map": m, "name": _place_name(state, content, m, viewer), "fighters": fighters}
+        if not tv:
+            cur = f.order[f.turn] if f.order else None
+            seen = {x["token"] for x in fighters}
+            v |= {"round": f.round, "now": cur if cur in seen else None, "rolled": [x for x in f.rolled if x in seen], "started": f.started}
+        out.append(v)
+    return out
+
+
 def project(state: GameState, content: Content, viewer: Viewer, online: frozenset[str] = frozenset()) -> dict:
     gm = viewer.is_gm
     here = viewer_map(state, viewer)
@@ -445,6 +492,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         "station": _station_view(state, content, viewer),
         "rolls": _rolls_view(state, viewer, set(tokens)),
         "stage": _stage_view(state, content, viewer, online),
+        "fights": _fights_view(state, content, viewer, here),
     }
     if gm:
         view["roster"] = [

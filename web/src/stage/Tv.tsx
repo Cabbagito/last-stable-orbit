@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { proj } from '../lib/proj'
-import { plainRing, ring } from '../lib/ring'
+import { hpRing, plainRing, ring } from '../lib/ring'
+import { fighterIn } from '../fight/fights'
+import { ChipFx } from '../fx/ChipFx'
 import { MapLayers } from '../map/MapLayers'
 import { RingPortrait } from '../shell/RingPortrait'
 import { useGame } from '../store/game'
@@ -39,6 +41,7 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
         <div className="app-tvplace">
           <div className="r4-place">{map.name}</div>
           {mood && <div className="r12-tvmood">{mood.label}</div>}
+          <TvFights view={view} />
         </div>
       )}
       <TvBand onFocus={setFocus} />
@@ -143,6 +146,7 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
   const [size, setSize] = useState<[number, number]>([0, 0])
   const remote = useGame((s) => s.remote)
   const [W, H] = map.display
+  const fight = view.fights?.find((f) => f.map === map.id)
 
   useLayoutEffect(() => {
     const el = box.current
@@ -175,12 +179,15 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
           {tokens.map((t) => {
             const [x, y] = at(t)
             const c = t.kind === 'crew' ? view.crew.find((m) => m.id === t.ref) : undefined
-            const r = c ? ring(c.hp, c.entropy, 64, 9, c.health) : plainRing(t.color, 64, 5)
+            const fighter = c ? undefined : fighterIn(fight, t.id)
+            const r = c ? ring(c.hp, c.entropy, 64, 9, c.health) : fighter ? hpRing(fighter.hp, fighter.health, t.color, 64, 5) : plainRing(t.color, 64, 5)
             return (
               <span key={t.id} className="r3-tok app-fixedtok" role="img" aria-label={t.name} style={{ left: x, top: y, zIndex: Math.round(y), transform: t.size && t.size !== 1 ? `scale(${t.size})` : undefined }}>
                 <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${t.color}`, background: 'rgba(0,0,0,.35)' }} />
                 <span style={{ position: 'absolute', left: '50%', bottom: 8, width: 1.5, height: 36, marginLeft: -0.75, background: t.color }} />
-                <RingPortrait src={t.portrait} ring={r} size={64} style={{ position: 'absolute', left: 0, top: 0 }} />
+                <ChipFx id={c ? `c:${c.id}` : `t:${t.id}`} down={c ? c.hp <= 0 : !!fighter && fighter.hp <= 0} style={{ position: 'absolute', left: 0, top: 0, width: 64, height: 64 }}>
+                  <RingPortrait src={t.portrait} ring={r} size={64} />
+                </ChipFx>
               </span>
             )
           })}
@@ -197,6 +204,33 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
           })}
         </div>
       )}
+    </div>
+  )
+}
+
+/**
+ * M8: who's in each fight, one row per fight on any map (the one the TV shows first): the map's name and its
+ * fighters with their HP rings. It never says whose turn it is: that's on the laptops.
+ */
+function TvFights({ view }: { view: View }) {
+  if (!view.fights?.length) return null
+  return (
+    <div className="app-tvfights" aria-label="Fights">
+      <span className="r5-sec">Fights</span>
+      {view.fights.map((f) => (
+        <div key={f.map} className="app-tvfrow">
+          <span className="app-tvfname">{f.name}</span>
+          {f.fighters.map((x) => {
+            const c = x.kind === 'crew' ? view.crew.find((m) => m.id === x.ref) : undefined
+            const r = c ? ring(c.hp, c.entropy, 52, 6, c.health) : hpRing(x.hp, x.health, x.color, 52, 5)
+            return (
+              <ChipFx key={x.token} id={c ? `c:${c.id}` : `t:${x.token}`} down={x.hp <= 0} style={{ position: 'relative', display: 'block', width: 52, height: 52 }}>
+                <RingPortrait src={x.portrait} ring={r} size={52} />
+              </ChipFx>
+            )
+          })}
+        </div>
+      ))}
     </div>
   )
 }

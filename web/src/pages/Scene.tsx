@@ -1,3 +1,6 @@
+import { FightBar } from '../fight/FightControls'
+import { fightOn } from '../fight/fights'
+import { FightStrip } from '../fight/Strip'
 import { GmScene } from '../gm/GmScene'
 import { MoodBar } from '../gm/MoodBar'
 import { MapView } from '../map/MapView'
@@ -19,6 +22,7 @@ export function Scene() {
   const tokens = Object.values(view.tokens).filter((t) => t.map === mapId)
   const canMove = (t: TokenView) => !preview && (isGm || (t.kind === 'crew' && t.ref === view.me.char))
   const me = view.crew.find((c) => c.id === view.me.char)
+  const fight = fightOn(view, mapId)
 
   return (
     <div className="app-body">
@@ -28,7 +32,12 @@ export function Scene() {
           <>
             <MapView key={map.id} map={map} tokens={tokens} canMove={canMove} />
             <div className="app-placewrap">
-              {isGm && <MoodBar map={map} />}
+              {isGm && (
+                <div className="app-moodrow">
+                  <MoodBar map={map} />
+                  <FightBar map={map} />
+                </div>
+              )}
               <div className="r4-place">{map.name}</div>
               {map.subtitle && <div style={{ color: 'var(--dim)', marginTop: 2 }}>{map.subtitle}</div>}
             </div>
@@ -36,6 +45,7 @@ export function Scene() {
         ) : (
           <div className="app-wait">Somewhere the map doesn't reach.</div>
         )}
+        {fight && <FightStrip key={fight.map} fight={fight} />}
         <CrewRail />
         <InspectCard />
       </section>

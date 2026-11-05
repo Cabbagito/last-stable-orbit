@@ -61,3 +61,20 @@ export function plainRing(color: string, px: number, band: number): Ring {
   const p = (band / px) * 100
   return { arcs: [{ d, c: color, w: 1.5 * u, cap: 'butt', o: 1 }], p, d: 100 - 2 * p }
 }
+
+/**
+ * An NPC in a fight (M8): its health, in its faction's colour, outside only. Like the crew's, one slice per point
+ * filling the whole ring with clean breaks, so 1 health is the whole ring with one break at the top.
+ */
+export function hpRing(hp: number, health: number, color: string, px: number, band: number): Ring {
+  const u = 100 / px
+  const t1 = px > 100 ? 5 : 3
+  const r1 = 50 - (t1 / 2) * u
+  const a = 360 / Math.max(1, health)
+  const arcs: Arc[] = []
+  for (let i = 0; i < health; i++) {
+    arcs.push({ d: arcPath(r1, i * a + 3.5, (i + 1) * a - 3.5), c: i < hp ? color : UNLIT, w: f2(t1 * u), cap: 'butt', o: 1 })
+  }
+  const p = (band / px) * 100
+  return { arcs, p: f2(p), d: f2(100 - 2 * p) }
+}

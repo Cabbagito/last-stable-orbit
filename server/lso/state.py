@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import RULES, BurnState, FilmState, GameState, InvEntry, MapState, Preset, PresetItem, RollState, TokenState, Vitals
+from .models import RULES, BurnState, Fight, FilmState, GameState, InvEntry, MapState, Preset, PresetItem, RollState, TokenState, Vitals
 
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
 
@@ -76,6 +76,22 @@ def _entry(s: GameState, holder: str, uid: str) -> InvEntry:
     return e
 
 
+def _drop_fighter(s: GameState, token: str) -> None:
+    """Someone left the map, or the map: out of its fight. Whoever's turn it is keeps it; a fight with nobody left ends."""
+    for map_id, f in list(s.fights.items()):
+        if token not in f.order:
+            continue
+        cur = f.order[f.turn]
+        f.order = [t for t in f.order if t != token]
+        f.rolled = [t for t in f.rolled if t != token]
+        f.ini.pop(token, None)
+        f.joined.pop(token, None)
+        if not f.order:
+            del s.fights[map_id]
+        else:
+            f.turn = f.order.index(cur) if cur != token else f.turn % len(f.order)
+
+
 def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     s = state.model_copy(deep=True)
     s.seq = seq
@@ -89,8 +105,11 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         s.tokens[data["token"]] = TokenState.model_validate(data["state"])
     elif ev_type == "token.removed":
         s.tokens.pop(data["token"], None)
+        _drop_fighter(s, data["token"])
     elif ev_type == "token.sent":  # the GM sent the crew to another map
         t = s.tokens[data["token"]]
+        if t.map != data["map"]:
+            _drop_fighter(s, data["token"])
         t.map, t.at = data["map"], tuple(data["at"])
     elif ev_type == "map.added":  # a map the content gained after this game was saved
         s.maps[data["map"]] = MapState.model_validate(data["state"])
@@ -168,6 +187,23 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         s.stage.setup = data["setup"]
     elif ev_type == "stage.camera_set":
         s.stage.camera, s.stage.follow = data["camera"], data.get("follow")
+    elif ev_type == "fight.started":
+        at = float(data["at"])
+        s.fights[data["map"]] = Fight(order=list(data["order"]), rolled=list(data["rolled"]), ini=dict(data["ini"]),
+                                      joined={t: at for t in data["order"]}, started=at)
+    elif ev_type == "fight.turned":
+        f = s.fights[data["map"]]
+        f.turn, f.round = int(data["turn"]), int(data["round"])
+    elif ev_type == "fight.joined":
+        f = s.fights[data["map"]]
+        f.order, f.turn = list(data["order"]), int(data["turn"])
+        f.ini[data["token"]], f.joined[data["token"]] = int(data["ini"]), float(data["at"])
+    elif ev_type == "fight.left":
+        _drop_fighter(s, data["token"])
+    elif ev_type == "fight.ended":
+        s.fights.pop(data["map"], None)
+    elif ev_type == "npc.hp_set":
+        s.tokens[data["token"]].hp = int(data["hp"])
     else:
         raise UnknownEvent(ev_type)
     return s

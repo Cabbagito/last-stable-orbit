@@ -21,7 +21,7 @@ export function RingPortrait({ src, ring, size, style }: { src: string; ring: Ri
           pointerEvents: 'none',
         }}
       />
-      <svg viewBox="0 0 100 100" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible', pointerEvents: 'none' }}>
+      <svg className="app-ring" viewBox="0 0 100 100" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible', pointerEvents: 'none' }}>
         {ring.arcs.map((a, i) => (
           <path key={i} d={a.d} fill="none" stroke={a.c} strokeWidth={a.w} strokeLinecap={a.cap} opacity={a.o} />
         ))}

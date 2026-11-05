@@ -4,11 +4,17 @@ import { unproj } from '../lib/proj'
 import { Callout, calloutKey, calloutSpeech } from '../roll/Callout'
 import { calloutsBy } from '../roll/callouts'
 import { gmRoll, gmRun, useGame } from '../store/game'
-import type { MapView, RosterNpc } from '../types'
+import type { MapView, RosterNpc, View } from '../types'
 import { Cross, Diamond, Eye } from './parts'
 import { SendCrew, crewOn, mapList } from './SendCrew'
 
 const DICE = [4, 6, 8, 10, 12, 20]
+
+/** " · fight, round 2" in the map list, for every map with a fight on (M8). */
+const fightLabel = (view: View, mapId: string) => {
+  const f = view.fights?.find((x) => x.map === mapId)
+  return f ? ` · fight, round ${f.round ?? 1}` : ''
+}
 
 interface Here {
   key: string
@@ -87,6 +93,7 @@ export function GmScene({ map }: { map: MapView | undefined }) {
               <option key={m.id} value={m.id}>
                 {m.name}
                 {n ? ` · ${n} crew` : ''}
+                {fightLabel(view, m.id)}
               </option>
             )
           })}

@@ -98,6 +98,10 @@ class Engine:
             bad.append(f"burn {s.stage.burn.char!r}")
         if s.stage.follow and s.stage.follow not in c.characters:
             bad.append(f"camera follow {s.stage.follow!r}")
+        for m, f in s.fights.items():
+            if m not in c.maps:
+                bad.append(f"fight on map {m!r}")
+            bad += [f"fight on {m}: token {tid!r}" for tid in f.order if tid not in s.tokens]
         if bad:
             raise RuntimeError(
                 "Saved state refers to content that no longer exists:\n  "

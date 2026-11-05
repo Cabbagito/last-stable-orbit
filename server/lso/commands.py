@@ -390,6 +390,103 @@ def _lit(state: GameState, content: Content, map_id: str) -> Events:
     return [("station.shown", {"map": map_id, "shown": True})] if map_id in places and map_id not in state.station else []
 
 
+# ---------------------------------------------------------------- fights (M8)
+
+
+def _reflex(state: GameState, content: Content, token: str) -> tuple[int, bool]:
+    """A fighter's Reflex die, from their sheet, and whether they're crew."""
+    t = state.tokens[token]
+    if t.kind == "crew":
+        return content.characters[t.ref].stats["reflex"], True
+    return content.npcs[t.ref].stats["reflex"], False
+
+
+def is_down(state: GameState, content: Content, token: str) -> bool:
+    """At 0 health: a down fighter keeps their place in the order, but Next skips them."""
+    t = state.tokens.get(token)
+    if t is None:
+        return True
+    if t.kind == "crew":
+        v = state.vitals.get(t.ref)
+        return v is not None and v.hp <= 0
+    return t.hp is not None and t.hp <= 0
+
+
+def _fight_tokens(state: GameState, map_id: str, raw) -> list[str]:
+    if not isinstance(raw, list) or not all(isinstance(x, str) for x in raw):
+        raise _invalid("tokens must be a list of token ids")
+    if len(set(raw)) != len(raw):
+        raise _invalid("a token is listed twice")
+    for tid in raw:
+        t = state.tokens.get(tid)
+        if t is None:
+            raise _invalid(f"unknown token {tid!r}")
+        if t.map != map_id:
+            raise _invalid(f"{tid} isn't on that map")
+    return raw
+
+
+def _gm_fight(state: GameState, content: Content, kind: str, args: dict, rng, now: float) -> Events:
+    """A fight belongs to a map. Its order comes from everyone's Reflex, rolled once on the server when it starts (or
+    when someone joins); the GM moves it on with Next and applies every result by hand."""
+    map_id = _str(args, "map")
+    if map_id not in content.maps:
+        raise _invalid("unknown map")
+    f = state.fights.get(map_id)
+
+    def roll(tid: str) -> int:
+        return sum(rules.roll_dice(_reflex(state, content, tid)[0], rng))
+
+    def order_of(ini: dict[str, int]) -> list[str]:
+        return rules.turn_order({tid: (v, *_reflex(state, content, tid)) for tid, v in ini.items()})
+
+    if kind == "gm.fight.start":
+        if f:
+            raise _invalid("there's already a fight on that map")
+        tokens = _fight_tokens(state, map_id, args.get("tokens"))
+        if len(tokens) < 2:
+            raise _invalid("a fight needs at least two")
+        # a hidden NPC joins in plain sight: the strip never shows a slot for something players can't see
+        events: Events = [("token.hidden_set", {"token": t, "hidden": False}) for t in tokens if state.tokens[t].hidden]
+        ini = {t: roll(t) for t in tokens}
+        events.append(("fight.started", {"map": map_id, "order": order_of(ini), "rolled": tokens, "ini": ini, "at": now}))
+        return events
+    if f is None:
+        raise _invalid("there's no fight on that map")
+
+    if kind == "gm.fight.next":
+        n, t, rnd = len(f.order), f.turn, f.round
+        for _ in range(n):
+            t += 1
+            if t >= n:
+                t, rnd = 0, rnd + 1
+            if not is_down(state, content, f.order[t]):
+                break
+        return [("fight.turned", {"map": map_id, "turn": t, "round": rnd})]
+
+    if kind == "gm.fight.add":
+        (tid,) = _fight_tokens(state, map_id, [_str(args, "token")])
+        if tid in f.order:
+            raise _invalid("they're already in the fight")
+        events = [("token.hidden_set", {"token": tid, "hidden": False})] if state.tokens[tid].hidden else []
+        ini = {**f.ini, tid: roll(tid)}
+        order = order_of(ini)
+        # whoever's turn it is keeps it
+        events.append(("fight.joined", {"map": map_id, "token": tid, "ini": ini[tid], "order": order, "turn": order.index(f.order[f.turn]), "at": now}))
+        return events
+
+    if kind == "gm.fight.remove":
+        tid = _str(args, "token")
+        if tid not in f.order:
+            raise _invalid("they aren't in the fight")
+        return [("fight.left", {"map": map_id, "token": tid})]
+
+    if kind == "gm.fight.end":
+        return [("fight.ended", {"map": map_id})]
+
+    raise _invalid(f"unknown intent {kind!r}")
+
+
 def sweep(state: GameState, now: float, online: set[str]) -> Events:
     """System housekeeping: rolls whose roller's screen stopped talking to us, and films that have ended."""
     events: Events = []
@@ -582,6 +679,22 @@ def handle(
 
     if kind == "gm.roll.start":
         return _gm_roll(state, content, args, rng, now)
+
+    if kind.startswith("gm.fight."):
+        return _gm_fight(state, content, kind, args, rng, now)
+
+    if kind == "gm.npc.hp":
+        token = _str(args, "token")
+        t = state.tokens.get(token)
+        if t is None or t.kind != "npc":
+            raise _invalid("only an NPC token has health here: the crew's is on the rail")
+        hp = args.get("hp")
+        if not isinstance(hp, int) or isinstance(hp, bool):
+            raise _invalid("hp must be a whole number")
+        top = content.npcs[t.ref].health
+        hp = max(0, min(top, hp))
+        cur = top if t.hp is None else t.hp
+        return [] if hp == cur else [("npc.hp_set", {"token": token, "hp": hp})]
 
     if kind.startswith(("gm.film.", "gm.stage.")):
         return _gm_stage(state, content, kind, args, now)

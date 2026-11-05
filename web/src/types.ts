@@ -281,6 +281,34 @@ export interface StageView {
   films?: string[] // the TV only: every film, fetched ahead
 }
 
+/** Someone in a fight (M8). An NPC's health is sent only here, while it's in a fight. */
+export interface Fighter {
+  token: string
+  kind: 'crew' | 'npc'
+  ref: string
+  name: string
+  portrait: string
+  color: string
+  hp: number
+  health: number
+  ini?: number // not on the TV: the Reflex total, shown only while the dice land
+  joined?: number // not on the TV: server time (s) this fighter's dice were rolled
+}
+
+/**
+ * A fight on one map, fighters in turn order. The GM gets every fight, a player the one on their map, the TV every
+ * fight as a list of who's in it (no round, turn or rolls).
+ */
+export interface FightView {
+  map: string
+  name: string
+  fighters: Fighter[]
+  round?: number
+  now?: string | null // whose turn: a token id (null when that token is hidden from this viewer)
+  rolled?: string[] // the order the GM picked them in, which the strip shows while the dice land
+  started?: number // server time (s)
+}
+
 export interface View {
   me: Me
   party_map: string
@@ -292,6 +320,7 @@ export interface View {
   stage: StageView
   codex: CodexView | null
   station: StationView | null
+  fights: FightView[]
   roster?: RosterNpc[] // GM only
   presets?: { id: string; name: string }[] // GM only
   items?: Item[] // GM only: the catalogue, for giving

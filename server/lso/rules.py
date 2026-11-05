@@ -87,3 +87,9 @@ def pick_insult(stat: str | None, insults: dict[str, list[str]], rng: Rng) -> st
     own = insults.get(stat, []) if stat else []
     pool = own + own + insults.get("any", [])
     return pool[rng.randrange(len(pool))] if pool else "DUMBASS."
+
+
+def turn_order(fighters: dict[str, tuple[int, int, bool]]) -> list[str]:
+    """A fight's turn order (M8). fighters: token -> (Reflex total, its Reflex die, crew?). Highest total first; a tie
+    goes to the bigger die, then the crew, then the token id, so it never depends on the order they were picked in."""
+    return sorted(fighters, key=lambda t: (-fighters[t][0], -fighters[t][1], not fighters[t][2], t))

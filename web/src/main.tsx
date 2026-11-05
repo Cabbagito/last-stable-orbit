@@ -7,6 +7,7 @@ import './styles/gm.css'
 import './styles/stage.css'
 import './styles/codex.css'
 import './styles/station.css'
+import './styles/fight.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

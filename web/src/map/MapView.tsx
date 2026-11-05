@@ -2,7 +2,9 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { objectKey } from '../inspect/objects'
 import { floorOf } from '../lib/floors'
 import { proj, unproj } from '../lib/proj'
-import { plainRing, ring } from '../lib/ring'
+import { hpRing, plainRing, ring } from '../lib/ring'
+import { fighterIn } from '../fight/fights'
+import { ChipFx } from '../fx/ChipFx'
 import { send, useGame } from '../store/game'
 import type { MapView as MapDef, MapObject, TokenView, Vec3 } from '../types'
 import { RingPortrait } from '../shell/RingPortrait'
@@ -40,6 +42,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
   const select = useGame((s) => s.select)
   const setLocal = useGame((s) => s.setLocal)
   const crewList = useGame((s) => s.view?.crew)
+  const fight = useGame((s) => s.view?.fights?.find((f) => f.map === map.id))
   const rolls = useGame((s) => s.view?.rolls)
   const calls = useGame((s) => s.calls)
   useGame((s) => s.callTick) // re-render when a callout fades
@@ -249,7 +252,10 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
             const on = selected === t.id
             const foot = on ? '#ffffff' : t.color
             const crew = t.kind === 'crew' ? crewList?.find((c) => c.id === t.ref) : undefined
-            const r = crew ? ring(crew.hp, crew.entropy, 64, 9, crew.health) : plainRing(t.color, 64, 5)
+            // an NPC in a fight on this map shows its health, in its faction's colour (M8)
+            const fighter = crew ? undefined : fighterIn(fight, t.id)
+            const r = crew ? ring(crew.hp, crew.entropy, 64, 9, crew.health) : fighter ? hpRing(fighter.hp, fighter.health, t.color, 64, 5) : plainRing(t.color, 64, 5)
+            const down = crew ? crew.hp <= 0 : !!fighter && fighter.hp <= 0
             const burn = burning && t.kind === 'crew' && t.ref === burning.char ? burning : null
             const call = burn ? undefined : callouts[t.id] // a Burn's mark takes the roll callout's place
             return (
@@ -265,7 +271,9 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
               >
                 <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${foot}`, background: 'rgba(0,0,0,.35)' }} />
                 <span style={{ position: 'absolute', left: '50%', bottom: 8, width: 1.5, height: 36, marginLeft: -0.75, background: foot }} />
-                <RingPortrait src={t.portrait} ring={r} size={64} style={{ position: 'absolute', left: 0, top: 0 }} />
+                <ChipFx id={crew ? `c:${crew.id}` : `t:${t.id}`} down={down} style={{ position: 'absolute', left: 0, top: 0, width: 64, height: 64 }}>
+                  <RingPortrait src={t.portrait} ring={r} size={64} />
+                </ChipFx>
                 {call && isSpinning(call.r) && <Orbit stat={call.r.stat} />}
                 {call && <Callout key={calloutKey(call.r)} r={call.r} side="s-t" fading={call.fading} />}
                 {burn && <Flare m={burn} />}

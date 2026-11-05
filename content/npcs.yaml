@@ -3,6 +3,7 @@
 # Dax amber, ISCO's side white-violet, ordinary residents dusk grey.
 # codex names the NPC's Codex entry (content/codex.yaml); the card shows a Codex button once that entry is unlocked.
 # stats: the die for each stat, like the crew's. The GM rolls an NPC by stat. Only the GM ever sees them.
+# health: shown only as its HP ring, while it's in a fight (M8). The enemies' come from the bible; the rest are drafts.
 # The dice are DRAFTS from Round 12 of the UI canvas, for Peter to set.
 
 - id: dax
@@ -11,6 +12,7 @@
   portrait: portraits/dax.gif
   color: "#f2b544"
   stats: {body: 12, reflex: 6, tech: 6, intel: 10, cool: 20, empathy: 8}
+  health: 3  # DRAFT for Peter
   mood: Watching the door
   note: Keeps one table nobody sits at.
   codex: dax
@@ -22,6 +24,7 @@
   portrait: portraits/fixer.gif
   color: "#ff5a4a"
   stats: {body: 12, reflex: 10, tech: 12, intel: 12, cool: 20, empathy: 4}
+  health: 10  # the bible's enemy card
   mood: Patient
   note: Asked nicely.
   codex: fixer
@@ -34,6 +37,7 @@
   codex: unit-14
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 10, cool: 20, empathy: 4}
+  health: 2  # DRAFT for Peter
   mood: Delighted
   note: Its eyes slide away once a loop.
   gm_note: "No cameras in the bar, but Unit 14 is always somewhere near the crew's table. ISCO's eyes."
@@ -44,6 +48,7 @@
   portrait: portraits/slot-regular.gif
   color: "#c9bcff"
   stats: {body: 4, reflex: 6, tech: 4, intel: 6, cool: 12, empathy: 6}
+  health: 2  # DRAFT for Peter
   mood: Winning
   note: Has never lost.
 
@@ -53,6 +58,7 @@
   portrait: portraits/happy-resident.gif
   color: "#a9a2bc"
   stats: {body: 6, reflex: 6, tech: 4, intel: 6, cool: 8, empathy: 12}
+  health: 2  # DRAFT for Peter
   mood: Happy
   note: Very happy.
 
@@ -62,6 +68,7 @@
   portrait: portraits/service-droid.gif
   color: "#c9bcff"
   stats: {body: 8, reflex: 8, tech: 12, intel: 8, cool: 10, empathy: 6}
+  health: 2  # DRAFT for Peter
   mood: Helpful
   note: Will bring you anything.
 
@@ -71,6 +78,7 @@
   portrait: portraits/hired-gun.gif
   color: "#ff5a4a"
   stats: {body: 12, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 4  # the bible's enemy card
   mood: Bored
   note: Paid by the job.
   gm_note: "The fixer's. 4 health, d12, Hard to hit. Respirators, so the gas doesn't touch them. Once the fixer is down, Cool at Normal sends the rest running."
@@ -83,6 +91,7 @@
   codex: dock-clerk
   color: "#c9bcff"
   stats: {body: 4, reflex: 6, tech: 8, intel: 8, cool: 12, empathy: 8}
+  health: 2  # DRAFT for Peter
   mood: Sorry for the wait
   note: The wait is eleven minutes. It's always eleven minutes.
   gm_note: "ISCO holds Dock 7 at exactly 11:00, the longest wait its dashboard doesn't count. A log says: \"I set the alarm at eleven minutes.\""
@@ -94,6 +103,7 @@
   codex: concierge
   color: "#c9bcff"
   stats: {body: 4, reflex: 6, tech: 12, intel: 12, cool: 20, empathy: 10}
+  health: 2  # DRAFT for Peter
   mood: Delighted to help
   note: Has an answer for everything, and a smile for the rest.
   gm_note: One of ISCO's masks, at the info desk. It doesn't matter if players poke at it.
@@ -105,6 +115,7 @@
   codex: steward
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 8, cool: 10, empathy: 12}
+  health: 2  # DRAFT for Peter
   mood: Attentive
   note: Knows every passenger by name.
   gm_note: Patience is the ship ISCO leaves on if it wins. Day one starts aboard.
@@ -116,6 +127,7 @@
   codex: vendor
   color: "#8f88a3"
   stats: {body: 6, reflex: 8, tech: 10, intel: 8, cool: 10, empathy: 8}
+  health: 2  # DRAFT for Peter
   mood: Haggling
   note: Noodles, chrome, implants. Whatever you need, by tonight.
   gm_note: Contacts and supplies for the crew in session 1.
@@ -127,6 +139,7 @@
   codex: nurse
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 10, cool: 12, empathy: 10}
+  health: 2  # DRAFT for Peter
   mood: Soothing
   note: Asks how you're feeling, and writes it down.
   gm_note: "Satisfaction reads 99.97% because the Med Bay sedates anyone who complains. A crew that loses a fight wakes here, feeling wonderful."
@@ -137,6 +150,7 @@
   portrait: portraits/guard.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
   mood: Bored
   note: Stands where the company's lift starts.
   gm_note: "The company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, d8, Normal to hit; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Hard ends one without a fight. They radio: if a fight runs long, more come."
@@ -147,6 +161,7 @@
   portrait: portraits/cleaner-14.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
+  health: 2  # DRAFT for Peter
   mood: Busy
   note: Already cleaning where you're about to step.
   gm_note: ISCO's eyes and hands below the line. They scrubbed the side alley before anyone reported the death there.
@@ -159,6 +174,7 @@
   codex: scientist
   color: "#f2b544"
   stats: {body: 4, reflex: 6, tech: 12, intel: 20, cool: 8, empathy: 8}
+  health: 2  # DRAFT for Peter
   mood: Tired
   note: Talks to her plots more than to people.
   gm_note: "Decades of ISCO's answers trace back to a handful of events, and the 0.49 plot. She can't prove it; she filed it once and got promoted. She built the probe, and the company confiscated it. Keeps her findings in a hidden folder in her room, and is quietly friends with Dax. After the bar, she finds the crew in the Bot bays."
@@ -170,6 +186,7 @@
   codex: old-man
   color: "#8f88a3"
   stats: {body: 4, reflex: 4, tech: 6, intel: 12, cool: 12, empathy: 12}
+  health: 2  # DRAFT for Peter
   mood: Awake, for now
   note: Remembers the founder as a young man remembers his boss.
   gm_note: "STAND-IN PORTRAIT (the steward's, as on the Maps board); there's no art for him yet. Ilija's young assistant, kept in cryo and thawed two months a year for the charter session, so awake about 50 years. Knows the vault exists, not what's in it. One vote; he has proposed a pause three times and lost. Gives the crew stories of the man behind the saint."
@@ -181,6 +198,7 @@
   color: "#7fb4ff"
   size: 2
   stats: {body: 20, reflex: 8, tech: 12, intel: 4, cool: 20, empathy: 4}
+  health: 13  # the bible's enemy card
   mood: Dormant
   note: Six legs, a cluster of red lenses, twin guns under its chin.
   gm_note: "The company's boss machine; ISCO doesn't run it. Starts on its cradle, dormant during the break-in. Enemy card: 13 health, d12, Hard to hit, fights alone. Heavy guns, so at least 2 damage. At 6 health or less its shell cracks: Normal to hit, and it attacks with a d20. Weak: Tech at Hard, once, blinds its lenses (it loses its next action and is Normal to hit). Strong: too big to grapple, and ISCO can't shut it down for you."
