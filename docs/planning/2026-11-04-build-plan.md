@@ -13,7 +13,7 @@
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
 | M6: Station and Codex tabs | **Built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex and Station texts, and the Codex's card crops, are drafts for Peter, who hasn't tried either tab yet |
 | M7: Ship for session 1 | Not started. Peter is leaving it for later; it has to happen before game day, when the app first goes online |
-| M8: Fights | **Designing** 2026-11-05. Not ready to build: Peter wants it dialled in on the real screens first. Round 16 draws the fight over screenshots of the app; waiting on Peter |
+| M8: Fights | **Designing** 2026-11-05. Not ready to build: Peter wants it dialled in on the real screens first. Round 16 draws the fight over screenshots of the app, revised to Peter's notes; waiting on Peter |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -505,18 +505,18 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
 - **In it** (as Round 16 draws it):
   1. **A fight belongs to a map.** There can be one on each map at once, for a split party.
      - **Start a fight** sits beside the map's moods on your Scene, because a fight is a state of that map like its moods.
-     - It opens a dialog listing everyone on that map: the crew standing there, and every NPC token there. Hidden NPCs are marked and get shown when the fight starts. Each row shows the Reflex die it will roll.
+     - It opens a dialog listing everyone on that map: the crew standing there, and every NPC token there. Hidden NPCs are marked and get shown when the fight starts. No dice are shown: they get rolled regardless.
      - The crew there start ticked and NPCs unticked. Roll for initiative rolls everyone's Reflex on the server (`rules.py`, from `commands.py`), and the order is the totals, highest first.
      - During the fight that spot reads "Fight · round 2 | End fight". Next turn sits just left of the strip.
      - An NPC's health stepper is on its card; the crew's are on the rail as now. Adding or removing someone mid-fight: tick them in a reopened dialog, and they roll and slot in.
   2. **The turn strip** along the top of the map, the looping kind from `R14SpotC`:
      - whoever's turn it is sits in the middle, larger, with NOW over them and a short bar under them, and NEXT over the next one;
      - the rest fade out to either side: past turns left, coming turns right, with a small R2 mark where the next round starts;
-     - each fighter's Reflex number stays under their slot, dim;
+     - each fighter's Reflex number shows as their dice land, then fades once the strip sorts: after that only the order matters;
      - no white ring or glow around anyone, on the strip or the map.
   3. **Who sees which fight.** A player sees the fight on the map they're looking at, which is the map their token is on. Ves alone on the Promenade sees only her fight there. You see the fight on the map open on your Scene, and your map list marks every map with a fight on ("Fight · round 2").
-  4. **The TV** shows the strip of the fight on the map it's showing: the party map, or the map of the one it follows. Its strip is bigger, at the top between the map's name and the logout button. When there's a fight on another map too, a note in the bottom-right corner says so and whose turn it is there (a tweak on `R16TvFight` turns it off).
-  5. **HP rings for everyone in the fight**, NPCs in their faction's colour. **A slice is never bigger than a quarter of the ring**, so 1 health is one short slice with the rest of the ring a faint line, not a closed circle (`R16Slices`). Enemies need a health in `content/npcs.yaml`: today it's only in the GM notes (guard 1, hired gun 4, spider mech 13 that cracks at 6, the fixer 10). Bots and bystanders have placeholders in Round 16.
+  4. **The TV lists who's in each fight, and nothing about whose turn it is.** There's one row per fight on any map, under the map's name at the top-left: the map's name, then its fighters in turn order with their HP rings. A row goes when its fight ends. There's no strip, NOW or NEXT on the TV.
+  5. **HP rings for everyone in the fight**, NPCs in their faction's colour. **One slice per point of health, always filling the whole ring, with the same clean breaks as the crew's segments**: 1 health is the whole ring with one break at the top, 2 are halves, 3 are thirds (`R16Slices`). There's no tapering or faint line, which looked like the old continuous bar. 1 health will be common: the bible's mook and security guard have 1, and guards come in groups of 3 to 5. Enemies need a health in `content/npcs.yaml`: today it's only in the GM notes (guard 1, hired gun 4, spider mech 13 that cracks at 6, the fixer 10). Bots and bystanders have placeholders in Round 16.
   6. **Change animations on the chips** (look C) for every GM change:
      - HP lost or healed;
      - Entropy gained or spent;
@@ -549,13 +549,16 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - `R16TomoFight` and `R16TvFight`: the same fight on a loop, on Tomo's laptop and on the TV;
   - `R16GmTwoFights` and `R16VesFight`: the Promenade fight, as you see it (your map list marks both fights) and as Ves sees it;
   - `R16Slices`: the health rings, from the guard's 1 to the mech's 13, beside the crew.
+- **Peter's notes on Round 16 (2026-11-05), applied to the boards:**
+  - No initiative numbers once the order is set.
+  - No dice in the Start a fight dialog.
+  - The TV shows who's in each fight, a row per fight, not whose turn it is.
+  - HP slices always fill the whole ring with clean breaks, even at 1.
 - **Defaults to confirm (drawn in Round 16):**
   - **Ties:** the bigger Reflex die goes first, then the crew before NPCs; Peter can drag to fix it.
   - **Down at 0:** the slot greys out and Next skips it, but it stays in the strip (Lale's Burn can get them up).
   - **A hidden NPC** can be ticked, and is shown to everyone when the fight starts, so the strip never shows a slot for something players can't see.
-  - **The TV's note about another fight:** on or off.
   - **Ves's Burn:** when she's in a fight, her row could pick the In a fight cut by itself.
-  - **The initiative numbers** stay under each slot, dim, so players can see why the order is what it is.
 - **Still open:** Team-up: whether it needs anything in the app, or the players just add their totals out loud.
 - **Done when:** set once Peter is happy with Round 16.
 - **Why here:** session 1 has no fight. It's needed before the first fight, session 2 at the earliest.
