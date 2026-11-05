@@ -13,7 +13,7 @@
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
 | M6: Station and Codex tabs | **Built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex and Station texts, and the Codex's card crops, are drafts for Peter, who hasn't tried either tab yet |
 | M7: Ship for session 1 | Not started. Peter is leaving it for later; it has to happen before game day, when the app first goes online |
-| M8: Fights | **Designing** 2026-11-05: Peter picked from Round 14 (chip look C, the turn strip, faction-coloured HP for everyone in a fight). Next: Round 15, the fight from start to end with initiative |
+| M8: Fights | **Designing** 2026-11-05: Peter picked from Round 14 (chip look C, the turn strip, faction-coloured HP for everyone in a fight). Round 15 draws a whole fight with initiative; waiting on Peter |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -505,7 +505,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
 - **In it:**
   1. **The fight.** On the Scene, Peter picks who's in it and presses Roll for initiative. Everyone's Reflex is rolled on the server (`rules.py`, from `commands.py`), and the order is the totals, highest first. Peter has Next and End fight, and can drag the order, add someone mid-fight (they roll and slot in) or take someone out.
   2. **The turn strip** along the top of the Scene, for everyone: the order left to right, NOW larger, NEXT marked. Each fighter's Reflex dice spin and land in their slot, then the slots slide into order.
-  3. **HP rings for everyone in the fight.** Enemies need a health in `content/npcs.yaml`: today it's only in the GM notes (guard 1, hired gun 4, spider mech 13 that cracks at 6, the fixer 10). The bots' health is still to set.
+  3. **HP rings for everyone in the fight.** Enemies need a health in `content/npcs.yaml`: today it's only in the GM notes (guard 1, hired gun 4, spider mech 13 that cracks at 6, the fixer 10). The bots' health is still to set (Round 15 draws the cleaner bot with 2, a placeholder).
   4. **Change animations on the chips** (look C) for every GM change:
      - HP lost or healed;
      - Entropy gained or spent;
@@ -519,11 +519,18 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - `R14ChipReact` (C, **picked**): the chip reacts. A hit shakes it with a red flash (and a crack for 3), a heal or a spend sends out a wave, Entropy orbits in, and an item lands on it as a badge.
   - **Enemy rings** (`R14Enemies`): the faction ring outside a fight; switched on, one segment per health in the faction colour. Hits take segments off; the guard goes down; the spider mech's notch at 6, which only the GM sees, and its shell cracking at 6.
   - **Whose turn it is:** `R14SpotA` (a pool of light, everyone else dims), `R14SpotB` (plus who has had a go this round) and `R14SpotC` (a turn strip along the top, **picked** without the white rim).
-- **Round 15, next:** the fight from start to end, as the GM and as a player: picking who's in it, the initiative roll landing in the strip and sorting, Next, someone going down, End fight.
+- **Round 15 on the UI canvas** (page "Round 15", drawn 2026-11-05, waiting on Peter):
+  - `R15FightGM` works:
+    - in your column on the Scene you tick who's in the fight (the crew start ticked) and press Roll for initiative;
+    - Reflex dice spin in each slot of the strip, land one by one, and the strip sorts itself;
+    - Next sits at the strip's end, and an HP stepper sits beside each fighter in your column, with look C on every hit;
+    - ticking someone mid-fight rolls them in; End fight puts the NPCs' plain rings back.
+  - `R15FightTable` plays a whole fight on Ves's screen, on a loop: the hired gun hits Tomo, Tomo floors the guard, and Next skips the guard in round 2.
+  - NPC rings fill in with HP segments in their faction colour as they join; a 1-health ring has a clear gap at the top, so it doesn't read as the plain ring.
 - **Defaults to confirm in Round 15:**
   - **Ties:** the bigger Reflex die goes first, then the crew before NPCs; Peter can drag to fix it.
   - **Down at 0:** the slot greys out and Next skips it, but it stays in the strip (Lale's Burn can get them up).
-  - **A hidden NPC in the fight:** players never see its slot; Peter sees it marked hidden.
+  - **A hidden NPC** can't join the fight until Peter shows it ("Hidden: show it first"), so the strip never gives it away.
   - **Where Peter's controls go:** Next at the end of the strip, and the fight picker in the Scene's GM column.
   - **The TV:** shows the strip too.
   - **The initiative numbers** stay under each slot, dim, so players can see why the order is what it is.
