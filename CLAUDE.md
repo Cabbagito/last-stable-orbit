@@ -19,7 +19,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 - **Rolls:** the full animation shows only on the roller's screen. Everyone else sees the result on the token and in the crew rail.
 - **The GM controls:** map moods and switches, HP and Entropy, rolls (including hidden ones), NPCs, and every inventory. Clues are handed out as items, such as a note.
 - **Login:** players pick their character; only the GM has a passcode.
-- **Fights:** the app never knows the number to beat, who attacks whom, or whether a fight is on. The GM names the check out loud and sets HP and Entropy by hand. Players spend Entropy and Burn whenever they want. See the plan's M8.
+- **Fights:** the app never knows the number to beat or who attacks whom. The GM names the check out loud and sets HP and Entropy by hand. It does know who's in a fight: the GM picks them, and the app rolls their Reflex for the turn order. Players spend Entropy and Burn whenever they want. See the plan's M8.
 
 ## Architecture rules
 

@@ -13,7 +13,7 @@
 | M5: The other 10 maps | **Built** 2026-11-04: all 11 maps are in the app. After Patience and the Promenade, Peter said go on to the other eight; those are for him to look over. Texts, NPC cards, dice and positions are drafts. See "How M5 is going" |
 | M6: Station and Codex tabs | **Built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex and Station texts, and the Codex's card crops, are drafts for Peter, who hasn't tried either tab yet |
 | M7: Ship for session 1 | Not started. Peter is leaving it for later; it has to happen before game day, when the app first goes online |
-| M8: Fights | **Designing** 2026-11-05: Peter cut it down (see M8). Round 14 on the UI canvas draws the change animations, enemy rings and a spotlight; waiting on Peter's picks |
+| M8: Fights | **Designing** 2026-11-05: Peter picked from Round 14 (chip look C, the turn strip, faction-coloured HP for everyone in a fight). Next: Round 15, the fight from start to end with initiative |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -490,39 +490,45 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - A restore from backup reproduces the exact state.
 - **Why here:** it is the last gate before session 1. Move Railway earlier if players should read the Codex at home first.
 
-### M8: Fights · M · design first (the change animations, maybe a turn order), then a single session
-- **Goal:** Peter runs a fight with the controls he already has, and the table sees every change happen.
+### M8: Fights · M · design first (Round 14 done, Round 15 next), then a single session
+- **Goal:** Peter runs a fight with the controls he already has, everyone sees whose turn it is, and the table sees every change happen.
 - **Decided 2026-11-05 (Peter). This replaces the earlier M8:**
-  - **The app knows nothing about the fight.** There is no number to beat, no damage by margin, no attack roll against a target, no "who hits whom", and no fight on/off. Peter names the check out loud ("that's a Very hard Reflex check") and the table plays it out. Enemy rolls stay as they are: the GM rolls the NPC's stat.
+  - **The app never knows the number to beat or who attacks whom.** There is no damage by margin and no attack roll against a target. Peter names the check out loud ("that's a Very hard Reflex check") and the table plays it out. Enemy rolls stay as they are: the GM rolls the NPC's stat.
+  - **It does know who's in a fight, and in what order.** Peter picks who's in it (crew and NPC tokens), and the app rolls everyone's Reflex at once for the turn order, highest first. Peter triggers that roll; nobody rolls it themselves. There's no alternating between the crew and enemies: the order is just the rolls. **This changes the bible**, which still says "no initiative" under Rules; Peter to update the live doc.
   - **Peter applies every result by hand** with the HP and Entropy steppers, as he already does. On your feet's +3 is him raising the number; damage landing on Tomo (Not them) is him lowering it.
   - **Players spend Entropy and Burn whenever they want.** Nothing is locked to a fight, so there's no "once per fight". If someone spends by mistake, Peter refunds it.
-  - **The other Entropy spends** (I know a guy 2, Last stand 3, and Team-up if it costs any): Peter leans towards the GM taking them off with the Entropy stepper, with no player buttons. Push and the Burn row keep their player buttons. Confirm at the design pass.
+  - **The other Entropy spends** (I know a guy 2, Last stand 3, and Team-up if it costs any): Peter leans towards the GM taking them off with the Entropy stepper, with no player buttons. Push and the Burn row keep their player buttons.
+- **Peter's picks on Round 14 (2026-11-05):**
+  - **Changes on the chip:** "all of those are good", leaning towards **C** (`R14ChipReact`: the chip reacts). Default: build C.
+  - **Turn order:** the strip along the top (`R14SpotC`), but **no spotlight and no white ring around anyone**, neither the pool nor the rim.
+  - **Enemy health:** everyone in a fight shows their HP ring. An NPC's segments are in its own colour, which is its faction's: the company blue, ISCO's bots white, the fixer's people red. Outside a fight NPCs keep their plain ring. This replaces the per-NPC switch on `R14Enemies`.
 - **In it:**
-  1. **Enemy rings.** An NPC token can carry an HP ring like the crew's (maybe Entropy too). The GM switches it on per NPC, so nobody has a ring outside a fight. Enemies need a health in `content/npcs.yaml`: today it's only in the GM notes (guard 1, hired gun 4, spider mech 13 that cracks at 6, the fixer 10). Players see a ring once it's on.
-  2. **Change animations on the chips.** Every change the GM makes plays an animation on that character's chip, so it isn't just a number going up or down:
-     - HP lost, HP healed;
-     - Entropy gained, Entropy spent;
-     - an item received, an item taken;
-     - credits gained, credits lost;
-     - and an enemy's ring losing or regaining HP.
-  3. **Maybe a turn order:** a way to show whose turn it is in a fight. Whether it's worth having, and where it goes, is part of the design.
-- **Round 14 on the UI canvas** (page "Round 14", drawn 2026-11-05, waiting on Peter's picks):
+  1. **The fight.** On the Scene, Peter picks who's in it and presses Roll for initiative. Everyone's Reflex is rolled on the server (`rules.py`, from `commands.py`), and the order is the totals, highest first. Peter has Next and End fight, and can drag the order, add someone mid-fight (they roll and slot in) or take someone out.
+  2. **The turn strip** along the top of the Scene, for everyone: the order left to right, NOW larger, NEXT marked. Each fighter's Reflex dice spin and land in their slot, then the slots slide into order.
+  3. **HP rings for everyone in the fight.** Enemies need a health in `content/npcs.yaml`: today it's only in the GM notes (guard 1, hired gun 4, spider mech 13 that cracks at 6, the fixer 10). The bots' health is still to set.
+  4. **Change animations on the chips** (look C) for every GM change:
+     - HP lost or healed;
+     - Entropy gained or spent;
+     - an item received or taken;
+     - credits gained or lost;
+     - going down at 0, and an enemy's ring losing or regaining HP.
+- **Round 14 on the UI canvas** (page "Round 14", drawn 2026-11-05):
   - **Changes on the chip,** three looks. Each board plays the same ten changes in the crew rail and on the map, on a loop:
     - `R14ChipRing` (A): the ring itself tells it. Lost segments flash and break off, new ones light up, and a number floats away. An item drops into the portrait, or rises out of it struck through;
     - `R14ChipCallout` (B): a callout beside the ring in the roll callout's language (HIT −1, HEALED +3, ENTROPY +1, GOT and the item, CREDITS +50, DOWN), fading after about 3 s;
-    - `R14ChipReact` (C): the chip reacts. A hit shakes it with a red flash (and a crack for 3), a heal or a spend sends out a wave, Entropy orbits in, and an item lands on it as a badge.
-  - **Enemy rings** (`R14Enemies`): the faction ring outside a fight; switched on, one segment per health in the faction colour (a tweak tries green). Hits take segments off; the guard goes down; the spider mech's notch at 6, which only the GM sees, and its shell cracking at 6. A tweak gives the fixer an Entropy ring. The GM's card on the right works: Health ring on/off and a health stepper.
-  - **Whose turn it is** (the bible has no initiative: Peter moves the spotlight, and an enemy acts after each player). Each board loops a round: Ves, an enemy, Tomo, an enemy, and so on:
-    - `R14SpotA`: a pool of light under whoever has the spotlight, a white rim on their ring, and everyone else dims;
-    - `R14SpotB`: the same without dimming, plus a tick on the crew who've had a go this round, and a GM-only New round button;
-    - `R14SpotC`: a turn strip along the top (NOW, NEXT, then the rest), with an enemy slot after each player.
-- **To decide at the design pass:**
-  - **Where the animations play:** the crew rail ring, the token's head on the map, the sheet, the TV.
-  - **Who sees the item and credit animations.** Players see only their own pockets, so the default is that only the holder and the GM see those; HP and Entropy changes are public.
-  - **0 HP:** whether the ring and token get a "down" look.
-  - **Team-up:** whether it needs anything in the app, or the players just add their totals out loud.
-  - **The turn order:** who sets it (the GM drags the order, or it follows a roll), and whether the TV shows it.
-- **Done when:** set after the design pass.
+    - `R14ChipReact` (C, **picked**): the chip reacts. A hit shakes it with a red flash (and a crack for 3), a heal or a spend sends out a wave, Entropy orbits in, and an item lands on it as a badge.
+  - **Enemy rings** (`R14Enemies`): the faction ring outside a fight; switched on, one segment per health in the faction colour. Hits take segments off; the guard goes down; the spider mech's notch at 6, which only the GM sees, and its shell cracking at 6.
+  - **Whose turn it is:** `R14SpotA` (a pool of light, everyone else dims), `R14SpotB` (plus who has had a go this round) and `R14SpotC` (a turn strip along the top, **picked** without the white rim).
+- **Round 15, next:** the fight from start to end, as the GM and as a player: picking who's in it, the initiative roll landing in the strip and sorting, Next, someone going down, End fight.
+- **Defaults to confirm in Round 15:**
+  - **Ties:** the bigger Reflex die goes first, then the crew before NPCs; Peter can drag to fix it.
+  - **Down at 0:** the slot greys out and Next skips it, but it stays in the strip (Lale's Burn can get them up).
+  - **A hidden NPC in the fight:** players never see its slot; Peter sees it marked hidden.
+  - **Where Peter's controls go:** Next at the end of the strip, and the fight picker in the Scene's GM column.
+  - **The TV:** shows the strip too.
+  - **The initiative numbers** stay under each slot, dim, so players can see why the order is what it is.
+- **Still open:** Team-up: whether it needs anything in the app, or the players just add their totals out loud.
+- **Done when:** set after Round 15.
 - **Why here:** session 1 has no fight. It's needed before the first fight, session 2 at the earliest.
 
 ### M9: Finale screen · S · single session after a design review
