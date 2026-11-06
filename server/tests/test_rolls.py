@@ -252,7 +252,7 @@ async def test_gm_rolls_for_npcs(engine, dice):
     dice.push(3)
     await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20})
     r = latest(engine)
-    assert r.god and not r.hidden and r.stat is None and r.sides == 20  # just a die: no stat, and always God
+    assert r.god and not r.hidden and not r.sealed and r.stat is None and r.sides == 20  # just a die: no stat, and Public unless told otherwise
     assert not engine.state.rolls[0].open  # the GM has one roll open at a time too
 
     await run(engine, GM, "gm.token.hide", {"token": "cleaner-14", "hidden": True})
@@ -268,7 +268,7 @@ async def test_gm_rolls_for_npcs(engine, dice):
                 {"token": "dax", "stat": "body", "mode": "loud"},
                 {"token": "dax", "stat": "body", "mode": "someone"},  # players can see Dax
                 {"token": "cleaner-14", "stat": "body", "mode": "hidden"},  # would show the face of an NPC nobody can see
-                {"token": None, "sides": 20, "mode": "public"}, {"token": None, "sides": 20, "mode": "hidden"}):
+                {"token": None, "sides": 20, "mode": "someone"}, {"token": None, "sides": 20, "mode": "god"}):
         assert (await run(engine, GM, "gm.roll.start", bad))["code"] == "invalid", bad
     assert (await run(engine, VES, "gm.roll.start", {"token": "dax", "stat": "body"}))["code"] == "forbidden"
 
@@ -458,16 +458,29 @@ async def test_god_for_an_npc_on_another_map_is_someone_there(engine, dice):
     assert rolls[0]["token"] is None and "guard" not in json.dumps(rolls)
 
 
-async def test_just_a_die_shows_nothing_about_the_die(engine, dice):
+async def test_just_a_die_in_public_shows_its_number_once_it_lands(engine, dice):
     dice.push(6, 3)
-    assert (await run(engine, GM, "gm.roll.start", {"token": None, "sides": 6}))["ok"]
+    assert (await run(engine, GM, "gm.roll.start", {"token": None, "sides": 6, "mode": "public"}))["ok"]
+    for v in WATCHERS:
+        r = seen_by(engine, v)[0]
+        assert r["god"] and not r["sealed"] and r["sides"] == 6 and '"value"' not in json.dumps(r)
+    await run(engine, GM, "roll.reveal", {"roll": latest(engine).id, "shown": 2})
+    for v in WATCHERS:
+        r = seen_by(engine, v)[0]
+        assert r["god"] and not r["sealed"] and r["value"] == 9
+    assert seen_by(engine, GM)[-1]["tag"] == "GOD"
+
+
+async def test_just_a_die_hidden_shows_nothing_about_the_die(engine, dice):
+    dice.push(6, 3)
+    assert (await run(engine, GM, "gm.roll.start", {"token": None, "sides": 6, "mode": "hidden"}))["ok"]
     await run(engine, GM, "roll.reveal", {"roll": latest(engine).id, "shown": 2})
     for v in WATCHERS:
         rolls = seen_by(engine, v)
         assert_sealed(rolls, "seal")
         assert rolls[0]["god"] and rolls[0]["stat"] is None and rolls[0]["sides"] == 20
     gm = seen_by(engine, GM)[-1]
-    assert (gm["sides"], gm["value"], gm["tag"]) == (6, 9, "GOD")
+    assert (gm["sides"], gm["value"], gm["tag"]) == (6, 9, "GOD · HIDDEN")
 
 
 async def test_hiding_an_npc_mid_roll_takes_its_number_away(engine, dice):

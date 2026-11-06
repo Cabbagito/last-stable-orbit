@@ -179,8 +179,6 @@
 @keyframes r17-godarm{50%{box-shadow:0 0 4px rgba(255,91,77,.3)}}
 .r17-jdie{position:sticky;bottom:-12px;margin:auto -12px -12px -16px;padding:0 12px 12px 16px;background:#000;box-shadow:0 -12px 12px -6px #000;z-index:1}
 .r17-jdie .r5-sec{box-shadow:inset 0 1px 0 #1e2024;padding-top:12px}
-.r17-dsec{flex:none;width:84px;background:#000;border:1px solid #2f3238;color:#b9bdc4;font-family:'Hanken Grotesk',sans-serif;font-size:13px;cursor:pointer}
-.r17-dsec:hover{border-color:#fff}
-.r17-dsec.on{background:#fff;color:#000;border-color:#fff}
+.r17-rseg.r17-jmodes{flex:none;width:174px}
 
 @media (prefers-reduced-motion:reduce){.r17-pl,.r17-strip,.r17-mo-slam,.r17-mo-cool,.r17-mo-pulse path,.r17-num,.r17-tile,.r17-sk,.r17-insult,.r17-ribbon,.r17-sweep,.r17-shock,.r17-spark,.r17-pushf,.r17-chipw,.r17-rgod.on,.r17-g1,.r17-g2,.r17-gnum span,.r17-gside{animation-duration:.01ms!important;animation-iteration-count:1!important}.r17-mo-pulse path{stroke-dashoffset:0}}

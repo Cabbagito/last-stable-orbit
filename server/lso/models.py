@@ -587,7 +587,7 @@ class RollState(Strict):
     seed: int  # the animation's randomness, so a reload paints the same scene
     insult: str | None = None  # natural 1 only
     hidden: bool = False  # GM rolls only: Secret. Players and the TV never hear of it
-    sealed: bool = False  # GM rolls only: Hidden or Someone. Everyone sees it happen, nobody but the GM sees how it came out
+    sealed: bool = False  # GM rolls only: Hidden or Someone, or a Hidden "just a die". Everyone sees it happen, nobody but the GM sees how it came out
     god: bool = False  # GM rolls only: the whole-screen God roll (Round 17)
     shown: int = 0  # dice that have landed on the roller's screen
     pushes: int = 0

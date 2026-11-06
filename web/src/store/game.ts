@@ -215,7 +215,7 @@ export type GmRollMode = 'public' | 'hidden' | 'someone' | 'secret' | 'god'
  * closes the roll. A public roll's explosions land one by one, as a roll screen's would. Anything players aren't to
  * read lands all at once, at the same moment whatever it came to, so how long it took tells them nothing.
  */
-export async function gmRoll(args: { token: string; stat: StatKey; mode: GmRollMode } | { token: null; sides: number; mode: 'god' | 'secret' }) {
+export async function gmRoll(args: { token: string; stat: StatKey; mode: GmRollMode } | { token: null; sides: number; mode: 'public' | 'hidden' | 'secret' }) {
   const ack = await gmRun('gm.roll.start', args)
   if (!ack.ok) return
   const mine = useGame.getState().view?.rolls.filter((r) => r.by === 'gm' && r.open).pop()

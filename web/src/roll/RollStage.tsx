@@ -162,7 +162,8 @@ function God({ r, tv, world, loop, onEnd }: { r: RollView; tv: boolean; world: R
   if (!view) return null
   const who = rollerOf(view, r)
   const hit = t >= T_HIT
-  const g1 = hit && hidden ? 'IT HAS LANDED.' : t < 0.45 ? '' : hidden && !r.stat ? 'THE GM IS ROLLING' : `${hidden ? 'SOMEONE' : who.name} ROLLS ${L.name}`
+  const rolling = !r.stat ? (hidden ? 'THE GM IS ROLLING' : `THE GM ROLLS D${r.sides}`) : `${hidden ? 'SOMEONE' : who.name} ROLLS ${L.name}`
+  const g1 = hit && hidden ? 'IT HAS LANDED.' : t < 0.45 ? '' : rolling
   const g2 = !hidden ? '' : hit ? 'YOU DON’T GET TO KNOW.' : t >= 1.5 ? 'YOUR FATE DEPENDS ON IT.' : ''
   const side = t >= 0.8 && !!r.stat
   const number = !hidden && hit ? r.value : undefined

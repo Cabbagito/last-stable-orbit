@@ -7,6 +7,11 @@ import { Cross, Diamond, Eye } from './parts'
 import { SendCrew, crewOn, mapList } from './SendCrew'
 
 const DICE = [4, 6, 8, 10, 12, 20]
+const DIE_MODES = [
+  ['public', 'Public', "The God roll, and everyone sees the number"],
+  ['hidden', 'Hidden', "The God roll, and nobody sees the number"],
+  ['secret', 'Secret', 'Only you know about it'],
+] as const
 
 /** " · fight, round 2" in the map list, for every map with a fight on (M8). */
 const fightLabel = (view: View, mapId: string) => {
@@ -37,7 +42,7 @@ export function GmScene({ map }: { map: MapView | undefined }) {
   const setGmMap = useGame((s) => s.setGmMap)
   const gmError = useGame((s) => s.gmError)
   const [sides, setSides] = useState(20)
-  const [secret, setSecret] = useState(false) // for one roll: it never stays on
+  const [dieMode, setDieMode] = useState<'public' | 'hidden' | 'secret'>('public')
   const [face, setFace] = useState<{ n: RosterNpc; x: number; y: number } | null>(null)
   if (!view) return null
 
@@ -182,19 +187,16 @@ export function GmScene({ map }: { map: MapView | undefined }) {
           ))}
         </div>
         <div className="r10-go">
-          <button
-            type="button"
-            className="r10-roll"
-            onClick={() => {
-              setSecret(false)
-              void gmRoll({ token: null, sides, mode: secret ? 'secret' : 'god' })
-            }}
-          >
+          <button type="button" className="r10-roll" onClick={() => void gmRoll({ token: null, sides, mode: dieMode })}>
             Roll d{sides}
           </button>
-          <button type="button" className={'r17-dsec' + (secret ? ' on' : '')} aria-pressed={secret} title="This one roll: players see nothing at all" onClick={() => setSecret(!secret)}>
-            Secret
-          </button>
+          <div className="r17-rseg r17-jmodes" role="group" aria-label="What players see">
+            {DIE_MODES.map(([id, name, title]) => (
+              <button key={id} type="button" className={'r17-rb' + (dieMode === id ? ' on' : '')} aria-pressed={dieMode === id} title={title} onClick={() => setDieMode(id)}>
+                {name}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
     </aside>

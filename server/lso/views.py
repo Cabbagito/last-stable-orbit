@@ -8,7 +8,7 @@ Every frame a client receives is built here for that viewer. A player gets:
 - their own inventory only, with each item's text (clues are items, so this is where they hide);
 - each crew member's latest roll, and the latest roll of each NPC they can see, its dice only as they land on the
   roller's screen. The GM's roll modes (Round 17) filter the rest, see _rolls_view and _roll_view: Secret never
-  arrives, a sealed roll (Hidden, Someone) never says how it came out, and God names only an NPC this viewer can see.
+  arrives, a sealed roll (Hidden, Someone) never says how it came out, and God names only an NPC this viewer can see. Just a die's God roll has its number unless it's sealed.
 The GM gets everything, plus the NPC roster, the presets, the item catalogue and the cue list.
 
 Each map also carries its decals and camera cones (everyone sees those). Only the GM gets its pins, the Key
@@ -318,7 +318,7 @@ def _gm_tag(state: GameState, r: RollState) -> str:
     if r.by != "gm":
         return ""
     if r.god:
-        return "GOD"
+        return "GOD · HIDDEN" if r.sealed else "GOD"
     if r.hidden:
         return "SECRET"
     if not r.sealed:
@@ -333,7 +333,7 @@ def _roll_view(state: GameState, r: RollState, viewer: Viewer, visible_tokens: s
     token = crew_token if r.char else r.token
     seen = token in visible_tokens
     # a sealed roll says it happened and what kind it was: never its dice, how many, a natural 1, or an explosion
-    sealed = not full and (r.sealed or (r.god and not seen))
+    sealed = not full and (r.sealed or (r.god and token is not None and not seen))
     phase = roll_phase(r)
     if sealed:
         phase = "seal" if r.shown >= len(r.dice) else "roll"

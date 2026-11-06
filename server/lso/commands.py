@@ -167,9 +167,10 @@ def _roll_intent(viewer: Viewer, state: GameState, content: Content, kind: str, 
 
 def _gm_roll(state: GameState, content: Content, args: dict, rng, now: float) -> Events:
     """An NPC rolls the die on its sheet for a stat, in one of the modes on its card (Round 17): Public, Hidden, Secret
-    or God, or Someone, Secret or God for an NPC players can't see. "Just a die" has no stat: God, or a one-roll Secret."""
+    or God, or Someone, Secret or God for an NPC players can't see. "Just a die" has no stat: Public and Hidden are both
+    God rolls, with and without the number, and Secret is only the GM's."""
     token = args.get("token")
-    mode = args.get("mode", "god" if token is None else "public")
+    mode = args.get("mode", "public")
     if mode not in GM_ROLL_MODES:
         raise _invalid(f"mode must be one of {', '.join(GM_ROLL_MODES)}")
     flags = {"hidden": mode == "secret", "sealed": mode in ("hidden", "someone"), "god": mode == "god"}
@@ -177,8 +178,9 @@ def _gm_roll(state: GameState, content: Content, args: dict, rng, now: float) ->
         sides = _int(args, "sides")
         if sides not in DIE_SIDES:
             raise _invalid(f"sides must be one of {DIE_SIDES}")
-        if mode not in ("god", "secret"):
-            raise _invalid("just a die is a God roll or a Secret one")
+        if mode not in ("public", "hidden", "secret"):
+            raise _invalid("just a die is Public, Hidden or Secret")
+        flags = {"hidden": mode == "secret", "sealed": mode == "hidden", "god": mode != "secret"}
         return _new_roll(state, content, rng, now, by="gm", token=None, handle="gm", stat=None, sides=sides, **flags)
     stat = _stat(args)
     if not isinstance(token, str):
