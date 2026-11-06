@@ -14,7 +14,7 @@
 | M6: Station and Codex tabs | **Built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex and Station texts, and the Codex's card crops, are drafts for Peter, who hasn't tried either tab yet |
 | M7: Ship for session 1 | **Hosting decided** 2026-11-05: parker at http://parker.local instead of Railway, with a join card on the TV (the README's "Hosting it at the table"). Backups and the layout checks are not started |
 | M8: Fights | **Built** 2026-11-05 and checked on :8071 with four seats (the GM, Tomo, Ves and the TV); see "How M8 turned out" in M8. Deployed to 8070 the same day. NPC health beyond the bible's enemy cards is drafts |
-| Round 17: rolls with pop | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV); see "How Round 17 turned out" below. Not yet deployed to 8070. The TV's sound is for Peter to judge by ear |
+| Round 17: rolls with pop | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV); see "How Round 17 turned out" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. The TV's sound is for Peter to judge by ear |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
