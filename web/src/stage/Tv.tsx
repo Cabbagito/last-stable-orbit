@@ -4,17 +4,19 @@ import { hpRing, plainRing, ring } from '../lib/ring'
 import { fighterIn } from '../fight/fights'
 import { ChipFx } from '../fx/ChipFx'
 import { MapLayers } from '../map/MapLayers'
+import { Banners, usePlates } from '../roll/Banner'
+import { RollStage } from '../roll/RollStage'
+import { RollSound } from '../roll/sound'
 import { RingPortrait } from '../shell/RingPortrait'
 import { useGame } from '../store/game'
 import type { MapView, TokenView, Vec3, View } from '../types'
 import { Downside } from './Downside'
 import { BurnFilms, FilmPlayer } from './Film'
 import { JoinCard } from './JoinCard'
-import { TvBand } from './TvBand'
 
 /**
  * The TV at the table (the Stage seat). Full screen: the party's map with only what everyone may see, no crew
- * rail; public rolls slide up in a band along the bottom (Round 12's TV 2); films play here, with all the sound.
+ * rail; a roll takes the whole screen as a big banner or as God's turn (Round 17); films and rolls make their sound here.
  * Its camera is set from the GM tab. It needs one click before the browser lets it go full screen and play sound.
  * Moving the mouse shows the cursor and a way to log out, for a few seconds; the GM tab's preview has neither.
  */
@@ -22,7 +24,11 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
   const view = useGame((s) => s.view)
   const preview = useGame((s) => s.preview) // the GM tab's small preview of the TV: no click, no sound
   const [started, setStarted] = useState(!!preview)
-  const [focus, setFocus] = useState<string | null>(null) // the token whose roll is in the band
+  const plates = usePlates()
+  const focus = plates[plates.length - 1]?.r.token ?? null // the token whose roll is on the screen
+  const world = useRef<HTMLDivElement>(null)
+  const sound = useRef<RollSound | null>(null)
+  useEffect(() => () => sound.current?.close(), [])
   const k = useScale()
   const awake = useAwake()
   if (!view) return <div className="app-tv app-wait">Docking…</div>
@@ -32,25 +38,30 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
 
   const start = () => {
     void document.documentElement.requestFullscreen?.().catch(() => undefined)
+    sound.current = new RollSound()
+    sound.current.unlock()
     setStarted(true) // this click also lets the films play their sound
   }
 
   return (
     <div className={'app-tv' + (awake ? ' awake' : '')} style={{ '--k': k } as React.CSSProperties}>
-      {map ? <TvMap map={map} tokens={tokens} view={view} focus={focus} /> : <div className="app-wait">Somewhere the map doesn't reach.</div>}
-      {map && (
-        <div className="app-tvplace">
-          <div className="r4-place">{map.name}</div>
-          {mood && <div className="r12-tvmood">{mood.label}</div>}
-          <TvFights view={view} />
-        </div>
-      )}
-      {view.stage.join?.show && (
-        <aside className="app-tvjoin" aria-label="How to join the game">
-          <JoinCard join={view.stage.join} />
-        </aside>
-      )}
-      <TvBand onFocus={setFocus} />
+      <div ref={world} className="app-rollworld tvw">
+        {map ? <TvMap map={map} tokens={tokens} view={view} focus={focus} /> : <div className="app-wait">Somewhere the map doesn't reach.</div>}
+        {map && (
+          <div className="app-tvplace">
+            <div className="r4-place">{map.name}</div>
+            {mood && <div className="r12-tvmood">{mood.label}</div>}
+            <TvFights view={view} />
+          </div>
+        )}
+        {view.stage.join?.show && (
+          <aside className="app-tvjoin" aria-label="How to join the game">
+            <JoinCard join={view.stage.join} />
+          </aside>
+        )}
+      </div>
+      <Banners where="tv" />
+      <RollStage world={world} tv sound={started ? sound.current : null} />
       <Downside where="tv" />
       {(view.stage.films ?? []).map((src) => (
         <FilmPlayer key={src} src={src} film={view.stage.film} sound={!preview} />
@@ -60,7 +71,7 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
         <div className="app-tvstart">
           <button type="button" className="app-tvgo" onClick={start}>
             <span className="r4-place">The TV</span>
-            <span>Click anywhere to start. It goes full screen, and films play their sound here.</span>
+            <span>Click anywhere to start. It goes full screen, and films and rolls play their sound here.</span>
           </button>
           {onLogout && (
             <button type="button" className="r4-btn app-tvout" onClick={onLogout}>
@@ -78,7 +89,7 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
   )
 }
 
-/** Round 12 drew the TV at 1440 x 810: the band and labels keep those proportions on any screen. */
+/** Round 12 drew the TV at 1440 x 810: the labels keep those proportions on any screen. */
 function useScale() {
   const read = () => Math.min(window.innerWidth / 1440, window.innerHeight / 810) || 1
   const [k, setK] = useState(read)
@@ -118,20 +129,20 @@ interface Cam {
 const PAD_X = 240 // world px kept around what the camera frames
 const PAD_TOP = 300 // a token stands about 100 px tall above its foot
 const PAD_BOTTOM = 160
+const UNDER_BANNER = 0.28 // the share of the screen a roller's token sits below the middle, clear of the banner
 const CREW_MAX = 1.25
 const ONE_MAX = 1.5
 
 /**
  * Frame some points on the map (world px): as close as `max` allows while every point fits, never further out
- * than the whole map, and kept on the art where the map is bigger than the screen. `inset` keeps the bottom of
- * the screen clear (the band).
+ * than the whole map, and kept on the art where the map is bigger than the screen. `lower` moves them down the
+ * screen by that much, under the banner.
  */
-function frame(size: [number, number], map: MapView, pts: [number, number][], max: number, inset = 0): Cam {
-  const [w, h0] = size
-  const h = h0 - inset
+function frame(size: [number, number], map: MapView, pts: [number, number][], max: number, lower = 0): Cam {
+  const [w, h] = size
   const [W, H] = map.display
-  const all = Math.min(w / W, h0 / H)
-  if (!pts.length) return { zoom: all, px: (w - W * all) / 2, py: (h0 - H * all) / 2 }
+  const all = Math.min(w / W, h / H)
+  if (!pts.length) return { zoom: all, px: (w - W * all) / 2, py: (h - H * all) / 2 }
   const xs = pts.map((p) => p[0])
   const ys = pts.map((p) => p[1])
   const x0 = Math.min(...xs) - PAD_X
@@ -143,7 +154,7 @@ function frame(size: [number, number], map: MapView, pts: [number, number][], ma
   return {
     zoom,
     px: keep(w / 2 - ((x0 + x1) / 2) * zoom, w, W),
-    py: keep(h / 2 - ((y0 + y1) / 2) * zoom, h0, H),
+    py: keep(h / 2 + lower - ((y0 + y1) / 2) * zoom, h, H),
   }
 }
 
@@ -168,11 +179,10 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
   const { camera, follow } = view.stage
   const followed = crew.find((t) => t.ref === follow)
   const rolling = camera === 'roller' && focus ? tokens.find((t) => t.id === focus) : undefined
-  const band = size[1] * 0.26 // the band's share of the screen
   const cam = !size[0]
     ? null
     : rolling
-      ? frame(size, map, [at(rolling)], ONE_MAX, band)
+      ? frame(size, map, [at(rolling)], ONE_MAX, size[1] * UNDER_BANNER)
       : camera === 'follow' && followed
         ? frame(size, map, [at(followed)], ONE_MAX)
         : frame(size, map, crew.map(at), CREW_MAX)

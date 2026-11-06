@@ -20,6 +20,7 @@ COORD_LIMIT = 500.0  # world units; far beyond any map, just stops garbage
 SESSION_ENTROPY = 2  # what "New session" sets everyone's Entropy to
 
 # The sweeper, for a roller whose laptop sleeps or whose tab closes mid-roll:
+GM_ROLL_MODES = ("public", "hidden", "someone", "secret", "god")
 REVEAL_AFTER = 45.0  # everyone sees the result even if the roller's screen never got there (6 exploding dice with every gate held run about 40 s)
 OFFLINE_CLOSE_AFTER = 30.0  # a roll this old whose roller has gone away is closed
 STALE_CLOSE_AFTER = 600.0  # nothing stays open longer than this
@@ -165,14 +166,20 @@ def _roll_intent(viewer: Viewer, state: GameState, content: Content, kind: str, 
 
 
 def _gm_roll(state: GameState, content: Content, args: dict, rng, now: float) -> Events:
-    """An NPC rolls the die on its sheet for a stat. "Just a die" is only a die, with no stat, and always hidden."""
+    """An NPC rolls the die on its sheet for a stat, in one of the modes on its card (Round 17): Public, Hidden, Secret
+    or God, or Someone, Secret or God for an NPC players can't see. "Just a die" has no stat: God, or a one-roll Secret."""
     token = args.get("token")
+    mode = args.get("mode", "god" if token is None else "public")
+    if mode not in GM_ROLL_MODES:
+        raise _invalid(f"mode must be one of {', '.join(GM_ROLL_MODES)}")
+    flags = {"hidden": mode == "secret", "sealed": mode in ("hidden", "someone"), "god": mode == "god"}
     if token is None:
         sides = _int(args, "sides")
         if sides not in DIE_SIDES:
             raise _invalid(f"sides must be one of {DIE_SIDES}")
-        # no token to sit on, so nobody else could see it: GM only
-        return _new_roll(state, content, rng, now, by="gm", token=None, handle="gm", stat=None, sides=sides, hidden=True)
+        if mode not in ("god", "secret"):
+            raise _invalid("just a die is a God roll or a Secret one")
+        return _new_roll(state, content, rng, now, by="gm", token=None, handle="gm", stat=None, sides=sides, **flags)
     stat = _stat(args)
     if not isinstance(token, str):
         raise _invalid("token must be a token id or null")
@@ -181,11 +188,12 @@ def _gm_roll(state: GameState, content: Content, args: dict, rng, now: float) ->
         raise _invalid("the GM rolls for NPC tokens")
     if "sides" in args:
         raise _invalid("an NPC rolls the die on its sheet: send the stat, not sides")
-    hidden = bool(args.get("hidden", False))
-    if t.hidden and not hidden:
-        raise _invalid("that token is hidden from players: make the roll hidden, or show the token first")
+    if t.hidden and mode in ("public", "hidden"):
+        raise _invalid("that token is hidden from players: roll as Someone, Secret or God, or show the token first")
+    if not t.hidden and mode == "someone":
+        raise _invalid("players can see that token: roll as Public, Hidden, Secret or God")
     sides = content.npcs[t.ref].stats[stat]
-    return _new_roll(state, content, rng, now, by="gm", token=token, handle=t.ref, stat=stat, sides=sides, hidden=hidden)
+    return _new_roll(state, content, rng, now, by="gm", token=token, handle=t.ref, stat=stat, sides=sides, **flags)
 
 
 def _holder(content: Content, args: dict, key: str = "holder") -> str:

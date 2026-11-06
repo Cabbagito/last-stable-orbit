@@ -4,6 +4,7 @@ import { FightStrip } from '../fight/Strip'
 import { GmScene } from '../gm/GmScene'
 import { MoodBar } from '../gm/MoodBar'
 import { MapView } from '../map/MapView'
+import { Banners } from '../roll/Banner'
 import { InspectCard } from '../map/InspectCard'
 import { Sheet } from '../sheet/Sheet'
 import { CrewRail } from '../shell/CrewRail'
@@ -46,6 +47,7 @@ export function Scene() {
           <div className="app-wait">Somewhere the map doesn't reach.</div>
         )}
         {fight && <FightStrip key={fight.map} fight={fight} />}
+        <Banners where="scene" low={!!fight} />
         <CrewRail />
         <InspectCard />
       </section>

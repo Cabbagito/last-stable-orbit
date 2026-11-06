@@ -1,6 +1,6 @@
 # Last Stable Orbit: recommended build plan
 
-## Progress (updated 2026-11-05)
+## Progress (updated 2026-11-06)
 
 | Milestone | Status |
 |---|---|
@@ -14,6 +14,7 @@
 | M6: Station and Codex tabs | **Built** 2026-11-04, with the rules change (see "How M6 is going" in M6). The Crew tab is gone. Codex and Station texts, and the Codex's card crops, are drafts for Peter, who hasn't tried either tab yet |
 | M7: Ship for session 1 | **Hosting decided** 2026-11-05: parker at http://parker.local instead of Railway, with a join card on the TV (the README's "Hosting it at the table"). Backups and the layout checks are not started |
 | M8: Fights | **Built** 2026-11-05 and checked on :8071 with four seats (the GM, Tomo, Ves and the TV); see "How M8 turned out" in M8. Deployed to 8070 the same day. NPC health beyond the bible's enemy cards is drafts |
+| Round 17: rolls with pop | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV); see "How Round 17 turned out" below. Not yet deployed to 8070. The TV's sound is for Peter to judge by ear |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -86,6 +87,20 @@
 - **A roll keeps going in a background tab.** The roll's clock (`web/src/roll/clock.ts`) runs on wall-clock time. A background tab gets no animation frames, so a timer drives the clock there instead, and the dice land for everyone on time, at most about a second late. Explosion gates still let go after 4 s.
 - **Reroll** on the result screen goes back to the picker with the same stat and skill picked. It's for players only; a natural 1 keeps just "Yeah. Okay.".
 - **The callout** stays about 4 s after the roller closes their screen, then fades. A screen that connects after a roll ended never shows it.
+
+**How Round 17 turned out** (2026-11-06, page "Round 17" on the UI canvas; this wins over "Decided for M2: the roll callout others see", M2's GM rolls, and the TV's band from Round 12):
+- **A roll on anyone else's screen is one big banner** (`web/src/roll/Banner.tsx`): the face, the name, the stat, the die, the skill, and a number box running each stat's motion. It leaves 4 s after the dice land, whenever the roller closes. A push after that pops it back for 3 s. A laptop's map isn't dimmed. The banner sits in the middle of the map between the sheet and the rail, under the turn strip in a fight, and clear of an open card (cards stay on top). It also shows on the Station, Codex and GM tabs, across the top: the boards only draw the Scene, so that's a default to confirm.
+- **The chip stays on the token** with the number, or "?" for a sealed roll. The crew rail's ring only spins while the dice fly; it no longer has a chip. As before, the chip lingers about 4 s after the roll closes; the board takes it away at the close, so that's a small difference to confirm.
+- **The GM's roll modes** are on the NPC card: Public, Hidden and Secret, or Someone and Secret for an NPC players can't see, and GOD, which arms one roll. Just a die (pinned to the bottom of the GM column) is always God, with a one-roll Secret. The GM's own laptop always shows a quiet banner with who and the number, tagged, with no flash or shake.
+  - **Public:** face, type and number.
+  - **Hidden:** face and type; shutters slam over the number box.
+  - **Someone:** a silhouette and the type, and only for players on that map.
+  - **Secret:** players and the TV get nothing, not even a frame.
+  - **God:** the screen goes grey and dark and a die falls on every screen but the GM's, at one moment by the server's clock. A visible NPC shows its name, type and number. An NPC this viewer can't see (hidden, or on another map) is Someone. Just a die shows only "THE GM IS ROLLING".
+- **Sealing happens in `views.py`.** A sealed roll's phase is only `roll` or `seal`: no value, count, chain, insult, dice or real die for just a die, so an explosion or a natural 1 can't show. The GM's screen lands those dice all at once at 2.8 s, so timing tells nothing either. Leak tests are in `test_rolls.py`.
+- **The TV sees rolls as a player does:** it no longer gets dice early, because the RollFX band is gone (`TvBand.tsx` removed). The banner takes the whole screen, dimmed behind it, and it's the only screen with sound (`web/src/roll/sound.ts`, unlocked by its start click). With the "whoever rolls" camera, the roller's token sits under the banner.
+- **Everyone else now gets** the skill's name and a natural 1's insult, which the banner shows.
+- **Saved games** still load: the new roll fields default to off.
 
 **On ultracode:** writing the keyword in a message does turn it on for that message; that's how this plan was made. The paragraph on ultracode further down is outdated.
 

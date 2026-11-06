@@ -169,7 +169,7 @@ function useReact(me: CrewMember): number {
 }
 
 function snapshot(view: View, self: string) {
-  const landed = new Set(view.rolls.filter((r) => !r.hidden && r.phase !== 'roll' && r.phase !== 'boom').map((r) => r.id))
+  const landed = new Set(view.rolls.filter((r) => !r.hidden && !r.sealed && r.phase !== 'roll' && r.phase !== 'boom').map((r) => r.id))
   const hp = Object.fromEntries(view.crew.filter((c) => c.id !== self).map((c) => [c.id, c.hp]))
   return { landed, hp }
 }

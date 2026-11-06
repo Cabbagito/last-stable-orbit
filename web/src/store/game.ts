@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { GameSocket, type Status } from '../net/socket'
 import { stillThere } from '../inspect/objects'
 import { serverClock } from '../net/clock'
+import { foldPlates, type PlateMemo } from '../roll/banners'
 import { FADE, LINGER, emptyMemo, remember, type CallMemo } from '../roll/callouts'
 import { burnTicks } from '../stage/burntime'
 import { changes, type Change } from '../fx/changes'
@@ -36,6 +37,8 @@ interface GameStore {
   /** After a (re)connect, reopen my own roll if the server says it's still open (a reload mid-roll). */
   resumeCheck: boolean
   calls: CallMemo
+  /** Round 17: each roll's banner on this screen, which has its own timeline. */
+  plates: PlateMemo
   callTick: number
   /** The newest Burn this screen saw, kept after the server clears it so its mark can linger (BurnMark). */
   burnSeen: BurnView | null
@@ -81,6 +84,8 @@ export const useGame = create<GameStore>((set, get) => {
         window.setTimeout(() => set({ callTick: get().callTick + 1 }), LINGER + 20)
         window.setTimeout(() => set({ callTick: get().callTick + 1 }), LINGER + FADE + 20)
       }
+      const folded = foldPlates(get().plates, f.view.rolls, now, f.view.me.seat, !get().view)
+      for (const d of folded.wake) window.setTimeout(() => set({ callTick: get().callTick + 1 }), d + 20)
       let burnSeen = get().burnSeen
       const b = f.view.stage.burn
       if (b && (b.at !== burnSeen?.at || b.char !== burnSeen?.char)) {
@@ -109,7 +114,7 @@ export const useGame = create<GameStore>((set, get) => {
           }, FX_LIFE)
         }
       }
-      set({ view: f.view, remote, selected: stillThere(f.view, sel) ? sel : null, calls: memo, burnSeen, dialog, resumeCheck: false, fx })
+      set({ view: f.view, remote, selected: stillThere(f.view, sel) ? sel : null, calls: memo, plates: folded.memo, burnSeen, dialog, resumeCheck: false, fx })
       // the GM reloaded mid-roll: finish landing it on the map
       if (resume && isGm) for (const r of f.view.rolls) if (r.by === 'gm' && r.open) playOnMap(r.id)
     } else if (f.t === 'drag') {
@@ -140,6 +145,7 @@ export const useGame = create<GameStore>((set, get) => {
     dismissed: {},
     resumeCheck: false,
     calls: emptyMemo(),
+    plates: {},
     callTick: 0,
     burnSeen: null,
     preview: previewSeat(),
@@ -159,7 +165,7 @@ export const useGame = create<GameStore>((set, get) => {
     },
     disconnect: () => {
       get().socket?.stop()
-      set({ socket: null, view: null, dialog: null, calls: emptyMemo(), burnSeen: null, fx: {} })
+      set({ socket: null, view: null, dialog: null, calls: emptyMemo(), plates: {}, burnSeen: null, fx: {} })
     },
     select: (selected) => set({ selected }),
     setLocal: (local) => set({ local }),
@@ -201,33 +207,37 @@ export async function gmRun(type: string, args: Record<string, unknown>): Promis
   return ack
 }
 
+export type GmRollMode = 'public' | 'hidden' | 'someone' | 'secret' | 'god'
+
 /**
- * Roll for an NPC by its stat (its die is on its sheet), or "just a die" (only a die, no stat). No roll screen
- * opens: the roll plays on the NPC's chip, for players too unless it's hidden, and "just a die" lands in the GM
- * column. This screen lands the dice on a timer, explosions included, then closes the roll.
+ * Roll for an NPC by its stat (its die is on its sheet), or "just a die" (only a die, no stat), in one of the modes
+ * on the card (Round 17). No roll screen opens: this screen shows its own banner, and lands the dice on a timer, then
+ * closes the roll. A public roll's explosions land one by one, as a roll screen's would. Anything players aren't to
+ * read lands all at once, at the same moment whatever it came to, so how long it took tells them nothing.
  */
-export async function gmRoll(args: { token: string; stat: StatKey; hidden: boolean } | { token: null; sides: number }) {
+export async function gmRoll(args: { token: string; stat: StatKey; mode: GmRollMode } | { token: null; sides: number; mode: 'god' | 'secret' }) {
   const ack = await gmRun('gm.roll.start', args)
   if (!ack.ok) return
   const mine = useGame.getState().view?.rolls.filter((r) => r.by === 'gm' && r.open).pop()
   if (mine) playOnMap(mine.id)
 }
 
-const GM_FIRST = 1800 // ms the dice spin on the chip before the first one lands
-const GM_NEXT = 1300 // each die an explosion adds
-const GM_HOLD = 2500 // after the last die lands, before the roll closes; its callout then lingers and fades
+const GM_FIRST = 2800 // ms the dice fly before they land (a God roll's die hits here too, by the server's clock)
+const GM_NEXT = 1600 // each die an explosion adds
+const GM_HOLD = 4000 // after the last die lands, before the roll closes: when its banner leaves
 const playing = new Set<string>()
 
-/** Land a GM roll's dice one by one, as a roll screen would, then close it. */
+/** Land a GM roll's dice, as a roll screen would, then close it. */
 function playOnMap(rollId: string) {
   const r = useGame.getState().view?.rolls.find((x) => x.id === rollId)
   if (!r?.open || !r.dice || playing.has(rollId)) return
   playing.add(rollId)
   const from = r.shown ?? 0
-  let t = from === 0 ? GM_FIRST : 600
-  for (let shown = from + 1; shown <= r.dice.length; shown++) {
-    const n = shown
-    window.setTimeout(() => void send('roll.reveal', { roll: rollId, shown: n }), t)
+  const n = r.dice.length
+  let t = from === 0 ? Math.max(100, r.started * 1000 + GM_FIRST - serverClock.now()) : 600
+  const steps = r.tag ? [n] : Array.from({ length: n - from }, (_, i) => from + i + 1)
+  for (const shown of steps) {
+    window.setTimeout(() => void send('roll.reveal', { roll: rollId, shown }), t)
     t += GM_NEXT
   }
   window.setTimeout(() => {

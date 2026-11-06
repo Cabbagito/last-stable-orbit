@@ -242,7 +242,7 @@ def test_every_npc_has_a_sheet(content):
 
 async def test_gm_rolls_for_npcs(engine, dice):
     dice.push(9)
-    assert (await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "cool", "hidden": False}))["ok"]
+    assert (await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "cool"}))["ok"]
     r = latest(engine)
     assert (r.by, r.token, r.char, r.handle, r.sides, r.hidden, r.bonus) == ("gm", "dax", None, "dax", 20, False, 0)  # Dax's Cool is a d20
     dice.push(2)
@@ -250,21 +250,25 @@ async def test_gm_rolls_for_npcs(engine, dice):
     assert latest(engine).sides == 6  # and his Reflex a d6
 
     dice.push(3)
-    await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20, "hidden": False})
+    await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20})
     r = latest(engine)
-    assert r.hidden and r.stat is None and r.sides == 20  # just a die: no stat, nowhere to show it, GM only
+    assert r.god and not r.hidden and r.stat is None and r.sides == 20  # just a die: no stat, and always God
     assert not engine.state.rolls[0].open  # the GM has one roll open at a time too
 
     await run(engine, GM, "gm.token.hide", {"token": "cleaner-14", "hidden": True})
     ack = await run(engine, GM, "gm.roll.start", {"token": "cleaner-14", "stat": "body"})
     assert ack["code"] == "invalid" and "hidden" in ack["error"]
     dice.push(4)
-    assert (await run(engine, GM, "gm.roll.start", {"token": "cleaner-14", "stat": "body", "hidden": True}))["ok"]
+    assert (await run(engine, GM, "gm.roll.start", {"token": "cleaner-14", "stat": "body", "mode": "someone"}))["ok"]
     assert latest(engine).sides == 6
 
     for bad in ({"token": "ves", "stat": "body"}, {"token": "nobody", "stat": "body"}, {"token": "dax", "stat": "luck"},
                 {"token": "dax", "sides": 20, "stat": "body"},  # an NPC's die is on its sheet, not picked
-                {"token": None, "sides": 7}, {"token": None}, {"token": "dax"}):
+                {"token": None, "sides": 7}, {"token": None}, {"token": "dax"},
+                {"token": "dax", "stat": "body", "mode": "loud"},
+                {"token": "dax", "stat": "body", "mode": "someone"},  # players can see Dax
+                {"token": "cleaner-14", "stat": "body", "mode": "hidden"},  # would show the face of an NPC nobody can see
+                {"token": None, "sides": 20, "mode": "public"}, {"token": None, "sides": 20, "mode": "hidden"}):
         assert (await run(engine, GM, "gm.roll.start", bad))["code"] == "invalid", bad
     assert (await run(engine, VES, "gm.roll.start", {"token": "dax", "stat": "body"}))["code"] == "forbidden"
 
@@ -320,7 +324,7 @@ async def test_natural_1_shows_red_to_everyone(engine, dice):
     await run(engine, VES, "roll.start", {"stat": "body"})
     await run(engine, VES, "roll.reveal", {"roll": latest(engine).id, "shown": 1})
     seen = their(project(engine.state, engine.content, MARLO), "ves")
-    assert (seen["phase"], seen["value"]) == ("nat1", 1) and "insult" not in seen
+    assert (seen["phase"], seen["value"]) == ("nat1", 1) and seen["insult"]  # the banner shows the insult to everyone
 
 
 async def test_natural_1_shows_1_whatever_the_bonus(engine, dice):
@@ -332,16 +336,16 @@ async def test_natural_1_shows_1_whatever_the_bonus(engine, dice):
     assert (latest(engine).bonus, seen["phase"], seen["value"]) == (2, "nat1", 1)
 
 
-async def test_hidden_gm_rolls_never_reach_players(engine, dice):
+async def test_secret_gm_rolls_never_reach_players(engine, dice):
     before = {v.seat: project(engine.state, engine.content, v) for v in (VES, MARLO)}
     dice.push(20, 20, 4)
-    await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20, "hidden": True})
+    await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20, "mode": "secret"})
     rid = latest(engine).id
     await run(engine, GM, "roll.reveal", {"roll": rid, "shown": 3})
     for v in (VES, MARLO):
         assert project(engine.state, engine.content, v) == before[v.seat]  # not one byte changed
     gm_view = project(engine.state, engine.content, GM)
-    assert gm_view["rolls"][-1]["hidden"] is True and gm_view["rolls"][-1]["value"] == 44
+    assert gm_view["rolls"][-1]["hidden"] is True and gm_view["rolls"][-1]["value"] == 44 and gm_view["rolls"][-1]["tag"] == "SECRET"
     await run(engine, GM, "roll.close", {"roll": rid})
     for v in (VES, MARLO):
         assert project(engine.state, engine.content, v) == before[v.seat]
@@ -354,6 +358,149 @@ async def test_npc_rolls_follow_their_token(engine, dice):
     assert [r["token"] for r in rolls] == ["dax"]
     await run(engine, GM, "gm.token.hide", {"token": "dax", "hidden": True})
     assert project(engine.state, engine.content, VES)["rolls"] == []  # Dax is gone, and so is his roll
+
+
+# ---------------------------------------------------------------- the GM's roll modes (Round 17)
+
+STAGE = Viewer("stage", "stage")
+WATCHERS = (VES, MARLO, STAGE)
+# never in a sealed roll's frame, whatever the dice did
+OUTCOME = ('"value"', '"count"', '"chain"', '"insult"', '"dice"', '"seed"', '"bonus"', '"shown"', '"handle"', '"tag"', '"hidden"')
+
+
+def seen_by(engine, viewer):
+    return project(engine.state, engine.content, viewer)["rolls"]
+
+
+def assert_sealed(rolls, phase):
+    assert len(rolls) == 1
+    raw = json.dumps(rolls)
+    for field in OUTCOME:
+        assert field not in raw, field
+    r = rolls[0]
+    assert r["sealed"] and r["phase"] == phase and not r["failed"]
+
+
+@pytest.mark.parametrize("thrown", [(9,), (20, 20, 4), (1,)], ids=["plain", "exploding", "natural 1"])
+async def test_hidden_shows_the_face_and_type_never_the_outcome(engine, dice, thrown):
+    dice.push(*thrown)
+    assert (await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "cool", "mode": "hidden"}))["ok"]
+    rid = latest(engine).id
+    for v in WATCHERS:
+        assert_sealed(seen_by(engine, v), "roll")
+        assert (seen_by(engine, v)[0]["token"], seen_by(engine, v)[0]["stat"], seen_by(engine, v)[0]["sides"]) == ("dax", "cool", 20)
+    if len(thrown) > 1:
+        await run(engine, GM, "roll.reveal", {"roll": rid, "shown": 1})  # an explosion looks like nothing at all
+        for v in WATCHERS:
+            assert_sealed(seen_by(engine, v), "roll")
+    await run(engine, GM, "roll.reveal", {"roll": rid, "shown": len(thrown)})
+    for v in WATCHERS:
+        assert_sealed(seen_by(engine, v), "seal")
+    gm = seen_by(engine, GM)[-1]
+    assert gm["tag"] == "HIDDEN" and not gm["sealed"] and gm["dice"] == list(thrown)
+    await run(engine, GM, "roll.close", {"roll": rid})
+    for v in WATCHERS:
+        assert_sealed(seen_by(engine, v), "seal")  # still nothing, after it's over
+
+
+async def test_someone_names_nobody(engine, dice, content):
+    await run(engine, GM, "gm.token.hide", {"token": "dax", "hidden": True})
+    dice.push(1)
+    assert (await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "reflex", "mode": "someone"}))["ok"]
+    await run(engine, GM, "roll.reveal", {"roll": latest(engine).id, "shown": 1})
+    for v in WATCHERS:
+        rolls = seen_by(engine, v)
+        assert_sealed(rolls, "seal")
+        assert rolls[0]["token"] is None and rolls[0]["stat"] == "reflex"
+        assert "dax" not in json.dumps(rolls) and content.npcs["dax"].name not in json.dumps(rolls)
+    assert seen_by(engine, GM)[-1]["tag"] == "SOMEONE"
+
+
+async def test_someone_is_only_heard_in_the_room(engine, dice):
+    await run(engine, GM, "gm.token.place", {"ref": "guard", "map": "promenade", "at": [3, 3, 0], "hidden": True})
+    dice.push(4)
+    assert (await run(engine, GM, "gm.roll.start", {"token": "guard", "stat": "reflex", "mode": "someone"}))["ok"]
+    assert seen_by(engine, VES) == []  # the crew is at the Event Horizon
+
+
+async def test_god_names_an_npc_you_can_see_and_shows_its_number(engine, dice):
+    dice.push(13)
+    assert (await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "cool", "mode": "god"}))["ok"]
+    rid = latest(engine).id
+    for v in WATCHERS:
+        r = seen_by(engine, v)[0]
+        assert r["god"] and not r["sealed"] and r["token"] == "dax" and r["started"] == latest(engine).started
+        assert '"value"' not in json.dumps(r)  # not until it lands
+    await run(engine, GM, "roll.reveal", {"roll": rid, "shown": 1})
+    for v in WATCHERS:
+        assert seen_by(engine, v)[0]["value"] == 13
+
+
+async def test_god_for_an_npc_players_cant_see_is_someone(engine, dice):
+    await run(engine, GM, "gm.token.hide", {"token": "dax", "hidden": True})
+    dice.push(5)  # Dax's Reflex is a d6
+    await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "reflex", "mode": "god"})
+    await run(engine, GM, "roll.reveal", {"roll": latest(engine).id, "shown": 1})
+    for v in WATCHERS:
+        rolls = seen_by(engine, v)
+        assert_sealed(rolls, "seal")
+        assert rolls[0]["god"] and rolls[0]["token"] is None and rolls[0]["stat"] == "reflex" and "dax" not in json.dumps(rolls)
+    assert seen_by(engine, GM)[-1]["value"] == 5 and seen_by(engine, GM)[-1]["tag"] == "GOD"
+
+
+async def test_god_for_an_npc_on_another_map_is_someone_there(engine, dice):
+    await run(engine, GM, "gm.token.place", {"ref": "guard", "map": "promenade", "at": [3, 3, 0], "hidden": False})
+    dice.push(4)
+    await run(engine, GM, "gm.roll.start", {"token": "guard", "stat": "reflex", "mode": "god"})
+    await run(engine, GM, "roll.reveal", {"roll": latest(engine).id, "shown": 1})
+    rolls = seen_by(engine, VES)
+    assert_sealed(rolls, "seal")
+    assert rolls[0]["token"] is None and "guard" not in json.dumps(rolls)
+
+
+async def test_just_a_die_shows_nothing_about_the_die(engine, dice):
+    dice.push(6, 3)
+    assert (await run(engine, GM, "gm.roll.start", {"token": None, "sides": 6}))["ok"]
+    await run(engine, GM, "roll.reveal", {"roll": latest(engine).id, "shown": 2})
+    for v in WATCHERS:
+        rolls = seen_by(engine, v)
+        assert_sealed(rolls, "seal")
+        assert rolls[0]["god"] and rolls[0]["stat"] is None and rolls[0]["sides"] == 20
+    gm = seen_by(engine, GM)[-1]
+    assert (gm["sides"], gm["value"], gm["tag"]) == (6, 9, "GOD")
+
+
+async def test_hiding_an_npc_mid_roll_takes_its_number_away(engine, dice):
+    dice.push(13)
+    await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "cool", "mode": "god"})
+    god = latest(engine).id
+    await run(engine, GM, "gm.token.hide", {"token": "dax", "hidden": True})
+    await run(engine, GM, "roll.reveal", {"roll": god, "shown": 1})
+    rolls = seen_by(engine, VES)
+    assert_sealed(rolls, "seal")
+    assert "dax" not in json.dumps(rolls)
+
+
+async def test_the_banner_gets_the_skill_and_the_chain(engine, dice):
+    dice.push(12, 3)
+    await run(engine, VES, "roll.start", {"stat": "tech", "entry": 0})  # Been in worse vents: d10 -> d12
+    rid = latest(engine).id
+    assert their(project(engine.state, engine.content, MARLO), "ves")["entry"] == "Been in worse vents"
+    await run(engine, VES, "roll.reveal", {"roll": rid, "shown": 1})
+    seen = their(project(engine.state, engine.content, MARLO), "ves")
+    assert (seen["phase"], seen["chain"]) == ("boom", 12) and "value" not in seen
+    await run(engine, VES, "roll.reveal", {"roll": rid, "shown": 2})
+    seen = their(project(engine.state, engine.content, MARLO), "ves")
+    assert (seen["phase"], seen["value"], seen["chain"], seen["count"]) == ("land", 15, 12, 2)
+
+
+async def test_a_viewers_rolls_come_in_the_order_they_were_rolled(engine, dice):
+    dice.push(5, 6, 7)
+    await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "cool", "mode": "god"})
+    await run(engine, GM, "gm.roll.start", {"token": None, "sides": 20})
+    await run(engine, GM, "gm.roll.start", {"token": "dax", "stat": "cool", "mode": "god"})
+    rolls = seen_by(engine, VES)
+    assert len(rolls) == 2 and rolls[-1]["id"] == latest(engine).id  # the newest God roll is the one to play
 
 
 async def test_players_get_one_callout_per_roller(engine, dice):

@@ -218,14 +218,14 @@ export interface RosterNpc {
   color: string
 }
 
-export type RollPhase = 'roll' | 'boom' | 'land' | 'nat1' | 'push'
+export type RollPhase = 'roll' | 'boom' | 'seal' | 'land' | 'nat1' | 'push'
 
 /** A roll as this viewer may see it. Others get the dice only as they land on the roller's screen. */
 export interface RollView {
   id: string
   by: string // the seat that rolled
   char: string | null // crew rolls
-  token: string | null // where its callout sits on this viewer's map, if anywhere
+  token: string | null // its token on this viewer's map, if they can see it. No token and a stat: "Someone"
   stat: StatKey | null // null: the GM's "just a die", which has no stat
   sides: number
   phase: RollPhase
@@ -233,15 +233,20 @@ export interface RollView {
   pushes: number
   pushed: number
   failed: boolean // the GM called it a failure, or it's a natural 1: a skill's downside shows on the TV
+  sealed: boolean // this viewer never gets to know how it came out (Hidden, Someone, or God for an NPC they can't see)
+  god: boolean // the whole-screen God roll
+  started: number // server time, in seconds
+  entry?: string | null // the skill or chrome it used
   value?: number // once landed
   count?: number // dice it took
-  // the roller, the GM and the TV only:
+  chain?: number // what the dice before the last one came to, when it exploded
+  insult?: string | null // a natural 1, once it has landed
+  tag?: string // the GM only: what their own roll shows on their banner (GOD, SECRET, HIDDEN, SOMEONE)
+  // the roller and the GM only:
   dice?: number[]
   bonus?: number
   seed?: number
-  insult?: string | null
   handle?: string
-  entry?: string | null
   shown?: number
   hidden?: boolean
 }

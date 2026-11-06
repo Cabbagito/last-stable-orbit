@@ -1,7 +1,7 @@
 import { Vitals } from '../gm/parts'
 import { ChipFx } from '../fx/ChipFx'
 import { ring } from '../lib/ring'
-import { Callout, Orbit, calloutKey, calloutSpeech, isSpinning } from '../roll/Callout'
+import { Orbit, calloutSpeech, isSpinning } from '../roll/Callout'
 import { calloutsBy } from '../roll/callouts'
 import { BurnCallout, Flare, burnSpeech, useBurnMark } from '../stage/BurnMark'
 import { gmRun, useGame } from '../store/game'
@@ -16,7 +16,7 @@ export function CrewRail() {
   const select = useGame((s) => s.select)
   const selected = useGame((s) => s.selected)
   const calls = useGame((s) => s.calls)
-  useGame((s) => s.callTick) // re-render when a callout fades
+  useGame((s) => s.callTick) // re-render when a roll is over
   const burning = useBurnMark()
   if (!view) return null
   const isGm = view.me.role === 'gm'
@@ -45,7 +45,6 @@ export function CrewRail() {
                   <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 64, 9, c.health)} size={64} />
                 </ChipFx>
                 {call && isSpinning(call.r) && <Orbit stat={call.r.stat} />}
-                {call && <Callout key={calloutKey(call.r)} r={call.r} side="s-l" fading={call.fading} />}
                 {burn && <Flare m={burn} />}
                 {burn && <BurnCallout key={burn.at} m={burn} side="s-l" />}
               </span>

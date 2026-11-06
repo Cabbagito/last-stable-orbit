@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Login } from './pages/Login'
+import { Banners } from './roll/Banner'
 import { RollDialog, preloadRollFonts } from './roll/RollDialog'
+import { RollStage } from './roll/RollStage'
 import { GmTab } from './pages/GmTab'
 import { Codex } from './pages/Codex'
 import { Placeholder } from './pages/Placeholder'
@@ -101,6 +103,7 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
   const tab = useHashTab(isGm)
   const connect = useGame((s) => s.connect)
   const disconnect = useGame((s) => s.disconnect)
+  const world = useRef<HTMLDivElement>(null)
   useEffect(() => {
     connect()
     preloadRollFonts()
@@ -109,10 +112,14 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
 
   return (
     <div className={'r4 th-meridian' + (preview ? ' app-preview' : '')}>
-      <Header tab={tab} isGm={isGm} onLogout={onLogout} />
-      {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : tab === 'codex' ? <Codex /> : tab === 'station' ? <Station /> : <Placeholder tab={tab} />}
-      <Downside where="laptop" />
-      <RollDialog />
+      <div ref={world} className="app-rollworld">
+        <Header tab={tab} isGm={isGm} onLogout={onLogout} />
+        {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : tab === 'codex' ? <Codex /> : tab === 'station' ? <Station /> : <Placeholder tab={tab} />}
+        {tab !== 'scene' && <Banners where="page" />}
+        <Downside where="laptop" />
+        <RollDialog />
+      </div>
+      <RollStage world={world} />
       <LaptopFilm />
       <BurnFilms />
     </div>

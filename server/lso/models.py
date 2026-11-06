@@ -577,7 +577,7 @@ class RollState(Strict):
     id: str
     by: str  # the seat that rolled: a character id, or "gm"
     char: str | None = None  # crew rolls: whose Entropy a push spends
-    token: str | None = None  # GM rolls: the NPC token the callout sits on (None: just a die, always hidden)
+    token: str | None = None  # GM rolls: the NPC token it belongs to (None: just a die)
     handle: str  # the name in the roll screen's terminal prompt
     stat: str | None  # body..empathy: the look and colour. None: "just a die", which has no stat
     entry: str | None = None  # the skill or chrome picked, if any
@@ -586,7 +586,9 @@ class RollState(Strict):
     dice: list[int]
     seed: int  # the animation's randomness, so a reload paints the same scene
     insult: str | None = None  # natural 1 only
-    hidden: bool = False  # GM rolls only: players never hear of it
+    hidden: bool = False  # GM rolls only: Secret. Players and the TV never hear of it
+    sealed: bool = False  # GM rolls only: Hidden or Someone. Everyone sees it happen, nobody but the GM sees how it came out
+    god: bool = False  # GM rolls only: the whole-screen God roll (Round 17)
     shown: int = 0  # dice that have landed on the roller's screen
     pushes: int = 0
     pushed: int = 0  # total added by pushes

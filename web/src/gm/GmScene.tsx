@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { objectKey } from '../inspect/objects'
 import { unproj } from '../lib/proj'
-import { Callout, calloutKey, calloutSpeech } from '../roll/Callout'
-import { calloutsBy } from '../roll/callouts'
 import { gmRoll, gmRun, useGame } from '../store/game'
 import type { MapView, RosterNpc, View } from '../types'
 import { Cross, Diamond, Eye } from './parts'
@@ -30,20 +28,18 @@ interface Here {
 /**
  * Round 12's left column on the GM's Scene: one list of everything in the scene (things to inspect, NPCs, the
  * crew), each with show/hide and its card a click away; the roster as faces, to add an NPC hidden; and
- * "Just a die", only a die, which lands beside its button. Everything else about a character is on its card,
- * which its map chip also opens.
+ * "Just a die", the God roll, pinned to the bottom. Everything else about a character is on its card, which its map
+ * chip also opens.
  */
 export function GmScene({ map }: { map: MapView | undefined }) {
   const view = useGame((s) => s.view)
   const select = useGame((s) => s.select)
   const setGmMap = useGame((s) => s.setGmMap)
   const gmError = useGame((s) => s.gmError)
-  const calls = useGame((s) => s.calls)
-  useGame((s) => s.callTick) // re-render when the die's result fades
   const [sides, setSides] = useState(20)
+  const [secret, setSecret] = useState(false) // for one roll: it never stays on
   const [face, setFace] = useState<{ n: RosterNpc; x: number; y: number } | null>(null)
   if (!view) return null
-  const die = calloutsBy(view.rolls, calls, Date.now(), (r) => (r.by === 'gm' && !r.token ? 'die' : null)).die
 
   const here: Here[] = []
   if (map) {
@@ -174,9 +170,9 @@ export function GmScene({ map }: { map: MapView | undefined }) {
         </section>
       )}
 
-      <section aria-label="Just a die">
+      <section aria-label="Just a die" className="r17-jdie">
         <div className="r5-sec">
-          Just a die <span style={{ letterSpacing: '.08em' }}>· only you see it</span>
+          Just a die <span style={{ letterSpacing: '.08em' }}>· the God roll</span>
         </div>
         <div className="r10-seg" role="group" aria-label="Die">
           {DICE.map((d) => (
@@ -186,13 +182,19 @@ export function GmScene({ map }: { map: MapView | undefined }) {
           ))}
         </div>
         <div className="r10-go">
-          <button type="button" className="r10-roll" onClick={() => void gmRoll({ token: null, sides })}>
+          <button
+            type="button"
+            className="r10-roll"
+            onClick={() => {
+              setSecret(false)
+              void gmRoll({ token: null, sides, mode: secret ? 'secret' : 'god' })
+            }}
+          >
             Roll d{sides}
           </button>
-          <div className="app-dieres" aria-live="polite">
-            {die && <Callout key={calloutKey(die.r)} r={die.r} side="s-l" fading={die.fading} />}
-            <span className="app-sr">{die ? calloutSpeech(die.r) : ''}</span>
-          </div>
+          <button type="button" className={'r17-dsec' + (secret ? ' on' : '')} aria-pressed={secret} title="This one roll: players see nothing at all" onClick={() => setSecret(!secret)}>
+            Secret
+          </button>
         </div>
       </section>
     </aside>

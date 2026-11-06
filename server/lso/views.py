@@ -6,8 +6,9 @@ Every frame a client receives is built here for that viewer. A player gets:
 - the tokens on that map that aren't hidden, with each NPC's public card (never its gm_note or its dice);
 - every crew member's public sheet and vitals (the crew rail shows them);
 - their own inventory only, with each item's text (clues are items, so this is where they hide);
-- each crew member's latest roll, and the latest public roll of each NPC they can see. The dice of a
-  roll that isn't theirs arrive only as they land on the roller's screen. Hidden GM rolls never.
+- each crew member's latest roll, and the latest roll of each NPC they can see, its dice only as they land on the
+  roller's screen. The GM's roll modes (Round 17) filter the rest, see _rolls_view and _roll_view: Secret never
+  arrives, a sealed roll (Hidden, Someone) never says how it came out, and God names only an NPC this viewer can see.
 The GM gets everything, plus the NPC roster, the presets, the item catalogue and the cue list.
 
 Each map also carries its decals and camera cones (everyone sees those). Only the GM gets its pins, the Key
@@ -15,9 +16,8 @@ board's "what's where".
 
 The TV (the Stage seat) gets what a player gets with no seat: the party map (or, following one of the crew, the
 map they're on), its visible tokens and revealed
-objects, the crew's public sheets, and no pockets at all. It also gets each public roll's dice as it starts, as
-the roller's screen does, to play the same animation in its band; it shows each die as the roller's screen
-lands it. And it gets every film's file, to have them ready, because at the table only the TV plays films.
+objects, the crew's public sheets, and no pockets at all. It sees a roll as a player does. And it gets every film's
+file, to have them ready, because at the table only the TV plays films.
 
 The Codex: a player gets only the entries the GM has unlocked, and on each page only the blocks that are open.
 A locked entry's id, name and art never leave the server: not in the Codex, not in See also, not on a Codex button
@@ -302,7 +302,7 @@ def _codex_view(state: GameState, content: Content, viewer: Viewer, open_: set[s
 
 
 def roll_phase(r: RollState) -> str:
-    """What everyone else sees: still rolling, exploded and rolling again, or landed."""
+    """How a roll stands: still rolling, exploded and rolling again, or landed."""
     n = len(r.dice)
     if r.shown == 0:
         return "roll"
@@ -313,30 +313,56 @@ def roll_phase(r: RollState) -> str:
     return "push" if r.pushes else "land"
 
 
+def _gm_tag(state: GameState, r: RollState) -> str:
+    """What the GM's own banner calls one of their rolls. Public has no tag."""
+    if r.by != "gm":
+        return ""
+    if r.god:
+        return "GOD"
+    if r.hidden:
+        return "SECRET"
+    if not r.sealed:
+        return ""
+    t = state.tokens.get(r.token) if r.token else None
+    return "HIDDEN" if t and not t.hidden else "SOMEONE"
+
+
 def _roll_view(state: GameState, r: RollState, viewer: Viewer, visible_tokens: set[str]) -> dict:
-    full = viewer.is_gm or viewer.is_stage or r.by == viewer.seat  # the TV gets public rolls only
-    phase = roll_phase(r)
+    full = viewer.is_gm or r.by == viewer.seat
     crew_token = next((tid for tid, t in state.tokens.items() if t.kind == "crew" and t.ref == r.char), None) if r.char else None
     token = crew_token if r.char else r.token
+    seen = token in visible_tokens
+    # a sealed roll says it happened and what kind it was: never its dice, how many, a natural 1, or an explosion
+    sealed = not full and (r.sealed or (r.god and not seen))
+    phase = roll_phase(r)
+    if sealed:
+        phase = "seal" if r.shown >= len(r.dice) else "roll"
     out = {
         "id": r.id,
         "by": r.by,
         "char": r.char,
-        "token": token if token in visible_tokens else None,
+        "token": token if seen else None,
         "stat": r.stat,
-        "sides": r.sides,
+        "sides": 20 if sealed and r.stat is None else r.sides,  # just a die shows nothing about the die
         "phase": phase,
         "open": r.open,
         "pushes": r.pushes,
         "pushed": r.pushed,
         "failed": r.failed or phase == "nat1",
+        "sealed": sealed,
+        "god": r.god,
+        "started": r.started,  # a God roll's die hits at one moment on every screen
     }
-    if out["failed"] and r.entry:
-        out["entry"] = r.entry  # a failed skill's downside shows for everyone, so everyone knows which skill
-    if phase == "nat1":
-        out |= {"value": 1, "count": len(r.dice)}  # it fails, whatever the bonus: everyone sees the red 1
+    if r.entry:
+        out["entry"] = r.entry  # the banner says which skill, and a failed one's downside shows for everyone
+    if phase == "boom":
+        out["chain"] = sum(r.dice[: r.shown])
+    elif phase == "nat1":
+        out |= {"value": 1, "count": len(r.dice), "insult": r.insult}  # it fails, whatever the bonus: everyone sees the red 1
     elif phase in ("land", "push"):
         out |= {"value": rules.total(r.dice, r.bonus, r.pushed), "count": len(r.dice)}
+        if len(r.dice) > 1:
+            out["chain"] = sum(r.dice[:-1])
     if full:
         out |= {
             "dice": list(r.dice),
@@ -344,23 +370,29 @@ def _roll_view(state: GameState, r: RollState, viewer: Viewer, visible_tokens: s
             "seed": r.seed,
             "insult": r.insult,
             "handle": r.handle,
-            "entry": r.entry,
             "shown": r.shown,
             "hidden": r.hidden,
         }
+    if viewer.is_gm:
+        out["tag"] = _gm_tag(state, r)
     return out
 
 
 def _rolls_view(state: GameState, viewer: Viewer, visible_tokens: set[str]) -> list[dict]:
     if viewer.is_gm:
         return [_roll_view(state, r, viewer, visible_tokens) for r in state.rolls]
-    latest: dict[str, RollState] = {}  # one callout per crew member or NPC token: their newest roll
+    here = viewer_map(state, viewer)
+    latest: dict[str, RollState] = {}  # one per crew member or NPC token: their newest roll
     for r in state.rolls:
         if r.hidden:
-            continue
-        if r.char is None and r.token not in visible_tokens:
-            continue  # an NPC this player can't see
-        latest[r.char or r.token] = r
+            continue  # Secret
+        if r.char is None and r.token not in visible_tokens and not r.god:
+            t = state.tokens.get(r.token) if r.token else None
+            if not (r.sealed and t and t.map == here):
+                continue  # an NPC this player can't see, unless it's Someone in the room with them
+        who = r.char or r.token or "die"
+        latest.pop(who, None)  # kept in the order they rolled: the last one here is the newest of all
+        latest[who] = r
     return [_roll_view(state, r, viewer, visible_tokens) for r in latest.values()]
 
 

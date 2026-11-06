@@ -89,14 +89,14 @@ async def test_the_tv_sees_only_what_everyone_may(engine, content):
     s = engine.state
     await ok(engine, GM, "gm.token.hide", {"token": "dax", "hidden": True})
     await ok(engine, GM, "gm.item.give", {"holder": "tally", "item": "maintenance-log"})
-    await ok(engine, GM, "gm.roll.start", {"token": None, "sides": 20})  # just a die: the GM's alone
+    await ok(engine, GM, "gm.roll.start", {"token": None, "sides": 20, "mode": "secret"})  # the GM's alone
     v = project(engine.state, content, STAGE)
     body = json.dumps(v)
     assert v["me"] == {"seat": "stage", "role": "stage", "char": None}
     assert list(v["maps"]) == [s.party_map]  # one map: the one the party is on
     assert "dax" not in v["tokens"] and all(not t.hidden for tid, t in engine.state.tokens.items() if tid in v["tokens"])
     assert v["inventory"] == {}  # nobody's pockets
-    assert v["rolls"] == []  # a hidden roll never reaches it
+    assert v["rolls"] == []  # a Secret roll never reaches it
     for secret in ("gm_note", "roster", "presets", '"items"', "cues", STILL, "maintenance-log"):
         assert secret not in body, secret
     assert not any("stats" in t for t in v["tokens"].values())  # NPC dice are the GM's
@@ -105,20 +105,17 @@ async def test_the_tv_sees_only_what_everyone_may(engine, content):
     assert v["stage"]["films"] == [FILM]  # every film, so a cue starts at once
 
 
-async def test_the_tv_gets_a_public_rolls_dice_to_play_them(engine, content):
-    await ok(engine, GM, "gm.roll.start", {"token": "dax", "stat": "cool", "hidden": False})
+async def test_the_tv_learns_a_roll_as_it_lands(engine, content):
+    await ok(engine, GM, "gm.roll.start", {"token": "dax", "stat": "cool"})
     await ok(engine, TALLY, "roll.start", {"stat": "tech"})
     rolls = {r["by"]: r for r in project(engine.state, content, STAGE)["rolls"]}
     assert set(rolls) == {"gm", "tally"}
     for r in rolls.values():
-        assert r["dice"] and "seed" in r and r["shown"] == 0  # the band plays the same animation as the roller
-    # a player still gets nobody else's dice before they land
-    marlo = {r["by"]: r for r in project(engine.state, content, Viewer("marlo", "player"))["rolls"]}
-    assert "dice" not in marlo["tally"] and "dice" not in marlo["gm"]
+        assert r["phase"] == "roll" and "dice" not in r and "seed" not in r and "value" not in r  # its banner waits like everyone's
 
 
-async def test_the_tv_never_gets_a_hidden_npc_roll(engine, content):
-    await ok(engine, GM, "gm.roll.start", {"token": "dax", "stat": "body", "hidden": True})
+async def test_the_tv_never_gets_a_secret_npc_roll(engine, content):
+    await ok(engine, GM, "gm.roll.start", {"token": "dax", "stat": "body", "mode": "secret"})
     assert project(engine.state, content, STAGE)["rolls"] == []
 
 

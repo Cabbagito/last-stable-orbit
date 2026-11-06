@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react'
-import { GiveRow, Pocket, Step, Vitals, Eye } from '../gm/parts'
+import { GiveRow, Pocket, Step, Vitals } from '../gm/parts'
 import { Closeup, CodexButton, InspectBlock, Inspector } from '../inspect/Inspector'
 import { useItemTip } from '../inspect/ItemTip'
 import { findObject } from '../inspect/objects'
@@ -7,7 +7,7 @@ import { floorOf, onFloor } from '../lib/floors'
 import { ring } from '../lib/ring'
 import { STAT_LOOK, statIcon } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
-import { gmRoll, gmRun, send, useGame } from '../store/game'
+import { gmRoll, gmRun, send, useGame, type GmRollMode } from '../store/game'
 import { fighterIn, fightOn } from '../fight/fights'
 import { STATS, type TokenView } from '../types'
 
@@ -149,14 +149,20 @@ export function InspectCard() {
   )
 }
 
+const SEEN_MODES: [GmRollMode, string][] = [['public', 'Public'], ['hidden', 'Hidden'], ['secret', 'Secret']]
+const UNSEEN_MODES: [GmRollMode, string][] = [['someone', 'Someone'], ['secret', 'Secret']]
+
 /**
- * An NPC's six stats as its rolls, each showing the die on its sheet. The roll plays here in full, and players
- * see it land on the NPC's chip unless it's hidden. A hidden NPC can only roll hidden.
+ * An NPC's six stats as its rolls, each showing the die on its sheet (Round 17): pick what players see, then click a
+ * stat. GOD arms one roll, and picking a mode disarms it. An NPC players can't see has Someone instead of Public and
+ * Hidden. The roll plays as a banner on this screen, whatever players get.
  */
 function NpcRolls({ t, stats }: { t: TokenView; stats: NonNullable<TokenView['stats']> }) {
-  const [hideRoll, setHideRoll] = useState(false)
-  const lock = !!t.hidden
-  const hidden = lock || hideRoll
+  const [pick, setPick] = useState<GmRollMode | null>(null)
+  const [armed, setArmed] = useState(false)
+  const modes = t.hidden ? UNSEEN_MODES : SEEN_MODES
+  const mode = modes.find(([id]) => id === pick)?.[0] ?? modes[0][0]
+  const label = armed ? 'God' : modes.find(([id]) => id === mode)?.[1]
   return (
     <InspectBlock label="ROLL">
       <div className="r12-rgrid">
@@ -165,8 +171,11 @@ function NpcRolls({ t, stats }: { t: TokenView; stats: NonNullable<TokenView['st
             key={s}
             type="button"
             className="r12-rbtn"
-            aria-label={`Roll ${STAT_LOOK[s].title} for ${t.name}, d${stats[s]}` + (hidden ? ', hidden' : '')}
-            onClick={() => void gmRoll({ token: t.id, stat: s, hidden })}
+            aria-label={`Roll ${STAT_LOOK[s].title} for ${t.name}, d${stats[s]}, ${label}`}
+            onClick={() => {
+              setArmed(false)
+              void gmRoll({ token: t.id, stat: s, mode: armed ? 'god' : mode })
+            }}
             style={{ '--c': STAT_LOOK[s].col } as CSSProperties}
           >
             <img src={statIcon(s)} alt="" className="r3-px" />
@@ -177,10 +186,30 @@ function NpcRolls({ t, stats }: { t: TokenView; stats: NonNullable<TokenView['st
           </button>
         ))}
       </div>
-      <button type="button" className={'r10-hide r12-rhide' + (hidden ? ' on' : '')} aria-pressed={hidden} disabled={lock} onClick={() => setHideRoll(!hideRoll)}>
-        <Eye off={hidden} />
-        <span>{lock ? 'Hidden NPC, so only you see the roll' : hidden ? 'Hidden roll: only you see it' : 'Public roll: everyone sees it'}</span>
-      </button>
+      <div className="r17-rmode">
+        <div className="r17-rseg" role="group" aria-label="What players see">
+          {modes.map(([id, name]) => {
+            const on = !armed && mode === id
+            return (
+              <button
+                key={id}
+                type="button"
+                className={'r17-rb' + (on ? ' on' : '')}
+                aria-pressed={on}
+                onClick={() => {
+                  setPick(id)
+                  setArmed(false)
+                }}
+              >
+                {name}
+              </button>
+            )
+          })}
+        </div>
+        <button type="button" className={'r17-rgod' + (armed ? ' on' : '')} aria-pressed={armed} title="The next roll is God's: the whole screen, on every screen" onClick={() => setArmed(!armed)}>
+          GOD
+        </button>
+      </div>
     </InspectBlock>
   )
 }

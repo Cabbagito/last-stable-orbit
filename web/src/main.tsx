@@ -8,6 +8,7 @@ import './styles/stage.css'
 import './styles/codex.css'
 import './styles/station.css'
 import './styles/fight.css'
+import './styles/rolls.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -8,7 +8,7 @@ import { ChipFx } from '../fx/ChipFx'
 import { send, useGame } from '../store/game'
 import type { MapView as MapDef, MapObject, TokenView, Vec3 } from '../types'
 import { RingPortrait } from '../shell/RingPortrait'
-import { Callout, Orbit, calloutKey, calloutSpeech, isSpinning } from '../roll/Callout'
+import { Chip, Orbit, calloutKey, calloutSpeech, isSpinning } from '../roll/Callout'
 import { calloutsBy } from '../roll/callouts'
 import { BurnCallout, Flare, burnSpeech, useBurnMark } from '../stage/BurnMark'
 import { Eye } from '../gm/parts'
@@ -230,7 +230,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
   }
 
   const scale = cam ? clamp(0.8 / cam.zoom, 0.6, 1.8) : 1
-  const callouts = calloutsBy(rolls ?? [], calls, Date.now(), (r) => r.token)
+  const callouts = calloutsBy(rolls ?? [], calls, Date.now(), (r) => (r.god ? null : r.token)) // God has the whole screen
   return (
     <div
       ref={box}
@@ -275,7 +275,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
                   <RingPortrait src={t.portrait} ring={r} size={64} />
                 </ChipFx>
                 {call && isSpinning(call.r) && <Orbit stat={call.r.stat} />}
-                {call && <Callout key={calloutKey(call.r)} r={call.r} side="s-t" fading={call.fading} />}
+                {call && !isSpinning(call.r) && <Chip key={calloutKey(call.r)} r={call.r} fading={call.fading} />}
                 {burn && <Flare m={burn} />}
                 {burn && <BurnCallout key={burn.at} m={burn} side="s-t" />}
                 {t.hidden && (
