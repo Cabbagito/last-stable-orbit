@@ -15,8 +15,8 @@
 | M7: Ship for session 1 | **Hosting decided** 2026-11-05: parker at http://parker.local instead of Railway, with a join card on the TV (the README's "Hosting it at the table"). Backups and the layout checks are not started |
 | M8: Fights | **Built** 2026-11-05 and checked on :8071 with four seats (the GM, Tomo, Ves and the TV); see "How M8 turned out" in M8. Deployed to 8070 the same day. NPC health beyond the bible's enemy cards is drafts |
 | Round 17: rolls with pop | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV); see "How Round 17 turned out" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. The TV's sound is for Peter to judge by ear |
-| The TV's turn order | **Built** 2026-11-06 and checked on :8071 with two seats (the GM and the TV); see "Changed 2026-11-06" in M8. Not deployed yet. The sound is for Peter to judge by ear |
-| Always the TV | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV) on a copy of the saved game; see "Changed 2026-11-06: the TV is always there" in Stage. Not deployed yet |
+| The TV's turn order | **Built** 2026-11-06 and checked on :8071 with two seats (the GM and the TV); see "Changed 2026-11-06" in M8. Deployed to 8070 the same day; parker still needs `git pull && make up`. The sound is for Peter to judge by ear |
+| Always the TV | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV) on a copy of the saved game; see "Changed 2026-11-06: the TV is always there" in Stage. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
