@@ -1,6 +1,6 @@
 """M8: fights. The GM picks who's in a fight on one map, and everyone's Reflex, rolled once on the server, sets the
-order. Next skips whoever is down. A player sees only the fight on their own map; the TV lists every fight without
-saying whose turn it is; a hidden token, an NPC's dice and its GM note never reach anyone but the GM."""
+order. Next skips whoever is down. A player sees only the fight on their own map; the TV lists every fight, with
+whose turn it is; a hidden token, an NPC's dice and its GM note never reach anyone but the GM."""
 
 import json
 
@@ -182,12 +182,13 @@ async def test_a_player_sees_only_the_fight_on_their_map(engine):
     assert {f["map"] for f in fights(engine, GM)} == {EH, "promenade"}  # in map order
 
 
-async def test_the_tv_shows_every_fights_roll_and_order_but_not_whose_turn_it_is(engine):
+async def test_the_tv_shows_every_fights_roll_order_and_turn(engine):
     await two_fights(engine)
     tv = fights(engine, STAGE)
     assert [f["map"] for f in tv] == [EH, "promenade"]  # the map the TV shows first
     for f in tv:
-        assert set(f) == {"map", "name", "fighters", "rolled", "started"}  # no "now", no "round"
+        assert set(f) == {"map", "name", "fighters", "round", "now", "rolled", "started"}
+        assert f["now"] == f["fighters"][0]["token"]
         for x in f["fighters"]:
             assert "ini" in x and "joined" in x
     # it may show the Promenade's fighters, though it's looking at the Event Horizon
@@ -209,7 +210,8 @@ async def test_a_hidden_fighter_vanishes_from_everyone_but_the_gm(engine):
         f = fights(engine, viewer)[0]
         assert [x["token"] for x in f["fighters"]] == ["tomo"]
         assert "fixer" not in json.dumps(f) and "The fixer" not in json.dumps(f)
-    assert fights(engine, TOMO)[0]["now"] is None  # it's the fixer's turn, and Tomo can't see him
+    for viewer in (TOMO, STAGE):
+        assert fights(engine, viewer)[0]["now"] is None  # it's the fixer's turn, and they can't see him
     assert [x["token"] for x in fights(engine, GM)[0]["fighters"]] == ["fixer", "tomo"]
 
 

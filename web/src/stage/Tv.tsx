@@ -130,7 +130,7 @@ interface Cam {
 const PAD_X = 240 // world px kept around what the camera frames
 const PAD_TOP = 300 // a token stands about 100 px tall above its foot
 const PAD_BOTTOM = 160
-const ROW_H = 94 // the turn order's rows, at the 1440 x 810 they were drawn at (see fight.css)
+const ROW_H = 110 // the turn order's rows, at the 1440 x 810 they were drawn at (see fight.css)
 const ROW_GAP = 8
 const ROW_FOOT = 18
 const UNDER_BANNER = 0.28 // the share of the screen a roller's token sits below the middle, clear of the banner

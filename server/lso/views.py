@@ -461,8 +461,7 @@ def _place_name(state: GameState, content: Content, map_id: str, viewer: Viewer)
 
 def _fights_view(state: GameState, content: Content, viewer: Viewer, here: str) -> list[dict]:
     """M8. The GM gets every fight; a player only the fight on the map they're looking at; the TV every fight, one row
-    each, with the roll and the turn order but nothing about whose turn it is. A hidden token is never anyone's but the
-    GM's to see.
+    each. A hidden token is never anyone's but the GM's to see.
     An NPC's health goes out only here, while it's in a fight; its dice and notes never do."""
     gm, tv = viewer.is_gm, viewer.is_stage
     maps = [m for m in content.maps if m in state.fights]
@@ -488,10 +487,16 @@ def _fights_view(state: GameState, content: Content, viewer: Viewer, here: str) 
             d |= {"token": tid, "kind": t.kind, "ref": t.ref, "ini": f.ini.get(tid, 0), "joined": f.joined.get(tid, f.started)}
             fighters.append(d)
         seen = {x["token"] for x in fighters}
-        v = {"map": m, "name": _place_name(state, content, m, viewer), "fighters": fighters, "rolled": [x for x in f.rolled if x in seen], "started": f.started}
-        if not tv:
-            cur = f.order[f.turn] if f.order else None
-            v |= {"round": f.round, "now": cur if cur in seen else None}
+        cur = f.order[f.turn] if f.order else None
+        v = {
+            "map": m,
+            "name": _place_name(state, content, m, viewer),
+            "fighters": fighters,
+            "round": f.round,
+            "now": cur if cur in seen else None,
+            "rolled": [x for x in f.rolled if x in seen],
+            "started": f.started,
+        }
         out.append(v)
     return out
 

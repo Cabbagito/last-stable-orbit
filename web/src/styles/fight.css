@@ -52,10 +52,14 @@
 .app-tvfrow{display:flex;align-items:center;gap:14px;padding:8px 14px 6px 14px;background:rgba(0,0,0,.8);border:1px solid var(--line)}
 .app-tvfname{display:flex;flex-direction:column;gap:6px;max-width:170px;font-family:'Michroma',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#e7e9ec}
 .app-tvfname .r5-sec{margin:0}
-.app-tvfslots{position:relative;height:78px}
-.app-tvfslot{position:absolute;top:0;width:56px;height:78px;display:flex;flex-direction:column;align-items:center;gap:4px;transition:left .5s cubic-bezier(.4,0,.2,1)}
+.app-tvfslots{position:relative;height:94px}
+.app-tvfslot{position:absolute;top:0;width:56px;height:94px;display:flex;flex-direction:column;align-items:center;gap:4px;transition:left .5s cubic-bezier(.4,0,.2,1)}
+.app-tvfnow{height:12px;font-family:'Michroma',sans-serif;font-size:8px;line-height:12px;letter-spacing:.16em;color:#fff;white-space:nowrap}
+.app-tvfhead{display:block;width:52px;height:52px;transition:transform .4s ease}
+.app-tvfslot.now .app-tvfhead{transform:scale(1.2)}
+.app-tvfslot.now .app-tvfpos{color:#fff}
 .app-tvfini{display:flex;justify-content:center;align-items:center;height:22px}
-.app-tvfpos{font-family:'Michroma',sans-serif;font-size:11px;line-height:22px;color:#e7e9ec;animation:app-tvfpos .5s ease}
+.app-tvfpos{font-family:'Michroma',sans-serif;font-size:11px;line-height:22px;color:#8a8e96;animation:app-tvfpos .5s ease}
 @keyframes app-tvfpos{from{opacity:0}to{opacity:1}}
 
 /* ---------------------------------------------------------------- look C: the chip reacts (Round 14) */
@@ -95,6 +99,6 @@
 
 @media (prefers-reduced-motion: reduce){
   .fx-layer{display:none}
-  .app-fx,.app-fslot,.app-fhead,.app-fdiv,.app-tvfslot,.app-tvfpos{animation:none!important;transition:none!important}
+  .app-fx,.app-fslot,.app-fhead,.app-fdiv,.app-tvfslot,.app-tvfhead,.app-tvfpos{animation:none!important;transition:none!important}
   .app-freel{animation:none}
 }

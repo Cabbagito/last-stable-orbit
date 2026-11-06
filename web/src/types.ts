@@ -315,7 +315,7 @@ export interface Fighter {
 
 /**
  * A fight on one map, fighters in turn order. The GM gets every fight, a player the one on their map, the TV every
- * fight with its roll and order, but no round or turn.
+ * fight.
  */
 export interface FightView {
   map: string
