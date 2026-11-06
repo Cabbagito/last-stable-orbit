@@ -74,8 +74,7 @@
 .app-loginlinks .app-link,.app-gmlogin .app-link{min-height:44px}
 /* A failed skill's downside, for the whole table */
 .app-down{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:calc(20px * var(--k,1));box-sizing:border-box;max-width:min(92vw,calc(1040px * var(--k,1)));padding:calc(18px * var(--k,1)) calc(28px * var(--k,1)) calc(18px * var(--k,1)) calc(18px * var(--k,1));background:#000;box-shadow:0 0 0 1px #f2b544,0 0 40px rgba(0,0,0,.8);z-index:40;animation:app-down-in .35s cubic-bezier(.2,.8,.2,1)}
-.app-down.tv{top:calc(36px * var(--k,1))}
-.app-down.laptop{position:fixed;top:72px;--k:.7}
+.app-down{top:calc(36px * var(--k,1))}
 .app-down img{width:calc(96px * var(--k,1));height:calc(96px * var(--k,1));flex:none;image-rendering:pixelated}
 .app-down-txt{display:flex;flex-direction:column;gap:calc(8px * var(--k,1));min-width:0}
 .app-down-lab{font-family:'Michroma',sans-serif;font-size:calc(11px * var(--k,1));letter-spacing:.16em;text-transform:uppercase;color:#f2b544}

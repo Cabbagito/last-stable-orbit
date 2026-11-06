@@ -17,7 +17,7 @@ board's "what's where".
 The TV (the Stage seat) gets what a player gets with no seat: the party map (or, following one of the crew, the
 map they're on), its visible tokens and revealed
 objects, the crew's public sheets, and no pockets at all. It sees a roll as a player does. And it gets every film's
-file, to have them ready, because at the table only the TV plays films.
+file, to have them ready, because only the TV plays films.
 
 The Codex: a player gets only the entries the GM has unlocked, and on each page only the blocks that are open.
 A locked entry's id, name and art never leave the server: not in the Codex, not in See also, not on a Codex button
@@ -27,10 +27,10 @@ The Station: everyone but the TV gets all of Ergo's places, but a place the crew
 shown) is dark: no lit overlay and no map preview, and the core goes by "The core". Players see where each of the
 crew stands, but only on lit places, and never a hidden token.
 
-Films: a player's laptop gets a film's file only while it plays, and only when its laptop plays it (no TV, or
-online). With a TV it gets only when the film starts and ends, and shows the black hole meanwhile.
-A Burn's film plays on the same screens, but with a TV the laptops never go dark for one: they get who is
-burning (not the file) and stay on the game, with the Burn's mark on the burner's token and rail ring.
+Films: only the TV gets the files and plays them, with all the sound. A player's laptop gets only when a film
+starts and ends, and shows the black hole meanwhile. A Burn's film plays on the TV too, but the laptops never go
+dark for one: they get who is burning (not the file) and stay on the game, with the Burn's mark on the burner's
+token and rail ring.
 """
 
 from __future__ import annotations
@@ -109,7 +109,7 @@ def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer, o
     return out
 
 
-def _crew_view(content: Content, state: GameState) -> list[dict]:
+def _crew_view(content: Content, state: GameState, viewer: Viewer) -> list[dict]:
     out = []
     for c in content.characters.values():
         v = state.vitals.get(c.id)
@@ -126,17 +126,17 @@ def _crew_view(content: Content, state: GameState) -> list[dict]:
                 "health": c.health,
                 "hp": v.hp if v else c.health,
                 "entropy": v.entropy if v else 2,
-                "burn": _burn_view(c.burn),
+                "burn": _burn_view(c.burn, viewer),
             }
         )
     return out
 
 
-def _burn_view(b) -> dict | None:
-    """A Burn is public, like the skills. Its films go to every screen, so whichever plays it has them ready."""
+def _burn_view(b, viewer: Viewer) -> dict | None:
+    """A Burn is public, like the skills. Only the TV gets its films, and has them all ready."""
     if not b:
         return None
-    cuts = [{"id": x.id, "label": x.label, "src": url(x.file), "length": x.length} for x in b.cuts]
+    cuts = [{"id": x.id, "label": x.label, "length": x.length} | ({"src": url(x.file)} if viewer.is_stage else {}) for x in b.cuts]
     return {"name": b.name, "when": b.when, "text": b.text, "icon": url(b.icon), "color": b.color, "react": b.react, "cuts": cuts}
 
 
@@ -407,23 +407,17 @@ def viewer_map(state: GameState, viewer: Viewer) -> str:
     return state.party_map
 
 
-def plays_film(setup: str, viewer: Viewer) -> bool:
-    """Which screens play a film: the TV, if there is one; otherwise every laptop, the GM's included."""
-    return viewer.is_stage if setup == "tv" else not viewer.is_stage
-
-
 def _stage_view(state: GameState, content: Content, viewer: Viewer, online: frozenset[str], join: dict | None) -> dict:
     st = state.stage
-    out: dict = {"setup": st.setup, "camera": st.camera, "follow": st.follow, "film": None}
+    out: dict = {"camera": st.camera, "follow": st.follow, "film": None}
     if join and (viewer.is_gm or viewer.is_stage):  # the wifi password: never on a player's feed
         out["join"] = join | {"show": st.join}
     f = st.film
     if f and f.cue in content.cutscenes:
         cue = content.cutscenes[f.cue]
         film: dict = {"at": f.at, "ends": f.ends}
-        if plays_film(st.setup, viewer):
-            # sound from one device at the table: the TV, or the GM's laptop when there's no TV
-            film |= {"src": url(cue.file), "sound": viewer.is_stage or viewer.is_gm or st.setup == "online"}
+        if viewer.is_stage:
+            film["src"] = url(cue.file)
         if viewer.is_gm:
             film |= {"cue": cue.id, "name": cue.name}
         out["film"] = film
@@ -432,8 +426,8 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
         burn = content.characters[b.char].burn
         cut = burn.cut(b.cut) or burn.cuts[0]
         out["burn"] = {"char": b.char, "name": burn.name, "color": burn.color, "at": b.at, "ends": b.ends}
-        if plays_film(st.setup, viewer):
-            out["burn"] |= {"src": url(cut.file), "sound": viewer.is_stage or viewer.is_gm or st.setup == "online"}
+        if viewer.is_stage:
+            out["burn"]["src"] = url(cut.file)
     else:
         out["burn"] = None
     if viewer.is_gm:
@@ -517,7 +511,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
     view = {
         "me": {"seat": viewer.seat, "role": viewer.role, "char": viewer.char},
         "party_map": here,
-        "crew": _crew_view(content, state),
+        "crew": _crew_view(content, state, viewer),
         "maps": {m: _map_view(content, state, m, viewer, open_) for m in map_ids},
         "tokens": tokens,
         "inventory": {h: _inventory_view(content, state.inventory.get(h, []), open_) for h in holders},

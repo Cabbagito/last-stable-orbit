@@ -4,11 +4,11 @@ import { useGame } from '../store/game'
 const SHOW_MS = 10000
 
 /**
- * A failed skill's downside, big, for the whole table: "IF THE ROLL FAILS", the skill and what happens now. It
- * shows when the GM calls a skill roll a failure (a natural 1 always is), on the TV, or on every laptop when
- * there's no TV. Peter narrates it; this is so nobody has to ask what it was.
+ * A failed skill's downside, big, on the TV for the whole table: "IF THE ROLL FAILS", the skill and what happens
+ * now. It shows when the GM calls a skill roll a failure (a natural 1 always is). Peter narrates it; this is so
+ * nobody has to ask what it was.
  */
-export function Downside({ where }: { where: 'tv' | 'laptop' }) {
+export function Downside() {
   const view = useGame((s) => s.view)
   const seen = useRef<Set<string> | null>(null)
   const [cur, setCur] = useState<{ id: string; until: number } | null>(null)
@@ -31,13 +31,12 @@ export function Downside({ where }: { where: 'tv' | 'laptop' }) {
     return () => window.clearTimeout(t)
   }, [cur])
   if (!view || !cur) return null
-  if (where === 'laptop' && view.stage.setup === 'tv') return null
   const r = view.rolls.find((x) => x.id === cur.id)
   const c = r && view.crew.find((m) => m.id === r.char)
   const k = c?.list.find((e) => e.name === r?.entry)
   if (!r || !c || !k?.downside) return null
   return (
-    <div className={'app-down ' + where} role="status">
+    <div className="app-down" role="status">
       {k.icon && <img src={k.icon} alt="" className="r3-px" />}
       <div className="app-down-txt">
         <span className="app-down-lab">{c.short} · if the roll fails</span>

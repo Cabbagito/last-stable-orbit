@@ -63,7 +63,7 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
       </div>
       <Banners where="tv" />
       <RollStage world={world} tv sound={started ? sound.current : null} />
-      <Downside where="tv" />
+      <Downside />
       {(view.stage.films ?? []).map((src) => (
         <FilmPlayer key={src} src={src} film={view.stage.film} sound={!preview} />
       ))}

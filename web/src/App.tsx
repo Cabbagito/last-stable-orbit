@@ -9,8 +9,7 @@ import { Placeholder } from './pages/Placeholder'
 import { Station } from './pages/Station'
 import { Scene } from './pages/Scene'
 import { Header, type Tab } from './shell/Header'
-import { Downside } from './stage/Downside'
-import { BurnFilms, LaptopFilm } from './stage/Film'
+import { LaptopFilm } from './stage/Film'
 import { Tv } from './stage/Tv'
 import { useGame } from './store/game'
 import type { Me } from './types'
@@ -116,12 +115,10 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
         <Header tab={tab} isGm={isGm} onLogout={onLogout} />
         {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : tab === 'codex' ? <Codex /> : tab === 'station' ? <Station /> : <Placeholder tab={tab} />}
         {tab !== 'scene' && <Banners where="page" />}
-        <Downside where="laptop" />
         <RollDialog />
       </div>
       <RollStage world={world} />
       <LaptopFilm />
-      <BurnFilms />
     </div>
   )
 }

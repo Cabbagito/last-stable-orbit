@@ -597,7 +597,6 @@ class RollState(Strict):
     started: float = 0.0  # server time, for the sweeper
 
 
-SETUPS = ("tv", "notv", "online")  # where you're playing: at the table with a TV, at the table without one, online
 CAMERAS = ("crew", "follow", "roller")  # the TV's camera: the whole crew, one of them, or cut to whoever rolls
 
 
@@ -619,9 +618,8 @@ class BurnState(Strict):
 
 
 class StageState(Strict):
-    """The TV and the table: where you're playing, the TV's camera, and the film or Burn playing now, if any."""
+    """The TV: its camera, and the film or Burn playing now, if any."""
 
-    setup: Literal["tv", "notv", "online"] = "tv"
     camera: Literal["crew", "follow", "roller"] = "crew"
     follow: str | None = None  # a character, for the "follow" camera
     film: FilmState | None = None

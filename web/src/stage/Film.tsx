@@ -112,34 +112,29 @@ export function FilmPlayer({ src, film, sound, hard = false, hold = false }: { s
 }
 
 /**
- * A laptop while a film plays. With a TV the film is on the TV: a player's laptop shows the black hole until it
- * ends, and the GM's keeps working. Without a TV, or online, every laptop plays it (only the sound differs).
+ * A laptop while a film plays on the TV: a player's shows the black hole until it ends, and the GM's keeps working.
  */
 export function LaptopFilm() {
   const film = useGame((s) => s.view?.stage.film)
   const role = useGame((s) => s.view?.me.role)
-  const preview = useGame((s) => s.preview)
-  if (!film) return null
-  if (film.src) return <FilmPlayer key={film.at} src={film.src} film={film} sound={!!film.sound && !preview} />
-  if (role === 'player') return <HoleScreen key={film.at} ends={film.ends} />
-  return null
+  if (!film || role !== 'player') return null
+  return <HoleScreen key={film.at} ends={film.ends} />
 }
 
 /**
- * The Burn films. Every screen loads all of them ahead (they're small), so a Burn starts at once wherever it plays:
- * on the TV when there is one, otherwise on every laptop. Unlike a cutscene, a Burn never takes a laptop over while
- * the TV plays it: every laptop stays on the game, and the map and the crew rail show who is burning (BurnMark).
+ * The TV's Burn films. It loads all of them ahead (they're small), so a Burn starts at once. Unlike a cutscene, a Burn
+ * never takes a laptop over: every laptop stays on the game, and the map and the crew rail show who is burning (BurnMark).
  */
 export function BurnFilms() {
   const crew = useGame((s) => s.view?.crew)
   const burn = useGame((s) => s.view?.stage.burn)
   const preview = useGame((s) => s.preview)
-  const key = (crew ?? []).flatMap((c) => c.burn?.cuts.map((x) => x.src) ?? []).join('|')
+  const key = (crew ?? []).flatMap((c) => c.burn?.cuts.flatMap((x) => x.src ?? []) ?? []).join('|')
   const srcs = useMemo(() => (key ? [...new Set(key.split('|'))] : []), [key])
   return (
     <>
       {srcs.map((src) => (
-        <FilmPlayer key={src} src={src} film={burn?.src === src ? burn : null} sound={!!burn?.sound && !preview} hard hold />
+        <FilmPlayer key={src} src={src} film={burn?.src === src ? burn : null} sound={!preview} hard hold />
       ))}
     </>
   )

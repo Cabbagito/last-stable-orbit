@@ -11,7 +11,7 @@ import random
 from . import rules
 from .auth import Viewer
 from .content import Content
-from .models import BURN_COST, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_MAX, SETUPS, STATS, GameState, InvEntry, RollState, TokenState
+from .models import BURN_COST, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_MAX, STATS, GameState, InvEntry, RollState, TokenState
 from .state import state_from_preset
 from .views import viewer_map
 
@@ -25,10 +25,8 @@ REVEAL_AFTER = 45.0  # everyone sees the result even if the roller's screen neve
 OFFLINE_CLOSE_AFTER = 30.0  # a roll this old whose roller has gone away is closed
 STALE_CLOSE_AFTER = 600.0  # nothing stays open longer than this
 
-# A film starts this long after the GM presses Play, at one moment on every screen that plays it. The TV has
-# every film already; laptops fetch theirs when the cue fires, so they get longer.
-FILM_LEAD = {"tv": 1.5, "notv": 3.0, "online": 3.0}
-BURN_LEAD = 0.4  # every screen has the Burn films already, so a Burn starts almost at once
+FILM_LEAD = 1.5  # a film starts this long after the GM presses Play. The TV has every film already
+BURN_LEAD = 0.4  # and every Burn film, so a Burn starts almost at once
 BURN_HOLD = 0.75  # seconds a Burn film's last frame stays up before the hard cut back
 
 
@@ -282,7 +280,7 @@ def burn_playing(state: GameState, now: float) -> bool:
 
 
 def _burn(state: GameState, content: Content, char: str, cut_id, now: float) -> Events:
-    """A Burn: 2 Entropy, no roll, and its film on the screens that play films. What it does, Peter applies."""
+    """A Burn: 2 Entropy, no roll, and its film on the TV. What it does, Peter applies."""
     c = content.characters[char]
     if not c.burn:
         raise _invalid(f"{c.short} has no Burn")
@@ -322,18 +320,12 @@ def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: fl
         events: Events = []
         if state.stage.film:  # it ended a moment ago and the sweeper hasn't caught up
             events.append(("film.ended", {"cue": state.stage.film.cue}))
-        at = round(now + FILM_LEAD[state.stage.setup], 3)
+        at = round(now + FILM_LEAD, 3)
         events.append(("film.started", {"cue": cue.id, "at": at, "ends": round(at + cue.length, 3)}))
         return events + _cue_sets(state, content, cue)
 
     if film_playing(state, now):
         raise _invalid("a film is playing: change the TV once it ends")
-
-    if kind == "gm.stage.setup":
-        setup = _str(args, "setup")
-        if setup not in SETUPS:
-            raise _invalid(f"setup must be one of {', '.join(SETUPS)}")
-        return [] if setup == state.stage.setup else [("stage.setup_set", {"setup": setup})]
 
     if kind == "gm.stage.camera":
         camera = _str(args, "camera")

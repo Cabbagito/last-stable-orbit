@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { serverClock } from '../net/clock'
 import { JoinCard } from '../stage/JoinCard'
 import { gmRun } from '../store/game'
-import type { Camera, CueView, Setup, View } from '../types'
+import type { Camera, CueView, View } from '../types'
 
 const mss = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`
 
@@ -16,26 +16,23 @@ function useTick(on: boolean) {
   }, [on])
 }
 
-const WHERE: Record<Setup, string> = { tv: 'on the TV', notv: 'on every laptop', online: 'on every laptop' }
-
 /**
  * Round 12's Cutscenes section (board R12TabCutscenes): the cue list in the order you'll use them. Play asks
- * twice, because a film can't be stopped once it starts. The cue sets the map behind the film.
+ * twice, because a film can't be stopped once it starts, and waits for the TV, the only screen that plays films.
+ * The cue sets the map behind the film.
  */
 export function CutscenesSection({ view }: { view: View }) {
-  const { film, setup } = view.stage
+  const { film, tv } = view.stage
   const cues = view.stage.cues ?? []
   const [armed, setArmed] = useState<string | null>(null)
   const now = serverClock.now() / 1000
   const busy = !!film && now < film.ends
   useTick(busy)
   const line = busy
-    ? setup === 'tv'
-      ? 'A film is playing on the TV, and the laptops are dark until it ends.'
-      : setup === 'notv'
-        ? 'A film is playing on every laptop, muted, with the sound on yours.'
-        : 'A film is playing on every laptop, with its sound.'
-    : "Play asks twice, because a film can't be stopped once it starts."
+    ? 'A film is playing on the TV, and the laptops are dark until it ends.'
+    : tv
+      ? "Play asks twice, because a film can't be stopped once it starts."
+      : 'No TV is connected, so Play waits for it. On the TV, open the app and pick "This screen is the TV".'
 
   const play = async (q: CueView) => {
     setArmed(null)
@@ -67,7 +64,7 @@ export function CutscenesSection({ view }: { view: View }) {
                       <span style={{ width: `${len ? Math.min(100, (el / len) * 100) : 0}%` }} />
                     </span>
                     <span className="r12-ptime">
-                      {now < film.at ? `Starting ${WHERE[setup]}…` : `Playing ${WHERE[setup]} · ${mss(el)} of ${mss(len)}`}
+                      {now < film.at ? 'Starting on the TV…' : `Playing on the TV · ${mss(el)} of ${mss(len)}`}
                     </span>
                   </>
                 )}
@@ -75,11 +72,11 @@ export function CutscenesSection({ view }: { view: View }) {
               <div className="r12-cact">
                 {tag && <span className="r12-tag">{tag}</span>}
                 {q.ready && !playing && armed !== q.id && (
-                  <button type="button" className="r10-btn" disabled={busy} onClick={() => setArmed(q.id)}>
+                  <button type="button" className="r10-btn" disabled={busy || !tv} onClick={() => setArmed(q.id)}>
                     {q.played ? 'Play again' : 'Play'}
                   </button>
                 )}
-                {q.ready && armed === q.id && !busy && (
+                {q.ready && armed === q.id && !busy && tv && (
                   <>
                     <button type="button" className="r12-go" onClick={() => void play(q)}>
                       Play it now
@@ -98,16 +95,6 @@ export function CutscenesSection({ view }: { view: View }) {
   )
 }
 
-const SETUPS: [Setup, string][] = [
-  ['tv', 'At the table, with a TV'],
-  ['notv', 'At the table, no TV'],
-  ['online', 'Online'],
-]
-const SETUP_LINE: Record<Setup, string> = {
-  tv: 'Films and all the sound play on the TV. Laptops go dark during a cutscene, so everyone looks up; a Burn leaves them on the game.',
-  notv: 'Laptops play films muted and in sync, and the sound comes from your laptop.',
-  online: 'Every laptop plays films and sound in sync, since everyone is in a different room.',
-}
 const CAMS: [Camera, string][] = [
   ['crew', 'Whole crew'],
   ['follow', 'Follow one'],
@@ -115,11 +102,11 @@ const CAMS: [Camera, string][] = [
 ]
 
 /**
- * Round 12's TV section (board R12TabTV): whether the TV is connected, where you're playing, the TV's camera,
- * and what the TV shows right now (the TV's own screen, small and silent).
+ * Round 12's TV section (board R12TabTV): whether the TV is connected, its camera, and what it shows right now
+ * (the TV's own screen, small and silent).
  */
 export function TvSection({ view }: { view: View }) {
-  const { setup, camera, follow, tv, film, join } = view.stage
+  const { camera, follow, tv, film, join } = view.stage
   const busy = !!film && serverClock.now() / 1000 < film.ends
   useTick(busy)
   const followed = view.crew.find((c) => c.id === follow)
@@ -134,9 +121,7 @@ export function TvSection({ view }: { view: View }) {
       <div className="r10-h">The TV</div>
       <div className="r12-tvgrid">
         <div className="r12-tvcol">
-          {setup !== 'tv' ? (
-            <div className="r12-status r10-dimtxt">No TV this session.</div>
-          ) : tv ? (
+          {tv ? (
             <div className="r12-status">
               <span className="r12-dot" aria-hidden="true" />
               The TV is connected.
@@ -144,17 +129,7 @@ export function TvSection({ view }: { view: View }) {
           ) : (
             <div className="r12-status r10-dimtxt">No TV is connected. On the TV, open the app and pick "This screen is the TV".</div>
           )}
-          <div className="r5-sec" style={{ marginTop: 8 }}>
-            Where you're playing
-          </div>
-          <div className="r12-seg3" role="group" aria-label="Where you're playing">
-            {SETUPS.map(([id, name]) => (
-              <button key={id} type="button" className={setup === id ? 'on' : ''} aria-pressed={setup === id} disabled={busy} onClick={() => void gmRun('gm.stage.setup', { setup: id })}>
-                {name}
-              </button>
-            ))}
-          </div>
-          <div className="r10-hint">{busy ? 'A film is playing: change this once it ends.' : SETUP_LINE[setup]}</div>
+          <div className="r10-hint">Films and all the sound play on the TV. Laptops go dark during a cutscene, so everyone looks up; a Burn leaves them on the game.</div>
           <div className="r5-sec" style={{ marginTop: 12 }}>
             The TV's camera
           </div>
@@ -204,7 +179,7 @@ export function TvSection({ view }: { view: View }) {
               Hidden
             </button>
           </div>
-          <div className="r10-hint">Shows the wifi password. Hide it once everyone's in. No TV? Turn this screen around.</div>
+          <div className="r10-hint">Shows the wifi password. Hide it once everyone's in.</div>
           <JoinCard join={join} />
         </div>
       )}

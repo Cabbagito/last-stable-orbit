@@ -95,8 +95,8 @@ async def test_a_burn_spends_two_entropy_and_plays_on_the_tv(engine, clock):
     b = engine.state.stage.burn
     assert (b.char, b.cut) == ("ves", "fight") and b.ends - b.at == pytest.approx(2.5 + BURN_HOLD)  # the film, then its last frame held
     tv = project(engine.state, engine.content, STAGE)["stage"]["burn"]
-    assert tv["src"] == "/assets/films/burns/gone.mp4" and tv["sound"] and tv["name"] == "Gone"
-    # with a TV, the laptops go dark instead of playing it
+    assert tv["src"] == "/assets/films/burns/gone.mp4" and tv["name"] == "Gone"
+    # the laptops never get the film: they stay on the game and show who is burning
     for viewer in (VES, TALLY, GM):
         laptop = project(engine.state, engine.content, viewer)["stage"]["burn"]
         assert laptop["char"] == "ves" and "src" not in laptop
@@ -105,15 +105,6 @@ async def test_a_burn_spends_two_entropy_and_plays_on_the_tv(engine, clock):
     assert await engine.sweep(set())
     assert engine.state.stage.burn is None
     assert project(engine.state, engine.content, VES)["stage"]["burn"] is None
-
-
-async def test_without_a_tv_every_laptop_plays_the_burn(engine):
-    await run(engine, GM, "gm.stage.setup", {"setup": "notv"})
-    assert (await run(engine, TALLY, "burn.use", {}))["ok"]
-    for viewer, sound in ((VES, False), (TALLY, False), (GM, True)):
-        b = project(engine.state, engine.content, viewer)["stage"]["burn"]
-        assert b["src"] == "/assets/films/burns/recount.mp4" and b["sound"] is sound
-    assert "src" not in project(engine.state, engine.content, STAGE)["stage"]["burn"]
 
 
 async def test_a_burn_needs_two_entropy_and_a_quiet_screen(engine, clock):
@@ -149,12 +140,14 @@ async def test_only_players_burn_their_own_and_the_gm_burns_for_anyone(engine):
     assert engine.state.vitals["tomo"].entropy == 0 and engine.state.stage.burn.char == "tomo"
 
 
-def test_every_screen_has_every_burn_film_ready(engine):
-    """Burns are public, like skills, and every screen loads the films ahead so they start at once."""
+def test_only_the_tv_has_the_burn_films_ready(engine):
+    """Burns are public, like skills, but only the TV plays their films, so only it loads them ahead."""
     films = {f"films/burns/{n}.mp4" for n in ("on-your-feet", "cheap-shot", "recount", "gone", "gone-quiet", "not-them")}
+    assert films <= referenced_assets(project(engine.state, engine.content, STAGE))
     for viewer in (VES, STAGE, GM):
         v = project(engine.state, engine.content, viewer)
-        assert films <= referenced_assets(v)
+        if viewer is not STAGE:
+            assert not films & referenced_assets(v)
         assert crew(v, "tomo")["burn"]["react"] == "hurt" and crew(v, "tally")["burn"]["react"] == "roll"
         assert [c["id"] for c in crew(v, "ves")["burn"]["cuts"]] == ["fight", "quiet"]
 

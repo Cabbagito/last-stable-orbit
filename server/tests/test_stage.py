@@ -1,8 +1,7 @@
 """The TV (the Stage seat) and cutscenes.
 
 The TV is picked on the login screen like a seat, only watches, and gets only what everyone may see. Films start at one
-server moment on the screens that play them; which screens those are, and who may fetch a film's file, depends
-on where you're playing.
+server moment, and only the TV plays them or may fetch their files (the GM can too, for the TV's preview).
 """
 
 import json
@@ -163,7 +162,7 @@ async def test_a_cue_starts_the_film_and_sets_the_bar_behind_it(engine, content,
     await ok(engine, GM, "gm.token.hide", {"token": "dax", "hidden": True})
     await ok(engine, GM, "gm.film.play", {"cue": "shotgun"})
     f = engine.state.stage.film
-    assert f.cue == "shotgun" and f.at == clock.t + FILM_LEAD["tv"] and f.ends == pytest.approx(f.at + 35.83)
+    assert f.cue == "shotgun" and f.at == clock.t + FILM_LEAD and f.ends == pytest.approx(f.at + 35.83)
     assert engine.state.maps[EH].mood == "after"  # the bar after hours, behind the film
     dax = engine.state.tokens["dax"]
     assert (dax.map, dax.at, dax.hidden) == (EH, (11.6, 1.05, 0.0), False)  # at the gap in the rail
@@ -172,7 +171,7 @@ async def test_a_cue_starts_the_film_and_sets_the_bar_behind_it(engine, content,
 
 async def test_a_film_cant_be_stopped_or_doubled(engine, content, clock):
     await ok(engine, GM, "gm.film.play", {"cue": "shotgun"})
-    for kind, args in [("gm.film.play", {"cue": "shotgun"}), ("gm.stage.setup", {"setup": "online"}), ("gm.stage.camera", {"camera": "roller"})]:
+    for kind, args in [("gm.film.play", {"cue": "shotgun"}), ("gm.stage.camera", {"camera": "roller"})]:
         with pytest.raises(CommandError) as e:
             handle(GM, engine.state, content, kind, args, now=clock.t + 10)
         assert e.value.code == "invalid"
@@ -200,38 +199,36 @@ def test_only_the_gm_plays_films_and_only_made_ones(engine, content):
             handle(GM, engine.state, content, "gm.film.play", {"cue": cue})
 
 
-async def test_with_a_tv_only_the_tv_plays_the_film(engine, content):
+async def test_only_the_tv_plays_the_film(engine, content):
     await ok(engine, GM, "gm.film.play", {"cue": "shotgun"})
     tv, gm, tally = (project(engine.state, content, v)["stage"]["film"] for v in (STAGE, GM, TALLY))
-    assert tv["src"] == FILM and tv["sound"] is True
+    assert tv["src"] == FILM
     assert "src" not in gm and gm["name"] == "The bar: the shotgun"
     assert tally == {"at": tv["at"], "ends": tv["ends"]}  # the black hole until it ends; no file, no name
     assert "shotgun" not in json.dumps(project(engine.state, content, TALLY))
 
 
-async def test_without_a_tv_laptops_play_it_muted_and_the_gm_has_the_sound(engine, content):
-    await ok(engine, GM, "gm.stage.setup", {"setup": "notv"})
-    await ok(engine, GM, "gm.film.play", {"cue": "shotgun"})
-    assert engine.state.stage.film.at == 1000.0 + FILM_LEAD["notv"]
-    tv, gm, tally = (project(engine.state, content, v)["stage"]["film"] for v in (STAGE, GM, TALLY))
-    assert "src" not in tv
-    assert (gm["src"], gm["sound"]) == (FILM, True)
-    assert (tally["src"], tally["sound"]) == (FILM, False)
+def test_a_game_saved_with_the_old_tv_choice_still_loads(content, tmp_path):
+    store = Store(tmp_path / "old.db")
+    Engine(content, store)
+    old = store.load_snapshot()[1]
+    old["stage"]["setup"] = "online"
+    store.commit("system", None, [], old, {})
+    e = Engine(content, store)
+    assert "setup" not in e.state.stage.model_dump() and "setup" not in project(e.state, content, GM)["stage"]
 
 
-async def test_online_every_laptop_plays_it_with_sound(engine, content):
-    await ok(engine, GM, "gm.stage.setup", {"setup": "online"})
-    await ok(engine, GM, "gm.film.play", {"cue": "shotgun"})
-    tally = project(engine.state, content, TALLY)["stage"]["film"]
-    assert (tally["src"], tally["sound"]) == (FILM, True)
+def test_the_choice_of_no_tv_is_gone(engine, content):
+    with pytest.raises(CommandError) as e:
+        handle(GM, engine.state, content, "gm.stage.setup", {"setup": "notv"})
+    assert e.value.code == "invalid"
 
 
 async def test_a_preset_keeps_the_table_setting(engine, content):
-    await ok(engine, GM, "gm.stage.setup", {"setup": "online"})
     await ok(engine, GM, "gm.stage.camera", {"camera": "follow", "follow": "ves"})
     await ok(engine, GM, "gm.world.load_preset", {"preset": "bar-after-hours"})
     st = engine.state.stage
-    assert (st.setup, st.camera, st.follow) == ("online", "follow", "ves")
+    assert (st.camera, st.follow) == ("follow", "ves")
 
 
 def test_the_camera_follows_a_crew_member(engine, content):
@@ -246,7 +243,7 @@ def test_the_camera_follows_a_crew_member(engine, content):
 # ---------- who may fetch a film ----------
 
 
-def test_a_film_file_reaches_only_the_screens_that_play_it(client, seat, app):
+def test_a_film_file_reaches_only_the_tv_and_the_gm(client, seat):
     gm, tally, tv = seat("gm"), seat("tally"), tv_login(client)
     get = lambda who, path: client.get(path, headers=who).status_code  # noqa: E731
     assert get(tv, FILM) == 200 and get(gm, FILM) == 200
@@ -257,14 +254,4 @@ def test_a_film_file_reaches_only_the_screens_that_play_it(client, seat, app):
         recv(g, "view")
         g.send_json({"t": "intent", "id": "p", "type": "gm.film.play", "args": {"cue": "shotgun"}})
         assert recv(g, "ack")["ok"]
-        assert get(tally, FILM) == 404  # with a TV, only the TV fetches films
-    engine = app.state.engine
-    engine.state.stage.film = None  # as if it ended
-    with client.websocket_connect("/ws", headers=gm) as g:
-        recv(g, "view")
-        g.send_json({"t": "intent", "id": "s", "type": "gm.stage.setup", "args": {"setup": "notv"}})
-        assert recv(g, "ack")["ok"]
-        assert get(tally, FILM) == 404  # not until its cue fires
-        g.send_json({"t": "intent", "id": "q", "type": "gm.film.play", "args": {"cue": "shotgun"}})
-        assert recv(g, "ack")["ok"]
-        assert get(tally, FILM) == 200  # no TV: her laptop plays it
+        assert get(tally, FILM) == 404  # only the TV fetches films

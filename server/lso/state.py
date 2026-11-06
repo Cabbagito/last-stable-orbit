@@ -97,7 +97,7 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     s.seq = seq
     if ev_type == "world.loaded":
         fresh = GameState.model_validate({**data["state"], "seq": seq})
-        fresh.stage = s.stage  # a preset sets the world, not the table: the setup, camera and films carry over
+        fresh.stage = s.stage  # a preset sets the world, not the table: the camera and films carry over
         return fresh
     if ev_type == "token.moved":
         s.tokens[data["token"]].at = tuple(data["at"])
@@ -184,7 +184,7 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "burn.ended":
         s.stage.burn = None
     elif ev_type == "stage.setup_set":
-        s.stage.setup = data["setup"]
+        pass  # an old log's TV / no TV / online choice: the TV is always there now
     elif ev_type == "stage.camera_set":
         s.stage.camera, s.stage.follow = data["camera"], data.get("follow")
     elif ev_type == "stage.join_set":

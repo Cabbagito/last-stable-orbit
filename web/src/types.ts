@@ -37,7 +37,7 @@ export interface CrewMember {
 export interface BurnCut {
   id: string
   label: string
-  src: string
+  src?: string // the TV only
   length: number
 }
 
@@ -59,8 +59,7 @@ export interface BurnView {
   color: string
   at: number
   ends: number
-  src?: string
-  sound?: boolean
+  src?: string // the TV only
 }
 
 export type Hum = 'bar' | 'street' | 'none' | 'beat'
@@ -251,15 +250,13 @@ export interface RollView {
   hidden?: boolean
 }
 
-export type Setup = 'tv' | 'notv' | 'online'
 export type Camera = 'crew' | 'follow' | 'roller'
 
-/** A film playing now. Times are the server's, in seconds. `src` only reaches screens that play it. */
+/** A film playing now. Times are the server's, in seconds. `src` only reaches the TV. */
 export interface FilmView {
-  at: number // it starts here, on every screen that plays it
+  at: number // it starts here
   ends: number
   src?: string
-  sound?: boolean
   cue?: string // GM only
   name?: string // GM only
 }
@@ -292,7 +289,6 @@ export interface JoinView {
 }
 
 export interface StageView {
-  setup: Setup
   camera: Camera
   follow: string | null
   film: FilmView | null

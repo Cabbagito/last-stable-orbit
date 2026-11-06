@@ -31,7 +31,9 @@ class Engine:
             self._commit("system", None, [("world.loaded", {"preset": preset.id, "state": state_from_preset(preset, content)})], {})
             log.info("seeded the world from preset %s", preset.id)
         else:
-            self.state = GameState.model_validate(snap[1])
+            saved = snap[1]
+            saved.get("stage", {}).pop("setup", None)  # the TV / no TV / online choice: the TV is always there now
+            self.state = GameState.model_validate(saved)
             self._check_refs()
             self._add_new_maps()
             self._update_rules()

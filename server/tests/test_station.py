@@ -104,7 +104,6 @@ def test_the_tv_has_no_station(engine):
 async def test_presets_and_cues_light_their_places(engine):
     assert (await run(engine, GM, "gm.world.load_preset", {"preset": "session-1-arrival"}))["ok"]
     assert {p["id"] for p in station(engine, VES)["places"] if p["lit"]} == {"patience"}
-    engine.state.stage.setup = "notv"
     # the intro has no film yet, so try a cue that sets the party map: the shotgun ends on the bar
     assert (await run(engine, GM, "gm.film.play", {"cue": "shotgun"}))["ok"]
     assert place(engine, VES, "event-horizon")["lit"]

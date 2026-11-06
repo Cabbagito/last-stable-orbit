@@ -1,7 +1,7 @@
 import type { BurnView } from '../types'
 
-// The Burn mark: what every laptop shows on the burner's token and crew-rail ring while a Burn plays on the TV
-// (or on the laptops, with no TV). It shows from the moment the Burn goes off until its film ends, then stays
+// The Burn mark: what every laptop shows on the burner's token and crew-rail ring while a Burn plays on the TV.
+// It shows from the moment the Burn goes off until its film ends, then stays
 // LINGER more and fades over FADE, the way a roll's callout does.
 export const BURN_LINGER = 4000
 export const BURN_FADE = 700

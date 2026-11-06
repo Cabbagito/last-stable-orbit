@@ -16,14 +16,15 @@
 | M8: Fights | **Built** 2026-11-05 and checked on :8071 with four seats (the GM, Tomo, Ves and the TV); see "How M8 turned out" in M8. Deployed to 8070 the same day. NPC health beyond the bible's enemy cards is drafts |
 | Round 17: rolls with pop | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV); see "How Round 17 turned out" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. The TV's sound is for Peter to judge by ear |
 | The TV's turn order | **Built** 2026-11-06 and checked on :8071 with two seats (the GM and the TV); see "Changed 2026-11-06" in M8. Not deployed yet. The sound is for Peter to judge by ear |
+| Always the TV | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV) on a copy of the saved game; see "Changed 2026-11-06: the TV is always there" in Stage. Not deployed yet |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
 - **In the data now:** each character has three skills in one unlabelled list, with what each covers and a downside that happens every time a roll using it fails. Ves carries a stun pistol and Marlo carries stun rings; both roll Reflex and put people down without killing them. Everyone starts with one signature item: Lale's fob watch, Marlo's rings, Tally's notebook, Ves's pistol, Tomo's sourdough starter. The skill icons come from the Icons canvas, board "Skills".
 - **Built 2026-11-04** (fa0d7be):
   - health by character: Tomo 9, Tally 7, Lale 5, Marlo 5, Ves 4, with one ring segment per point. A saved game moves over once at boot: whoever was at the old full 6 is full again;
-  - Burns, from the Burn animations canvas (https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg): the Burn row under the name, held for half a second, spends 2 Entropy and plays the character's film, on the TV or on every laptop when there's no TV. Ves picks between her two cuts. Tally's Recount also sits on his roll screen beside Push. Tomo's row pulses for 5 s after one of the others is hurt, Tally's after a die lands. A film's last frame holds for 0.75 s. With a TV the laptops stay on the game (no black hole, unlike a cutscene); every laptop marks the burner's token and rail ring (BURN, the icon and the name, in the Burn's colour, with a flare ring) until 4 s after the film. Peter applies what a Burn does by hand;
-  - a failed skill's downside on the TV: Peter presses Failed on the crew ring (a natural 1 always fails). Without a TV it shows on every laptop;
+  - Burns, from the Burn animations canvas (https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg): the Burn row under the name, held for half a second, spends 2 Entropy and plays the character's film on the TV. Ves picks between her two cuts. Tally's Recount also sits on his roll screen beside Push. Tomo's row pulses for 5 s after one of the others is hurt, Tally's after a die lands. A film's last frame holds for 0.75 s. With a TV the laptops stay on the game (no black hole, unlike a cutscene); every laptop marks the burner's token and rail ring (BURN, the icon and the name, in the Burn's colour, with a flare ring) until 4 s after the film. Peter applies what a Burn does by hand;
+  - a failed skill's downside on the TV: Peter presses Failed on the crew ring (a natural 1 always fails).;
   - enemy cards: the spider mech has 13 health and cracks at 6, and the fixer has 10.
 - **Dropped 2026-11-05:** what happens at the target's token after a Burn's film (+3 for On your feet, the pink mark for Cheap shot, Ves going faint). Peter applies a Burn by hand, for example +3 HP, and M8's change animations show it on the chip.
 
@@ -366,7 +367,13 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
        - Drawn the way the app will draw it: a low-resolution canvas scaled up with crisp pixels, at 30 frames a second, and a still frame for anyone who has reduced motion on.
        - **Peter's pick (2026-11-04): C's falling dust, in A's colours (pink on the side turning away, cyan on the side turning toward you, brighter there), at 5 px pixels, with no text on screen at all.** The `R13FilmDust` board is updated to that; A and B stay as drawn.
   4. **Sound:** only the films' own baked-in sound in this milestone. The soundboard, per-map ambience and roll sounds come later.
-- **Known limits:** the online setup can be built now, but it can only be tested once the app is hosted (M7).
+- **Changed 2026-11-06: the TV is always there** (Peter; this wins over the setups and the "table setting" below):
+  - The TV / no TV / Online choice is gone. Cutscenes, Burns, a failed skill's downside and all the sound are on the TV. Laptops are silent. A player's laptop shows the black hole during a cutscene, and stays on the game during a Burn.
+  - Only the TV gets film files, Burn films included. Laptops don't load them ahead any more, and a player's fetch of one is a 404.
+  - **With no TV connected:** the GM's Play is greyed out with a line saying why, because otherwise a film would run with nobody seeing it. That's a client check on `stage.tv`. It can't tell a TV that hasn't had its start click, where a film plays muted behind the start screen. A Burn is never refused: its Entropy is spent, the mark shows, and no film plays.
+  - **If the TV dies:** any spare laptop can pick "This screen is the TV".
+  - **Online is gone** too, though the Cutscenes doc still says one session may be online. It was never tested, and http://parker.local only works on the wifi. For an online session, screen-share a window logged in as the TV, with sound, on the call. It would also need hosting people can reach from outside.
+  - A saved game drops its old `setup` at boot (`engine.py`), and an old log's `stage.setup_set` does nothing.
 - **How Stage turned out** (built 2026-11-04; this wins over the proposals above):
   - **The TV is the Stage seat.** On the login screen, "This screen is the TV" logs in as `stage` with one click, no passcode (Peter's call). Its screen (`web/src/stage/Tv.tsx`) has no header and no rail. It needs one click to start, which goes full screen and lets films play their sound. The mouse is hidden on it.
     - Logging out: the start screen has "Not the TV? Log out". Once started, moving the mouse shows the cursor and "Log out of the TV" in the top right for 3 s (Peter couldn't get out of it at first).
@@ -376,24 +383,20 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **TV 2, the band** (`TvBand.tsx`): a public roll slides up along the bottom with the roller's ring, name, stat and die, and plays the real roll animation in step with the roller's screen. At an explosion it waits until the roller's screen rolls again; if the roller skips, it skips. It stays 3.8 s after the dice settle, then slides away. Rolls under way when the TV connects don't get one.
   - **The camera** (GM tab, The TV): Whole crew frames every crew member on the map; Follow one centres on one of them; Whoever rolls frames the crew and moves to whoever rolls, above the band, until the band leaves. Moves glide over 0.9 s.
   - **Cutscenes** are in `content/cutscenes.yaml`, in the order you'll use them. A cue with no file shows as "NOT MADE YET". Each made cue has its file, its length, the GM's still, and `sets`: what it sets behind the film (the party's map, mood, switches, NPCs placed). The shotgun sets the bar after hours with Dax at [11.6, 1.05, 0], his after-hours spot. That position is a draft for "the gap in the rail".
-    - `gm.film.play` starts a film 1.5 s after the press with a TV (it has the file already), or 3 s without one (laptops fetch it then). It can't be stopped, and while it plays the setup and camera don't change either. The server ends it on time and marks the cue played.
+    - `gm.film.play` starts a film 1.5 s after the press (the TV has the file already). It can't be stopped, and while it plays the setup and camera don't change either. The server ends it on time and marks the cue played.
     - The film itself is `assets/films/shotgun.mp4` (35.8 s, 1920×1080, sound baked in), from the shotgun canvas.
   - **In sync:** every frame and pong carries the server's clock, and each screen keeps its offset from the shortest round trip (`web/src/net/clock.ts`). A screen starts the film at the server moment; one that's late jumps to where everyone is, and one that drifts more than 0.3 s jumps back.
   - **Which screens play it, and who may fetch it:**
-    - With a TV: only the TV plays it, with all the sound. Players' laptops show the black hole (Round 13's dust) until it ends; they never get the file or the film's name. The GM's laptop keeps working, and the cue list shows its progress.
-    - No TV: every laptop plays it, players' muted, the GM's with the sound. Players get the file only once its cue fires.
-    - Online: every laptop plays it with its sound. If a browser won't start the sound by itself, the film plays muted with a "Turn the sound on" button.
+    - Only the TV plays it, with all the sound. Players' laptops show the black hole (Round 13's dust) until it ends; they never get the file or the film's name. The GM's laptop keeps working, and the cue list shows its progress.
     - The GM's still is a spoiler, so only the GM gets it.
-  - **The GM tab:** Cutscenes is the cue list with a two-step Play, progress while it plays, and PLAYED after. The TV has the status, where you're playing, the camera with faces for Follow one, and "On the TV now", the TV's own screen small and silent (`/?as=stage`).
+  - **The GM tab:** Cutscenes is the cue list with a two-step Play, progress while it plays, and PLAYED after. The TV has the status, the camera with faces for Follow one, and "On the TV now", the TV's own screen small and silent (`/?as=stage`).
   - **Loading a preset keeps the table setting:** where you're playing, the camera, and which cues were played.
   - **Not built:** the waiting loop and the intro, which aren't made yet; a stop button (Peter's call); and the soundboard, ambience and roll sounds (later).
   - **Checked:** 104 server tests (17 new) and 22 web tests. Walked through on a separate test server with the GM, the TV and Tally:
     - the TV's login and start click;
     - the camera following Ves;
     - Dax's public Cool roll in the band, with the camera cutting to him and back;
-    - the shotgun with a TV: the film on the TV, the black hole on Tally's laptop, progress in the GM tab, then the bar after hours everywhere and PLAYED;
-    - the shotgun with no TV: the GM's laptop with sound and Tally's muted, about 0.2 s apart, and nothing on the TV.
-  - **Online** is built, but it can only really be tested once the app is hosted (M7).
+    - the shotgun: the film on the TV, the black hole on Tally's laptop, progress in the GM tab, then the bar after hours everywhere and PLAYED;
 
 ### M5: The other 10 maps · M · best ultracode fan-out
 - **Goal:** every map from the Maps canvas, driven by data.

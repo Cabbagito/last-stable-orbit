@@ -26,7 +26,7 @@ const SECTIONS: [Section, string, string?][] = [
 /**
  * The GM tab (Round 12, board R12TabCrew): what you do between scenes. A section nav on the left; the crew's
  * HP, Entropy and every pocket; every map's mood, switches and things; New session and presets; and a
- * read-only look at any player's screen; the cue list; and the TV: where you're playing, and its camera.
+ * read-only look at any player's screen; the cue list; and the TV: whether it's connected, and its camera.
  */
 export function GmTab() {
   const view = useGame((s) => s.view)
