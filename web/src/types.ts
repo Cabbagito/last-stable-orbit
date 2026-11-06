@@ -313,13 +313,13 @@ export interface Fighter {
   color: string
   hp: number
   health: number
-  ini?: number // not on the TV: the Reflex total, shown only while the dice land
-  joined?: number // not on the TV: server time (s) this fighter's dice were rolled
+  ini?: number // the Reflex total, shown only while the dice land
+  joined?: number // server time (s) this fighter's dice were rolled
 }
 
 /**
  * A fight on one map, fighters in turn order. The GM gets every fight, a player the one on their map, the TV every
- * fight as a list of who's in it (no round, turn or rolls).
+ * fight with its roll and order, but no round or turn.
  */
 export interface FightView {
   map: string

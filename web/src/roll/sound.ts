@@ -103,6 +103,21 @@ export class RollSound {
     if (hidden) [55, 82.4, 110, 164.8].forEach((f, i) => this.osc('sine', f, f, t0 + T + 0.35, 2.8, 0.1 - i * 0.012, 0.001, 0.5))
   }
 
+  /** Everyone's Reflex at once: the dice go in, tick while they spin, each lands with a knock, and the order is set.
+   * `lands` and `sort` are seconds from now. */
+  initiative(lands: number[], sort: number) {
+    if (!this.ac || !lands.length) return
+    const t0 = this.ac.currentTime + 0.02
+    const last = Math.max(...lands)
+    this.burst('bandpass', 300, 2000, 1.5, t0, 0.3, 0.4, 0.001)
+    for (let t = 0.25; t < last; t += 0.08) this.osc('square', 700, 700, t0 + t, 0.03, 0.05, 0.001)
+    lands.forEach((s) => {
+      this.osc('sine', 190, 42, t0 + s, 0.3, 0.7, 0.001)
+      this.burst('lowpass', 3000, 300, 0.7, t0 + s, 0.14, 0.4, 0.001)
+    })
+    ;[523, 784].forEach((f, i) => this.osc('triangle', f, f, t0 + sort + i * 0.07, 0.35, 0.16, 0.001))
+  }
+
   crew(phase: string, stat: string | null) {
     if (!this.ac) return
     const t0 = this.ac.currentTime + 0.02

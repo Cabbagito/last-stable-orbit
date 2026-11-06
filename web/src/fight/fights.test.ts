@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { FightView, Fighter } from '../types'
-import { carousel, landing, nextUp, shownOrder } from './fights'
+import { carousel, diceDue, landing, nextUp, shownOrder } from './fights'
 
 const x = (token: string, hp = 3, joined = 100): Fighter => ({ token, kind: 'npc', ref: token, name: token, portrait: '', color: '', hp, health: 4, ini: 5, joined })
 const fight = (over: Partial<FightView> = {}): FightView => ({
@@ -20,6 +20,21 @@ describe('the dice landing', () => {
     const f = fight({ fighters: [x('gun'), x('fixer', 10, 200), x('tomo'), x('lale')] })
     expect(shownOrder(f, 200.5)).toEqual(['gun', 'tomo', 'lale', 'fixer'])
     expect(shownOrder(f, 202)).toEqual(['gun', 'fixer', 'tomo', 'lale'])
+  })
+})
+
+describe('the dice still to land', () => {
+  it('are everyone at the start, then fewer, then none', () => {
+    expect(diceDue(fight(), 100).map((d) => d.token)).toEqual(['gun', 'tomo', 'lale'])
+    expect(diceDue(fight(), 101).map((d) => d.token)).toEqual(['gun', 'lale'])
+    expect(diceDue(fight(), 102)).toEqual([])
+  })
+  it('are only the newcomer when someone joins later', () => {
+    const f = fight({ fighters: [x('gun'), x('fixer', 10, 200), x('tomo'), x('lale')] })
+    const [due, ...rest] = diceDue(f, 200)
+    expect(rest).toEqual([])
+    expect(due.token).toBe('fixer')
+    expect(due.land).toBeCloseTo(200.9)
   })
 })
 

@@ -33,6 +33,13 @@ export function landing(f: FightView): { land: Record<string, number>; place: Re
   return { land, place }
 }
 
+/** For a screen with sound: the fighters whose dice haven't landed at server time t (s), with when each lands and
+ * takes its place. */
+export function diceDue(f: FightView, t: number): { token: string; land: number; place: number }[] {
+  const { land, place } = landing(f)
+  return f.fighters.filter((x) => land[x.token] > t).map((x) => ({ token: x.token, land: land[x.token], place: place[x.token] }))
+}
+
 /** The order the strip shows at server time t (s): the GM's pick order while the first dice land, then the turn
  * order, with anyone still rolling in at the end. */
 export function shownOrder(f: FightView, t: number): string[] {

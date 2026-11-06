@@ -47,10 +47,16 @@
 .r10-roll:disabled{opacity:.4;cursor:default}
 .r10-roll:disabled:hover{background:#000;color:#ff7dbb}
 
-/* ---------------------------------------------------------------- the TV: who's in each fight */
-.app-tvfights{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:22px}
-.app-tvfrow{display:flex;align-items:center;gap:10px;padding:8px 14px 8px 12px;background:rgba(0,0,0,.8);border:1px solid var(--line)}
-.app-tvfname{width:170px;font-family:'Michroma',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#e7e9ec}
+/* ---------------------------------------------------------------- the TV: each fight's turn order, along the bottom */
+.app-tvfights{position:absolute;left:0;right:0;bottom:0;padding-bottom:18px;display:flex;flex-direction:column;align-items:center;gap:8px;transform:scale(var(--k));transform-origin:50% 100%;pointer-events:none;z-index:4}
+.app-tvfrow{display:flex;align-items:center;gap:14px;padding:8px 14px 6px 14px;background:rgba(0,0,0,.8);border:1px solid var(--line)}
+.app-tvfname{display:flex;flex-direction:column;gap:6px;max-width:170px;font-family:'Michroma',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#e7e9ec}
+.app-tvfname .r5-sec{margin:0}
+.app-tvfslots{position:relative;height:78px}
+.app-tvfslot{position:absolute;top:0;width:56px;height:78px;display:flex;flex-direction:column;align-items:center;gap:4px;transition:left .5s cubic-bezier(.4,0,.2,1)}
+.app-tvfini{display:flex;justify-content:center;align-items:center;height:22px}
+.app-tvfpos{font-family:'Michroma',sans-serif;font-size:11px;line-height:22px;color:#e7e9ec;animation:app-tvfpos .5s ease}
+@keyframes app-tvfpos{from{opacity:0}to{opacity:1}}
 
 /* ---------------------------------------------------------------- look C: the chip reacts (Round 14) */
 .app-fx{flex:none}
@@ -89,6 +95,6 @@
 
 @media (prefers-reduced-motion: reduce){
   .fx-layer{display:none}
-  .app-fx,.app-fslot,.app-fhead,.app-fdiv{animation:none!important;transition:none!important}
+  .app-fx,.app-fslot,.app-fhead,.app-fdiv,.app-tvfslot,.app-tvfpos{animation:none!important;transition:none!important}
   .app-freel{animation:none}
 }

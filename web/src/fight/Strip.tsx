@@ -12,6 +12,34 @@ const SLOT = 56
 const VISIBLE = 7 // slots across; the outer ones fade
 const REEL = ['7', '2', '9', '4', '1', '8', '7']
 
+/** When each fighter's number lands and takes its place; re-renders as each one does. */
+export function useLanding(fight: FightView) {
+  const [, tick] = useState(0)
+  const { land, place } = landing(fight)
+  const key = fight.fighters.map((x) => `${x.token}@${x.joined ?? 0}`).join(',') + `:${fight.started}`
+  useEffect(() => {
+    const now = serverClock.now() / 1000
+    const at = [...Object.values(land), ...Object.values(place)].filter((s) => s > now).map((s) => (s - now) * 1000 + 30)
+    const ids = at.map((ms) => window.setTimeout(() => tick((n) => n + 1), ms))
+    return () => ids.forEach(clearTimeout)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key])
+  return { land, place }
+}
+
+/** A Reflex die spinning; `k` puts the reels out of step, so they look like separate dice. */
+export function Reel({ k }: { k: number }) {
+  return (
+    <span className="app-fwin">
+      <span className="app-freel" style={{ animationDelay: `${-(k % 6) * 0.07}s` }}>
+        {REEL.map((d, i) => (
+          <span key={i}>{d}</span>
+        ))}
+      </span>
+    </span>
+  )
+}
+
 /**
  * The turn strip along the top of the map (Round 16): whoever's turn it is sits in the middle, larger, NOW over
  * them and a bar under them, NEXT over the next one; the rest fade to either side, with R2 where the next round
@@ -21,19 +49,9 @@ const REEL = ['7', '2', '9', '4', '1', '8', '7']
 export function FightStrip({ fight }: { fight: FightView }) {
   const view = useGame((s) => s.view)
   const isGm = view?.me.role === 'gm'
-  const [, tick] = useState(0)
   const t = serverClock.now() / 1000
-  const { land, place } = landing(fight)
+  const { land, place } = useLanding(fight)
   const settling = fight.fighters.some((x) => t < place[x.token])
-  const key = fight.fighters.map((x) => `${x.token}@${x.joined ?? 0}`).join(',') + `:${fight.started}`
-  // re-render as each number lands, and when the strip sorts
-  useEffect(() => {
-    const now = serverClock.now() / 1000
-    const at = [...Object.values(land), ...Object.values(place)].filter((s) => s > now).map((s) => (s - now) * 1000 + 30)
-    const ids = at.map((ms) => window.setTimeout(() => tick((n) => n + 1), ms))
-    return () => ids.forEach(clearTimeout)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key])
 
   const n = fight.fighters.length
   const idx = fight.fighters.findIndex((x) => x.token === fight.now)
@@ -116,15 +134,7 @@ export function FightStrip({ fight }: { fight: FightView }) {
             <span className="app-fhead">{head(s.x)}</span>
             <span className="app-fbar" />
             <span className="app-fini">
-              {s.reel && (
-                <span className="app-fwin">
-                  <span className="app-freel" style={{ animationDelay: `${-(s.k % 6) * 0.07}s` }}>
-                    {REEL.map((d, i) => (
-                      <span key={i}>{d}</span>
-                    ))}
-                  </span>
-                </span>
-              )}
+              {s.reel && <Reel k={s.k} />}
               {s.num && <span className={s.num}>{s.x.ini}</span>}
             </span>
           </div>

@@ -182,14 +182,14 @@ async def test_a_player_sees_only_the_fight_on_their_map(engine):
     assert {f["map"] for f in fights(engine, GM)} == {EH, "promenade"}  # in map order
 
 
-async def test_the_tv_lists_every_fight_but_not_whose_turn_it_is(engine):
+async def test_the_tv_shows_every_fights_roll_and_order_but_not_whose_turn_it_is(engine):
     await two_fights(engine)
     tv = fights(engine, STAGE)
     assert [f["map"] for f in tv] == [EH, "promenade"]  # the map the TV shows first
     for f in tv:
-        assert set(f) == {"map", "name", "fighters"}
+        assert set(f) == {"map", "name", "fighters", "rolled", "started"}  # no "now", no "round"
         for x in f["fighters"]:
-            assert "ini" not in x and "joined" not in x
+            assert "ini" in x and "joined" in x
     # it may show the Promenade's fighters, though it's looking at the Event Horizon
     assert "portraits/guard.gif" in referenced_assets(project(engine.state, engine.content, STAGE))
 

@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { proj } from '../lib/proj'
 import { hpRing, plainRing, ring } from '../lib/ring'
 import { fighterIn } from '../fight/fights'
+import { TvFights } from '../fight/TvFights'
 import { ChipFx } from '../fx/ChipFx'
 import { MapLayers } from '../map/MapLayers'
 import { Banners, usePlates } from '../roll/Banner'
@@ -51,9 +52,9 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
           <div className="app-tvplace">
             <div className="r4-place">{map.name}</div>
             {mood && <div className="r12-tvmood">{mood.label}</div>}
-            <TvFights view={view} />
           </div>
         )}
+        <TvFights view={view} sound={started ? sound.current : null} />
         {view.stage.join?.show && (
           <aside className="app-tvjoin" aria-label="How to join the game">
             <JoinCard join={view.stage.join} />
@@ -129,6 +130,9 @@ interface Cam {
 const PAD_X = 240 // world px kept around what the camera frames
 const PAD_TOP = 300 // a token stands about 100 px tall above its foot
 const PAD_BOTTOM = 160
+const ROW_H = 94 // the turn order's rows, at the 1440 x 810 they were drawn at (see fight.css)
+const ROW_GAP = 8
+const ROW_FOOT = 18
 const UNDER_BANNER = 0.28 // the share of the screen a roller's token sits below the middle, clear of the banner
 const CREW_MAX = 1.25
 const ONE_MAX = 1.5
@@ -136,10 +140,12 @@ const ONE_MAX = 1.5
 /**
  * Frame some points on the map (world px): as close as `max` allows while every point fits, never further out
  * than the whole map, and kept on the art where the map is bigger than the screen. `lower` moves them down the
- * screen by that much, under the banner.
+ * screen by that much, under the banner. `bottom` is what the turn order covers along the bottom edge: the points
+ * fit above it, and the art still runs under it.
  */
-function frame(size: [number, number], map: MapView, pts: [number, number][], max: number, lower = 0): Cam {
+function frame(size: [number, number], map: MapView, pts: [number, number][], max: number, lower = 0, bottom = 0): Cam {
   const [w, h] = size
+  const clear = h - bottom
   const [W, H] = map.display
   const all = Math.min(w / W, h / H)
   if (!pts.length) return { zoom: all, px: (w - W * all) / 2, py: (h - H * all) / 2 }
@@ -149,12 +155,12 @@ function frame(size: [number, number], map: MapView, pts: [number, number][], ma
   const x1 = Math.max(...xs) + PAD_X
   const y0 = Math.min(...ys) - PAD_TOP
   const y1 = Math.max(...ys) + PAD_BOTTOM
-  const zoom = Math.max(all, Math.min(max, w / (x1 - x0), h / (y1 - y0)))
+  const zoom = Math.max(all, Math.min(max, w / (x1 - x0), clear / (y1 - y0)))
   const keep = (p: number, view: number, world: number) => (world * zoom >= view ? Math.min(0, Math.max(view - world * zoom, p)) : (view - world * zoom) / 2)
   return {
     zoom,
     px: keep(w / 2 - ((x0 + x1) / 2) * zoom, w, W),
-    py: keep(h / 2 + lower - ((y0 + y1) / 2) * zoom, h, H),
+    py: keep(clear / 2 + lower - ((y0 + y1) / 2) * zoom, h, H),
   }
 }
 
@@ -179,13 +185,17 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
   const { camera, follow } = view.stage
   const followed = crew.find((t) => t.ref === follow)
   const rolling = camera === 'roller' && focus ? tokens.find((t) => t.id === focus) : undefined
+  const rows = view.fights?.length ?? 0
+  const bottom = rows ? (Math.min(size[0] / 1440, size[1] / 810) || 1) * (ROW_FOOT + rows * ROW_H + (rows - 1) * ROW_GAP) : 0
+  // with a fight on, everyone in it stays in the shot, clear of the turn order
+  const party = tokens.filter((t) => t.kind === 'crew' || fighterIn(fight, t.id))
   const cam = !size[0]
     ? null
     : rolling
-      ? frame(size, map, [at(rolling)], ONE_MAX, size[1] * UNDER_BANNER)
+      ? frame(size, map, [at(rolling)], ONE_MAX, size[1] * UNDER_BANNER, bottom)
       : camera === 'follow' && followed
-        ? frame(size, map, [at(followed)], ONE_MAX)
-        : frame(size, map, crew.map(at), CREW_MAX)
+        ? frame(size, map, [at(followed)], ONE_MAX, 0, bottom)
+        : frame(size, map, party.map(at), CREW_MAX, 0, bottom)
 
   return (
     <div ref={box} className="app-mapbox app-tvmap">
@@ -220,33 +230,6 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
           })}
         </div>
       )}
-    </div>
-  )
-}
-
-/**
- * M8: who's in each fight, one row per fight on any map (the one the TV shows first): the map's name and its
- * fighters with their HP rings. It never says whose turn it is: that's on the laptops.
- */
-function TvFights({ view }: { view: View }) {
-  if (!view.fights?.length) return null
-  return (
-    <div className="app-tvfights" aria-label="Fights">
-      <span className="r5-sec">Fights</span>
-      {view.fights.map((f) => (
-        <div key={f.map} className="app-tvfrow">
-          <span className="app-tvfname">{f.name}</span>
-          {f.fighters.map((x) => {
-            const c = x.kind === 'crew' ? view.crew.find((m) => m.id === x.ref) : undefined
-            const r = c ? ring(c.hp, c.entropy, 52, 6, c.health) : hpRing(x.hp, x.health, x.color, 52, 5)
-            return (
-              <ChipFx key={x.token} id={c ? `c:${c.id}` : `t:${x.token}`} down={x.hp <= 0} style={{ position: 'relative', display: 'block', width: 52, height: 52 }}>
-                <RingPortrait src={x.portrait} ring={r} size={52} />
-              </ChipFx>
-            )
-          })}
-        </div>
-      ))}
     </div>
   )
 }

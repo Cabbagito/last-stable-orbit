@@ -15,6 +15,7 @@
 | M7: Ship for session 1 | **Hosting decided** 2026-11-05: parker at http://parker.local instead of Railway, with a join card on the TV (the README's "Hosting it at the table"). Backups and the layout checks are not started |
 | M8: Fights | **Built** 2026-11-05 and checked on :8071 with four seats (the GM, Tomo, Ves and the TV); see "How M8 turned out" in M8. Deployed to 8070 the same day. NPC health beyond the bible's enemy cards is drafts |
 | Round 17: rolls with pop | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV); see "How Round 17 turned out" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. The TV's sound is for Peter to judge by ear |
+| The TV's turn order | **Built** 2026-11-06 and checked on :8071 with two seats (the GM and the TV); see "Changed 2026-11-06" in M8. Not deployed yet. The sound is for Peter to judge by ear |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -664,6 +665,11 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - NPC health in `content/npcs.yaml`: the guard, the hired gun, the spider mech and the fixer come from the bible, and the rest are drafts;
     - the bible still says "no initiative".
   - **Not done:** dragging the order, and Team-up.
+- **Changed 2026-11-06 (Peter):** the TV didn't show the initiative order, the roll had no sound, and the fights should be at the bottom. This replaces step 4 of "In it" and step 7 of the build plan:
+  - **The TV shows each fight's turn order along the bottom,** one row per fight (`fight/TvFights.tsx`). The roll plays there at the same moment as on the laptops: the reels spin, the Reflex numbers land, the row sorts, and the numbers give way to 1, 2, 3 for the order.
+  - **It still doesn't say whose turn it is.** `views.py` now sends the TV `ini`, `joined`, `rolled` and `started`, but not `now` or `round`; the leak test checks both.
+  - **The roll has a sound, on the TV only,** like every other roll (`RollSound.initiative`): the dice go in, Reflex's tick while they spin, a knock as each lands, and two notes when the order is set. Someone joining mid-fight gets the same, shorter. A reload mid-fight doesn't replay it.
+  - **The TV's camera** keeps everyone in a fight in the shot, above the rows, so the rows never sit on a fighter.
 - **Why here:** session 1 has no fight. It's needed before the first fight, session 2 at the earliest.
 
 ### M9: Finale screen · S · single session after a design review
