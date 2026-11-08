@@ -22,7 +22,7 @@
 | Events: mini-golf | **Built** 2026-11-08 and checked on a copy on :8072 with two seats (the GM and Marlo); see "Events" below. Sent from the GM tab until the top executive floor's map brings its object. Deployed to 8070 the same day, with the heist maps; parker still needs `git pull && make up` |
 | The heist maps | **Built** 2026-11-08 and checked on a copy of the saved game on :8072 as the GM; see "The heist maps" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. Object texts, pins and camera cones are drafts for Peter |
 | The story, against the live bible | **Done** 2026-11-08: the content now matches the live Campaign Bible, and the repo's copy is deleted. See "The story consolidated" below. Includes session 1's four presets and Scene only. Tests pass, and it was checked on a copy of the saved game. Deployed to 8070 the same day; parker still needs `git pull && make up`. New wording is marked DRAFT in the YAML |
-| The GM screen, consolidated | **Built** 2026-11-08 from the canvas "GM screen, consolidated" (https://claude.ai/artifact/Pd3ZR19LyxgnLWWypoaXGs) and checked in the sandbox with a Playwright walk of the GM, a player, and the wall of seats; see "The GM screen, consolidated" below. Not yet on 8070 or parker |
+| The GM screen, consolidated | **Built** 2026-11-08 from the canvas "GM screen, consolidated" (https://claude.ai/artifact/Pd3ZR19LyxgnLWWypoaXGs) and checked in the sandbox with a Playwright walk of the GM, a player, and the wall of seats; see "The GM screen, consolidated" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | M9: Finale screen | Not started |
 
 **The GM screen, consolidated** (2026-11-08, red-teamed and drawn on the canvas above, which Peter approved):
