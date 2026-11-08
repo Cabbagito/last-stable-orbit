@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import RULES, BurnState, Fight, FilmState, GameState, InvEntry, MapState, Preset, PresetItem, RollState, TokenState, Vitals
+from .models import RULES, BurnState, Fight, FilmState, GameState, InvEntry, MapState, OverviewState, Preset, PresetItem, RollState, TokenState, Vitals
 
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
 
@@ -98,6 +98,7 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     if ev_type == "world.loaded":
         fresh = GameState.model_validate({**data["state"], "seq": seq})
         fresh.stage = s.stage  # a preset sets the world, not the table: the camera and films carry over
+        fresh.overviews = s.overviews  # and what's open on someone's screen stays open
         return fresh
     if ev_type == "token.moved":
         s.tokens[data["token"]].at = tuple(data["at"])
@@ -206,6 +207,11 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         s.fights.pop(data["map"], None)
     elif ev_type == "npc.hp_set":
         s.tokens[data["token"]].hp = int(data["hp"])
+    elif ev_type == "overview.sent":  # the GM sent an overview: it opens on each of these players' screens
+        for char in data["chars"]:
+            s.overviews[char] = OverviewState(kind=data["kind"], id=data["id"])
+    elif ev_type == "overview.closed":  # the player closed it, or the GM took it back
+        s.overviews.pop(data["char"], None)
     else:
         raise UnknownEvent(ev_type)
     return s

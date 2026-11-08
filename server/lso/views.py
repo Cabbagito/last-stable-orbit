@@ -501,6 +501,16 @@ def _fights_view(state: GameState, content: Content, viewer: Viewer, here: str) 
     return out
 
 
+def _overview_view(state: GameState, content: Content, viewer: Viewer) -> dict | None:
+    """The overview open on this player's screen, whole: how it scores is no secret, and nothing comes back. Only
+    the player it was sent to gets it; the GM sees who has one open, the TV and the other players nothing."""
+    o = state.overviews.get(viewer.char) if viewer.char else None
+    ov = content.overviews.get(o.kind) if o else None
+    if not ov:
+        return None
+    return {**ov.model_dump(), "kind": ov.id, "id": o.id, "device": url(ov.device), "mask": url(ov.mask)}
+
+
 def project(state: GameState, content: Content, viewer: Viewer, online: frozenset[str] = frozenset(), join: dict | None = None) -> dict:
     gm = viewer.is_gm
     here = viewer_map(state, viewer)
@@ -525,6 +535,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         "rolls": _rolls_view(state, viewer, set(tokens)),
         "stage": _stage_view(state, content, viewer, online, join),
         "fights": _fights_view(state, content, viewer, here),
+        "overview": _overview_view(state, content, viewer),
     }
     if gm:
         view["roster"] = [
@@ -533,6 +544,10 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         ]
         view["presets"] = [{"id": p.id, "name": p.name} for p in content.presets.values()]
         view["items"] = [_item_view(it, open_) for it in content.items.values()]  # the catalogue, for giving
+        view["overviews"] = {  # the Events section: what can be sent, and whose screen has one open now
+            "games": [{"id": o.id, "name": o.name} for o in content.overviews.values()],
+            "open": {c: {"kind": o.kind, "id": o.id} for c, o in state.overviews.items()},
+        }
     return view
 
 

@@ -1,0 +1,91 @@
+# Overviews: little games the GM sends to players' screens from the GM tab's Events section.
+# From the Satisfaction Report canvas (https://claude.ai/artifact/Vkpa2f7xbG1pnwFuscAbHc).
+#
+# A device rises over the map (never the sheet) with a live screen cut into its face. The player clicks through it;
+# the verdict shows on their own screen only and nothing comes back to the GM, who plays out what follows at the table.
+# The screen's box is in the 900 x 900 the device art is drawn at (3x its pixels).
+
+- id: satisfaction
+  name: Satisfaction Report
+  device: overviews/service-droid.png
+  screen: [186, 108, 528, 510]
+  mask: overviews/droid-screen-mask.png
+  tint: paper
+  burns: true
+  survey:
+    intro:
+      header: ERGO HOSPITALITY
+      title: [GUEST SATISFACTION, REPORT]
+      stat: STATION SATISFACTION
+      value: 99.97%
+      text: Hello! Would you like to tell us about your day? It takes about one minute.
+      begin: BEGIN
+      decline: NOT NOW
+    # Each answer gives bad points. You're sent in with more than `limit` (half of the 14 possible), so more bad than
+    # good. Only one answer sends you in by itself: waiting over 11 minutes.
+    # Honest and pleasant (4 stars, Delicious and Long, still waiting, Probably) is 6: fine.
+    # Honest Marlo (3 stars, Long and Confusing, still waiting, Not sure) is 9: sent in.
+    # Everyone's letter promises them something, so an honest Yes on "still waiting" always costs 3.
+    limit: 7
+    questions:
+      - id: stars
+        kind: stars
+        text: How would you rate your day on Ergo?
+        stars_points: [4, 3, 2, 1, 0]
+      - id: wait
+        kind: one
+        text: How long did you wait today?
+        options:
+          - {id: none, label: "I didn’t wait"}
+          - {id: under, label: Under 11 minutes}
+          - {id: about, label: About 11 minutes}
+          - {id: over, label: Over 11 minutes, sends: true}
+      - id: words
+        kind: many
+        text: Tick every word that fits your visit
+        options:
+          - {id: wonderful, label: Wonderful}
+          - {id: long, label: Long, points: 1}
+          - {id: restful, label: Restful}
+          - {id: confusing, label: Confusing, points: 1}
+          - {id: delicious, label: Delicious}
+          - {id: unfair, label: Unfair, points: 1}
+      - id: still
+        kind: one
+        text: Is there anything you are still waiting for?
+        options:
+          - {id: "no", label: "No"}
+          - {id: "yes", label: "Yes", points: 3}
+      - id: rec
+        kind: one
+        text: Would you recommend Ergo to a friend?
+        options:
+          - {id: def, label: Definitely}
+          - {id: prob, label: Probably, points: 1}
+          - {id: ns, label: Not sure, points: 2}
+          - {id: "no", label: "No", points: 3}
+      - id: text
+        kind: text
+        header: OPTIONAL
+        text: Anything else you'd like to tell us?
+        hint: Leave it blank if everything is fine.
+        points: 1
+        flag: [wait*, slow*, queue*, late, complain*, bad, hate*, awful, terrible, leave, leaving, help, unhappy, sad, bored, tired, scared, afraid, worried]
+    busy: SUBMITTING
+    busy_text: Thank you for your patience.
+    fine:
+      title: [THANK YOU., EVERYTHING IS FINE.]
+      text: Have a wonderful evening on Ergo.
+      button: CLOSE
+      toast: Everything is fine.
+    sent:
+      title: [THANK YOU FOR YOUR FEEDBACK.]
+      line: A care assistant is on the way to help you feel better.
+      text: Please stay where you are.
+      status: MED BAY · DISPATCHED
+      button: OK
+      toast: A care assistant is on the way.
+    later:
+      title: [OF COURSE!, "I'LL COME BACK LATER."]
+      button: BYE
+      toast: Not now. It will come back.

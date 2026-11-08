@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, Preset, PresetItem, Station
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, Overview, Preset, PresetItem, Station
 
 log = logging.getLogger("lso.content")
 
@@ -30,6 +30,7 @@ class Content:
     codex: dict[str, CodexEntry] = field(default_factory=dict)  # in reading order within each section
     codex_sections: list[CodexSection] = field(default_factory=list)  # the landing's five rows, in order
     station: Station | None = None  # the Station tab's cross-section
+    overviews: dict[str, Overview] = field(default_factory=dict)  # little games the GM sends to players' screens
     missing_assets: list[str] = field(default_factory=list)
 
     @property
@@ -89,6 +90,8 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
     stn = content_dir / "station.yaml"
     if stn.is_file():
         c.station = _parse(Station, _read(stn), "station.yaml")
+    ov = content_dir / "overviews.yaml"
+    c.overviews = _by_id(Overview, _read(ov), "overviews.yaml") if ov.is_file() else {}
     ins = content_dir / "insults.yaml"
     c.insults = _insults((_read(ins) or {}) if ins.is_file() else {})
     if clash := set(c.characters) & set(c.npcs):
@@ -251,4 +254,6 @@ def asset_paths(c: Content) -> set[str]:
     for e in c.codex.values():
         paths.add(e.art.src)
         paths |= {r.icon for r in e.rows if r.icon} | {s.src for s in e.shots}
+    for o in c.overviews.values():
+        paths |= {p for p in (o.device, o.mask) if p}
     return paths

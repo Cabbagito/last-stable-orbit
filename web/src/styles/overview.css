@@ -1,0 +1,78 @@
+/* Overviews (the Satisfaction Report canvas): a device rises over the map, never the sheet, with a live CRT cut into
+   its face. The device is drawn in a 900 x 900 box, scaled to fit the map by --ov-k. */
+.ov-layer{position:absolute;inset:0;z-index:8;overflow:hidden;pointer-events:none}
+.ov-layer.open{pointer-events:auto}
+.ov-veil{position:absolute;inset:0;opacity:0;transition:opacity .6s;
+  background:radial-gradient(ellipse at 50% 42%,rgba(60,40,120,.28),transparent 60%),rgba(3,2,8,.8);
+  -webkit-backdrop-filter:blur(1.5px) saturate(.6);backdrop-filter:blur(1.5px) saturate(.6)}
+.ov-layer.open .ov-veil{opacity:1}
+.ov-dev{position:absolute;left:50%;top:8px;width:900px;height:900px;transform-origin:50% 0;opacity:0;
+  transform:translateX(-50%) translateY(70px) scale(var(--ov-k,1));transition:opacity .45s ease,transform .6s cubic-bezier(.2,.9,.25,1)}
+.ov-layer.open .ov-dev{opacity:1;transform:translateX(-50%) scale(var(--ov-k,1))}
+.ov-bot{position:absolute;inset:0;width:900px;height:900px;image-rendering:pixelated;pointer-events:none;z-index:3;user-select:none}
+
+.ov-toast{position:absolute;left:16px;bottom:104px;z-index:8;border:1px solid #1e2024;background:#000;padding:12px 16px;display:flex;flex-direction:column;gap:4px;animation:ov-toast 9s ease forwards;pointer-events:none}
+.ov-toast b{font-family:'Michroma',sans-serif;font-weight:400;font-size:8px;letter-spacing:.18em;color:var(--dim)}
+.ov-toast span{color:#e7e9ec;font-size:13.5px}
+@keyframes ov-toast{0%{opacity:0;transform:translateY(6px)}5%,88%{opacity:1;transform:none}100%{opacity:0}}
+
+/* the CRT, cut to the droid's face by its mask */
+.ov-crt{
+  --s-bg:#18110a;--s-ink:#f3e3bd;--s-dim:#a38f6a;--s-sel:#f3e3bd;--s-selink:#18110a;--s-glow:rgba(255,214,150,.55);--s-scan:rgba(0,0,0,.28);
+  position:absolute;z-index:1;overflow:hidden;background:var(--s-bg);color:var(--s-ink);
+  font-family:'VT323','Courier New',monospace;font-size:30px;line-height:1.05;letter-spacing:.02em;text-shadow:0 0 6px var(--s-glow);
+  -webkit-mask-size:100% 100%;mask-size:100% 100%}
+.ov-crt[data-tint="violet"]{--s-bg:#0c0918;--s-ink:#ece6ff;--s-dim:#8e84c6;--s-sel:#e3dbff;--s-selink:#0c0918;--s-glow:rgba(190,170,255,.6);--s-scan:rgba(0,0,0,.3)}
+.ov-crt[data-tint="paper"]{--s-bg:#e8dcbd;--s-ink:#2c2140;--s-dim:#857559;--s-sel:#2c2140;--s-selink:#eadfc2;--s-glow:rgba(0,0,0,0);--s-scan:rgba(60,40,10,.08)}
+.ov-crt::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:5;
+  background:repeating-linear-gradient(0deg,var(--s-scan) 0 1px,transparent 1px 3px),radial-gradient(ellipse at 34% 20%,rgba(255,255,255,.10),transparent 42%),radial-gradient(ellipse at 50% 50%,transparent 58%,rgba(0,0,0,.45));
+  animation:ov-flick 6s infinite steps(1)}
+.ov-crt[data-tint="paper"]::after{background:repeating-linear-gradient(0deg,var(--s-scan) 0 1px,transparent 1px 3px),radial-gradient(ellipse at 34% 20%,rgba(255,255,255,.35),transparent 45%),radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(70,50,20,.32))}
+@keyframes ov-flick{0%,100%{opacity:1}47%{opacity:.82}48%{opacity:1}}
+.ov-burns{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;pointer-events:none;z-index:4}
+
+.ov-pg{position:absolute;inset:0;padding:46px 50px 44px;display:flex;flex-direction:column;gap:12px}
+.ov-hdr{color:var(--s-dim);font-size:24px;letter-spacing:.06em}
+.ov-q{font-size:34px;line-height:1;text-transform:uppercase}
+.ov-opts{display:flex;flex-direction:column;gap:2px;margin-top:4px}
+.ov-opts.two{display:grid;grid-template-columns:1fr 1fr;gap:2px 8px}
+.ov-o,.ov-b{all:unset;cursor:pointer;text-transform:uppercase;white-space:nowrap}
+.ov-o{padding:1px 6px}
+.ov-b{padding:1px 8px}
+.ov-o:hover,.ov-o:focus-visible,.ov-b:hover,.ov-b:focus-visible{background:var(--s-sel);color:var(--s-selink);text-shadow:none}
+.ov-b[aria-disabled="true"]{color:var(--s-dim);cursor:default;background:none}
+.ov-nav{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px}
+
+.ov-stars{display:flex;gap:6px;margin-top:10px}
+.ov-star{all:unset;cursor:pointer;width:64px;height:64px;display:grid;place-items:center}
+.ov-star i{width:48px;height:48px;display:block;background:var(--s-dim);opacity:.45;clip-path:polygon(50% 0,62% 36%,100% 38%,70% 60%,80% 100%,50% 76%,20% 100%,30% 60%,0 38%,38% 36%)}
+.ov-star.on i{background:var(--s-ink);opacity:1;filter:drop-shadow(0 0 4px var(--s-glow))}
+.ov-star:focus-visible{outline:1px dashed var(--s-ink)}
+.ov-txt{all:unset;border-bottom:2px solid var(--s-dim);padding:3px 2px;font-family:'VT323','Courier New',monospace;font-size:30px;color:var(--s-ink);caret-color:var(--s-ink);width:100%;box-sizing:border-box}
+.ov-txt:focus{border-color:var(--s-ink)}
+.ov-small{font-size:24px;color:var(--s-dim);line-height:1.1}
+.ov-plain{text-transform:none}
+.ov-big{font-size:40px;line-height:1;text-transform:uppercase}
+.ov-big.long{font-size:34px}
+.ov-line{font-size:28px;text-transform:uppercase}
+.ov-pct{font-size:58px;line-height:1;margin:2px 0}
+.ov-bar{height:18px;border:2px solid var(--s-ink);margin-top:14px}
+.ov-bar i{display:block;height:100%;width:100%;background:var(--s-ink);transform-origin:0 50%;animation:ov-bar 1.4s steps(14) both}
+@keyframes ov-bar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.ov-face{width:180px;height:120px;image-rendering:pixelated;align-self:center;margin:4px 0 6px}
+.ov-blink{animation:ov-blink 1s steps(1) infinite}
+@keyframes ov-blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.ov-dev,.ov-veil{transition:none}.ov-crt::after,.ov-blink,.ov-bar i{animation:none}}
+
+/* the GM tab's Events section */
+.ev-send{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 28px;border:1px solid #1e2024;padding:16px;margin-top:6px}
+.ev-col{display:flex;flex-direction:column;gap:8px;min-width:0}
+.ev-row{display:flex;flex-wrap:wrap;gap:4px}
+.ev-pk{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;border:1px solid #2f3238;padding:3px 12px 3px 3px;min-height:36px;box-sizing:border-box;font-size:13.5px;color:#e7e9ec}
+.ev-pk img{width:28px;height:28px;border-radius:50%;object-fit:cover;object-position:50% 20%;box-shadow:0 0 0 1px var(--cc)}
+.ev-pk:hover{border-color:#5e626a}
+.ev-pk.on{border-color:#ff4fa3;background:#180c13}
+.ev-pk:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.ev-go{margin-left:auto;padding:0 28px}
+.ev-go:disabled{opacity:.35;cursor:default}
+.ev-open{justify-content:space-between}

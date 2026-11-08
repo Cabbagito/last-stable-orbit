@@ -9,6 +9,7 @@ import './styles/codex.css'
 import './styles/station.css'
 import './styles/fight.css'
 import './styles/rolls.css'
+import './styles/overview.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

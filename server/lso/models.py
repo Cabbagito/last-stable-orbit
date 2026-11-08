@@ -495,6 +495,89 @@ class Station(Strict):
         return self
 
 
+class SurveyOption(Strict):
+    id: str
+    label: str
+    points: int = 0  # bad points this answer adds
+    sends: bool = False  # this answer alone gets you sent in, whatever the total
+
+
+class SurveyQuestion(Strict):
+    """One page of a survey. `stars` scores by `stars_points`; `one` and `many` by their options; `text` by `flag`."""
+
+    id: str
+    kind: Literal["stars", "one", "many", "text"]
+    text: str
+    header: str = ""  # the page's top line; a question without one is numbered ("QUESTION 2 / 5")
+    hint: str = ""
+    options: list[SurveyOption] = []
+    stars_points: list[int] = []  # one star .. five stars
+    flag: list[str] = []  # text: words that cost `points`; a trailing * matches any ending ("wait*")
+    points: int = 0  # text: what a flagged word costs
+
+    @model_validator(mode="after")
+    def _shape(self) -> "SurveyQuestion":
+        if self.kind == "stars" and len(self.stars_points) != 5:
+            raise ValueError(f"question {self.id}: stars needs five stars_points, one star first")
+        if self.kind in ("one", "many") and len(self.options) < 2:
+            raise ValueError(f"question {self.id}: needs at least two options")
+        if self.kind == "text" and not self.flag:
+            raise ValueError(f"question {self.id}: a text question needs its flag words")
+        return self
+
+
+class SurveyEnding(Strict):
+    """A last page: what the device says, and the line left on the map once it's closed."""
+
+    title: list[str]  # big lines
+    line: str = ""
+    text: str = ""
+    status: str = ""  # a blinking line by the button
+    button: str
+    toast: str
+
+
+class SurveyIntro(Strict):
+    header: str
+    title: list[str]
+    stat: str = ""  # a figure under the title, e.g. STATION SATISFACTION 99.97%
+    value: str = ""
+    text: str
+    begin: str = "BEGIN"
+    decline: str = ""  # a way to walk away; leave it out if there's none
+
+
+class Survey(Strict):
+    intro: SurveyIntro
+    questions: list[SurveyQuestion]
+    limit: int  # sent in with more bad points than this
+    busy: str = "SUBMITTING"
+    busy_text: str = ""
+    fine: SurveyEnding
+    sent: SurveyEnding
+    later: SurveyEnding | None = None  # the decline's page; needed with intro.decline
+
+
+class Overview(Strict):
+    """A little game the GM sends to players' screens: a device rises over the map with a live screen in its face.
+    The verdict shows on the player's own screen only; nothing comes back to the GM."""
+
+    id: str
+    name: str
+    device: str  # the art, drawn at 3x over a 900 x 900 box; the screen shows through its face
+    screen: tuple[int, int, int, int]  # where the screen sits in that box: left, top, width, height
+    mask: str | None = None  # the screen's shape, an alpha mask stretched over it
+    tint: Literal["amber", "violet", "paper"] = "amber"
+    burns: bool = False  # cigar burns on the glass
+    survey: Survey
+
+    @model_validator(mode="after")
+    def _walk_away(self) -> "Overview":
+        if bool(self.survey.intro.decline) != bool(self.survey.later):
+            raise ValueError(f"overview {self.id}: intro.decline and the later page go together")
+        return self
+
+
 class PresetToken(Strict):
     id: str | None = None
     kind: Literal["crew", "npc"]
@@ -628,6 +711,13 @@ class StageState(Strict):
     join: bool = True  # the join card is on the TV, if the server has one, until the GM hides it
 
 
+class OverviewState(Strict):
+    """An overview the GM sent to one player. It stays until they close it (or the GM takes it back)."""
+
+    kind: str  # the overview's id in overviews.yaml
+    id: str  # this sending, so a reload or a resend starts it fresh
+
+
 class GameState(Strict):
     seq: int = 0  # seq of the last applied event
     rules: int = 0  # the rules version this game is on (RULES); boot brings an older game up to date
@@ -643,3 +733,4 @@ class GameState(Strict):
     codex_read: dict[str, list[str]] = {}  # character -> the unlocked keys they've read; the rest are new to them
     station: list[str] = []  # maps lit on the Station for the crew: they've been there, or the GM showed them
     fights: dict[str, Fight] = {}  # map id -> the fight on it: one per map, so a split party can have two
+    overviews: dict[str, OverviewState] = {}  # character -> the overview open on their screen, one at a time

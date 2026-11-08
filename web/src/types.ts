@@ -342,6 +342,61 @@ export interface View {
   roster?: RosterNpc[] // GM only
   presets?: { id: string; name: string }[] // GM only
   items?: Item[] // GM only: the catalogue, for giving
+  overview: OverviewView | null // the overview open on this player's screen; never anyone else's
+  overviews?: { games: { id: string; name: string }[]; open: Record<string, { kind: string; id: string }> } // GM only
+}
+
+/** A survey answer, or the device's page. Scores in bad points; more than `limit` gets you sent in. */
+export interface SurveyOption {
+  id: string
+  label: string
+  points: number
+  sends: boolean // this answer alone sends you in
+}
+
+export interface SurveyQuestion {
+  id: string
+  kind: 'stars' | 'one' | 'many' | 'text'
+  text: string
+  header: string
+  hint: string
+  options: SurveyOption[]
+  stars_points: number[] // one star .. five stars
+  flag: string[] // text: words that cost `points`; "wait*" matches any ending
+  points: number
+}
+
+export interface SurveyEnding {
+  title: string[]
+  line: string
+  text: string
+  status: string
+  button: string
+  toast: string
+}
+
+export interface Survey {
+  intro: { header: string; title: string[]; stat: string; value: string; text: string; begin: string; decline: string }
+  questions: SurveyQuestion[]
+  limit: number
+  busy: string
+  busy_text: string
+  fine: SurveyEnding
+  sent: SurveyEnding
+  later: SurveyEnding | null
+}
+
+/** An overview the GM sent to this player: a device over the map with a live screen in its face. */
+export interface OverviewView {
+  id: string // this sending
+  kind: string
+  name: string
+  device: string
+  screen: [number, number, number, number] // left, top, width, height in the device's 900 x 900 box
+  mask: string | null
+  tint: 'amber' | 'violet' | 'paper'
+  burns: boolean
+  survey: Survey
 }
 
 export type CodexSec = 'chars' | 'items' | 'world' | 'lore' | 'rules'

@@ -103,6 +103,10 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
   const connect = useGame((s) => s.connect)
   const disconnect = useGame((s) => s.disconnect)
   const world = useRef<HTMLDivElement>(null)
+  const overview = useGame((s) => s.view?.overview?.id)
+  useEffect(() => {
+    if (overview && location.hash.slice(1).split('/')[0] !== 'scene') location.hash = 'scene' // it opens over the map
+  }, [overview])
   useEffect(() => {
     connect()
     preloadRollFonts()

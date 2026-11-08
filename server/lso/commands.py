@@ -370,6 +370,25 @@ def _cue_sets(state: GameState, content: Content, cue) -> Events:
     return events
 
 
+def _gm_overview(state: GameState, content: Content, kind: str, args: dict) -> Events:
+    """The GM tab's Events: send an overview to some of the crew, or take one back. Sending one replaces what's open."""
+    if kind == "gm.overview.send":
+        ov = content.overviews.get(_str(args, "overview"))
+        if not ov:
+            raise _invalid("unknown overview")
+        chars = args.get("chars")
+        if not isinstance(chars, list) or not chars or not all(isinstance(c, str) and c in content.characters for c in chars):
+            raise _invalid("pick one or more of the crew")
+        chars = [c for c in content.characters if c in chars]
+        return [("overview.sent", {"kind": ov.id, "chars": chars, "id": f"o{state.seq + 1}"})]
+    if kind == "gm.overview.recall":
+        char = _str(args, "char")
+        if char not in content.characters:
+            raise _invalid("unknown character")
+        return [("overview.closed", {"char": char})] if char in state.overviews else []
+    raise _invalid(f"unknown intent {kind!r}")
+
+
 def _send_crew(state: GameState, content: Content, map_id: str) -> Events:
     """The whole crew to a map's entrance (its `arrive` spots, in crew order), and it becomes the party's map.
     A hidden crew token stays hidden. One that isn't on any map yet is placed."""
@@ -559,6 +578,13 @@ def handle(
             raise _invalid("the GM burns for someone with gm.burn.use")
         return _burn(state, content, viewer.char, args.get("cut"), now)
 
+    if kind == "overview.close":
+        # the player is done with it. What they answered stays on their screen
+        if not viewer.char:
+            raise _invalid("only the player it was sent to closes an overview")
+        o = state.overviews.get(viewer.char)
+        return [("overview.closed", {"char": viewer.char})] if o and o.id == args.get("id") else []
+
     if kind == "item.seen":
         if viewer.is_gm:
             raise _invalid("only an item's holder marks it seen")
@@ -706,6 +732,9 @@ def handle(
 
     if kind.startswith(("gm.film.", "gm.stage.")):
         return _gm_stage(state, content, kind, args, now)
+
+    if kind.startswith("gm.overview."):
+        return _gm_overview(state, content, kind, args)
 
     if kind.startswith("gm.item."):
         return _gm_item(state, content, kind, args)

@@ -7,6 +7,7 @@ stores:
   UI: https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff
   SHOTGUN: https://claude.ai/artifact/ExqP99kRwpzUP9Funyg7Sv
   BURNS: https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg
+  SATISFACTION: https://claude.ai/artifact/Vkpa2f7xbG1pnwFuscAbHc  # no asset store: these are inlined in its page
 assets:
   - path: maps/event-horizon/base-open.png
     store: MAPS
@@ -1219,3 +1220,17 @@ assets:
     bytes: 1833
     width: 550
     height: 420
+  - path: overviews/service-droid.png
+    store: SATISFACTION
+    asset_id: null  # a data: URI in the page
+    sha256: "38177eb1de9c2dc305813d11d1cb25c91dc703fc6ceabe42bca71b1f9395eb2c"
+    bytes: 7597
+    width: 300
+    height: 300
+  - path: overviews/droid-screen-mask.png
+    store: SATISFACTION
+    asset_id: null  # a data: URI in the page
+    sha256: "1dc4377d42070c2703d91e9a721826dad29c49b7a780004e09de0b42e7871576"
+    bytes: 896
+    width: 176
+    height: 170

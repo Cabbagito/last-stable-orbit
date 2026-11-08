@@ -6,17 +6,19 @@ import { SendCrew, mapList } from '../gm/SendCrew'
 import { ViewAs } from '../gm/ViewAs'
 import { CodexSection } from '../gm/CodexSection'
 import { CutscenesSection, TvSection } from '../gm/StageSections'
+import { EventsSection } from '../gm/EventsSection'
 import { ring } from '../lib/ring'
 import { RingPortrait } from '../shell/RingPortrait'
 import { useItemTip, type TipBind } from '../inspect/ItemTip'
 import { gmRun, useGame } from '../store/game'
 import type { CrewMember, InvEntry, View } from '../types'
 
-type Section = 'crew' | 'cut' | 'tv' | 'maps' | 'codex' | 'session'
+type Section = 'crew' | 'cut' | 'events' | 'tv' | 'maps' | 'codex' | 'session'
 
 const SECTIONS: [Section, string, string?][] = [
   ['crew', 'Crew and pockets'],
   ['cut', 'Cutscenes'],
+  ['events', 'Events'],
   ['tv', 'The TV'],
   ['maps', 'Maps'],
   ['codex', 'Codex'],
@@ -60,6 +62,7 @@ export function GmTab() {
         {section === 'codex' && <CodexSection view={view} />}
         {section === 'session' && <SessionSection view={view} />}
         {section === 'cut' && <CutscenesSection view={view} />}
+        {section === 'events' && <EventsSection view={view} />}
         {section === 'tv' && <TvSection view={view} />}
       </div>
       {seeing && <ViewAs who={seeing} onClose={() => setViewAs(null)} />}

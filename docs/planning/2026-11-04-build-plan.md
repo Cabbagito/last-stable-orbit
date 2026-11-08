@@ -1,6 +1,6 @@
 # Last Stable Orbit: recommended build plan
 
-## Progress (updated 2026-11-06)
+## Progress (updated 2026-11-08)
 
 | Milestone | Status |
 |---|---|
@@ -17,6 +17,7 @@
 | Round 17: rolls with pop | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV); see "How Round 17 turned out" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. The TV's sound is for Peter to judge by ear |
 | The TV's turn order | **Built** 2026-11-06 and checked on :8071 with two seats (the GM and the TV); see "Changed 2026-11-06" in M8. Deployed to 8070 the same day, with the NOW marker; parker still needs `git pull && make up`. The sound is for Peter to judge by ear |
 | Always the TV | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV) on a copy of the saved game; see "Changed 2026-11-06: the TV is always there" in Stage. Deployed to 8070 the same day; parker still needs `git pull && make up` |
+| Events: the Satisfaction Report | **Built** 2026-11-08 and checked on :8071 with two seats (the GM and Marlo); see "Events" below. Not deployed to 8070 or parker yet |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -104,6 +105,13 @@
 - **The TV sees rolls as a player does:** it no longer gets dice early, because the RollFX band is gone (`TvBand.tsx` removed). The banner takes the whole screen, dimmed behind it, and it's the only screen with sound (`web/src/roll/sound.ts`, unlocked by its start click). With the "whoever rolls" camera, the roller's token sits under the banner.
 - **Everyone else now gets** the skill's name and a natural 1's insult, which the banner shows.
 - **Saved games** still load: the new roll fields default to off.
+
+**Events** (2026-11-08, from the Satisfaction Report canvas, https://claude.ai/artifact/Vkpa2f7xbG1pnwFuscAbHc; the canvas calls them overviews):
+- **The GM tab has an Events section:** pick an event and one or more of the crew, and Send. It lists whose screen one is still open on, with Take it back. Sending again starts it fresh.
+- **On the player's screen** the map dims and the service droid rises over it, its face a CRT survey; the sheet stays clear. A player on the Station or Codex tab is moved to the Scene. Closing it leaves a "Last report" line on the map for 9 s.
+- **Nothing comes back:** the answers and the verdict stay on the player's screen, and the log only records that it was sent and closed. Other players and the TV never hear of it (leak tests in `test_overviews.py`).
+- **The survey is content** (`content/overviews.yaml`): its pages, points and endings, scored on the player's screen (`web/src/overview/survey.ts`, tested against the canvas's examples). The droid art and the screen mask came inlined in the canvas's page, so the manifest lists them with no asset id.
+- **Not built yet:** sending one from an object's card, the slots, mini-golf and probe, and the canvas's later captcha.
 
 **On ultracode:** writing the keyword in a message does turn it on for that message; that's how this plan was made. The paragraph on ultracode further down is outdated.
 
