@@ -43,7 +43,7 @@ def place(engine, viewer, map_id):
 
 
 def test_every_map_is_a_place_on_the_station(content):
-    assert {p.map for p in content.station.places} == set(content.maps)
+    assert {m for p in content.station.places for m in [p.map, *p.also]} == set(content.maps)
 
 
 def test_session_one_lights_where_the_crew_has_been(engine):

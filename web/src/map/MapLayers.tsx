@@ -50,7 +50,7 @@ export function MapLayers({ map }: { map: MapView }) {
       {cams.length > 0 && map.cameras && (
         <svg className="app-cones" viewBox={`0 0 ${W} ${H}`} width={W} height={H} aria-hidden="true" style={{ fill: map.cameras.color, stroke: map.cameras.color }}>
           {cams.map((c, i) => (
-            <polygon key={i} points={c.pts.map(([x, y]) => proj(map.origin, [x, y, c.z]).join(',')).join(' ')} />
+            <polygon key={i} points={c.pts.map(([x, y]) => proj(map.origin, [x, y, 0]).join(',')).join(' ')} />
           ))}
         </svg>
       )}

@@ -9,7 +9,7 @@ description: >-
   and an old recorder.
 display: [1480, 1040]
 origin: [340, 150]
-order: 6
+order: 9
 hum: none
 moods:
   - {id: open, label: Open, base: maps/vault/base.png, glow: maps/vault/glow.png}

@@ -390,7 +390,7 @@ entries:
   name: The Executive floors
   role: Decks 6 to 9
   label: Place · decks 6 to 9
-  art: {src: maps/executive/base-office.png, px: 840, cx: 420, y0: 1350, k: 1, km: 1, pos: 50% 75%, z: 1.4}
+  art: {src: maps/deck-6/base-day.png, px: 1110, cx: 640, y0: 230, k: 1, km: 1, pos: 60% 50%, z: 1.4}
   lead: Glass, quiet carpets and human staff. The company sells booking time with ISCO here. By the founder's rule ISCO has
     no systems on these decks, because the people who review it can't be watched by the thing they review.
   see: [isco, old-man, secure]
@@ -399,7 +399,7 @@ entries:
   name: The Secure floor
   role: Behind the guarded door on deck 8
   label: Place · deck 8
-  art: {src: maps/secure/base-quiet.png, px: 1460, cx: 1100, y0: 120, k: 1, km: 1, pos: 75% 30%, z: 1.3}
+  art: {src: maps/secure/base-day.png, px: 1660, cx: 1130, y0: 150, k: 1, km: 1, pos: 68% 30%, z: 1.3}
   lead: 'Behind the guarded door: a checkpoint, the company''s confiscated gear, and the founder''s vault, kept like a saint''s
     shrine, with flowers and candles left at its door.'
   see: [executive, vault]
@@ -416,7 +416,7 @@ entries:
   name: The Bot bays
   role: Deck 1, Maintenance
   label: Place · deck 1
-  art: {src: maps/bots/base.png, px: 800, cx: 400, y0: 100, k: 2, km: 1, pos: 50% 45%, z: 1.4}
+  art: {src: maps/bots/base-day.png, px: 1110, cx: 620, y0: 180, k: 2, km: 1, pos: 55% 40%, z: 1.4}
   lead: Pipes, heat and the cleaner robots' charging cradles. Nobody comes down here on purpose.
   see: [unit-14]
 - id: lift

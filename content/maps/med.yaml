@@ -8,7 +8,7 @@ description: >-
   a violet cross, a screen asking how are you feeling above 99.97 percent, a nurse's counter and a sedation cart.
 display: [1540, 1050]
 origin: [340, 150]
-order: 11
+order: 14
 hum: none
 moods:
   - {id: white, label: White, base: maps/med/base.png, glow: maps/med/glow.png}

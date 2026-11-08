@@ -512,8 +512,26 @@ def _send_crew(state: GameState, content: Content, map_id: str) -> Events:
 
 def _lit(state: GameState, content: Content, map_id: str) -> Events:
     """The crew is going somewhere: it lights up on the Station."""
-    places = {p.map for p in content.station.places} if content.station else set()
-    return [("station.shown", {"map": map_id, "shown": True})] if map_id in places and map_id not in state.station else []
+    p = content.station.place_of(map_id) if content.station else None
+    return [("station.shown", {"map": p.map, "shown": True})] if p and p.map not in state.station else []
+
+
+def _send_token(state: GameState, content: Content, token: str, map_id: str) -> Events:
+    """One token to another map's entrance, on the first spot nobody is standing on. Up the stairs, down the vent:
+    the GM moves whoever goes, and the party's map stays where it is."""
+    t = state.tokens.get(token)
+    if t is None:
+        raise _invalid("unknown token")
+    m = content.maps.get(map_id)
+    if not m:
+        raise _invalid("unknown map")
+    if not m.arrive:
+        raise _invalid(f"{m.name} has nowhere to arrive")
+    if t.map == map_id:
+        return []
+    taken = {tuple(x.at) for x in state.tokens.values() if x.map == map_id}
+    at = next((a for a in m.arrive if tuple(a) not in taken), m.arrive[0])
+    return [("token.sent", {"token": token, "map": map_id, "at": list(at)})] + (_lit(state, content, map_id) if t.kind == "crew" else [])
 
 
 # ---------------------------------------------------------------- fights (M8)
@@ -767,6 +785,9 @@ def handle(
 
     if kind == "gm.crew.send":
         return _send_crew(state, content, _str(args, "map"))
+
+    if kind == "gm.token.send":
+        return _send_token(state, content, _str(args, "token"), _str(args, "map"))
 
     if kind == "gm.vitals.set":
         char = _str(args, "char")

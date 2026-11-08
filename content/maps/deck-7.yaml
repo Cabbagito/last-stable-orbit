@@ -1,0 +1,82 @@
+# Deck 7, from the Heist maps canvas (board "Deck 7: managers"). Art is 1110x700, drawn at 2x.
+# The shared isometric formula, with origin (460, 150). The floor is X 0 to 20, Y 0 to 14.
+id: deck-7
+name: "Deck 7: managers"
+subtitle: The Executive floors
+description: >-
+  Deck 7 seen from above at an angle: three glass-walled offices in a row, a scientist's room with a wall of plots,
+  a small power closet, and a security office with a wall of monitors.
+display: [2220, 1400]
+origin: [460, 150]
+order: 5
+hum: none
+moods:
+  - {id: day, label: Day, base: maps/deck-7/base-day.png}
+  - {id: night, label: Night, base: maps/deck-7/base-night.png}
+  - {id: alert, label: Alert, base: maps/deck-7/base-alert.png}
+switches:
+  - {id: cameras, label: Cameras, type: bool}
+cameras:  # one, on the pole, watching the power closet door and the corridor. The operator's door is in its blind spot.
+  switch: cameras
+  bounds: [0, 0, 20, 14]
+  steps: 12
+  color: "#7fb4ff"
+  cones:
+    - {at: [11.73, 5.07], deg: -162, spread: 75, reach: 8, bounds: [7, 0, 20, 14]}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: plots
+    name: "Her plots"
+    at: [3.17, 0, 2.29]
+    closeup: [1110.2, 230.22]
+    text: "Screens edge to edge, in her own hand. One curve has a jump in it that nobody can explain, circled twice, and a number beside it, 0.49."
+  - id: her-desk
+    name: "Her desk"
+    at: [3.17, 2.5, 0.83]
+    closeup: [960.2, 410.34]
+    text: "A lamp, a folder gone soft at the corners, and a manual for an instrument the company doesn't list."
+  - id: maintenance-door
+    name: "The old maintenance door"
+    at: [6.87, 1.27, 0.61]
+    closeup: [1256, 500.28]
+    text: "An old door in the corner of her room, the kind nobody has renovated. It leads into the power closet."
+  - id: power-closet
+    name: "The power closet"
+    at: [7.63, 0.7, 1.19]
+    closeup: [1335.8, 464.22]
+    text: "Fuses, and a board of little lights that would very much like to be left alone."
+  - id: monitors
+    name: "The monitors"
+    at: [14.17, 0, 2.01]
+    closeup: [1770.2, 580.38]
+    text: "A wall of screens. Every camera on decks 6 to 9, and one bored person watching them."
+  - id: head-count
+    name: "The head-count terminal"
+    at: [1.53, 9.93, 0.89]
+    closeup: [416, 579.72]
+    text: "A terminal in the first glass office, counting who's on the floor. It's very sure of itself."
+  - id: sofa
+    name: "The sofa"
+    at: [13.42, 10.25, 0.75]
+    closeup: [1110.2, 956.1]
+    text: "A long blue sofa in the last glass office. You could lie here until the lights go out."
+  - id: duct
+    name: "The duct hatch"
+    at: [0, 7.1, 0.46]
+    closeup: [494, 479.88]
+    text: "A hatch at the foot of a steel service tower, big enough for someone small."
+# What's where, from the Heist playground's floor notes. Only the GM sees these.
+pins:
+  - {k: "1", label: "Irena's room. She's always there", at: [3.17, 2.5, 0.83]}
+  - {k: "2", label: "Plots, folder and the probe manual", at: [3.17, 0, 2.29]}
+  - {k: "3", label: "Old maintenance door: the only unseen way into the closet, through her room", at: [6.87, 1.27, 0.61]}
+  - {k: "4", label: "Power closet. Loop the cameras here: Tech, Very hard, nobody knows", at: [7.63, 0.7, 1.19]}
+  - {k: "5", label: "Security office: the operator sees every camera, decks 6 to 9", at: [14.17, 0, 2.01]}
+  - {k: "6", label: "The operator's door, under the camera, in its blind spot", at: [14.03, 4.63, 0.28]}
+  - {k: "7", label: "Glass offices connect: a camera-free route full of people", at: [7.67, 11, 0.14]}
+  - {k: "8", label: "Duct hatch", at: [0, 7.1, 0.46]}
+  - {k: "A", label: "Head-count terminal, first glass office", at: [1.53, 9.93, 0.89]}
+  - {k: "B", label: "Sofa, third office: hide till night", at: [13.42, 10.25, 0.75]}
+  - {k: "C", label: "The camera on its pole, watching the closet door", at: [11.82, 4.98, 2.69]}
+  - {k: "D", label: "Stairs", at: [18.15, 2.65, 0.89]}
+# Where the crew land when you send them here: at the stairs, in crew order.
+arrive: [[17.8, 3.9, 0], [17.2, 4.8, 0], [16.3, 5.3, 0], [15.4, 5.4, 0], [17.9, 5.3, 0]]

@@ -1,37 +1,69 @@
-# The Bot bays, from the Maps canvas (board "SmallBots", key in "SmallKey").
-# Art is 800x540, drawn at 2x. The shared isometric formula, with origin (340, 150).
+# The Bot bays, from the Heist maps canvas (board "Bot bays"). Art is 1110x700, drawn at 2x.
+# The shared isometric formula, with origin (460, 150). The floor is X 0 to 20, Y 0 to 14.
 id: bots
 name: The Bot bays
 subtitle: Deck 1, Maintenance
 description: >-
-  The Bot bays seen from above at an angle: a dark maintenance deck with pipes, a boiler and drums. A spotless
-  white strip holds a row of empty charging cradles numbered 2, 3, 5, 7, 11, 13 and 14. A ladder comes down from
-  a wooden hatch, and a service door leads out.
-display: [1600, 1080]
-origin: [340, 150]
-order: 7
+  The Bot bays seen from above at an angle: a dark maintenance deck with a boiler, crates and drums, a row of white
+  charging cradles, a hazard-striped repair frame with something under a tarp, a freight lift and a service door. A
+  ladder comes down from a wooden hatch behind the boiler.
+display: [2220, 1400]
+origin: [460, 150]
+order: 10
 hum: none
 moods:
-  - {id: dark, label: Dark, base: maps/bots/base.png, glow: maps/bots/glow.png}
+  - {id: day, label: Day, base: maps/bots/base-day.png}
+  - {id: night, label: Night, base: maps/bots/base-night.png}
+  - {id: alert, label: Alert, base: maps/bots/base-alert.png}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: cradles
-    name: The cradles
-    at: [3.14, -2.16, 1]
-    closeup: [998, 257]
-    text: "A row of charging cradles on a strip scrubbed spotless, in a deck that isn't. All empty, numbered 2, 3, 5, 7, 11, 13."
+    name: "The cradles"
+    at: [7.33, 13, 0.56]
+    closeup: [579.8, 869.58]
+    text: "A row of charging cradles on a strip scrubbed spotless, in a deck that isn't. Numbered 2, 3, 5, 7, 11, 13."
   - id: cradle-14
-    name: Cradle 14
-    at: [10.44, -2.16, 1]
-    closeup: [1436, 476]
-    text: The last cradle is 14. Every other number on the strip is a prime.
-# The Key's "what's where". Only the GM sees these.
+    name: "Cradle 14"
+    at: [17.17, 12.83, 0.28]
+    closeup: [1180.4, 1179.84]
+    text: "The last cradle is 14. Every other number on the strip is a prime. There's a log on it."
+  - id: bin
+    name: "The bin"
+    at: [5.35, 8.98, 0.83]
+    closeup: [702.2, 670.14]
+    text: "A blue bin with something heavier than rubbish at the bottom. A pouch, by the sound of it."
+  - id: dispatch
+    name: "The dispatch terminal"
+    at: [9.67, 9.67, 1.25]
+    closeup: [920, 790.2]
+    text: "The cleaners' jobs, all logged. One says the alley was scrubbed, and there's no report to go with it."
+  - id: mech
+    name: "The thing under the tarp"
+    at: [15, 5.33, 1.67]
+    closeup: [1500.2, 789.66]
+    text: "Something big under a tarp in a repair frame, with hazard stripes around it and cables running in."
+  - id: hidey-hole
+    name: "The hidey-hole"
+    at: [0.83, 1.17, 0.83]
+    closeup: [899.6, 300.24]
+    text: "A nook behind the boiler with a cot and a ladder going up to a wooden hatch."
+  - id: service-door
+    name: "The service door"
+    at: [10.33, 0, 1.81]
+    closeup: [1539.8, 479.58]
+    text: "A heavy door in black and yellow. The way out to the rest of the station."
+# What's where, from the Heist playground's floor notes. Only the GM sees these.
 pins:
-  - {k: "1", label: "Charging cradles, primes only, empty so cleaners can be tokens", at: [3.14, -2.16, 1]}
-  - {k: "2", label: "Ladder down from Dax's hatch", at: [-1.62, 6.08, 2]}
-  - {k: "3", label: "Service door: the way around", at: [13.76, 4.76, 1.2]}
-  - {k: "4", label: "Cradle 14, the exception", at: [10.44, -2.16, 1]}
-  - {k: A, label: The spotless strip in a dirty deck, at: [9.44, 2.14, 0]}
-  - {k: B, label: Boiler and pipes, at: [-0.44, 3.16, 1.5]}
-  - {k: C, label: Drums, at: [10.84, 7.24, 0.6]}
+  - {k: "1", label: "Cradles, primes only: cleaners charging by day", at: [7.33, 13, 0.56]}
+  - {k: "2", label: "Cradle 14: Unit 14's log", at: [17.17, 12.83, 0.28]}
+  - {k: "3", label: "Bin: the coin pouch", at: [5.35, 8.98, 0.83]}
+  - {k: "4", label: "Dispatch terminal: the cleaning log, the alley scrubbed with no report", at: [9.67, 9.67, 1.25]}
+  - {k: "5", label: "The mech in the repair frame, with techs and guards. Getting near it weakens it for the probe run", at: [15, 5.33, 1.67]}
+  - {k: "6", label: "Hidey-hole behind the boiler, ladder up to Dax's hatch. Irena waits here in session 4", at: [0.83, 1.17, 0.83]}
+  - {k: "7", label: "Freight lift: only to the Secure floor. The heist's escape lands by the mech", at: [21.33, 5, 0.56]}
+  - {k: "8", label: "Service door to the station. The crates give cover to sneak in", at: [10.33, 0, 1.81]}
+  - {k: "A", label: "Crates", at: [7.33, 2, 0.78]}
+  - {k: "B", label: "Parts bench and tool wall", at: [15, 0.33, 0.97]}
+  - {k: "C", label: "Boiler", at: [4.5, 4.83, 1.67]}
+  - {k: "D", label: "Drums", at: [18.75, 10.25, 0.83]}
 # Where the crew land when you send them here: at the foot of the ladder from Dax's hatch, in crew order.
-arrive: [[-0.25, 6.92, 0], [0.83, 6.83, 0], [1.17, 8.17, 0], [2.17, 7.17, 0], [2.58, 8.42, 0]]
+arrive: [[0.4, 0.5, 0], [1.2, 0.4, 0], [0.5, 1.2, 0], [1.9, 0.3, 0], [1.2, 1.2, 0]]

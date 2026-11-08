@@ -1,0 +1,76 @@
+# Deck 8, from the Heist maps canvas (board "Deck 8: the board"). Art is 1110x700, drawn at 2x.
+# The shared isometric formula, with origin (460, 150). The floor is X 0 to 20, Y 0 to 14.
+id: deck-8
+name: "Deck 8: the board"
+subtitle: The Executive floors
+description: >-
+  Deck 8 seen from above at an angle: a padded boardroom with a long table, two offices, a lounge under a wall of
+  green lights, and a walled checkpoint in front of a heavy lit door.
+display: [2220, 1400]
+origin: [460, 150]
+order: 6
+hum: none
+moods:
+  - {id: day, label: Day, base: maps/deck-8/base-day.png}
+  - {id: night, label: Night, base: maps/deck-8/base-night.png}
+  - {id: alert, label: Alert, base: maps/deck-8/base-alert.png}
+switches:
+  - {id: cameras, label: Cameras, type: bool}
+cameras:  # one, on the pole by the stairs, looking back along the way anyone would come. The catering lift's route to the checkpoint stays clear of it, as in the Heist playground.
+  switch: cameras
+  bounds: [0, 0, 20, 14]
+  steps: 12
+  color: "#7fb4ff"
+  cones:
+    - {at: [19.25, 4.75], deg: -142, spread: 58, reach: 8, bounds: [12.6, 0, 20, 14]}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: guarded-door
+    name: "The guarded door"
+    at: [10.33, 0, 1.94]
+    closeup: [1539.8, 470.22]
+    text: "Heavy steel with a lit frame and hazard strips on the floor. Beyond it, the Secure floor."
+  - id: checkpoint
+    name: "The checkpoint"
+    at: [10.42, 2.58, 0.92]
+    closeup: [1390.4, 623.76]
+    text: "A guard's desk behind low walls, in front of the guarded door. Everyone going through stops here."
+  - id: boardroom
+    name: "The boardroom"
+    at: [5.73, 10.4, 0.89]
+    closeup: [639.8, 719.82]
+    text: "One long table, a dozen red chairs, and padded walls. Nothing you say in here carries."
+  - id: dashboard
+    name: "The dashboard"
+    at: [0, 2.43, 1.99]
+    closeup: [774.2, 229.62]
+    text: "A wall of evals, every one of them green. Every single one."
+  - id: security-desk
+    name: "The head of security's desk"
+    at: [12.62, 11.38, 0.89]
+    closeup: [994.4, 955.92]
+    text: "A tidy desk and a small black safe, in the office of someone who doesn't need notes."
+  - id: catering-lift
+    name: "The catering lift"
+    at: [19.42, 6.92, 1.11]
+    closeup: [1670, 1010.28]
+    text: "A steel hatch and a shelf, big enough for a trolley. It comes up from the kitchen on deck 6."
+  - id: duct
+    name: "The duct hatch"
+    at: [0, 4.33, 0.47]
+    closeup: [660.2, 396.06]
+    text: "A hatch at the foot of a steel service tower, big enough for someone small."
+# What's where, from the Heist playground's floor notes. Only the GM sees these.
+pins:
+  - {k: "1", label: "The guarded door to the Secure floor. One way in at night, unless you crawl", at: [10.33, 0, 1.94]}
+  - {k: "2", label: "Checkpoint. By day the pilgrims walk through it", at: [10.42, 2.58, 0.92]}
+  - {k: "3", label: "Boardroom: soundproofed, good for quiet fights", at: [5.73, 10.4, 0.89]}
+  - {k: "4", label: "Head of security: one of the few who know the probe's code", at: [12.62, 11.38, 0.89]}
+  - {k: "5", label: "Stairs, down to 7 and up to 9. By day a guard turns people away from 9", at: [18.15, 2.65, 0.89]}
+  - {k: "6", label: "Catering lift from the deck 6 kitchen. Checkpoint reachable unseen from here; the stairs aren't", at: [19.42, 6.92, 1.11]}
+  - {k: "7", label: "Duct hatch: reaches the checkpoint, boardroom and offices unseen", at: [0, 4.33, 0.47]}
+  - {k: "A", label: "Dashboard, every eval green", at: [0, 2.43, 1.99]}
+  - {k: "B", label: "Lounge: sofas, table, drinks cabinet", at: [2.25, 1.42, 0.69]}
+  - {k: "C", label: "The other office", at: [17.17, 11.17, 0.83]}
+  - {k: "D", label: "The camera on its pole, watching the way to the stairs", at: [19.25, 4.75, 2.83]}
+# Where the crew land when you send them here: at the stairs, in crew order.
+arrive: [[17.8, 4.0, 0], [16.9, 3.6, 0], [16.0, 3.3, 0], [17.0, 4.8, 0], [16.0, 4.4, 0]]

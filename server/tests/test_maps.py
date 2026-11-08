@@ -153,10 +153,11 @@ def test_a_saved_game_gains_the_new_maps(content, tmp_path):
     assert handle(GM, e.state, content, "gm.map.mood", {"map": "promenade", "mood": "hunted"}) == [("map.mood_set", {"map": "promenade", "mood": "hunted"})]
 
 
-ALL = ["patience", "promenade", "event-horizon", "executive", "secure", "vault", "bots", "lift", "cab", "terminal", "med"]
+HEIST = ["deck-6", "deck-7", "deck-8", "deck-9", "secure", "bots"]
+ALL = ["patience", "promenade", "event-horizon", "deck-6", "deck-7", "deck-8", "deck-9", "secure", "vault", "bots", "lift", "cab", "terminal", "med"]
 
 
-def test_all_eleven_maps_in_story_order(content):
+def test_all_the_maps_in_story_order(content):
     assert list(content.maps) == ALL
 
 
@@ -173,29 +174,90 @@ async def test_no_map_leaks_its_pins(engine):
             assert [p["label"] for p in gm["pins"] if len(p["label"]) > 20 and p["label"] in sent] == []
 
 
-async def test_the_executive_floors_are_a_tower(engine):
-    """Four decks, 12.5 height apart: deck 6's floor is Z 0. A deck jump is a move that keeps X and Y."""
-    await ok(engine, GM, "gm.crew.send", {"map": "executive"})
-    m = project(engine.state, engine.content, VES)["maps"]["executive"]
-    assert [f["label"] for f in m["floors"]] == ["Deck 6", "Deck 7", "Deck 8", "Deck 9"]
-    assert [f["z"] for f in m["floors"]] == [0, 12.5, 25, 37.5]
-    cams = m["cameras"]
-    assert cams["color"] == "#7fb4ff" and sorted({c["z"] for c in cams["cones"]}) == [0, 12.5, 25]
-    assert all(c["mood"] is None and len(c["pts"]) == 14 for c in cams["cones"])
-    # the board's own projection, proj(X, Y, Z, deck) with oy = 150 + (9 - deck) * 450, lands on the same spot
-    from lso.models import MapDef
+async def test_the_heist_maps_are_separate_with_day_night_alert(engine):
+    """Decks 6 to 9, the Secure floor and the Bot bays: one map each, the three moods, and things marked on them."""
+    gm = project(engine.state, engine.content, GM)["maps"]
+    assert "executive" not in gm
+    for m in HEIST:
+        assert [x["id"] for x in gm[m]["moods"]] == ["day", "night", "alert"], m
+        assert all(x["glow"] is None for x in gm[m]["moods"]), m  # the new art is one flat picture per mood
+        assert gm[m]["objects"] and gm[m]["pins"], m
+    assert {m: bool(gm[m]["cameras"]) for m in HEIST} == {"deck-6": True, "deck-7": True, "deck-8": True, "deck-9": True, "secure": True, "bots": False}
+    assert gm["deck-9"]["objects"][0]["id"] == "signet"
 
-    d: MapDef = engine.content.maps["executive"]
-    ox, oy = d.origin
-    for deck in (6, 7, 8, 9):
-        X, Y, Z = 7, 1.5, 0.4
-        board = ((X - Y) * 30 + 360, (X + Y) * 15 - Z * 36 + 150 + (9 - deck) * 450)
-        ours = ((X - Y) * 30 + ox, (X + Y) * 15 - (Z + (deck - 6) * 12.5) * 36 + oy)
-        assert board == pytest.approx(ours)
+
+def test_heist_objects_and_arrivals_are_on_their_maps(content):
+    """Everything marked projects inside the art, and nobody arrives outside the floor."""
+    for m in HEIST:
+        d = content.maps[m]
+        W, H = d.display
+        ox, oy = d.origin
+        for x in [*d.objects, *d.pins]:
+            X, Y, Z = x.at
+            sx, sy = ((X - Y) * 30 + ox) * 2, ((X + Y) * 15 - Z * 36 + oy) * 2
+            assert 0 <= sx <= W and 0 <= sy <= H, (m, x)
+        assert len(d.arrive) == 5, m
+
+
+async def test_the_gm_sends_one_token_to_another_map(engine):
+    await ok(engine, GM, "gm.crew.send", {"map": "deck-8"})
     ves = next(tid for tid, t in engine.state.tokens.items() if t.ref == "ves")
-    x, y, _ = engine.state.tokens[ves].at
-    await ok(engine, VES, "token.move", {"token": ves, "at": [x, y, 37.5]})  # up to deck 9
-    assert tuple(engine.state.tokens[ves].at) == (x, y, 37.5)
+    tomo = next(tid for tid, t in engine.state.tokens.items() if t.ref == "tomo")
+    ack, _ = await engine.run(VES, None, "gm.token.send", {"token": ves, "map": "secure"})
+    assert not ack["ok"]  # the GM moves people between maps
+    await ok(engine, GM, "gm.token.send", {"token": ves, "map": "secure"})
+    assert engine.state.tokens[ves].map == "secure" and tuple(engine.state.tokens[ves].at) == tuple(engine.content.maps["secure"].arrive[0])
+    assert engine.state.tokens[tomo].map == "deck-8" and engine.state.party_map == "deck-8"
+    # she sees where she is now, the others don't see her
+    assert list(project(engine.state, engine.content, VES)["maps"]) == ["secure"]
+    await ok(engine, GM, "gm.token.send", {"token": tomo, "map": "secure"})
+    assert tuple(engine.state.tokens[tomo].at) == tuple(engine.content.maps["secure"].arrive[1])  # not on top of her
+    ack, _ = await engine.run(GM, None, "gm.token.send", {"token": ves, "map": "nowhere"})
+    assert not ack["ok"]
+
+
+async def test_any_deck_lights_the_executive_floors_on_the_station(engine):
+    await ok(engine, GM, "gm.crew.send", {"map": "deck-9"})
+    assert "deck-6" in engine.state.station and "deck-9" not in engine.state.station
+    st = project(engine.state, engine.content, VES)["station"]
+    assert next(p for p in st["places"] if p["id"] == "deck-6")["lit"]
+    assert {c["map"] for c in st["crew"]} == {"deck-6"}
+
+
+def test_a_saved_game_moves_onto_the_heist_maps(tmp_path, content):
+    """A game from before: tokens on the tower land on the deck they were on, moods and the Station move over."""
+    from lso.engine import Engine
+    from lso.models import RULES, GameState, MapState
+    from lso.store import Store
+
+    store = Store(tmp_path / "w.db")
+    Engine(content, store)
+    old = GameState.model_validate(store.load_snapshot()[1])
+    old.rules = 3
+    old.maps["executive"] = MapState(mood="night")
+    old.maps["secure"].mood = "quiet"
+    old.maps["bots"].mood = "dark"
+    for m in ("deck-6", "deck-7", "deck-8", "deck-9"):
+        del old.maps[m]
+    old.party_map = "executive"
+    old.station = [*[m for m in old.station if m != "deck-6"], "executive"]
+    ves = next(tid for tid, t in old.tokens.items() if t.ref == "ves")
+    tomo = next(tid for tid, t in old.tokens.items() if t.ref == "tomo")
+    lale = next(tid for tid, t in old.tokens.items() if t.ref == "lale")
+    old.tokens[ves].map, old.tokens[ves].at = "executive", (5.0, 5.0, 37.5)
+    old.tokens[tomo].map, old.tokens[tomo].at = "executive", (5.0, 5.0, 12.9)
+    old.tokens[lale].map, old.tokens[lale].at = "secure", (25.0, 18.0, 0.0)
+    store.commit("system", None, [], old.model_dump(mode="json"), {})
+    e = Engine(content, store)
+    assert e.state.rules == RULES and "executive" not in e.state.maps
+    assert e.state.tokens[ves].map == "deck-9" and tuple(e.state.tokens[ves].at) == tuple(content.maps["deck-9"].arrive[0])
+    assert e.state.tokens[tomo].map == "deck-7"
+    assert e.state.tokens[lale].map == "secure" and tuple(e.state.tokens[lale].at) == tuple(content.maps["secure"].arrive[0])
+    assert e.state.maps["secure"].mood == "day" and e.state.maps["bots"].mood == "day"
+    assert all(m in e.state.maps for m in ("deck-6", "deck-7", "deck-8", "deck-9"))
+    assert e.state.party_map == "deck-6"
+    assert "deck-6" in e.state.station and "executive" not in e.state.station
+    project(e.state, content, GM)  # and it still goes out
 
 
 async def test_the_terminal_rooms_face_and_feed(engine):
@@ -213,8 +275,6 @@ async def test_the_terminal_rooms_face_and_feed(engine):
 
 async def test_the_alert_moods_pulse(engine):
     gm = project(engine.state, engine.content, GM)["maps"]
-    assert {m["id"]: m["hum"] for m in gm["executive"]["moods"]} == {"office": "none", "night": "none", "alert": "beat"}
-    assert {m["id"]: m["hum"] for m in gm["secure"]["moods"]} == {"quiet": "none", "alert": "beat"}
     assert {m["hum"] for m in gm["event-horizon"]["moods"]} == {"bar"}
 
 

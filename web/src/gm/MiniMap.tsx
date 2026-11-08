@@ -27,7 +27,7 @@ export function MiniMap({ map, tokens, onOpen }: { map: MapView; tokens: TokenVi
       ref={box}
       type="button"
       className="app-mini"
-      style={{ height: H > W ? 460 : 280 }} // a tower (the Executive floors) gets a taller frame
+      style={{ height: 280 }}
       onClick={onOpen}
       aria-label={`${map.name}, ${mood?.label ?? ''}. Open it on the Scene`}
       title="Open it on the Scene"

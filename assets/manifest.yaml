@@ -9,6 +9,7 @@ stores:
   BURNS: https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg
   SATISFACTION: https://claude.ai/artifact/Vkpa2f7xbG1pnwFuscAbHc  # no asset store: these are inlined in its page
   SLOTS: https://claude.ai/artifact/EPiC8wXsHQy7o5to3Rd8kj
+  HEIST: https://claude.ai/artifact/LpMi1WHzziSMdTDEoQ9uYk
 assets:
   - path: maps/event-horizon/base-open.png
     store: MAPS
@@ -787,76 +788,6 @@ assets:
     bytes: 31522
     width: 96
     height: 96
-  - path: maps/executive/base-office.png
-    store: MAPS
-    asset_id: "064450cbfb7574ef8c2309d94e42de36"
-    sha256: "73ed55cea2ba214352892e8d85313676432d42135eb45b8b251f40a3ed423db3"
-    bytes: 253095
-    width: 840
-    height: 1880
-  - path: maps/executive/glow-office.png
-    store: MAPS
-    asset_id: "3470a4b828eb08660f0b624cae509f96"
-    sha256: "d0df8fc8b52fa9fec4540107dcc59aa1b870c9f5fd8426b32d1c742be10e1b06"
-    bytes: 87541
-    width: 840
-    height: 1880
-  - path: maps/executive/base-night.png
-    store: MAPS
-    asset_id: "e865157c597e4c208a29a860e6470b76"
-    sha256: "be7a3de3f3d1792ac7bc8adf835549a97be1b45217a53b1e6af22b6f4ac5cbe4"
-    bytes: 227825
-    width: 840
-    height: 1880
-  - path: maps/executive/glow-night.png
-    store: MAPS
-    asset_id: "9b34477bb0c45a8313b1b4735cb3225e"
-    sha256: "53fc53e5843da53294a240c366bb7c5e4ba10afb5a4352d19cf1e81526cd5d00"
-    bytes: 67588
-    width: 840
-    height: 1880
-  - path: maps/executive/base-alert.png
-    store: MAPS
-    asset_id: "5110994211bb4f831c4903426310ceb6"
-    sha256: "3baed144d59f74c609eee502af2494a36b81ebd4770513bc82846310d4a2b546"
-    bytes: 278943
-    width: 840
-    height: 1880
-  - path: maps/executive/glow-alert.png
-    store: MAPS
-    asset_id: "002a50feb29b3b3bac7b56771403021e"
-    sha256: "aff467781078d9268c2ebf3e01aea538387227fd85b9be8176e9c0f5cb0d9384"
-    bytes: 95071
-    width: 840
-    height: 1880
-  - path: maps/secure/base-quiet.png
-    store: MAPS
-    asset_id: "78dd28e91dbae05fda50336e7943eb51"
-    sha256: "84370f7cc7b41e2ab6f89717d8c41df9c935ad76f6bf1079a07d6d200cc43820"
-    bytes: 165212
-    width: 1460
-    height: 890
-  - path: maps/secure/glow-quiet.png
-    store: MAPS
-    asset_id: "c52596a119084898b7910ab2cf47ad0d"
-    sha256: "53ea173f2f0ceb0f81b4b7fec521902d575df159569aa7c0c1bcf674b5af30bf"
-    bytes: 31520
-    width: 1460
-    height: 890
-  - path: maps/secure/base-alert.png
-    store: MAPS
-    asset_id: "3cc019bd80f2dc462bc67555458cdf60"
-    sha256: "deb53cb820400c5d148e4afeb06c28720ac4a214d5f47bff9cb704bbf4c4e217"
-    bytes: 174851
-    width: 1460
-    height: 890
-  - path: maps/secure/glow-alert.png
-    store: MAPS
-    asset_id: "2d9fce3ddf7de882b8a85062678505ab"
-    sha256: "85be67747ca642e61e3edbd9dcc3867e8420b7a5011e348a677edd2a3bd15e2d"
-    bytes: 45775
-    width: 1460
-    height: 890
   - path: maps/lift/base-shut.png
     store: MAPS
     asset_id: "32e181ffe538a454a2f6b5735af1a00c"
@@ -941,20 +872,6 @@ assets:
     bytes: 82425
     width: 96
     height: 96
-  - path: maps/bots/base.png
-    store: MAPS
-    asset_id: "e7c62a971ba10a29b67a91d1016b3139"
-    sha256: "2c21f97f5fce9397e9afd53fa3de60b81a73248a56b83a628302b3b7a0c229c1"
-    bytes: 52826
-    width: 800
-    height: 540
-  - path: maps/bots/glow.png
-    store: MAPS
-    asset_id: "ed52e252fcf9d3d3efac32979f47112a"
-    sha256: "c0ae4dc7fb7e2912ecf2a90d44279666d60bade9fe1314b7662e8a6b96f4d241"
-    bytes: 15827
-    width: 800
-    height: 540
   - path: maps/cab/base-top.png
     store: MAPS
     asset_id: "8efc02491851c68a4accee84a32f0722"
@@ -1291,3 +1208,129 @@ assets:
     bytes: 149
     width: 8
     height: 8
+  - path: maps/deck-9/base-day.png
+    store: HEIST
+    asset_id: "1d0693033a8307390f16bf7f0553bbad"
+    sha256: "973b9569f4da8d08e3dea233b8fc5ab6f6809c953e01cfdbe563bb40b8a0d470"
+    bytes: 136044
+    width: 1110
+    height: 700
+  - path: maps/deck-9/base-night.png
+    store: HEIST
+    asset_id: "207e39cec6967a83bc6eedde4ddd1374"
+    sha256: "0f83a5023316a551f11f843c4c2cbd6ca810eab7026c8b146f114f6abf83efd6"
+    bytes: 118759
+    width: 1110
+    height: 700
+  - path: maps/deck-9/base-alert.png
+    store: HEIST
+    asset_id: "f700117440990ddb0d6c2e0e298c3fdb"
+    sha256: "1744f689fe2174f7622110c69ed64e2678420973ede4db60d26b84f418a22bb3"
+    bytes: 135806
+    width: 1110
+    height: 700
+  - path: maps/deck-8/base-day.png
+    store: HEIST
+    asset_id: "b71ce184f278b1d99f96acc68f64111c"
+    sha256: "9f3d84986ac8a7262e55191bfdf0675d0d09af043cb6f23eb2bedaa03c0e0c97"
+    bytes: 93089
+    width: 1110
+    height: 700
+  - path: maps/deck-8/base-night.png
+    store: HEIST
+    asset_id: "129984ab985b2dad6f92e749169a2ca4"
+    sha256: "436ff00e0bedbb8c34f9fd9f184e7a9a26908055b1280f8ab51afbfc7a1cd21e"
+    bytes: 100302
+    width: 1110
+    height: 700
+  - path: maps/deck-8/base-alert.png
+    store: HEIST
+    asset_id: "b30d45c5e433b53f05c92f91a4dec148"
+    sha256: "7b99edd9ea93d4a85fe7086c76f3ec75b6f4e4e46fe01b6faae7388a703fe062"
+    bytes: 105044
+    width: 1110
+    height: 700
+  - path: maps/deck-7/base-day.png
+    store: HEIST
+    asset_id: "4eeb085b782219f3d01fc127f10fac78"
+    sha256: "1e058e6bfc71fc3b5fd3cc6f4ceb2849bccfac1a41bb71a69a3855c2a220f1d1"
+    bytes: 136081
+    width: 1110
+    height: 700
+  - path: maps/deck-7/base-night.png
+    store: HEIST
+    asset_id: "4c92d39149c9b32dc417994770a5b2cb"
+    sha256: "afeb916cde3220810e965c80dc4e6cbe352f1dba7e9345d47ca764f31b1c24b8"
+    bytes: 136405
+    width: 1110
+    height: 700
+  - path: maps/deck-7/base-alert.png
+    store: HEIST
+    asset_id: "60e068f4996bb690ae02bceee0062e9a"
+    sha256: "0b5b6d59ee151c4056ea9ea90b13392c84a52b79258c4e693b51991c48976b65"
+    bytes: 142514
+    width: 1110
+    height: 700
+  - path: maps/deck-6/base-day.png
+    store: HEIST
+    asset_id: "6cc730cae3d21395328b86b75db8857d"
+    sha256: "7f6b9d43d66e8ec62573fcffe5711c28419c7b42232a79a658040cd7e5c392a2"
+    bytes: 115115
+    width: 1110
+    height: 700
+  - path: maps/deck-6/base-night.png
+    store: HEIST
+    asset_id: "cce70185e44f70b82b56e16955c2bc80"
+    sha256: "4af2b3a8ac29b3e0173095c84a2b7bd998e53c347f1361563e9bc24ced09cfb4"
+    bytes: 130756
+    width: 1110
+    height: 700
+  - path: maps/deck-6/base-alert.png
+    store: HEIST
+    asset_id: "a68fbe7d0ab51aaca1a62a914e320b70"
+    sha256: "a2dcd3a44db17f0700f43016b0819ce95986d230c02c1c6f5ae7e54f9082e852"
+    bytes: 134290
+    width: 1110
+    height: 700
+  - path: maps/secure/base-day.png
+    store: HEIST
+    asset_id: "51d8f442116301fe8bb4550137c9a293"
+    sha256: "399a2dec6fdb297c1c7b5a0d1fed050003af1ab07f3cfcb630654b3410e590f6"
+    bytes: 194153
+    width: 1660
+    height: 1010
+  - path: maps/secure/base-night.png
+    store: HEIST
+    asset_id: "ffa608d6964fb45db675d4f044e22d74"
+    sha256: "3c90a1ed7d34733e5096af777ead2b8ca67b0a280b96e349e44ac35303e097e8"
+    bytes: 219323
+    width: 1660
+    height: 1010
+  - path: maps/secure/base-alert.png
+    store: HEIST
+    asset_id: "46690e4d7cdeed55407c81db0edfd98a"
+    sha256: "de23d4583ac74b264b8ae7960f67e6ba4f9a19d86217eae0c77f28c265aeb954"
+    bytes: 224326
+    width: 1660
+    height: 1010
+  - path: maps/bots/base-day.png
+    store: HEIST
+    asset_id: "c1730b7aed72ca78be0e37deac0a09d0"
+    sha256: "3fa178fd224109b06834955fd9177ea8621eef3b3241933b59beb002a2606a3e"
+    bytes: 112046
+    width: 1110
+    height: 700
+  - path: maps/bots/base-night.png
+    store: HEIST
+    asset_id: "f916646f795ad634dd03645552c88891"
+    sha256: "25f3ec9444d2aee7bbc1af32c8f947146d69fa0fa2a031b4d0b958df5243a596"
+    bytes: 124361
+    width: 1110
+    height: 700
+  - path: maps/bots/base-alert.png
+    store: HEIST
+    asset_id: "6f6a518b00ca22120da944f4c6035fe5"
+    sha256: "ccbc76fdbcd2bf6718c8eb4924787e0b0e737a42ca1561765ee5c6cd7210fd43"
+    bytes: 129262
+    width: 1110
+    height: 700

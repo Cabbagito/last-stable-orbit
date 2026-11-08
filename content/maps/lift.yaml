@@ -10,7 +10,7 @@ description: >-
   crawler cab stands with its door open and its lights on.
 display: [3520, 2040]
 origin: [800, 170]
-order: 8
+order: 11
 hum: none
 moods:  # the blast door: shut for the first fight, open for the fixer
   - {id: shut, label: Door shut, base: maps/lift/base-shut.png, glow: maps/lift/glow-shut.png}

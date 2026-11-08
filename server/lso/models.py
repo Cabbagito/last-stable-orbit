@@ -11,7 +11,8 @@ STATS = ("body", "reflex", "tech", "intel", "cool", "empathy")
 DIE_SIDES = (4, 6, 8, 10, 12, 20)
 ENTROPY_MAX = 6
 BURN_COST = 2  # Entropy a Burn spends
-RULES = 3  # the rules version a saved game is on: 1 gave each character their own health, 2 the Codex, 3 the Station
+RULES = 4  # the rules version a saved game is on: 1 gave each character their own health, 2 the Codex, 3 the Station,
+# 4 the heist maps (the Executive tower became four separate decks; the Secure floor and the Bot bays were redrawn)
 
 Vec3 = tuple[float, float, float]
 
@@ -195,15 +196,6 @@ class Feed(Strict):
     lines: list[str]
 
 
-class Floor(Strict):
-    """One deck of a map drawn as a tower (the Executive floors). Its floor is at height `z`; a deck jump moves a
-    token straight up or down, keeping X and Y. `centre` (world X, Y) is where its camera button looks."""
-
-    label: str
-    z: float
-    centre: tuple[float, float]
-
-
 class Cone(Strict):
     """One camera's view on the floor: from `at` (world X, Y), facing `deg`, `spread` degrees wide, `reach` long."""
 
@@ -212,7 +204,6 @@ class Cone(Strict):
     deg: float
     spread: float
     reach: float
-    z: float = 0  # the floor it's drawn on (a deck of the Executive floors)
     bounds: tuple[float, float, float, float] | None = None  # its own walls, else the map's
 
 
@@ -258,7 +249,6 @@ class MapDef(Strict):
     decals: list[Decal] = []
     cameras: Cameras | None = None
     feed: Feed | None = None
-    floors: list[Floor] = []  # a tower of decks, bottom first
     objects: list[MapObject] = []
     pins: list[Pin] = []
     arrive: list[Vec3] = []  # where the crew land when the GM sends them here, in crew order
@@ -287,8 +277,6 @@ class MapDef(Strict):
                     raise ValueError(f"the feed needs a level switch {k!r}")
             if sw[self.feed.events].max > len(self.feed.lines):
                 raise ValueError("the feed's events switch goes past its lines")
-        if [f.z for f in self.floors] != sorted(f.z for f in self.floors):
-            raise ValueError("floors go bottom first")
         if self.cameras:
             s = sw.get(self.cameras.switch)
             if not s or s.type != "bool":
@@ -466,6 +454,7 @@ class StationPlace(Strict):
     has been there, and the boxes you hover. Positions are display px on the 1100 x 840 picture (art framing)."""
 
     map: str
+    also: list[str] = []  # other maps that count as this place: the Executive floors are four decks
     name: str
     dark_name: str | None = None
     where: str
@@ -490,10 +479,14 @@ class Station(Strict):
 
     @model_validator(mode="after")
     def _once(self) -> "Station":
-        ids = [p.map for p in self.places]
+        ids = [m for p in self.places for m in [p.map, *p.also]]
         if len(ids) != len(set(ids)):
             raise ValueError("a map shows on the Station once")
         return self
+
+    def place_of(self, map_id: str) -> StationPlace | None:
+        """The place on the cross-section a map belongs to."""
+        return next((p for p in self.places if map_id == p.map or map_id in p.also), None)
 
 
 class SurveyOption(Strict):

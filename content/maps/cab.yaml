@@ -9,7 +9,7 @@ description: >-
   as you descend.
 display: [1120, 820]
 origin: [250, 140]
-order: 9
+order: 12
 hum: none
 moods:  # how far down: the clock reads 1.00×, 0.58× (an estimate), then 0.31×
   - {id: top, label: Top, base: maps/cab/base-top.png, glow: maps/cab/glow-top.png}

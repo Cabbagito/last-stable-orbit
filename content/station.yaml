@@ -50,7 +50,8 @@ places:
     chip: [1006, 442]
     hots: [[984, 374, 56, 68]]
 
-  - map: executive
+  - map: deck-6
+    also: [deck-7, deck-8, deck-9]
     name: The Executive floors
     where: Decks 6 to 9
     blurb: "Glass, quiet carpets, human staff. The company sells booking time with ISCO here. By the founder's rule, ISCO has no systems on these decks."

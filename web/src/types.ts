@@ -118,17 +118,11 @@ export interface FeedDef {
 }
 
 /** One deck of a tower map: its floor height, and where its camera button looks. */
-export interface FloorDef {
-  label: string
-  z: number
-  centre: [number, number]
-}
-
 /** The cameras on a map's walls: each cone as world X, Y points on the floor, shown while `switch` is on. */
 export interface CamerasDef {
   switch: string
   color: string
-  cones: { mood: string | null; z: number; pts: [number, number][] }[]
+  cones: { mood: string | null; pts: [number, number][] }[]
 }
 
 /** A labelled point from the map's Key board ("what's where"). GM only. */
@@ -153,7 +147,6 @@ export interface MapView {
   decals: DecalDef[]
   cameras: CamerasDef | null
   feed: FeedDef | null
-  floors: FloorDef[]
   mood: string
   values: Record<string, number>
   objects: MapObject[]
@@ -531,6 +524,7 @@ export interface CodexView {
 
 /** One place on the Station's cross-section. A dark one (`lit` false) has no overlay or preview for players. */
 export interface StationPlaceView {
+  also: string[]
   id: string // its map
   name: string
   where: string

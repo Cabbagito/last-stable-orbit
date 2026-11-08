@@ -9,7 +9,7 @@ description: >-
   ISCO is revealed, an enormous face inside a prism ring looms over the back corner.
 display: [1900, 1690]
 origin: [430, 380]
-order: 10
+order: 13
 hum: none
 moods:  # Seal in: white-violet room, gold slot lit, clamp lamps red to white
   - {id: empty, label: Empty, base: maps/terminal/base-empty.png, glow: maps/terminal/glow-dark.png}

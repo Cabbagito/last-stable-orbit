@@ -1,0 +1,82 @@
+# Deck 6, from the Heist maps canvas (board "Deck 6: arrivals"). Art is 1110x700, drawn at 2x.
+# The shared isometric formula, with origin (460, 150). The floor is X 0 to 20, Y 0 to 14.
+id: deck-6
+name: "Deck 6: arrivals"
+subtitle: The Executive floors, out of the lift from the Promenade
+description: >-
+  Deck 6 seen from above at an angle: a guard desk in front of the lift, rows of reviewers' desks, an archive,
+  lockers, showers, a canteen and kitchen, and a small closet full of flowers.
+display: [2220, 1400]
+origin: [460, 150]
+order: 4
+hum: none
+moods:
+  - {id: day, label: Day, base: maps/deck-6/base-day.png}
+  - {id: night, label: Night, base: maps/deck-6/base-night.png}
+  - {id: alert, label: Alert, base: maps/deck-6/base-alert.png}
+switches:
+  - {id: cameras, label: Cameras, type: bool}
+cameras:  # one, on the pole by the stairs, along the reviewers' rows. From the Heist playground's coverage.
+  switch: cameras
+  bounds: [0, 0, 20, 14]
+  steps: 12
+  color: "#7fb4ff"
+  cones:
+    - {at: [19.17, 6.17], deg: 180, spread: 45, reach: 11, bounds: [0, 0, 20, 9.6]}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: throughput
+    name: "The throughput board"
+    at: [7.67, 0, 2.36]
+    closeup: [1380.2, 360.18]
+    text: "THROUGHPUT, in bars that only climb. Reviews closed per hour. Under it, small: review time counts as waiting."
+  - id: lockers
+    name: "The lockers"
+    at: [0.17, 5.83, 1.39]
+    closeup: [580.4, 379.92]
+    text: "A bank of blue lockers. Two of them aren't locked, and there are uniforms inside."
+  - id: lost-and-found
+    name: "Lost and found"
+    at: [8.67, 9.67, 0.61]
+    closeup: [860, 806.28]
+    text: "A box of things people left behind. There's a uniform in it, XXL."
+  - id: noticeboard
+    name: "The noticeboard"
+    at: [6.12, 10.22, 1.03]
+    closeup: [674, 716.04]
+    text: "The shift rota, the Vigil schedule, and a line in marker: clean-up crew starts at 22:00."
+  - id: janitor
+    name: "The janitor's closet"
+    at: [15.25, 1.08, 0.83]
+    closeup: [1770.2, 730.14]
+    text: "A mop in a yellow bucket and a lot of flowers. The door is right off the pilgrims' route."
+  - id: catering-lift
+    name: "The catering lift"
+    at: [18.45, 7.55, 0.78]
+    closeup: [1574, 1023.84]
+    text: "A steel hatch and a shelf outside the kitchen, big enough for a trolley. It only goes to deck 8."
+  - id: duct
+    name: "The duct hatch"
+    at: [-0.97, 1.97, 0.42]
+    closeup: [743.6, 299.76]
+    text: "A hatch at the foot of a steel service tower, big enough for someone small."
+# What's where, from the Heist playground's floor notes. Only the GM sees these.
+pins:
+  - {k: "1", label: "Lift from the Promenade, and the guard desk", at: [11.17, 1.83, 0.56]}
+  - {k: "2", label: "Reviewers' rows: one camera, and the night patrol walks them", at: [10.67, 5.67, 0.42]}
+  - {k: "3", label: "Lockers: two uniforms. Anyone who doesn't know your face may ask (Cool)", at: [0.17, 5.83, 1.39]}
+  - {k: "4", label: "Lost and found: one XXL uniform", at: [8.67, 9.67, 0.61]}
+  - {k: "5", label: "Break nook, off camera. Gossip: the duty officer's sick kid, the mech, the bored operator", at: [7.45, 11.22, 0.42]}
+  - {k: "6", label: "Noticeboard: shift rota, Vigil schedule, the clean-up crew's 22:00 start", at: [6.12, 10.22, 1.03]}
+  - {k: "7", label: "Showers: at shift change two off-duty guards. A fight in towels", at: [0.83, 10.5, 0.83]}
+  - {k: "8", label: "Canteen, across the rows", at: [11.17, 10.83, 0.28]}
+  - {k: "9", label: "Kitchen", at: [16.5, 11.5, 0.56]}
+  - {k: "10", label: "Catering lift, to deck 8 only. In the camera's blind spot, but the patrol walks past it", at: [18.45, 7.55, 0.78]}
+  - {k: "11", label: "Ahti, The Janitor: whoever opens his door is hired on the spot", at: [15.25, 1.08, 0.83]}
+  - {k: "A", label: "Archive shelves", at: [2.67, 0, 1.53]}
+  - {k: "B", label: "Duct hatch", at: [-0.97, 1.97, 0.42]}
+  - {k: "C", label: "Throughput board", at: [7.67, 0, 2.36]}
+  - {k: "D", label: "Water cooler", at: [6.37, 12.97, 0.78]}
+  - {k: "E", label: "The camera on its pole", at: [19.17, 6.17, 2.78]}
+  - {k: "F", label: "Stairs", at: [18.15, 2.65, 0.89]}
+# Where the crew land when you send them here: out of the lift from the Promenade, in crew order.
+arrive: [[8.33, 1.33, 0], [7.33, 1.33, 0], [6.33, 1.33, 0], [8.17, 2.17, 0], [7.17, 2.17, 0]]

@@ -1,9 +1,9 @@
 import { useEffect, useState, type CSSProperties } from 'react'
 import { GiveRow, Pocket, Step, Vitals } from '../gm/parts'
+import { mapList } from '../gm/SendCrew'
 import { Closeup, CodexButton, InspectBlock, Inspector } from '../inspect/Inspector'
 import { useItemTip } from '../inspect/ItemTip'
 import { findObject } from '../inspect/objects'
-import { floorOf, onFloor } from '../lib/floors'
 import { ring } from '../lib/ring'
 import { STAT_LOOK, statIcon } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
@@ -121,7 +121,7 @@ export function InspectCard() {
         {isGm && !crew && <NpcHealth token={t.id} map={t.map} name={t.name} />}
         {t.hidden && <div className="r10-warn">HIDDEN FROM PLAYERS</div>}
         {t.note && <div className="app-ins-txt">{t.note}</div>}
-        <DeckJump t={t} />
+        <SendTo t={t} onSent={() => select(null)} />
         {isGm && t.gm_note && (
           <div className="r10-gmn">
             <span className="r4-lab">ONLY YOU SEE THIS</span>
@@ -257,10 +257,6 @@ function NpcRolls({ t, stats }: { t: TokenView; stats: NonNullable<TokenView['st
   )
 }
 
-/**
- * On a tower map (the Executive floors), move a token to another deck: straight up or down the stairs or the
- * duct, keeping where it stands. For whoever may move it: the GM, or the player whose token it is.
- */
 /** M8: an NPC's health, on its card, while it's in a fight (the crew's is on the rail). */
 function NpcHealth({ token, map, name }: { token: string; map: string; name: string }) {
   const x = useGame((s) => fighterIn(fightOn(s.view, map), token))
@@ -272,34 +268,35 @@ function NpcHealth({ token, map, name }: { token: string; map: string; name: str
   )
 }
 
-function DeckJump({ t }: { t: TokenView }) {
+/**
+ * The GM moves one token to another map: up the stairs, down the vent. It lands at that map's entrance, for the GM to
+ * drag where it should be. The rest of the crew and the party's map stay put.
+ */
+function SendTo({ t, onSent }: { t: TokenView; onSent: () => void }) {
   const view = useGame((s) => s.view)
   const preview = useGame((s) => s.preview)
-  const look = useGame((s) => s.look)
-  const floors = view?.maps[t.map]?.floors ?? []
-  const mine = view?.me.role === 'gm' || (t.kind === 'crew' && t.ref === view?.me.char && !t.hidden)
-  if (!floors.length || !mine || preview) return null
-  const cur = floorOf(floors, t.at[2])
+  if (!view || view.me.role !== 'gm' || preview) return null
   return (
-    <InspectBlock label="DECK">
-      <div className="app-decks" role="group" aria-label={`Move ${t.name} to another deck`}>
-        {floors.map((f, i) => (
-          <button
-            key={i}
-            type="button"
-            className={'r10-btn' + (i === cur ? ' on' : '')}
-            aria-pressed={i === cur}
-            disabled={i === cur}
-            onClick={() => {
-              const at = onFloor(floors, t.at, i)
-              look(t.map, i, at)
-              void send('token.move', { token: t.id, at })
-            }}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
+    <InspectBlock label="SEND TO">
+      <select
+        className="app-select"
+        value=""
+        aria-label={`Send ${t.name} to another map`}
+        onChange={(e) => {
+          if (!e.target.value) return
+          void gmRun('gm.token.send', { token: t.id, map: e.target.value })
+          onSent() // it's gone from this map
+        }}
+      >
+        <option value="">Another map…</option>
+        {mapList(view)
+          .filter((m) => m.arrive && m.id !== t.map)
+          .map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.name}
+            </option>
+          ))}
+      </select>
     </InspectBlock>
   )
 }

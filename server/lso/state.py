@@ -61,11 +61,11 @@ def state_from_preset(preset: Preset, content: Content) -> dict:
 
 def station_lit(preset: Preset, content: Content, tokens: dict[str, dict]) -> list[str]:
     """A preset's lit places: its own list, the party map, and wherever the crew stands."""
-    places = {p.map for p in content.station.places} if content.station else set()
     lit = list(preset.station)
     for m in [preset.party_map] + [t["map"] for t in tokens.values() if t["kind"] == "crew"]:
-        if m in places and m not in lit:
-            lit.append(m)
+        p = content.station.place_of(m) if content.station else None
+        if p and p.map not in lit:
+            lit.append(p.map)
     return lit
 
 
@@ -139,6 +139,9 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         t.map, t.at = data["map"], tuple(data["at"])
     elif ev_type == "map.added":  # a map the content gained after this game was saved
         s.maps[data["map"]] = MapState.model_validate(data["state"])
+    elif ev_type == "map.removed":  # a map the content no longer has (the Executive tower, split into decks)
+        s.maps.pop(data["map"], None)
+        s.fights.pop(data["map"], None)
     elif ev_type == "token.hidden_set":
         s.tokens[data["token"]].hidden = bool(data["hidden"])
     elif ev_type == "map.mood_set":

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Secure floor</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1660px; height: 1010px; background: #000000; position: relative; overflow: hidden; font-family: system-ui, sans-serif">
+  <sc-if value="{{showDay}}" hint-placeholder-val="{{ false }}"><img src="/_blob/51d8f442116301fe8bb4550137c9a293" alt="The Secure floor by day" style="position: absolute; left: 0; top: 0; width: 1660px; height: 1010px; image-rendering: pixelated"></sc-if>
+  <sc-if value="{{showNight}}" hint-placeholder-val="{{ true }}"><img src="/_blob/ffa608d6964fb45db675d4f044e22d74" alt="The Secure floor at night: the lockup with the probe, the guard room, the vault door and its shrine, the empty mech cradle, the freight lift, the Vigil stores" style="position: absolute; left: 0; top: 0; width: 1660px; height: 1010px; image-rendering: pixelated"></sc-if>
+  <sc-if value="{{showAlert}}" hint-placeholder-val="{{ false }}"><img src="/_blob/46690e4d7cdeed55407c81db0edfd98a" alt="The Secure floor on alert" style="position: absolute; left: 0; top: 0; width: 1660px; height: 1010px; image-rendering: pixelated"></sc-if>
+  <div style="position: absolute; left: 16px; top: 16px; display: flex; gap: 4px; padding: 4px; background: #0a0c12; border: 1px solid #2a3040">
+    <button type="button" onClick="{{pickDay}}" aria-pressed="{{dayOn}}" style="height: 44px; min-width: 76px; border: 0; font: inherit; font-size: 14px; cursor: pointer; background: {{dayBg}}; color: {{dayFg}}">Day</button>
+    <button type="button" onClick="{{pickNight}}" aria-pressed="{{nightOn}}" style="height: 44px; min-width: 76px; border: 0; font: inherit; font-size: 14px; cursor: pointer; background: {{nightBg}}; color: {{nightFg}}">Night</button>
+    <button type="button" onClick="{{pickAlert}}" aria-pressed="{{alertOn}}" style="height: 44px; min-width: 76px; border: 0; font: inherit; font-size: 14px; cursor: pointer; background: {{alertBg}}; color: {{alertFg}}">Alert</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1660,"height":1010}}'>
+class Component extends DCLogic {
+  state = { mood: 'night' };
+  renderVals() {
+    const m = this.state.mood;
+    const bg = (k) => (m === k ? '#ff6aa8' : '#141a26');
+    const fg = (k) => (m === k ? '#0b0e14' : '#e9edf6');
+    return {
+      showDay: m === 'day', showNight: m === 'night', showAlert: m === 'alert',
+      dayOn: m === 'day', nightOn: m === 'night', alertOn: m === 'alert',
+      dayBg: bg('day'), nightBg: bg('night'), alertBg: bg('alert'), dayFg: fg('day'), nightFg: fg('night'), alertFg: fg('alert'),
+      pickDay: () => this.setState({ mood: 'day' }), pickNight: () => this.setState({ mood: 'night' }), pickAlert: () => this.setState({ mood: 'alert' }),
+    };
+  }
+}
+</script>
+</body>
+</html>

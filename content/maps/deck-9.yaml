@@ -1,0 +1,89 @@
+# Deck 9, from the Heist maps canvas (board "Deck 9: the founder"). Art is 1110x700, drawn at 2x.
+# The shared isometric formula, with origin (460, 150). The floor is X 0 to 20, Y 0 to 14.
+id: deck-9
+name: "Deck 9: the founder"
+subtitle: The top of the Executive floors
+description: >-
+  Deck 9 seen from above at an angle: a raised old wood office with a wall of books, a desk and one glass case,
+  a gallery of four lit cases and a huge gold portrait, and a long putting green with one hole.
+display: [2220, 1400]
+origin: [460, 150]
+order: 7
+hum: none
+moods:
+  - {id: day, label: Day, base: maps/deck-9/base-day.png}
+  - {id: night, label: Night, base: maps/deck-9/base-night.png}
+  - {id: alert, label: Alert, base: maps/deck-9/base-alert.png}
+switches:
+  - {id: cameras, label: Cameras, type: bool}
+cameras:  # one, on the pole, watching the office door and the gallery. From the Heist playground's coverage.
+  switch: cameras
+  bounds: [0, 0, 20, 14]
+  steps: 12
+  color: "#7fb4ff"
+  cones:
+    - {at: [19.2, 8.5], deg: -156, spread: 32, reach: 10.5, bounds: [9.6, 0, 20, 14]}
+objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
+  - id: signet
+    name: "The signet"
+    at: [2.27, 6.07, 1.31]
+    closeup: [692, 455.88]
+    text: "The founder's signet, on velvet in a glass case at the heart of his office. Old gold, heavy, cut to press into something."
+  - id: office-door
+    name: "The office door"
+    at: [9.93, 5.93, 1.33]
+    closeup: [1160, 680.04]
+    text: "Old wood and a brass handle, and it's locked. Everyone on this deck can see it, and so can the camera."
+  - id: portrait
+    name: "The portrait"
+    at: [13.47, 0, 2]
+    closeup: [1728.2, 560.1]
+    text: "The founder in gold leaf, with a halo. Whoever hung it meant it."
+  - id: ergo-model
+    name: "A model of Ergo"
+    at: [12.22, 1.92, 1.39]
+    closeup: [1538, 624.12]
+    text: "Under glass: the first design of the station, small enough to carry. Nobody has dusted it by hand in a very long time, and there's no dust."
+  - id: helmet
+    name: "His helmet"
+    at: [15, 2, 1.47]
+    closeup: [1700, 704.16]
+    text: "His old pressure-suit helmet, scratched at the visor. A card says he wore it on the first walk outside."
+  - id: ergo-plans
+    name: "The Ergo plans"
+    at: [12.37, 5.1, 1.22]
+    closeup: [1356.2, 736.26]
+    text: "The original blueprints, flat under glass, in a hand that kept changing its mind."
+  - id: first-terminal
+    name: "His first terminal"
+    at: [15, 5, 1.53]
+    closeup: [1520, 789.84]
+    text: "Still on. A green CRT with a cursor blinking, waiting for someone who isn't coming back."
+  - id: putting-green
+    name: "The putting green"
+    at: [4.18, 12.35, 0.17]
+    closeup: [429.8, 783.66]
+    text: "The board's own putting green, the length of the deck. One hole, at the far end by the wall."
+  - id: duct
+    name: "The duct hatch"
+    at: [0, 13.27, 0.53]
+    closeup: [123.8, 659.94]
+    text: "A low hatch in the wall at the far end of the green, behind the hole."
+# What's where, from the Heist playground's floor notes. Only the GM sees these.
+pins:
+  - {k: "1", label: "Founder's office: the signet in its glass case. By day the board sits around it", at: [2.27, 6.07, 1.31]}
+  - {k: "2", label: "Office door, locked at night, on camera from every side", at: [9.93, 5.93, 1.33]}
+  - {k: "3", label: "Duct hatch: arriving is unseen, but the door still isn't", at: [0, 13.27, 0.53]}
+  - {k: "4", label: "Stairs down to deck 8", at: [18.15, 2.65, 0.89]}
+  - {k: "5", label: "The gallery: four cases, cover to hide behind", at: [13.25, 4.08, 0.14]}
+  - {k: "6", label: "Putting green, a minigame like the slots. The hole's by the duct", at: [0.45, 11.88, 0.08]}
+  - {k: "A", label: "Case 1: a model of Ergo, the first design", at: [12.22, 1.92, 1.39]}
+  - {k: "B", label: "Case 2: his old pressure-suit helmet", at: [15, 2, 1.47]}
+  - {k: "C", label: "Case 3: the Ergo plans, the original blueprints", at: [12.37, 5.1, 1.22]}
+  - {k: "D", label: "Case 4: his first terminal, still on", at: [15, 5, 1.53]}
+  - {k: "E", label: "The portrait of the founder", at: [13.47, 0, 2]}
+  - {k: "F", label: "His desk, armchairs and long-case clock", at: [5.67, 3.67, 0.78]}
+  - {k: "G", label: "The camera, on a pole", at: [19.2, 8.47, 2.75]}
+  - {k: "H", label: "Armchairs and golf caddy by the green", at: [10.5, 12.83, 0.56]}
+# Where the crew land when you send them here: at the top of the stairs from deck 8, in crew order.
+arrive: [[17.8, 3.9, 0], [16.9, 3.6, 0], [16.0, 3.3, 0], [17.1, 4.7, 0], [16.1, 4.4, 0]]

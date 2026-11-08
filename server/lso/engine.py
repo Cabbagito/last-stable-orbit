@@ -34,6 +34,7 @@ class Engine:
             saved = snap[1]
             saved.get("stage", {}).pop("setup", None)  # the TV / no TV / online choice: the TV is always there now
             self.state = GameState.model_validate(saved)
+            self._heist_maps()  # first: the checks below would stop at a map that's gone on purpose
             self._check_refs()
             self._add_new_maps()
             self._update_rules()
@@ -64,6 +65,35 @@ class Engine:
                     events.append(("station.shown", {"map": m, "shown": True}))
         self._commit("system", None, events + [("rules.updated", data)], {})
         log.info("brought the saved game up to rules %s", RULES)
+
+    def _heist_maps(self) -> None:
+        """Rules 4: the Executive tower became four separate decks, and the Secure floor and the Bot bays were redrawn.
+        Old positions mean nothing on the new art, so anyone there lands at their map's entrance (from the tower, on the
+        deck they were on: each was 12.5 high). A mood the new art doesn't have becomes its first."""
+        if self.state.rules >= 4:
+            return
+        events: list[tuple[str, dict]] = []
+        landed: dict[str, int] = {}
+        for tid, t in self.state.tokens.items():
+            if t.map not in ("executive", "secure", "bots"):
+                continue
+            to = t.map if t.map != "executive" else f"deck-{6 + min(3, int((t.at[2] + 0.01) // 12.5))}"
+            spots = self.content.maps[to].arrive
+            n = landed.get(to, 0)
+            landed[to] = n + 1
+            events.append(("token.sent", {"token": tid, "map": to, "at": list(spots[n % len(spots)])}))
+        for m_id, ms in self.state.maps.items():
+            d = self.content.maps.get(m_id)
+            if d and ms.mood not in {x.id for x in d.moods}:
+                events.append(("map.mood_set", {"map": m_id, "mood": d.moods[0].id}))
+        if "executive" in self.state.maps:
+            if self.state.party_map == "executive":
+                events.append(("party.map_set", {"map": "deck-6"}))
+            if "executive" in self.state.station:
+                events += [("station.shown", {"map": "executive", "shown": False}), ("station.shown", {"map": "deck-6", "shown": True})]
+            events.append(("map.removed", {"map": "executive"}))
+        if events:
+            self._commit("system", None, events, {})
 
     def _add_new_maps(self) -> None:
         """A game saved before a map existed has no state for it: give it the default preset's (or its first mood)."""

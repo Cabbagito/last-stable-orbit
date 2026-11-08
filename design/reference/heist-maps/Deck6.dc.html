@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Deck 6: arrivals</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1110px; height: 700px; background: #000000; position: relative; overflow: hidden; font-family: system-ui, sans-serif">
+  <sc-if value="{{showDay}}" hint-placeholder-val="{{ false }}"><img src="/_blob/6cc730cae3d21395328b86b75db8857d" alt="Deck 6 by day" style="position: absolute; left: 0; top: 0; width: 1110px; height: 700px; image-rendering: pixelated"></sc-if>
+  <sc-if value="{{showNight}}" hint-placeholder-val="{{ true }}"><img src="/_blob/cce70185e44f70b82b56e16955c2bc80" alt="Deck 6 at night: the lift and guard desk, archive, lockers, showers, the reviewers' rows, canteen, kitchen, Ahti's closet" style="position: absolute; left: 0; top: 0; width: 1110px; height: 700px; image-rendering: pixelated"></sc-if>
+  <sc-if value="{{showAlert}}" hint-placeholder-val="{{ false }}"><img src="/_blob/a68fbe7d0ab51aaca1a62a914e320b70" alt="Deck 6 on alert" style="position: absolute; left: 0; top: 0; width: 1110px; height: 700px; image-rendering: pixelated"></sc-if>
+  <div style="position: absolute; left: 16px; top: 16px; display: flex; gap: 4px; padding: 4px; background: #0a0c12; border: 1px solid #2a3040">
+    <button type="button" onClick="{{pickDay}}" aria-pressed="{{dayOn}}" style="height: 44px; min-width: 76px; border: 0; font: inherit; font-size: 14px; cursor: pointer; background: {{dayBg}}; color: {{dayFg}}">Day</button>
+    <button type="button" onClick="{{pickNight}}" aria-pressed="{{nightOn}}" style="height: 44px; min-width: 76px; border: 0; font: inherit; font-size: 14px; cursor: pointer; background: {{nightBg}}; color: {{nightFg}}">Night</button>
+    <button type="button" onClick="{{pickAlert}}" aria-pressed="{{alertOn}}" style="height: 44px; min-width: 76px; border: 0; font: inherit; font-size: 14px; cursor: pointer; background: {{alertBg}}; color: {{alertFg}}">Alert</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1110,"height":700}}'>
+class Component extends DCLogic {
+  state = { mood: 'night' };
+  renderVals() {
+    const m = this.state.mood;
+    const bg = (k) => (m === k ? '#ff6aa8' : '#141a26');
+    const fg = (k) => (m === k ? '#0b0e14' : '#e9edf6');
+    return {
+      showDay: m === 'day', showNight: m === 'night', showAlert: m === 'alert',
+      dayOn: m === 'day', nightOn: m === 'night', alertOn: m === 'alert',
+      dayBg: bg('day'), nightBg: bg('night'), alertBg: bg('alert'), dayFg: fg('day'), nightFg: fg('night'), alertFg: fg('alert'),
+      pickDay: () => this.setState({ mood: 'day' }), pickNight: () => this.setState({ mood: 'night' }), pickAlert: () => this.setState({ mood: 'alert' }),
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -19,9 +19,9 @@ export function Station() {
   const [look, setLook] = useState<string | null>(null)
   if (!view || !st) return <div className="app-body" />
   const isGm = view.me.role === 'gm'
-  const here = view.party_map // a player's own map
   const byId = Object.fromEntries(st.places.map((p) => [p.id, p]))
-  const focusId = hover ?? pin ?? (byId[here] ? here : st.places[0].id)
+  const here = st.places.find((p) => p.id === view.party_map || p.also.includes(view.party_map)) // a player's own map's place
+  const focusId = hover ?? pin ?? here?.id ?? st.places[0].id
   const cur = byId[focusId]
   const crewOf = (id: string) => st.crew.filter((c) => c.map === id)
   const member = (char: string) => view.crew.find((c) => c.id === char)

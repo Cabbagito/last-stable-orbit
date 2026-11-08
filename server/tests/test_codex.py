@@ -51,7 +51,7 @@ def test_the_codex_has_its_five_sections_and_every_entry_resolves(content):
     assert content.missing_assets == []
     # every crew member has a page, and every place on the map
     assert {e.crew for e in content.codex.values() if e.crew} == set(content.characters)
-    assert set(content.maps) <= set(content.codex)
+    assert {m for m in content.maps if not m.startswith("deck-")} | {"executive"} <= set(content.codex)  # the decks share a page
 
 
 def test_session_one_opens_the_crew_how_to_play_and_day_one(engine):

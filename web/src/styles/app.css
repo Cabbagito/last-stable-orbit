@@ -714,41 +714,6 @@ body {
 .app-feed-h {
   color: #fff;
 }
-/* A tower map's decks (the Executive floors): buttons that bring one deck into view. */
-.app-floors {
-  position: absolute;
-  left: 12px;
-  top: 12px;
-  z-index: 5;
-  display: flex;
-  gap: 4px;
-}
-.app-floors button {
-  font: 11px 'Silkscreen', monospace;
-  color: var(--ink);
-  background: rgba(5, 6, 8, 0.88);
-  border: 1px solid var(--btnline);
-  min-height: 36px;
-  padding: 0 10px;
-  cursor: pointer;
-}
-.app-floors button:hover {
-  border-color: var(--hover);
-}
-.app-floors button:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 1px;
-}
-.app-floors button.on {
-  border-color: var(--accent);
-  color: #fff;
-}
-.app-decks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 6px;
-}
 /* The Key board's pins, on the GM's map only: a number or letter in a small white disc, its label on hover. */
 .app-pin {
   position: absolute;

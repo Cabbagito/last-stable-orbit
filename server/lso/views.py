@@ -108,12 +108,11 @@ def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer, o
         "cameras": {
             "switch": d.cameras.switch,
             "color": d.cameras.color,
-            "cones": [{"mood": c.mood, "z": c.z, "pts": d.cameras.polygon(c)} for c in d.cameras.cones],
+            "cones": [{"mood": c.mood, "pts": d.cameras.polygon(c)} for c in d.cameras.cones],
         }
         if d.cameras
         else None,
         "feed": d.feed.model_dump() if d.feed else None,
-        "floors": [f.model_dump() for f in d.floors],
         "mood": ms.mood if ms else d.moods[0].id,
         "values": dict(ms.switches) if ms else {},
         "objects": _objects_view(state, content, d, ms, viewer, open_),
@@ -268,6 +267,7 @@ def _station_view(state: GameState, content: Content, viewer: Viewer) -> dict | 
         m = content.maps[p.map]
         v = {
             "id": p.map,
+            "also": p.also,
             "name": p.name if known or not p.dark_name else p.dark_name,
             "where": p.where,
             "blurb": p.blurb,
@@ -281,10 +281,11 @@ def _station_view(state: GameState, content: Content, viewer: Viewer) -> dict | 
         places.append(v)
     crew = []
     for t in state.tokens.values():
-        if t.kind != "crew" or t.map not in {p.map for p in st.places}:
+        place = st.place_of(t.map) if t.kind == "crew" else None
+        if not place:
             continue
-        if gm or (not t.hidden and t.map in lit):
-            crew.append({"char": t.ref, "map": t.map} | ({"hidden": t.hidden} if gm else {}))
+        if gm or (not t.hidden and place.map in lit):
+            crew.append({"char": t.ref, "map": place.map} | ({"hidden": t.hidden} if gm else {}))
     order = list(content.characters)
     crew.sort(key=lambda c: order.index(c["char"]))
     labels = [x.model_dump() for x in st.labels]
@@ -471,10 +472,10 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
 def _place_name(state: GameState, content: Content, map_id: str, viewer: Viewer) -> str:
     """A map's name, as the Station tells it: a dark place keeps its dark name for anyone but the GM."""
     name = content.maps[map_id].name
-    if viewer.is_gm or not content.station or map_id in state.station:
+    p = content.station.place_of(map_id) if content.station else None
+    if viewer.is_gm or not p or p.map in state.station:
         return name
-    p = next((p for p in content.station.places if p.map == map_id), None)
-    return p.dark_name if p and p.dark_name else name
+    return p.dark_name or name
 
 
 def _fights_view(state: GameState, content: Content, viewer: Viewer, here: str) -> list[dict]:
