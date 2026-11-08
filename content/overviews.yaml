@@ -89,3 +89,14 @@
       title: [OF COURSE!, "I'LL COME BACK LATER."]
       button: BYE
       toast: Not now. It will come back.
+
+# From the Mini-golf canvas (https://claude.ai/artifact/LdXDGzq7yTFWV4s13G5h3y), its "drag to putt" board.
+# One putt on deck 9, just for fun: nothing comes back to the GM. Send it to each player who's there for it.
+- id: golf
+  name: Mini-golf
+  golf:
+    header: OVERVIEW · DECK 9 · THE BOARD'S GREEN
+    well: gentle  # the cup's pull: off, gentle or strong (the easy mode)
+    sweeper: true
+    turnstile: true
+    curve: true

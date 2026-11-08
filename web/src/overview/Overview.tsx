@@ -1,9 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import { send, useGame } from '../store/game'
-import type { OverviewView, Survey, SurveyEnding, SurveyQuestion } from '../types'
+import type { OverviewView, Survey, SurveyEnding, SurveyOverview, SurveyQuestion } from '../types'
+import { Green } from './Green'
 import { answered, sentIn, type Answers } from './survey'
 
 const BOX = 900 // the device art is drawn into a 900 x 900 box (3x its pixels)
+const GOLF = { w: 1184, h: 770 } // the green with its header and readouts; matches .ov-dev.gf
 const RISE = 450 // ms the device takes to sink away
 const SUBMIT = 1700 // ms of SUBMITTING before the verdict
 const TOAST = 9000 // ms the last report stays on the map
@@ -46,7 +48,8 @@ export function OverviewLayer() {
   useLayoutEffect(() => {
     const el = box.current
     if (!el) return
-    const fit = () => setK(Math.min(1, (el.clientHeight - 16) / BOX, (el.clientWidth - 16) / BOX))
+    const { w, h } = held?.golf ? GOLF : { w: BOX, h: BOX }
+    const fit = () => setK(Math.min(1, (el.clientHeight - 16) / h, (el.clientWidth - 16) / w))
     fit()
     const ro = new ResizeObserver(fit)
     ro.observe(el)
@@ -66,9 +69,15 @@ export function OverviewLayer() {
       {held && (
         <div ref={box} className={'ov-layer' + (open ? ' open' : '')} aria-hidden={!open}>
           <div className="ov-veil" />
-          <div className="ov-dev" style={{ '--ov-k': k } as CSSProperties} role="dialog" aria-label={held.name} aria-modal="false">
-            <Screen key={held.id} o={held} onClose={(end) => close(held, end)} />
-            <img className="ov-bot" src={held.device} alt="" draggable={false} />
+          <div className={'ov-dev' + (held.golf ? ' gf-dev' : '')} style={{ '--ov-k': k } as CSSProperties} role="dialog" aria-label={held.name} aria-modal="false">
+            {held.golf ? (
+              <Green key={held.id} green={held.golf} onClose={() => close(held, null)} />
+            ) : (
+              <>
+                <Screen key={held.id} o={held} onClose={(end) => close(held, end)} />
+                <img className="ov-bot" src={held.device} alt="" draggable={false} />
+              </>
+            )}
           </div>
         </div>
       )}
@@ -83,7 +92,7 @@ export function OverviewLayer() {
 }
 
 /** The CRT in the device's face: the survey's pages, one at a time. */
-function Screen({ o, onClose }: { o: OverviewView; onClose: (end: SurveyEnding | null) => void }) {
+function Screen({ o, onClose }: { o: SurveyOverview; onClose: (end: SurveyEnding | null) => void }) {
   const s = o.survey
   const [page, setPage] = useState<Page>({ k: 'intro' })
   const [a, setA] = useState<Answers>({})

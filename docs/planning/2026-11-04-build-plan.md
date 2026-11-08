@@ -19,6 +19,7 @@
 | Always the TV | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV) on a copy of the saved game; see "Changed 2026-11-06: the TV is always there" in Stage. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | Events: the Satisfaction Report | **Built** 2026-11-08 and checked on :8071 with two seats (the GM and Marlo); see "Events" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | The slots | **Built** 2026-11-08 and checked on :8071 with six seats (the GM, Tally, three more at the machines and the TV); see "The slots" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
+| Events: mini-golf | **Built** 2026-11-08 and checked on a copy on :8072 with two seats (the GM and Marlo); see "Events" below. Sent from the GM tab until the top executive floor's map brings its object. Not deployed yet |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -112,7 +113,8 @@
 - **On the player's screen** the map dims and the service droid rises over it, its face a CRT survey; the sheet stays clear. A player on the Station or Codex tab is moved to the Scene. Closing it leaves a "Last report" line on the map for 9 s.
 - **Nothing comes back:** the answers and the verdict stay on the player's screen, and the log only records that it was sent and closed. Other players and the TV never hear of it (leak tests in `test_overviews.py`).
 - **The survey is content** (`content/overviews.yaml`): its pages, points and endings, scored on the player's screen (`web/src/overview/survey.ts`, tested against the canvas's examples). The droid art and the screen mask came inlined in the canvas's page, so the manifest lists them with no asset id.
-- **Not built yet:** sending one from an object's card, mini-golf and probe, and the canvas's later captcha.
+- **Mini-golf** (from the Mini-golf canvas, https://claude.ai/artifact/LdXDGzq7yTFWV4s13G5h3y, its "drag to putt" board) is the second event: the green rises over the map instead of the droid. Everything the canvas's proposal marks as added (the sweeper, the turnstile, the cup's pull) and the curve are switches in `content/overviews.yaml`. It's one shot, as the proposal says, so the canvas's "click to play again" closes it instead; the GM sends it again for another go. The game runs on the player's screen (`web/src/overview/golf.ts`, tested), and nothing about the putt comes back.
+- **Not built yet:** sending one from an object's card (mini-golf goes on the top executive floor's object once that map is in), probe, and the canvas's later captcha.
 
 **The slots** (2026-11-08, from the Slots canvas, https://claude.ai/artifact/EPiC8wXsHQy7o5to3Rd8kj):
 - **Sitting down:** a map object marked `game: slots` has seat pips and PLAY on its card. Four seats, one each. A player has to be on that map and the GM has to have shown the machines. A fifth sees WAIT FOR A SEAT. Anyone who can see the card sees how many seats are taken, never who.

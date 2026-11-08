@@ -424,18 +424,41 @@ export interface Survey {
   later: SurveyEnding | null
 }
 
-/** An overview the GM sent to this player: a device over the map with a live screen in its face. */
-export interface OverviewView {
+/** Mini-golf's switches. The game plays out on the player's screen. */
+export interface GolfGreen {
+  header: string
+  well: 'off' | 'gentle' | 'strong' // how hard the green pulls toward the cup
+  sweeper: boolean
+  turnstile: boolean
+  curve: boolean
+}
+
+interface OverviewBase {
   id: string // this sending
   kind: string
   name: string
-  device: string
-  screen: [number, number, number, number] // left, top, width, height in the device's 900 x 900 box
   mask: string | null
   tint: 'amber' | 'violet' | 'paper'
   burns: boolean
-  survey: Survey
 }
+
+/** A survey on a device over the map, with a live screen in its face. */
+export interface SurveyOverview extends OverviewBase {
+  device: string
+  screen: [number, number, number, number] // left, top, width, height in the device's 900 x 900 box
+  survey: Survey
+  golf: null
+}
+
+export interface GolfOverview extends OverviewBase {
+  device: null
+  screen: null
+  survey: null
+  golf: GolfGreen
+}
+
+/** An overview the GM sent to this player. */
+export type OverviewView = SurveyOverview | GolfOverview
 
 export type CodexSec = 'chars' | 'items' | 'world' | 'lore' | 'rules'
 

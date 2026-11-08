@@ -66,7 +66,10 @@ async def test_nobody_else_hears_of_it(engine):
 async def test_the_gm_sees_what_can_be_sent_and_whose_screen_has_one_open(engine):
     v = view(engine, GM)
     assert v["overview"] is None
-    assert v["overviews"] == {"games": [{"id": "satisfaction", "name": "Satisfaction Report"}], "open": {}}
+    assert v["overviews"] == {
+        "games": [{"id": "satisfaction", "name": "Satisfaction Report"}, {"id": "golf", "name": "Mini-golf"}],
+        "open": {},
+    }
     await ok(engine, GM, "gm.overview.send", {"overview": "satisfaction", "chars": ["ves"]})
     assert list(view(engine, GM)["overviews"]["open"]) == ["ves"]
 
@@ -126,6 +129,38 @@ def test_a_survey_can_only_be_walked_away_from_with_a_page_for_it(content):
     raw["survey"]["later"] = None
     with pytest.raises(ValueError):
         Overview.model_validate(raw)
+
+
+async def test_mini_golf_opens_only_on_the_screen_it_was_sent_to(engine):
+    await ok(engine, GM, "gm.overview.send", {"overview": "golf", "chars": ["tally"]})
+    o = view(engine, TALLY)["overview"]
+    assert o["kind"] == "golf" and o["golf"]["well"] == "gentle" and o["survey"] is None and o["device"] is None
+    for who in (MARLO, VES, STAGE):
+        v = view(engine, who)
+        assert v["overview"] is None and "THE BOARD'S GREEN" not in str(v)
+    assert "THE BOARD'S GREEN" not in str(view(engine, GM))  # just its name, and whose screen it's on
+    assert view(engine, GM)["overviews"]["open"]["tally"]["kind"] == "golf"
+
+
+async def test_nothing_about_the_putt_comes_back(engine):
+    await ok(engine, GM, "gm.overview.send", {"overview": "golf", "chars": ["ves"]})
+    oid = view(engine, VES)["overview"]["id"]
+    await ok(engine, VES, "overview.close", {"id": oid, "result": "in"})
+    logged = [e for e in engine.store.events() if e[1] == "overview.closed"]
+    assert [json.loads(e[2]) for e in logged] == [{"char": "ves"}]
+
+
+def test_an_overview_is_a_survey_or_a_green_not_both(content):
+    from lso.models import Overview
+
+    survey = content.overviews["satisfaction"].model_dump()
+    green = content.overviews["golf"].model_dump()
+    with pytest.raises(ValueError):
+        Overview.model_validate({**survey, "golf": green["golf"]})
+    with pytest.raises(ValueError):
+        Overview.model_validate({**green, "golf": None})
+    with pytest.raises(ValueError):
+        Overview.model_validate({**survey, "device": None})
 
 
 def test_the_droid_reaches_only_whoever_has_it_open(client, seat):

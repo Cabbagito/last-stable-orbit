@@ -11,6 +11,26 @@
 .ov-layer.open .ov-dev{opacity:1;transform:translateX(-50%) scale(var(--ov-k,1))}
 .ov-bot{position:absolute;inset:0;width:900px;height:900px;image-rendering:pixelated;pointer-events:none;z-index:3;user-select:none}
 
+/* Mini-golf (the Mini-golf canvas): the green is 1152 x 648, a 384 x 216 canvas at 3x, with a sharper one for the controls */
+.ov-dev.gf-dev{width:1184px;height:770px;top:calc(50% - 385px*var(--ov-k,1));box-sizing:border-box;padding:16px;background:#000;display:flex;flex-direction:column;gap:14px;color:#e7e9ec;font-family:'Hanken Grotesk',system-ui,sans-serif}
+.gf-top{display:flex;align-items:baseline;justify-content:space-between;gap:24px;font-family:'Michroma','Arial Narrow',sans-serif;font-size:11px;letter-spacing:.18em;color:#8a8e96}
+.gf-top .pink{color:#ff7dbb}
+.gf-green{position:relative;width:1152px;height:648px;flex-shrink:0;outline:1px solid #1e2024}
+.gf-room{display:block;width:1152px;height:648px;image-rendering:pixelated;touch-action:none;user-select:none}
+.gf-controls{position:absolute;left:0;top:0;width:1152px;height:648px;pointer-events:none}
+.gf-hint{position:absolute;left:20px;top:16px;font-family:'VT323','Courier New',monospace;font-size:26px;line-height:1;color:#ff7dbb;pointer-events:none}
+.gf-hint.plain{color:#e7e9ec}
+.gf-end{position:absolute;left:0;right:0;top:236px;padding:18px 0 22px;background:rgba(0,0,0,.72);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;font-family:'VT323','Courier New',monospace}
+.gf-result{font-size:88px;line-height:1;letter-spacing:.04em;color:#e7e9ec}
+.gf-result.pink{color:#ff7dbb}
+.gf-detail{font-size:32px;line-height:1;color:#e7e9ec}
+.gf-close{all:unset;pointer-events:auto;cursor:pointer;font-size:24px;line-height:1;color:#8a8e96;margin-top:10px;padding:2px 8px}
+.gf-close:hover{color:#e7e9ec}
+.gf-close:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.gf-read{display:flex;align-items:center;gap:40px;min-height:44px}
+.gf-lab{font-family:'Michroma','Arial Narrow',sans-serif;font-size:9px;letter-spacing:.16em;color:#8a8e96}
+.gf-lab span{font-family:'VT323','Courier New',monospace;font-size:26px;letter-spacing:.02em;color:#e7e9ec;margin-left:8px}
+
 .ov-toast{position:absolute;left:16px;bottom:104px;z-index:8;border:1px solid #1e2024;background:#000;padding:12px 16px;display:flex;flex-direction:column;gap:4px;animation:ov-toast 9s ease forwards;pointer-events:none}
 .ov-toast b{font-family:'Michroma',sans-serif;font-weight:400;font-size:8px;letter-spacing:.18em;color:var(--dim)}
 .ov-toast span{color:#e7e9ec;font-size:13.5px}

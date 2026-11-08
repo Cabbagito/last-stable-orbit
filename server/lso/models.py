@@ -559,23 +559,39 @@ class Survey(Strict):
     later: SurveyEnding | None = None  # the decline's page; needed with intro.decline
 
 
+class GolfGreen(Strict):
+    """The mini-golf green. The game plays out on the player's screen; these are its switches."""
+
+    header: str
+    well: Literal["off", "gentle", "strong"] = "gentle"  # how hard the green pulls toward the cup
+    sweeper: bool = True  # the groundskeeping bot
+    turnstile: bool = True
+    curve: bool = True  # dragging sideways bends the putt
+
+
 class Overview(Strict):
-    """A little game the GM sends to players' screens: a device rises over the map with a live screen in its face.
+    """A little game the GM sends to players' screens, over the map: a survey on a device's live screen, or a green.
     The verdict shows on the player's own screen only; nothing comes back to the GM."""
 
     id: str
     name: str
-    device: str  # the art, drawn at 3x over a 900 x 900 box; the screen shows through its face
-    screen: tuple[int, int, int, int]  # where the screen sits in that box: left, top, width, height
+    device: str | None = None  # a survey's art, drawn at 3x over a 900 x 900 box; the screen shows through its face
+    screen: tuple[int, int, int, int] | None = None  # where the screen sits in that box: left, top, width, height
     mask: str | None = None  # the screen's shape, an alpha mask stretched over it
     tint: Literal["amber", "violet", "paper"] = "amber"
     burns: bool = False  # cigar burns on the glass
-    survey: Survey
+    survey: Survey | None = None
+    golf: GolfGreen | None = None
 
     @model_validator(mode="after")
-    def _walk_away(self) -> "Overview":
-        if bool(self.survey.intro.decline) != bool(self.survey.later):
-            raise ValueError(f"overview {self.id}: intro.decline and the later page go together")
+    def _one_game(self) -> "Overview":
+        if bool(self.survey) == bool(self.golf):
+            raise ValueError(f"overview {self.id}: needs a survey or a green, not both")
+        if self.survey:
+            if not self.device or not self.screen:
+                raise ValueError(f"overview {self.id}: a survey needs its device and screen")
+            if bool(self.survey.intro.decline) != bool(self.survey.later):
+                raise ValueError(f"overview {self.id}: intro.decline and the later page go together")
         return self
 
 
