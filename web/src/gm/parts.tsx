@@ -38,15 +38,36 @@ export function Diamond() {
 }
 
 /** − value + for HP or Entropy. `label` is shown beside it only when `showLabel`. */
-export function Step({ who, label, value, max, tone, onChange, showLabel = true }: { who: string; label: 'HP' | 'EN'; value: number; max: number; tone: 'hp' | 'en'; onChange: (v: number) => void; showLabel?: boolean }) {
+export function Step({ who, label, value, max, tone, onChange, showLabel = true, showMax = false }: { who: string; label: 'HP' | 'EN'; value: number; max: number; tone: 'hp' | 'en'; onChange: (v: number) => void; showLabel?: boolean; showMax?: boolean }) {
   return (
     <div className="r10-step" role="group" aria-label={`${who} ${label}`}>
       {showLabel && <span className="r4-lab">{label}</span>}
       <button type="button" className="r10-sq" aria-label={`${who} ${label} down`} disabled={value <= 0} onClick={() => onChange(value - 1)}>
         −
       </button>
-      <span className={`r10-num r9-${tone}`}>{value}</span>
+      <span className={`r10-num r9-${tone}`}>
+        {value}
+        {showMax && <span className="gx-max">/{max}</span>}
+      </span>
       <button type="button" className="r10-sq" aria-label={`${who} ${label} up`} disabled={value >= max} onClick={() => onChange(value + 1)}>
+        +
+      </button>
+    </div>
+  )
+}
+
+/** The column's stepper: quiet until its row is hovered, and never hidden. `max` beside the value when `showMax`. */
+export function MiniStep({ who, label, value, max, tone, onChange, showMax = false }: { who: string; label: string; value: number; max: number; tone: 'hp' | 'en'; onChange: (v: number) => void; showMax?: boolean }) {
+  return (
+    <div className="gx-step" role="group" aria-label={`${who} ${label}`}>
+      <button type="button" aria-label={`${who} ${label} down`} disabled={value <= 0} onClick={() => onChange(value - 1)}>
+        −
+      </button>
+      <span className={`r10-num r9-${tone}`}>
+        {value}
+        {showMax && <span className="gx-max">/{max}</span>}
+      </span>
+      <button type="button" aria-label={`${who} ${label} up`} disabled={value >= max} onClick={() => onChange(value + 1)}>
         +
       </button>
     </div>

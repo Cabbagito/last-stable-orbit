@@ -59,7 +59,8 @@ class Hub:
             log.debug("send to %s failed", c.viewer.seat)
 
     async def send_view(self, c: Conn, force: bool = False) -> None:
-        view = project(self.engine.state, self.engine.content, c.viewer, frozenset(self.online()), self.join)
+        online = self.online() | ({"stage"} if self.engine.fake_tv else set())  # the Bench's pretend TV
+        view = project(self.engine.state, self.engine.content, c.viewer, frozenset(online), self.join, self.engine.bench_view())
         body = _dump(view)
         h = hashlib.sha256(body.encode()).hexdigest()
         if h == c.last_hash and not force:

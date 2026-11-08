@@ -3,13 +3,15 @@
 # Dax amber, ISCO's side white-violet, ordinary residents dusk grey.
 # codex names the NPC's Codex entry (content/codex.yaml); the card shows a Codex button once that entry is unlocked.
 # stats: the die for each stat, like the crew's. The GM rolls an NPC by stat. Only the GM ever sees them.
-# health: shown only as its HP ring, while it's in a fight (M8). The enemies' come from the bible; the rest are drafts.
+# group: where it sits in the GM's Add list (in the order the groups first appear below). DRAFTS for Peter.
+# health: players see it only as its HP ring, while it's in a fight (M8). The GM can set it any time. The enemies' come from the bible; the rest are drafts.
 # The dice are DRAFTS from Round 12 of the UI canvas, for Peter to set.
 # A line marked DRAFT is wording that isn't in the Campaign Bible, for Peter to edit.
 
 - id: dax
   name: Old Dax
   role: Barkeep
+  group: Locals
   portrait: portraits/dax.gif
   color: "#f2b544"
   stats: {body: 12, reflex: 6, tech: 6, intel: 10, cool: 20, empathy: 8}
@@ -22,6 +24,7 @@
 - id: fixer
   name: Lucan Merrow
   role: The Fixer
+  group: Muscle
   portrait: portraits/fixer.gif
   color: "#ff5a4a"
   stats: {body: 12, reflex: 10, tech: 12, intel: 12, cool: 20, empathy: 4}
@@ -34,6 +37,7 @@
 - id: cleaner-14
   name: Unit 14
   role: The Cleaner
+  group: ISCO
   portrait: portraits/cleaner-14.gif
   codex: unit-14
   color: "#c9bcff"
@@ -46,6 +50,7 @@
 - id: slot-regular
   name: Slot regular
   role: Resident
+  group: Locals
   portrait: portraits/slot-regular.gif
   color: "#c9bcff"
   stats: {body: 4, reflex: 6, tech: 4, intel: 6, cool: 12, empathy: 6}
@@ -57,6 +62,7 @@
 - id: happy-resident
   name: Happy resident
   role: Resident
+  group: Locals
   portrait: portraits/happy-resident.gif
   color: "#a9a2bc"
   stats: {body: 6, reflex: 6, tech: 4, intel: 6, cool: 8, empathy: 12}
@@ -67,6 +73,7 @@
 - id: service-droid
   name: Service droid
   role: Staff, ISCO
+  group: ISCO
   portrait: portraits/service-droid.gif
   color: "#c9bcff"
   stats: {body: 8, reflex: 8, tech: 12, intel: 8, cool: 10, empathy: 6}
@@ -77,6 +84,7 @@
 - id: hired-gun
   name: Hired gun
   role: Muscle
+  group: Muscle
   portrait: portraits/hired-gun.gif
   color: "#ff5a4a"
   stats: {body: 12, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}
@@ -89,6 +97,7 @@
 - id: dock-clerk
   name: Dock 7 clerk
   role: Clerk, ISCO
+  group: ISCO
   portrait: portraits/dock-clerk.gif
   codex: dock-clerk
   color: "#c9bcff"
@@ -101,6 +110,7 @@
 - id: concierge
   name: The Concierge
   role: Station helper, ISCO
+  group: ISCO
   portrait: portraits/concierge.gif
   codex: concierge
   color: "#c9bcff"
@@ -113,6 +123,7 @@
 - id: steward
   name: Patience steward
   role: Steward
+  group: Locals
   portrait: portraits/steward.gif
   codex: steward
   color: "#8f88a3"
@@ -125,6 +136,7 @@
 - id: vendor
   name: Night Market vendor
   role: Vendor
+  group: Locals
   portrait: portraits/vendor.gif
   codex: vendor
   color: "#8f88a3"
@@ -137,6 +149,7 @@
 - id: nurse
   name: Med Bay nurse
   role: Nurse, ISCO
+  group: ISCO
   portrait: portraits/nurse.gif
   codex: nurse
   color: "#c9bcff"
@@ -149,6 +162,7 @@
 - id: guard
   name: Security guard
   role: Guard, the company
+  group: The company
   portrait: portraits/guard.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
@@ -160,6 +174,7 @@
 - id: cleaner-bot
   name: Cleaner bot
   role: Cleaner, ISCO
+  group: ISCO
   portrait: portraits/cleaner-14.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
@@ -172,6 +187,7 @@
 - id: scientist
   name: Dr. Irena Vos
   role: The Analyst
+  group: The company
   portrait: portraits/scientist.gif
   codex: scientist
   color: "#f2b544"
@@ -184,6 +200,7 @@
 - id: spider-mech
   name: Spider mech
   role: Security, the company
+  group: The company
   portrait: portraits/spider-mech.gif
   color: "#7fb4ff"
   size: 2
@@ -198,6 +215,7 @@
 - id: ahti
   name: Ahti
   role: The Janitor
+  group: Locals
   portrait: portraits/steward.gif  # STAND-IN
   codex: ahti
   color: "#8f88a3"
@@ -209,6 +227,7 @@
 - id: static
   name: Static Kováč
   role: The Ex
+  group: Locals
   portrait: portraits/hired-gun.gif  # STAND-IN
   codex: static
   color: "#8f88a3"
@@ -220,6 +239,7 @@
 - id: gumshoe
   name: The Gumshoe
   role: ""  # the bible leaves it open: The Detective, The Snooper or The Investigator
+  group: Locals
   portrait: portraits/vendor.gif  # STAND-IN
   codex: gumshoe
   color: "#8f88a3"
@@ -231,6 +251,7 @@
 - id: head-of-security
   name: Head of security
   role: The company
+  group: The company
   portrait: portraits/guard.gif  # STAND-IN
   color: "#7fb4ff"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder

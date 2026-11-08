@@ -29,7 +29,7 @@ export function Station() {
   const open = (p: StationPlaceView) => {
     if (isGm) {
       setGmMap(p.id)
-      location.hash = 'scene'
+      location.hash = `scene/${p.id}`
     } else setLook(p.id)
   }
   const lookAt = look ? byId[look] : null

@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, Overview, Preset, PresetItem, SlotsGame, Station
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, Overview, Preset, PresetItem, Scenario, SlotsGame, Station
 
 log = logging.getLogger("lso.content")
 
@@ -25,6 +25,8 @@ class Content:
     items: dict[str, Item] = field(default_factory=dict)
     maps: dict[str, MapDef] = field(default_factory=dict)
     presets: dict[str, Preset] = field(default_factory=dict)
+    scenarios: dict[str, Scenario] = field(default_factory=dict)  # the sandbox's setups to test from
+    map_groups: list[MapGroup] = field(default_factory=list)  # the GM's map picker
     insults: dict[str, list[str]] = field(default_factory=dict)  # "any" plus one pool per stat
     cutscenes: dict[str, Cutscene] = field(default_factory=dict)  # in the order the GM will use them
     codex: dict[str, CodexEntry] = field(default_factory=dict)  # in reading order within each section
@@ -79,6 +81,10 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
     for p in sorted((content_dir / "presets").glob("*.yaml")):
         pr = _parse(Preset, _read(p), f"presets/{p.name}")
         c.presets[pr.id] = pr
+    for p in sorted((content_dir / "scenarios").glob("*.yaml")):
+        sc = _parse(Scenario, _read(p), f"scenarios/{p.name}")
+        c.scenarios[sc.id] = sc
+    c.map_groups = [_parse(MapGroup, g, "map_groups.yaml") for g in _read(content_dir / "map_groups.yaml")]
     cut = content_dir / "cutscenes.yaml"
     c.cutscenes = _by_id(Cutscene, _read(cut), "cutscenes.yaml") if cut.is_file() else {}
     cdx = content_dir / "codex.yaml"
@@ -134,7 +140,7 @@ def check_refs(c: Content) -> None:
         problems += [f"slots: unknown audit character {a!r}" for a in c.slots.audit if a not in c.characters]
     if not c.slots:
         problems += [f"map {m.id}: object {o.id} is a game, but there's no slots.yaml" for m in c.maps.values() for o in m.objects if o.game]
-    for pr in c.presets.values():
+    for pr in (*c.presets.values(), *c.scenarios.values()):
         where = f"preset {pr.id}"
         if pr.party_map not in c.maps:
             problems.append(f"{where}: unknown party_map {pr.party_map!r}")
@@ -198,11 +204,15 @@ def check_refs(c: Content) -> None:
                 problems.append(f"{where}: bad switch {st.map}.{sw}={val}")
         problems += [f"{where}: token ref {t.ref!r} is not an NPC" for t in st.tokens if t.ref not in c.npcs]
         problems += [f"{where}: token id {t.id!r} is a crew member's" for t in st.tokens if t.id in c.characters]
+    listed = [e.map for g in c.map_groups for e in g.entries()]
+    problems += [f"map_groups.yaml: unknown map {m!r}" for m in listed if m not in c.maps]
+    problems += [f"map_groups.yaml: {m} is listed twice" for m in set(listed) if listed.count(m) > 1]
+    problems += [f"map_groups.yaml: {m} isn't listed" for m in c.maps if m not in listed]
     problems += _codex_problems(c)
     if c.station:
         problems += [f"station.yaml: unknown map {p.map!r}" for p in c.station.places if p.map not in c.maps]
     places = {p.map for p in c.station.places} if c.station else set()
-    for pr in c.presets.values():
+    for pr in (*c.presets.values(), *c.scenarios.values()):
         problems += [f"preset {pr.id}: station {m!r} isn't a place on the Station" for m in pr.station if m not in places]
     if problems:
         raise ContentError("content references are broken:\n  " + "\n  ".join(problems))

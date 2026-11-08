@@ -1,134 +1,155 @@
-import { useEffect, useState } from 'react'
-import { GiveRow, Pocket, Step, Diamond, Eye, ENTROPY_MAX, itemAria } from '../gm/parts'
-import { CamerasButton, liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
-import { MiniMap } from '../gm/MiniMap'
-import { SendCrew, mapList } from '../gm/SendCrew'
-import { ViewAs } from '../gm/ViewAs'
+import { useEffect, useState, type DragEvent } from 'react'
+import { Bench, Seats } from '../gm/Bench'
 import { CodexSection } from '../gm/CodexSection'
-import { CutscenesSection, TvSection } from '../gm/StageSections'
 import { EventsSection } from '../gm/EventsSection'
+import { CamerasButton, liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
+import { crewFaces, isFar, moodArt } from '../gm/mapTiles'
+import { Diamond, Eye, GIVE_COUNTED, Pocket, itemAria } from '../gm/parts'
+import { SendCrew } from '../gm/SendCrew'
+import { CutscenesSection, JoinSection, TvSection } from '../gm/StageSections'
+import { ViewAs } from '../gm/ViewAs'
+import { useItemTip, type TipBind } from '../inspect/ItemTip'
 import { ring } from '../lib/ring'
 import { RingPortrait } from '../shell/RingPortrait'
-import { useItemTip, type TipBind } from '../inspect/ItemTip'
 import { gmRun, useGame } from '../store/game'
-import type { CrewMember, InvEntry, View } from '../types'
+import type { CrewMember, InvEntry, Item, MapView, View } from '../types'
 
-type Section = 'crew' | 'cut' | 'events' | 'tv' | 'maps' | 'codex' | 'session'
+type Section = 'pockets' | 'show' | 'maps' | 'codex' | 'session' | 'bench' | 'seats'
 
-const SECTIONS: [Section, string, string?][] = [
-  ['crew', 'Crew and pockets'],
-  ['cut', 'Cutscenes'],
-  ['events', 'Events'],
-  ['tv', 'The TV'],
+const SECTIONS: [Section, string][] = [
+  ['pockets', 'Pockets'],
+  ['show', 'On screen'],
   ['maps', 'Maps'],
   ['codex', 'Codex'],
   ['session', 'Session'],
 ]
+const SANDBOX: [Section, string][] = [
+  ['bench', 'Bench'],
+  ['seats', 'Seats'],
+]
 
-/**
- * The GM tab (Round 12, board R12TabCrew): what you do between scenes. A section nav on the left; the crew's
- * HP, Entropy and every pocket; every map's mood, switches and things; New session and presets; and a
- * read-only look at any player's screen; the cue list; and the TV: whether it's connected, and its camera.
- */
+/** `#gm/maps`: the section is in the URL, so a reload keeps your place. */
+function useSection(all: [Section, string][]): Section {
+  const read = () => {
+    const s = location.hash.slice(1).split('/')[1] as Section
+    return all.some(([id]) => id === s) ? s : 'pockets'
+  }
+  const [section, setSection] = useState(read)
+  useEffect(() => {
+    const on = () => setSection(read())
+    window.addEventListener('hashchange', on)
+    return () => window.removeEventListener('hashchange', on)
+  })
+  return section
+}
+
+/** The GM tab: what you do between scenes, five short pages (and in the sandbox, the Bench). */
 export function GmTab() {
   const view = useGame((s) => s.view)
   const gmError = useGame((s) => s.gmError)
-  const [section, setSection] = useState<Section>('crew')
+  const all = view?.bench ? [...SECTIONS, ...SANDBOX] : SECTIONS
+  const section = useSection(all)
   const [viewAs, setViewAs] = useState<string | null>(null)
   if (!view) return <div className="app-body app-wait">Docking…</div>
   const seeing = viewAs ? view.crew.find((c) => c.id === viewAs) : undefined
 
   return (
-    <div className="r12-tab">
-      <nav className="r10-nav" aria-label="GM tab">
-        <div className="r5-sec">GM tab</div>
-        <div className="r5-rows">
-          {SECTIONS.map(([id, name, later]) => (
-            <button key={id} type="button" className={'r10-seat r10-wnav' + (section === id ? ' on' : '')} aria-pressed={section === id} onClick={() => setSection(id)}>
-              <span>{name}</span>
-              {later && <span className="r10-dimtxt">{later}</span>}
-            </button>
+    <div className="gx-tab">
+      <div className="gx-subrow">
+        <nav className="r10-mood gx-sub" aria-label="GM tab">
+          {all.map(([id, name]) => (
+            <a key={id} className={section === id ? 'on' : ''} aria-current={section === id ? 'page' : undefined} href={`#gm/${id}`}>
+              {name}
+            </a>
           ))}
-        </div>
+        </nav>
         {gmError && (
-          <div className="app-error" role="alert" style={{ marginTop: 10 }}>
+          <div className="app-error" role="alert">
             {gmError}
           </div>
         )}
-      </nav>
-      <div className="r12-main">
-        {section === 'crew' && <CrewSection view={view} onView={setViewAs} />}
+      </div>
+      <div className="gx-body">
+        {section === 'pockets' && <PocketsSection view={view} onView={setViewAs} />}
+        {section === 'show' && <OnScreen view={view} />}
         {section === 'maps' && <MapsSection view={view} />}
         {section === 'codex' && <CodexSection view={view} />}
         {section === 'session' && <SessionSection view={view} />}
-        {section === 'cut' && <CutscenesSection view={view} />}
-        {section === 'events' && <EventsSection view={view} />}
-        {section === 'tv' && <TvSection view={view} />}
+        {section === 'bench' && view.bench && <Bench view={view} bench={view.bench} />}
+        {section === 'seats' && view.bench && <Seats view={view} />}
       </div>
       {seeing && <ViewAs who={seeing} onClose={() => setViewAs(null)} />}
     </div>
   )
 }
 
-type Carry = { holder: string; uid: string } | null
+/** What you're holding: something from a pocket, or something off the shelf. */
+type Carry = { holder: string; uid: string } | { item: string } | null
+const DRAG_TYPE = 'application/x-lso-item'
 
-function CrewSection({ view, onView }: { view: View; onView: (id: string) => void }) {
+/**
+ * Everyone's pockets, with one shelf of everything there is to hand out above them. Pick something up, then click who
+ * gets it, or drag it onto them.
+ */
+function PocketsSection({ view, onView }: { view: View; onView: (id: string) => void }) {
   const [carry, setCarry] = useState<Carry>(null)
-  const [giveTo, setGiveTo] = useState<string | null>(null)
-  const [over, setOver] = useState<string | null>(null) // the row a dragged item is over
-  const { bind: tip, tip: itemTip } = useItemTip() // each item as its holder sees it
-  const held = (holder: string, uid: string) => (view.inventory[holder] ?? []).find((e) => e.uid === uid)
-  const carried = carry ? held(carry.holder, carry.uid) : undefined
+  const [over, setOver] = useState<string | null>(null)
+  const { bind: tip, tip: itemTip } = useItemTip()
+  const items = view.items ?? []
+  const carriedItem = carry && 'item' in carry ? items.find((i) => i.id === carry.item) : undefined
+  const carriedEntry = carry && 'uid' in carry ? (view.inventory[carry.holder] ?? []).find((e) => e.uid === carry.uid) : undefined
+  const carriedName = carriedItem?.name ?? carriedEntry?.item.name
   useEffect(() => {
-    if (carry && !carried) setCarry(null) // it was taken or moved elsewhere
-  }, [carry, carried])
-  const nameOf = (id: string) => view.crew.find((c) => c.id === id)?.short ?? id
-  const moveTo = (to: string, from: Carry = carry) => {
-    if (from && from.holder !== to) void gmRun('gm.item.move', { holder: from.holder, uid: from.uid, to })
+    if (carry && !carriedName) setCarry(null) // it was taken or moved elsewhere
+  }, [carry, carriedName])
+
+  const hand = (to: string, what: Carry = carry) => {
+    if (what && 'item' in what) {
+      const it = items.find((i) => i.id === what.item)
+      if (it) void gmRun('gm.item.give', it.counted ? { holder: to, item: it.id, count: GIVE_COUNTED } : { holder: to, item: it.id })
+    } else if (what && what.holder !== to) {
+      void gmRun('gm.item.move', { holder: what.holder, uid: what.uid, to })
+    }
     setCarry(null)
   }
-  const line =
-    carry && carried
-      ? `Carrying ${carried.item.name} from ${nameOf(carry.holder)}. Hand it to someone, or click it again to put it back.`
-      : 'Click an item to pick it up, then hand it to someone else, or drag it onto them. The × takes it back.'
+  const line = carriedName ? `Carrying ${carriedName}. Hand it to someone below.` : 'Pick something up, then click who gets it, or drag it onto them. The × takes it back.'
+  const dragProps = (c: CrewMember) => ({
+    onDragOver: (e: DragEvent) => {
+      if (!e.dataTransfer.types.includes(DRAG_TYPE)) return
+      e.preventDefault()
+      setOver(c.id)
+    },
+    onDragLeave: () => setOver((o) => (o === c.id ? null : o)),
+    onDrop: (e: DragEvent) => {
+      e.preventDefault()
+      setOver(null)
+      try {
+        hand(c.id, JSON.parse(e.dataTransfer.getData(DRAG_TYPE)))
+      } catch {
+        /* not one of ours */
+      }
+    },
+  })
 
   return (
-    <section aria-label="Crew and pockets" style={{ minWidth: 0 }}>
-      <div className="r10-h">Crew</div>
-      <div className="r10-hint" style={{ marginTop: 4 }} aria-live="polite">
-        {line}
-      </div>
-      <div className="r10-ctable">
-        <div className="r10-chead">
-          <span className="r5-sec">Who</span>
-          <span className="r5-sec">HP</span>
-          <span className="r5-sec">Entropy</span>
-          <span className="r5-sec">On hand</span>
-          <span />
+    <section aria-label="Pockets">
+      <div className="gx-shelf">
+        <span className="r5-sec">Hand out</span>
+        <div className="r10-give">
+          {items.map((it) => (
+            <ShelfItem key={it.id} it={it} on={!!carry && 'item' in carry && carry.item === it.id} tip={tip} toggle={() => setCarry(carry && 'item' in carry && carry.item === it.id ? null : { item: it.id })} />
+          ))}
         </div>
+        <span className="r10-hint" aria-live="polite">
+          {line}
+        </span>
+      </div>
+      <div className="gx-ptable">
         {view.crew.map((c) => {
-          const items = view.inventory[c.id] ?? []
-          const target = !!carry && carry.holder !== c.id
+          const pockets = view.inventory[c.id] ?? []
+          const target = !!carry && !('holder' in carry && carry.holder === c.id)
           return (
-            <div
-              key={c.id}
-              className={'r10-crow' + (target ? ' target' : '') + (over === c.id ? ' over' : '')}
-              onDragOver={(e) => {
-                if (!e.dataTransfer.types.includes('application/x-lso-item')) return
-                e.preventDefault()
-                setOver(c.id)
-              }}
-              onDragLeave={() => setOver((o) => (o === c.id ? null : o))}
-              onDrop={(e) => {
-                e.preventDefault()
-                setOver(null)
-                try {
-                  moveTo(c.id, JSON.parse(e.dataTransfer.getData('application/x-lso-item')))
-                } catch {
-                  /* not one of ours */
-                }
-              }}
-            >
+            <div key={c.id} className={'gx-prow' + (target ? ' target' : '') + (over === c.id ? ' over' : '')} {...dragProps(c)}>
               <div className="r10-who2">
                 <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 56, 8, c.health)} size={56} />
                 <span style={{ minWidth: 0 }}>
@@ -137,36 +158,22 @@ function CrewSection({ view, onView }: { view: View; onView: (id: string) => voi
                   <span className="r5-role">{c.role}</span>
                 </span>
               </div>
-              <Step who={c.short} label="HP" tone="hp" value={c.hp} max={c.health} showLabel={false} onChange={(hp) => void gmRun('gm.vitals.set', { char: c.id, hp })} />
-              <Step who={c.short} label="EN" tone="en" value={c.entropy} max={ENTROPY_MAX} showLabel={false} onChange={(entropy) => void gmRun('gm.vitals.set', { char: c.id, entropy })} />
               <div className="r10-pkrow" role="group" aria-label={`${c.short}'s pockets`}>
-                {items.map((e) => (
+                {pockets.map((e) => (
                   <CrewPocket key={e.uid} e={e} c={c} carry={carry} setCarry={setCarry} tip={tip} />
                 ))}
-                {items.length === 0 && <span className="r10-dimtxt">Nothing.</span>}
+                {pockets.length === 0 && <span className="r10-dimtxt">Nothing.</span>}
               </div>
               <div className="r10-acts2">
-                {target ? (
-                  <button type="button" className="r10-btn on" onClick={() => moveTo(c.id)}>
+                {target && (
+                  <button type="button" className="r10-btn on" onClick={() => hand(c.id)}>
                     Hand it to {c.short}
                   </button>
-                ) : (
-                  <>
-                    <button type="button" className="r10-btn" aria-expanded={giveTo === c.id} onClick={() => setGiveTo(giveTo === c.id ? null : c.id)}>
-                      {giveTo === c.id ? 'Done' : 'Give'}
-                    </button>
-                    <button type="button" className="r10-btn" aria-label={`See ${c.short}'s screen`} title={`See ${c.short}'s screen`} onClick={() => onView(c.id)}>
-                      <Eye off={false} />
-                    </button>
-                  </>
                 )}
+                <button type="button" className="r10-btn" aria-label={`See ${c.short}'s screen`} title={`See ${c.short}'s screen`} onClick={() => onView(c.id)}>
+                  <Eye off={false} />
+                </button>
               </div>
-              {giveTo === c.id && (
-                <div className="r10-givebar">
-                  <span className="r4-lab">GIVE TO {c.short.toUpperCase()}</span>
-                  <GiveRow to={c} items={view.items ?? []} tip={tip} />
-                </div>
-              )}
             </div>
           )
         })}
@@ -176,9 +183,29 @@ function CrewSection({ view, onView }: { view: View; onView: (id: string) => voi
   )
 }
 
-/** A pocket in the crew table: click to pick it up, drag it onto someone, and type a new amount for credits. */
+function ShelfItem({ it, on, tip, toggle }: { it: Item; on: boolean; tip: TipBind; toggle: () => void }) {
+  return (
+    <button
+      type="button"
+      className={'r10-gv gx-gv' + (on ? ' on' : '')}
+      aria-label={`Pick up ${it.name}` + (it.counted ? `, ${GIVE_COUNTED}` : '')}
+      aria-pressed={on}
+      draggable
+      onDragStart={(ev) => {
+        ev.dataTransfer.setData(DRAG_TYPE, JSON.stringify({ item: it.id }))
+        ev.dataTransfer.effectAllowed = 'copy'
+      }}
+      onClick={toggle}
+      {...tip(`shelf:${it.id}`, it, null, it.counted ? <span className="app-ins-num">+{GIVE_COUNTED}</span> : undefined)}
+    >
+      <img src={it.icon} alt="" className="r3-px" />
+    </button>
+  )
+}
+
+/** A pocket in the table: click to pick it up, drag it onto someone, and type a new amount for credits. */
 function CrewPocket({ e, c, carry, setCarry, tip }: { e: InvEntry; c: CrewMember; carry: Carry; setCarry: (c: Carry) => void; tip: TipBind }) {
-  const on = !!carry && carry.holder === c.id && carry.uid === e.uid
+  const on = !!carry && 'holder' in carry && carry.holder === c.id && carry.uid === e.uid
   return (
     <>
       <Pocket
@@ -195,7 +222,7 @@ function CrewPocket({ e, c, carry, setCarry, tip }: { e: InvEntry; c: CrewMember
             aria-pressed={on}
             draggable
             onDragStart={(ev) => {
-              ev.dataTransfer.setData('application/x-lso-item', JSON.stringify({ holder: c.id, uid: e.uid }))
+              ev.dataTransfer.setData(DRAG_TYPE, JSON.stringify({ holder: c.id, uid: e.uid }))
               ev.dataTransfer.effectAllowed = 'move'
             }}
             onClick={() => setCarry(on ? null : { holder: c.id, uid: e.uid })}
@@ -231,124 +258,116 @@ function CountInput({ value, label, onCommit }: { value: number; label: string; 
   )
 }
 
-/**
- * Every map as it stands right now (Peter, 2026-11-04): a live miniature with its mood, switches, cones and
- * everyone on it (click it to open the map on the Scene), then who's there, its cameras, and its things to
- * inspect. The cards fill the width, two or three across.
- */
-function MapsSection({ view }: { view: View }) {
-  const setGmMap = useGame((s) => s.setGmMap)
-  const crewOrder = view.crew.map((c) => c.id)
+/** Everything you put on people's screens: films, little games, and the TV. */
+function OnScreen({ view }: { view: View }) {
   return (
-    <section className="app-mapsgrid-wrap" aria-label="Maps">
-      <div className="r10-h">Maps</div>
-      <div className="app-mapsgrid">
-        {mapList(view).map((m) => {
-          const sws = liveSwitches(m)
-          const here = Object.values(view.tokens).filter((t) => t.map === m.id)
-          const crew = here.filter((t) => t.kind === 'crew').sort((a, b) => crewOrder.indexOf(a.ref) - crewOrder.indexOf(b.ref))
-          const npcs = here.filter((t) => t.kind === 'npc').sort((a, b) => a.name.localeCompare(b.name))
-          const cams = m.cameras
-          const camsOn = !!cams && (m.values[cams.switch] ?? 0) > 0
-          return (
-            <div key={m.id} className="r10-mapcard">
-              <MiniMap
-                map={m}
-                tokens={here}
-                onOpen={() => {
-                  setGmMap(m.id)
-                  location.hash = 'scene'
-                }}
-              />
-              <div>
-                <div className="r10-cname">{m.name}</div>
-                <div className="r5-role">
-                  {m.subtitle}
-                  {view.party_map === m.id && <span className="r10-dimtxt"> · the party's map</span>}
-                </div>
-                <SendCrew view={view} map={m} />
-              </div>
-              {m.moods.length > 1 && (
-                <div className="r10-mood3" role="group" aria-label={`${m.name}: mood`}>
-                  {m.moods.map((x) => (
-                    <button key={x.id} type="button" className={m.mood === x.id ? 'on' : ''} aria-pressed={m.mood === x.id} onClick={() => void gmRun('gm.map.mood', { map: m.id, mood: x.id })}>
-                      {x.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-              {sws.length > 0 && (
-                <div className="r10-swrow">
-                  {sws.map((sw) => {
-                    const v = m.values[sw.id] ?? 0
-                    return (
-                      <button key={sw.id} type="button" className={'r10-btn' + (v ? ' on' : '')} aria-pressed={v > 0} onClick={() => void pressSwitch(m, sw)}>
-                        {switchLabel(sw, v)}
-                      </button>
-                    )
-                  })}
-                </div>
-              )}
-              {cams && (
-                <div className="app-camrow">
-                  <span className="r4-lab">CAMERAS</span>
-                  <span className="r10-dimtxt">
-                    {cams.cones.filter((c) => c.mood === null || c.mood === m.mood).length} on the walls · {camsOn ? 'everyone sees their cones' : 'cones hidden'}
-                  </span>
-                  <CamerasButton map={m} className="r10-btn" />
-                </div>
-              )}
-              <div>
-                <span className="r4-lab">HERE</span>
-                {here.length ? (
-                  <div className="app-who">
-                    {[...crew, ...npcs].map((t) => (
-                      <span key={t.id} className={'app-whochip' + (t.hidden ? ' off' : '')} title={t.hidden ? `${t.name} (hidden from players)` : t.name}>
-                        <img src={t.portrait} alt="" className="r3-px" style={{ boxShadow: `0 0 0 1.5px ${t.color}` }} />
-                        {t.name}
-                        {t.hidden && <span className="r10-dimtxt"> · hidden</span>}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="r10-dimtxt" style={{ marginTop: 4 }}>
-                    Nobody.
-                  </div>
-                )}
-              </div>
-              {m.objects.length > 0 && (
-                <div>
-                  <span className="r4-lab">THINGS TO INSPECT</span>
-                  <div className="r5-rows" style={{ marginTop: 4 }}>
-                    {m.objects.map((o) => (
-                      <div key={o.id} className={'r5-row r10-hrow' + (o.shown ? '' : ' dim')}>
-                        <Diamond />
-                        <span className="r10-grow">
-                          {o.name}
-                          <span className="r10-dimtxt">{o.shown ? ' · players see it' : ' · hidden'}</span>
-                        </span>
-                        <button
-                          type="button"
-                          className={'r10-ico' + (o.shown ? '' : ' off')}
-                          aria-label={(o.shown ? 'Hide ' : 'Show ') + o.name}
-                          title={(o.shown ? 'Hide ' : 'Show ') + o.name}
-                          onClick={() => void gmRun('gm.object.show', { map: m.id, object: o.id, shown: !o.shown })}
-                        >
-                          <Eye off={!o.shown} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )
-        })}
+    <div className="gx-show">
+      <CutscenesSection view={view} />
+      <div className="gx-showcol">
+        <TvSection view={view} />
+        <EventsSection view={view} />
       </div>
+    </div>
+  )
+}
+
+/** Every map on one page, in the picker's three places: its mood, who's there, and its things and switches a click away. */
+function MapsSection({ view }: { view: View }) {
+  const [open, setOpen] = useState<string | null>(null)
+  return (
+    <section aria-label="Maps">
+      {(view.map_groups ?? []).map((g) => (
+        <div key={g.title}>
+          <div className="r5-sec gx-mgroup">{g.title}</div>
+          {g.maps.map(({ id, under }) => {
+            const m = view.maps[id]
+            return m ? <MapRow key={id} view={view} m={m} under={under} open={open === id} toggle={() => setOpen(open === id ? null : id)} /> : null
+          })}
+        </div>
+      ))}
     </section>
   )
 }
 
+function MapRow({ view, m, under, open, toggle }: { view: View; m: MapView; under: number; open: boolean; toggle: () => void }) {
+  const setGmMap = useGame((s) => s.setGmMap)
+  const shown = m.objects.filter((o) => o.shown).length
+  const sws = liveSwitches(m)
+  const fight = view.fights?.find((f) => f.map === m.id)
+  const openIt = () => {
+    setGmMap(m.id)
+    location.hash = `scene/${m.id}`
+  }
+  const npcs = Object.values(view.tokens).filter((t) => t.map === m.id && t.kind === 'npc')
+  return (
+    <>
+      <div className={'gx-mrow' + (view.party_map === m.id ? ' party' : '') + (isFar(view, m.id) ? ' far' : '')}>
+        <button type="button" className="gx-mopen" style={{ paddingLeft: under * 18 }} onClick={openIt} title="Open it on the Scene">
+          <img src={moodArt(m)} alt="" loading="lazy" />
+          <span className="gx-mname">
+            <b>{m.name}</b>
+            <small>
+              {m.subtitle}
+              {view.party_map === m.id ? " · the party's map" : ''}
+            </small>
+          </span>
+        </button>
+        <span className="gx-faces">
+          {crewFaces(view, m.id).map((t) => (
+            <img key={t.id} src={t.portrait} alt={t.name} title={t.name} className={'r3-px' + (t.hidden ? ' off' : '')} style={{ boxShadow: `0 0 0 1px ${t.color}` }} />
+          ))}
+          {npcs.length > 0 && <span className="r10-dimtxt gx-plus">+{npcs.length}</span>}
+          {fight && <span className="r12-tag">FIGHT</span>}
+        </span>
+        <div>
+          {m.moods.length > 1 && (
+            <div className="r10-mood gx-mmood" role="group" aria-label={`${m.name}: mood`}>
+              {m.moods.map((x) => (
+                <button key={x.id} type="button" className={m.mood === x.id ? 'on' : ''} aria-pressed={m.mood === x.id} onClick={() => void gmRun('gm.map.mood', { map: m.id, mood: x.id })}>
+                  {x.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <button type="button" className="gx-things" aria-expanded={open} onClick={toggle}>
+          {shown} of {m.objects.length} shown ⌄
+        </button>
+        <div className="gx-macts">
+          <SendCrew view={view} map={m} quiet />
+        </div>
+      </div>
+      {open && (
+        <div className="gx-mopenrow">
+          {(sws.length > 0 || m.cameras) && (
+            <div className="r10-go" style={{ flexWrap: 'wrap' }}>
+              {sws.map((sw) => {
+                const v = m.values[sw.id] ?? 0
+                return (
+                  <button key={sw.id} type="button" className={'r10-btn' + (v ? ' on' : '')} aria-pressed={v > 0} onClick={() => void pressSwitch(m, sw)}>
+                    {switchLabel(sw, v)}
+                  </button>
+                )
+              })}
+              <CamerasButton map={m} className="r10-btn" />
+            </div>
+          )}
+          <div className="gx-mthings">
+            {m.objects.map((o) => (
+              <button key={o.id} type="button" className={'gx-thing' + (o.shown ? ' on' : '')} aria-pressed={!!o.shown} title={o.shown ? 'Players see it. Hide it.' : 'Hidden. Show it to players.'} onClick={() => void gmRun('gm.object.show', { map: m.id, object: o.id, shown: !o.shown })}>
+                <Diamond />
+                {o.name}
+                <Eye off={!o.shown} size={14} />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+/** The start of the night, in order. */
 function SessionSection({ view }: { view: View }) {
   const [done, setDone] = useState('')
   const [asking, setAsking] = useState<{ id: string; name: string; scene: boolean } | null>(null)
@@ -363,63 +382,97 @@ function SessionSection({ view }: { view: View }) {
     setAsking(null)
     if (ack.ok) setLoaded(`Loaded ${asking.scene ? 'the scene of ' : ''}"${asking.name}".`)
   }
+  const { tv, join } = view.stage
   return (
-    <section className="r10-wide" aria-label="Session">
-      <div className="r10-h">Session</div>
-      <button type="button" className="r10-cta" onClick={() => void newSession()}>
-        New session
-      </button>
-      <div className={done ? 'r10-done' : 'r10-hint'} aria-live="polite">
-        {done || "Sets everyone's Entropy to 2. HP, pockets and maps stay as they are."}
+    <section className="gx-session" aria-label="Session">
+      <div className="gx-stepr">
+        <span className="gx-num">1</span>
+        <div className="gx-stepb">
+          <span className="gx-steph">Get the TV on</span>
+          {tv ? (
+            <div className="r12-status">
+              <span className="r12-dot" aria-hidden="true" />
+              The TV is connected.
+            </div>
+          ) : (
+            <div className="r12-status r10-dimtxt">No TV is connected. On the TV, open the app and pick "This screen is the TV".</div>
+          )}
+        </div>
       </div>
-      <div className="r5-sec" style={{ marginTop: 14 }}>
-        Presets
-      </div>
-      <div className="r5-rows">
-        {(view.presets ?? []).map((p) => (
-          <div key={p.id} className="r5-row r10-prow">
-            <span className="r10-grow">{p.name}</span>
-            <button
-              type="button"
-              className="r10-btn"
-              onClick={() => {
-                setAsking({ ...p, scene: true })
-                setLoaded('')
-              }}
-            >
-              Scene only
-            </button>
-            <button
-              type="button"
-              className="r10-btn"
-              onClick={() => {
-                setAsking({ ...p, scene: false })
-                setLoaded('')
-              }}
-            >
-              Load
-            </button>
-          </div>
-        ))}
-      </div>
-      {asking && (
-        <div className="r10-confirm" role="alertdialog" aria-label={`Load ${asking.name}?`}>
-          <div style={{ fontSize: 12.5 }}>
-            {asking.scene
-              ? `Load only the scene of "${asking.name}"? It moves everyone and sets every map's mood, and any fight ends. HP, Entropy, pockets and the Codex stay as they are.`
-              : `Load "${asking.name}"? It replaces every position, mood, HP, Entropy, pocket and the Codex.`}
-          </div>
-          <div className="r10-go">
-            <button type="button" className="r10-btn" onClick={() => void load()}>
-              Load it
-            </button>
-            <button type="button" className="r10-btn" onClick={() => setAsking(null)}>
-              Cancel
-            </button>
+      {join && (
+        <div className="gx-stepr">
+          <span className="gx-num">2</span>
+          <div className="gx-stepb">
+            <span className="gx-steph">Get everyone in</span>
+            <JoinSection view={view} />
           </div>
         </div>
       )}
-      {loaded && <div className="r10-done">{loaded}</div>}
+      <div className="gx-stepr">
+        <span className="gx-num">{join ? 3 : 2}</span>
+        <div className="gx-stepb">
+          <span className="gx-steph">Start the session</span>
+          <div>
+            <button type="button" className="r10-cta" style={{ padding: '0 32px' }} onClick={() => void newSession()}>
+              New session
+            </button>
+          </div>
+          <div className={done ? 'r10-done' : 'r10-hint'} aria-live="polite">
+            {done || "Sets everyone's Entropy to 2. HP, pockets and maps stay as they are."}
+          </div>
+        </div>
+      </div>
+      <div className="gx-stepr">
+        <span className="gx-num">·</span>
+        <div className="gx-stepb">
+          <span className="gx-steph">Or start from a preset</span>
+          <div className="r5-rows">
+            {(view.presets ?? []).map((p) => (
+              <div key={p.id} className="r5-row r10-prow">
+                <span className="r10-grow">{p.name}</span>
+                <button
+                  type="button"
+                  className="r10-btn"
+                  onClick={() => {
+                    setAsking({ ...p, scene: true })
+                    setLoaded('')
+                  }}
+                >
+                  Scene only
+                </button>
+                <button
+                  type="button"
+                  className="r10-btn"
+                  onClick={() => {
+                    setAsking({ ...p, scene: false })
+                    setLoaded('')
+                  }}
+                >
+                  Load
+                </button>
+              </div>
+            ))}
+          </div>
+          {asking && (
+            <div className="r10-confirm" role="alertdialog" aria-label={`Load ${asking.name}?`}>
+              <div style={{ fontSize: 12.5 }}>
+                {asking.scene
+                  ? `Load only the scene of "${asking.name}"? It moves everyone and sets every map's mood, and any fight ends. HP, Entropy, pockets and the Codex stay as they are.`
+                  : `Load "${asking.name}"? It replaces every position, mood, HP, Entropy, pocket and the Codex.`}
+              </div>
+              <div className="r10-go">
+                <button type="button" className="r10-btn" onClick={() => void load()}>
+                  Load it
+                </button>
+                <button type="button" className="r10-btn" onClick={() => setAsking(null)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+          {loaded && <div className="r10-done">{loaded}</div>}
+        </div>
+      </div>
     </section>
   )
 }

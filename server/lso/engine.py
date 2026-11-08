@@ -7,6 +7,7 @@ import logging
 import random
 import time
 
+from . import bench
 from .auth import Viewer
 from .commands import CommandError, handle, sweep
 from .content import Content
@@ -18,12 +19,17 @@ log = logging.getLogger("lso.engine")
 
 
 class Engine:
-    def __init__(self, content: Content, store: Store, rng=None, clock=time.time):
+    def __init__(self, content: Content, store: Store, rng=None, clock=time.time, sandbox: bool = False):
         self.content = content
         self.store = store
         self.lock = asyncio.Lock()
         self.rng = rng or random.SystemRandom()  # the dice; tests swap in a scripted one
         self.clock = clock
+        self.sandbox = sandbox
+        self.fake_tv = False  # the Bench: pretend a TV is connected
+        if sandbox:
+            self.rng = bench.BenchDice(self.rng)
+            store.enable_moments()
         snap = store.load_snapshot()
         if snap is None:
             self.state = GameState()
@@ -39,6 +45,8 @@ class Engine:
             self._check_refs()
             self._add_new_maps()
             self._update_rules()
+        if sandbox and not store.moments("start"):
+            store.add_moment("start", bench.START_NAME, self.clock(), self.state.model_dump(mode="json"))
 
     def _update_rules(self) -> None:
         """A game saved under older rules, brought up to date once. Rules 1 gave each character their own health:
@@ -172,8 +180,11 @@ class Engine:
         state, seq = self.state, self.store.next_seq()
         for i, (ev_type, data) in enumerate(events):
             state = apply(state, seq + i, ev_type, data)
-        seqs = self.store.commit(actor, intent_id, events, state.model_dump(mode="json"), ack)
+        dumped = state.model_dump(mode="json")
+        seqs = self.store.commit(actor, intent_id, events, dumped, ack)
         assert not seqs or seqs[-1] == state.seq, "event log and state disagree on seq"
+        if self.sandbox and actor != "system" and (name := bench.describe(self.content, self.state, events)):
+            self.store.add_moment("auto", name, self.clock(), dumped, keep=bench.HISTORY)
         self.state = state
 
     async def run(self, viewer: Viewer, intent_id: str | None, kind: str, args: dict) -> tuple[dict, bool]:
@@ -184,12 +195,19 @@ class Engine:
                 if prior is not None:
                     return prior, False
             try:
+                if kind.startswith("bench."):
+                    bench.run(self, viewer, kind, args)
+                    return {"id": intent_id, "ok": True}, True
                 events = handle(viewer, self.state, self.content, kind, args, rng=self.rng, now=self.clock())
             except CommandError as e:
                 return {"id": intent_id, "ok": False, "code": e.code, "error": str(e)}, False
             ack = {"id": intent_id, "ok": True}
             self._commit(viewer.seat, intent_id, events, ack)
             return ack, bool(events)
+
+    def bench_view(self) -> dict | None:
+        """What the GM's Bench shows. None on the real table, so the Bench doesn't exist there."""
+        return bench.view(self) if self.sandbox else None
 
     async def sweep(self, online: set[str], seated: set[str] | None = None) -> bool:
         """Housekeeping the server does on its own (rolls whose roller went quiet). True if anything changed."""

@@ -1,56 +1,70 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { gmRun, useGame } from '../store/game'
-import type { MapView, TokenView } from '../types'
+import { serverClock } from '../net/clock'
+import type { FightView, MapView, TokenView } from '../types'
 import { fightOn } from './fights'
+import { useLanding } from './Strip'
 
 /** "The Promenade" mid-sentence: "on the Promenade". */
 const inText = (name: string) => name.replace(/^The /, 'the ')
 
+/** In the column's "Here" heading: opens "Who's in the fight". */
+export function StartFight({ map }: { map: MapView }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <button type="button" className="gx-mini" onClick={() => setOpen(true)}>
+        Start a fight
+      </button>
+      {open && <FightDialog map={map} onClose={() => setOpen(false)} />}
+    </>
+  )
+}
+
 /**
- * Beside the map's moods (Round 16): "Start a fight" opens the dialog. During a fight it reads "Fight · round n",
- * which reopens the dialog to add or take out fighters, and "End fight", which asks once more.
+ * At the top of the GM's column during a fight: Next turn, which appears once the dice have landed, the round,
+ * "Who's in" to add or take out fighters, and "End", which asks once more.
  */
-export function FightBar({ map }: { map: MapView }) {
-  const view = useGame((s) => s.view)
+export function FightBlock({ fight, map }: { fight: FightView; map: MapView }) {
   const [open, setOpen] = useState(false)
   const [armed, setArmed] = useState(false)
-  const fight = fightOn(view, map.id)
-  useEffect(() => setArmed(false), [map.id, !!fight])
+  const { place } = useLanding(fight)
+  const t = serverClock.now() / 1000
+  const settling = fight.fighters.some((x) => t < place[x.token])
+  useEffect(() => setArmed(false), [map.id])
   useEffect(() => {
     if (!armed) return
     const id = window.setTimeout(() => setArmed(false), 4000)
     return () => clearTimeout(id)
   }, [armed])
   return (
-    <>
-      <div className="r10-mood" role="group" aria-label="Fight">
-        {fight ? (
-          <>
-            <button type="button" className="on" title="Who's in the fight: add or take out fighters" onClick={() => setOpen(true)}>
-              Fight · round {fight.round ?? 1}
-            </button>
-            <button
-              type="button"
-              className={armed ? 'app-armed' : ''}
-              onClick={() => {
-                if (!armed) return setArmed(true)
-                setArmed(false)
-                void gmRun('gm.fight.end', { map: map.id })
-              }}
-            >
-              {armed ? 'End it?' : 'End fight'}
-            </button>
-          </>
-        ) : (
-          <button type="button" onClick={() => setOpen(true)}>
-            Start a fight
+    <section className="gx-fight" aria-label="The fight">
+      <button type="button" className="r10-roll" disabled={settling} onClick={() => void gmRun('gm.fight.next', { map: fight.map })}>
+        {settling ? 'Rolling…' : 'Next turn'}
+      </button>
+      <div className="gx-fmeta">
+        <span className="r5-sec">Round {fight.round ?? 1}</span>
+        <span>
+          <button type="button" className="gx-lnk" onClick={() => setOpen(true)}>
+            Who's in
+          </button>{' '}
+          &nbsp;{' '}
+          <button
+            type="button"
+            className={'gx-lnk' + (armed ? ' armed' : '')}
+            onClick={() => {
+              if (!armed) return setArmed(true)
+              setArmed(false)
+              void gmRun('gm.fight.end', { map: map.id })
+            }}
+          >
+            {armed ? 'End it?' : 'End'}
           </button>
-        )}
+        </span>
       </div>
-      {/* at the app's root: the map's name block it's opened from takes no clicks and sits under the map */}
-      {open && createPortal(<FightDialog map={map} onClose={() => setOpen(false)} />, document.querySelector('.r4') ?? document.body)}
-    </>
+      {open && <FightDialog map={map} onClose={() => setOpen(false)} />}
+    </section>
   )
 }
 
@@ -60,6 +74,10 @@ export function FightBar({ map }: { map: MapView }) {
  * a tick adds or takes out that fighter at once.
  */
 function FightDialog({ map, onClose }: { map: MapView; onClose: () => void }) {
+  return createPortal(<FightDialogBody map={map} onClose={onClose} />, document.querySelector('.r4') ?? document.body)
+}
+
+function FightDialogBody({ map, onClose }: { map: MapView; onClose: () => void }) {
   const view = useGame((s) => s.view)
   const fight = fightOn(view, map.id)
   const first = useRef<HTMLInputElement>(null)

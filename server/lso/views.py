@@ -169,6 +169,7 @@ def _token_view(content: Content, tid: str, t, gm: bool, open_: set[str]) -> dic
         base |= {"name": n.name, "role": n.role, "portrait": url(n.portrait), "color": n.color, "mood": n.mood, "note": n.note, "codex": _link(n.codex, open_), "size": n.size}
         if gm:
             base |= {"gm_note": n.gm_note, "stats": n.stats}  # an NPC's dice are the GM's secret
+            base |= {"hp": n.health if t.hp is None else t.hp, "health": n.health}  # and so is its health, outside a fight
     if gm:
         base["hidden"] = t.hidden
     return base
@@ -555,7 +556,7 @@ def _slots_view(state: GameState, content: Content, viewer: Viewer) -> dict | No
     return None
 
 
-def project(state: GameState, content: Content, viewer: Viewer, online: frozenset[str] = frozenset(), join: dict | None = None) -> dict:
+def project(state: GameState, content: Content, viewer: Viewer, online: frozenset[str] = frozenset(), join: dict | None = None, bench: dict | None = None) -> dict:
     gm = viewer.is_gm
     here = viewer_map(state, viewer)
     open_ = codex_open(state, content, viewer)
@@ -584,9 +585,12 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
     }
     if gm:
         view["roster"] = [
-            {"id": n.id, "name": n.name, "role": n.role, "portrait": url(n.portrait), "color": n.color}
+            {"id": n.id, "name": n.name, "role": n.role, "group": n.group, "portrait": url(n.portrait), "color": n.color}
             for n in content.npcs.values()
         ]
+        view["map_groups"] = [{"title": g.title, "maps": [{"id": e.map, "under": e.under} for e in g.entries()]} for g in content.map_groups]
+        if bench is not None:
+            view["bench"] = bench  # the sandbox's, and only ever the GM's
         view["presets"] = [{"id": p.id, "name": p.name} for p in content.presets.values()]
         view["items"] = [_item_view(it, open_) for it in content.items.values()]  # the catalogue, for giving
         view["overviews"] = {  # the Events section: what can be sent, and whose screen has one open now

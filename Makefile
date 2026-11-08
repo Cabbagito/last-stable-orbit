@@ -1,5 +1,5 @@
 # Last Stable Orbit. Everything runs in Docker except the server tests (uv).
-.PHONY: help env passcode passcodes up down logs dev test test-server test-web reset-world
+.PHONY: help env passcode passcodes up down logs dev sandbox sandbox-down test test-server test-web reset-world
 
 help:
 	@echo "make env          write .env with a random secret and a GM passcode (once)"
@@ -8,6 +8,8 @@ help:
 	@echo "make logs         follow the app's logs"
 	@echo "make down         stop everything"
 	@echo "make dev          hot-reloading dev setup on http://localhost:5173"
+	@echo "make sandbox      a fresh copy of your save with the Bench, hot-reloading, on http://localhost:8072 (passcode: test)"
+	@echo "make sandbox-down stop the sandbox"
 	@echo "make test         server tests (uv) and web tests (docker)"
 	@echo "make reset-world  wipe the app's saved game and reload the default preset"
 
@@ -29,6 +31,16 @@ logs:
 
 dev:
 	docker compose --profile dev up --build api web
+
+sandbox:
+	docker compose --profile sandbox stop sandbox sandbox-web
+	docker volume create lso_lso-sandbox-data >/dev/null
+	docker run --rm -v lso_lso-data:/from:ro -v lso_lso-sandbox-data:/to alpine sh -c "rm -f /to/*; cp -a /from/. /to/"
+	docker compose --profile sandbox up --build -d sandbox sandbox-web
+	@echo "Sandbox on http://localhost:8072 (GM passcode: test). Your real save is untouched."
+
+sandbox-down:
+	docker compose --profile sandbox stop sandbox sandbox-web
 
 test: test-server test-web
 

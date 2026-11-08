@@ -63,7 +63,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def lifespan(app: FastAPI):
         content = load_content(settings.content_dir, settings.assets_dir)
         store = Store(settings.data_dir / "lso.db")
-        engine = Engine(content, store)
+        engine = Engine(content, store, sandbox=settings.sandbox)
         app.state.auth = Auth(settings, content.characters)
         # the character picker shows the crew before anyone is logged in
         app.state.login_assets = {c.portrait for c in content.characters.values()}
@@ -182,7 +182,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 return
         hub: Hub = ws.app.state.hub
         engine: Engine = ws.app.state.engine
-        conn = hub.add(ws, viewer, preview=view_as is not None)
+        # in the sandbox only, a seat on the wall can act as that seat, and counts as that seat being here
+        acting = view_as is not None and settings.sandbox and ws.query_params.get("act") == "1"
+        conn = hub.add(ws, viewer, preview=view_as is not None and not acting)
         read_only = conn.preview or viewer.is_stage  # the TV, and the GM looking through someone's screen, only watch
         try:
             await hub.send_view(conn, force=True)

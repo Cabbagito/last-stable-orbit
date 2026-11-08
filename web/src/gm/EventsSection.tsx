@@ -29,12 +29,8 @@ export function EventsSection({ view }: { view: View }) {
   }
 
   return (
-    <section className="r12-wide" aria-label="Events">
-      <div className="r10-h">Events</div>
-      <div className="r10-hint">
-        Send a little game to some of the crew. It rises over the map on their screens, not the sheet. What they answer and
-        how it ends stays on their screen: nothing comes back here, so play out what follows at the table.
-      </div>
+    <section className="gx-events" aria-label="Events">
+      <div className="gx-h2">Events</div>
 
       <div className="ev-send">
         <div className="ev-col">
@@ -72,10 +68,7 @@ export function EventsSection({ view }: { view: View }) {
         </div>
       )}
 
-      <div className="r5-sec" style={{ marginTop: 26 }}>
-        Open now
-      </div>
-      <div className="r5-rows">
+      <div className="r5-rows" style={{ marginTop: 10 }}>
         {Object.entries(open).map(([char, o]) => (
           <div key={char} className="r5-row ev-open">
             <span>

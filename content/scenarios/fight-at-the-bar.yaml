@@ -1,0 +1,28 @@
+# A setup to test from. Only the sandbox's Bench can load a scenario; the real table never sees them.
+# It's a preset, plus a line saying what it's for, plus GM commands to run once it's loaded.
+id: fight-at-the-bar
+name: Fight at the bar
+note: Two hired guns, a hidden guard, round 1
+party_map: event-horizon
+maps:
+  event-horizon: {mood: open, shown: [mural, slots]}
+tokens:
+  - {kind: crew, ref: ves, map: event-horizon, at: [9.7, 6.2, 0]}
+  - {kind: crew, ref: tomo, map: event-horizon, at: [9.4, 3.9, 0]}
+  - {kind: crew, ref: lale, map: event-horizon, at: [8.2, 8.7, 0]}
+  - {kind: crew, ref: marlo, map: event-horizon, at: [11.7, 8.9, 0]}
+  - {kind: crew, ref: tally, map: event-horizon, at: [11.9, 4.4, 0]}
+  - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
+  - {kind: npc, ref: hired-gun, map: event-horizon, at: [5.7, 6.3, 0]}
+  - {kind: npc, ref: hired-gun, map: event-horizon, at: [4.3, 7.1, 0]}
+  - {kind: npc, ref: guard, map: event-horizon, at: [10.6, 11.2, 0], hidden: true}
+inventory:
+  lale: [fob-watch, {item: credits, count: 120}]
+  marlo: [stun-rings, {item: credits, count: 60}]
+  tally: [tally-notebook, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, {item: credits, count: 90}]
+  tomo: [sourdough-jar, {item: credits, count: 140}]
+codex: [lale, marlo, tally, ves, tomo, rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health]
+station: [patience, promenade, event-horizon]
+after:
+  - {type: gm.fight.start, args: {map: event-horizon, tokens: [ves, tomo, lale, marlo, tally, hired-gun, hired-gun-2]}}

@@ -29,6 +29,8 @@ class Settings:
     join_fallback: str = ""
     wifi_ssid: str = ""
     wifi_password: str = ""
+    # `make sandbox`: a disposable copy of the game with the Bench. Never set on the real table
+    sandbox: bool = False
 
 
 class SettingsError(RuntimeError):
@@ -71,4 +73,5 @@ def load_settings(env: dict[str, str] | None = None) -> Settings:
         join_fallback=env.get("LSO_JOIN_FALLBACK", "").strip(),
         wifi_ssid=env.get("LSO_WIFI_SSID", "").strip(),
         wifi_password=env.get("LSO_WIFI_PASSWORD", ""),  # as typed: a password's spaces are part of it
+        sandbox=_flag(env.get("LSO_SANDBOX")),
     )

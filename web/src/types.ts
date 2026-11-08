@@ -219,6 +219,8 @@ export interface TokenView {
   hidden?: boolean // GM only
   gm_note?: string // GM only
   stats?: Record<StatKey, number> // GM only, NPCs: the die for each stat
+  hp?: number // GM only, NPCs: their health, in or out of a fight
+  health?: number // GM only, NPCs
 }
 
 export interface Item {
@@ -242,6 +244,7 @@ export interface RosterNpc {
   id: string
   name: string
   role: string
+  group: string
   portrait: string
   color: string
 }
@@ -375,6 +378,32 @@ export interface View {
   overview: OverviewView | null // the overview open on this player's screen; never anyone else's
   slots: SlotView | null // the slot machine this player is sitting at
   overviews?: { games: { id: string; name: string }[]; open: Record<string, { kind: string; id: string }> } // GM only
+  map_groups?: MapGroup[] // GM only: how the map picker lays out the station
+  bench?: BenchView // GM only, and only in the sandbox
+}
+
+/** One heading in the GM's map picker. `under` tucks a map beneath the one above it. */
+export interface MapGroup {
+  title: string
+  maps: { id: string; under: number }[]
+}
+
+export type BenchDice = 'random' | 'one' | 'boom' | 'boom2'
+
+export interface BenchMoment {
+  id: number
+  name: string
+  at: number // server time, in seconds
+}
+
+/** The sandbox's Bench. The real table has none of this. */
+export interface BenchView {
+  dice: BenchDice
+  tv: boolean
+  scenarios: { id: string; name: string; note: string }[]
+  start: BenchMoment[]
+  kept: BenchMoment[]
+  history: BenchMoment[]
 }
 
 /** A survey answer, or the device's page. Scores in bad points; more than `limit` gets you sent in. */

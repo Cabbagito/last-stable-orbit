@@ -1,15 +1,14 @@
-import { Vitals } from '../gm/parts'
 import { ChipFx } from '../fx/ChipFx'
 import { ring } from '../lib/ring'
 import { Orbit, calloutSpeech, isSpinning } from '../roll/Callout'
 import { calloutsBy } from '../roll/callouts'
 import { BurnCallout, Flare, burnSpeech, useBurnMark } from '../stage/BurnMark'
-import { gmRun, useGame } from '../store/game'
+import { useGame } from '../store/game'
 import { RingPortrait } from './RingPortrait'
 
 /**
- * Top-right column of crew rings. Everyone's HP and Entropy are public; your own name is pink. The GM gets HP
- * and Entropy steppers beside a ring on hover (Round 12).
+ * Top-right column of crew rings, for players and the GM's look through their screens. Everyone's HP and Entropy are
+ * public; your own name is pink. The GM has the crew in their column instead (gm/GmScene.tsx).
  */
 export function CrewRail() {
   const view = useGame((s) => s.view)
@@ -19,7 +18,6 @@ export function CrewRail() {
   useGame((s) => s.callTick) // re-render when a roll is over
   const burning = useBurnMark()
   if (!view) return null
-  const isGm = view.me.role === 'gm'
   const callouts = calloutsBy(view.rolls, calls, Date.now(), (r) => r.char)
   const tokenOf = (charId: string) =>
     Object.values(view.tokens).find((t) => t.kind === 'crew' && t.ref === charId)?.id ?? null
@@ -29,9 +27,6 @@ export function CrewRail() {
         const tok = tokenOf(c.id)
         const burn = burning?.char === c.id ? burning : null
         const call = burn ? undefined : callouts[c.id] // a Burn's mark takes the roll callout's place
-        // the GM calls their newest skill roll a failure once it has landed, and its downside shows on the TV
-        const last = isGm ? view.rolls.filter((r) => r.char === c.id).pop() : undefined
-        const canFail = last && last.entry && !last.failed && last.phase !== 'roll' && last.phase !== 'boom' ? last : null
         return (
           <div key={c.id} className="r10-railit">
             <button
@@ -50,21 +45,6 @@ export function CrewRail() {
               </span>
               <span className={c.id === view.me.char ? 'r4-rail-name me' : 'r4-rail-name'}>{c.short}</span>
             </button>
-            {isGm && (
-              <div className="r10-railstep">
-                <Vitals c={c} />
-                {canFail && (
-                  <button
-                    type="button"
-                    className="r10-btn app-failbtn"
-                    title={`It failed: show the downside of ${canFail.entry} on the TV`}
-                    onClick={() => void gmRun('gm.roll.failed', { roll: canFail.id })}
-                  >
-                    Failed
-                  </button>
-                )}
-              </div>
-            )}
           </div>
         )
       })}

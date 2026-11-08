@@ -91,6 +91,7 @@ class Npc(Strict):
     id: str
     name: str
     role: str = ""
+    group: str = "Others"  # where it sits in the GM's Add list
     portrait: str
     color: str = "#8f88a3"
     stats: dict[str, int]  # the die for each stat; the GM rolls an NPC by stat. Never sent to players.
@@ -644,6 +645,21 @@ class Vitals(Strict):
     entropy: int = 2
 
 
+class MapGroupEntry(Strict):
+    map: str
+    under: int = Field(default=0, ge=0, le=2)  # how far it's tucked under the map above it (the vault, under the Secure floor)
+
+
+class MapGroup(Strict):
+    """One heading in the GM's map picker, with its maps in the order they're listed."""
+
+    title: str
+    maps: list[str | MapGroupEntry]
+
+    def entries(self) -> list[MapGroupEntry]:
+        return [MapGroupEntry(map=m) if isinstance(m, str) else m for m in self.maps]
+
+
 class Preset(Strict):
     """A whole-table arrangement the GM can load: positions, moods, vitals, inventories."""
 
@@ -657,6 +673,18 @@ class Preset(Strict):
     inventory: dict[str, list[str | PresetItem]] = {}  # holder -> item ids, or {item, count} for counted items
     codex: list[str] = []  # Codex entries unlocked for the crew ("entry"), and locked blocks ("entry/block")
     station: list[str] = []  # places lit on the Station; the party map and the crew's maps are added
+
+
+class ScenarioStep(Strict):
+    type: str  # a GM command, run after the world is loaded
+    args: dict = {}
+
+
+class Scenario(Preset):
+    """A setup to test from: only the sandbox's Bench can load one."""
+
+    note: str = ""
+    after: list[ScenarioStep] = []
 
 
 # ---------------------------------------------------------------- state

@@ -1,0 +1,27 @@
+# A setup to test from. See fight-at-the-bar.yaml.
+id: everyone-hurt
+name: Everyone hurt
+note: Low HP and Entropy all round, Ves down at 0
+party_map: event-horizon
+maps:
+  event-horizon: {mood: stand, shown: [mural, slots]}
+tokens:
+  - {kind: crew, ref: ves, map: event-horizon, at: [9.7, 6.2, 0]}
+  - {kind: crew, ref: tomo, map: event-horizon, at: [9.4, 3.9, 0]}
+  - {kind: crew, ref: lale, map: event-horizon, at: [8.2, 8.7, 0]}
+  - {kind: crew, ref: marlo, map: event-horizon, at: [11.7, 8.9, 0]}
+  - {kind: crew, ref: tally, map: event-horizon, at: [11.9, 4.4, 0]}
+vitals:
+  ves: {hp: 0, entropy: 0}
+  tomo: {hp: 2, entropy: 1}
+  lale: {hp: 1, entropy: 2}
+  marlo: {hp: 1, entropy: 0}
+  tally: {hp: 3, entropy: 1}
+inventory:
+  lale: [fob-watch, {item: credits, count: 120}]
+  marlo: [stun-rings, {item: credits, count: 60}]
+  tally: [tally-notebook, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, {item: credits, count: 90}]
+  tomo: [sourdough-jar, {item: credits, count: 140}]
+codex: [lale, marlo, tally, ves, tomo, rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health]
+station: [patience, promenade, event-horizon]

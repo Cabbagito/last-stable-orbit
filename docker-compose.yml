@@ -37,7 +37,35 @@ services:
     ports: ["5173:5173"]
     depends_on: [api]
 
+  # `make sandbox`: a copy of your save to test on, with the Bench, on http://localhost:8072. Code and content hot-reload.
+  sandbox:
+    profiles: [sandbox]
+    build: { context: ., target: app }
+    command: >-
+      uvicorn --factory lso.main:app_factory --host 0.0.0.0 --port 8000 --workers 1 --ws-ping-interval 20
+      --reload --reload-dir /app/server/lso --reload-dir /app/content --reload-include *.yaml
+    env_file: .env
+    environment: { LSO_SANDBOX: "1", LSO_GM_PASSCODE: "test" }
+    volumes:
+      - ./server/lso:/app/server/lso
+      - ./content:/app/content
+      - ./assets:/app/assets
+      - lso-sandbox-data:/data
+
+  sandbox-web:
+    profiles: [sandbox]
+    image: node:22-alpine
+    working_dir: /web
+    command: sh -c "npm ci --no-audit --no-fund --loglevel=error && npx vite --host 0.0.0.0"
+    environment: { VITE_API: "http://sandbox:8000" }
+    volumes:
+      - ./web:/web
+      - lso-web-node-modules:/web/node_modules
+    ports: ["8072:5173"]
+    depends_on: [sandbox]
+
 volumes:
   lso-data: {}
+  lso-sandbox-data: {}
   lso-dev-data: {}
   lso-web-node-modules: {}

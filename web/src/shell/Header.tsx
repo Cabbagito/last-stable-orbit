@@ -23,18 +23,22 @@ const STATUS_TEXT = { live: 'Live', connecting: 'Connecting', offline: 'Reconnec
 export function Header({ tab, isGm, onLogout }: { tab: Tab; isGm: boolean; onLogout?: () => void }) {
   const status = useGame((s) => s.status)
   const me = useGame((s) => s.view?.me)
+  const gmMap = useGame((s) => s.gmMap)
+  const sandbox = useGame((s) => !!s.view?.bench)
   const tabs = isGm ? [...TABS, ['gm', 'GM'] as [Tab, string]] : TABS
   return (
     <header className="r4-head">
+      {sandbox && <div className="gx-sbxline" aria-hidden="true" />}
       <Logo />
       <nav aria-label="Sections" className="r4-tabs">
         {tabs.map(([id, name]) => (
-          <a key={id} className={id === tab ? 'r4-tab on' : 'r4-tab'} href={`#${id}`} aria-current={id === tab ? 'page' : undefined}>
+          <a key={id} className={id === tab ? 'r4-tab on' : 'r4-tab'} href={id === 'scene' && isGm && gmMap ? `#scene/${gmMap}` : `#${id}`} aria-current={id === tab ? 'page' : undefined}>
             {name}
           </a>
         ))}
       </nav>
       <div className="app-headright">
+        {sandbox && <span className="gx-sbxtag">Sandbox</span>}
         <span className={`app-status ${status}`} role="status">
           <span className="app-dot" aria-hidden="true" />
           {STATUS_TEXT[status]}

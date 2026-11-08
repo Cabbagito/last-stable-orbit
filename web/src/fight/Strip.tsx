@@ -3,7 +3,7 @@ import { ChipFx } from '../fx/ChipFx'
 import { hpRing, ring } from '../lib/ring'
 import { serverClock } from '../net/clock'
 import { RingPortrait } from '../shell/RingPortrait'
-import { gmRun, useGame } from '../store/game'
+import { useGame } from '../store/game'
 import type { FightView, Fighter } from '../types'
 import { COPIES, carousel, isDown, landing, nextUp, shownOrder } from './fights'
 
@@ -48,7 +48,6 @@ export function Reel({ k }: { k: number }) {
  */
 export function FightStrip({ fight }: { fight: FightView }) {
   const view = useGame((s) => s.view)
-  const isGm = view?.me.role === 'gm'
   const t = serverClock.now() / 1000
   const { land, place } = useLanding(fight)
   const settling = fight.fighters.some((x) => t < place[x.token])
@@ -115,13 +114,8 @@ export function FightStrip({ fight }: { fight: FightView }) {
   })
 
   return (
-    <div className="app-fight" aria-label={`Turn order${fight.now ? `, ${byToken(fight.now)?.name}'s turn` : ''}`}>
+    <div className={'app-fight' + (view.me.role === 'gm' ? ' gm' : '')} aria-label={`Turn order${fight.now ? `, ${byToken(fight.now)?.name}'s turn` : ''}`}>
       <div className="app-fbox" style={{ width }}>
-      {isGm && !settling && (
-        <button type="button" className="app-fnext" onClick={() => void gmRun('gm.fight.next', { map: fight.map })}>
-          Next turn
-        </button>
-      )}
       <div className={'app-fstrip' + (pos.snap ? ' snap' : '')} style={{ width }}>
         {divs.map((d) => (
           <div key={d.c} className={'app-fdiv' + (d.out ? ' out' : '')} style={{ left: d.left }}>

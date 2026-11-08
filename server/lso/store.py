@@ -31,6 +31,16 @@ CREATE TABLE IF NOT EXISTS snapshot (
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 """
 SCHEMA_VERSION = "1"
+# the sandbox's copies of the whole table. Only a sandbox creates this: the real game's file never gets it
+MOMENTS = """
+CREATE TABLE IF NOT EXISTS moments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    kind TEXT NOT NULL,
+    name TEXT NOT NULL,
+    ts REAL NOT NULL,
+    state TEXT NOT NULL
+);
+"""
 
 
 class Store:
@@ -86,6 +96,26 @@ class Store:
             cur.execute("ROLLBACK")
             raise
         return seqs
+
+    def enable_moments(self) -> None:
+        self.db.executescript(MOMENTS)
+
+    def add_moment(self, kind: str, name: str, ts: float, state: dict, keep: int | None = None) -> None:
+        """Keep a copy of the table. With `keep`, only that many of this kind stay."""
+        self.db.execute("INSERT INTO moments (kind, name, ts, state) VALUES (?, ?, ?, ?)", (kind, name, ts, json.dumps(state)))
+        if keep:
+            self.db.execute("DELETE FROM moments WHERE kind = ? AND id NOT IN (SELECT id FROM moments WHERE kind = ? ORDER BY id DESC LIMIT ?)", (kind, kind, keep))
+
+    def moments(self, kind: str, limit: int = 50) -> list[dict]:
+        rows = self.db.execute("SELECT id, name, ts FROM moments WHERE kind = ? ORDER BY id DESC LIMIT ?", (kind, limit))
+        return [{"id": r[0], "name": r[1], "at": r[2]} for r in rows]
+
+    def moment_state(self, moment_id: int) -> tuple[str, dict] | None:
+        row = self.db.execute("SELECT kind, state FROM moments WHERE id = ?", (moment_id,)).fetchone()
+        return (row[0], json.loads(row[1])) if row else None
+
+    def drop_moments_after(self, moment_id: int, kind: str) -> None:
+        self.db.execute("DELETE FROM moments WHERE kind = ? AND id > ?", (kind, moment_id))
 
     def events(self):
         yield from self.db.execute("SELECT seq, type, data FROM events ORDER BY seq")

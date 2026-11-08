@@ -40,8 +40,8 @@ export function CutscenesSection({ view }: { view: View }) {
   }
 
   return (
-    <section className="r12-wide" aria-label="Cutscenes">
-      <div className="r10-h">Cutscenes</div>
+    <section className="gx-cues" aria-label="Cutscenes">
+      <div className="gx-h2">Cutscenes</div>
       <div className="r10-hint" aria-live="polite">
         In the order you'll use them. {line}
       </div>
@@ -102,11 +102,10 @@ const CAMS: [Camera, string][] = [
 ]
 
 /**
- * Round 12's TV section (board R12TabTV): whether the TV is connected, its camera, and what it shows right now
- * (the TV's own screen, small and silent).
+ * The TV: whether it's connected, what it shows right now (its own screen, small and silent), and its camera.
  */
 export function TvSection({ view }: { view: View }) {
-  const { camera, follow, tv, film, join } = view.stage
+  const { camera, follow, tv, film } = view.stage
   const busy = !!film && serverClock.now() / 1000 < film.ends
   useTick(busy)
   const followed = view.crew.find((c) => c.id === follow)
@@ -117,72 +116,69 @@ export function TvSection({ view }: { view: View }) {
         ? `Follows ${followed?.short ?? 'one of the crew'}.`
         : 'Shows the whole crew, cuts to whoever rolls, then comes back.'
   return (
-    <section aria-label="The TV">
-      <div className="r10-h">The TV</div>
-      <div className="r12-tvgrid">
-        <div className="r12-tvcol">
-          {tv ? (
-            <div className="r12-status">
-              <span className="r12-dot" aria-hidden="true" />
-              The TV is connected.
-            </div>
-          ) : (
-            <div className="r12-status r10-dimtxt">No TV is connected. On the TV, open the app and pick "This screen is the TV".</div>
-          )}
-          <div className="r10-hint">Films and all the sound play on the TV. Laptops go dark during a cutscene, so everyone looks up; a Burn leaves them on the game.</div>
-          <div className="r5-sec" style={{ marginTop: 12 }}>
-            The TV's camera
-          </div>
-          <div className="r12-seg3" role="group" aria-label="The TV's camera">
-            {CAMS.map(([id, name]) => (
-              <button key={id} type="button" className={camera === id ? 'on' : ''} aria-pressed={camera === id} disabled={busy} onClick={() => void gmRun('gm.stage.camera', { camera: id })}>
-                {name}
-              </button>
-            ))}
-          </div>
-          {camera === 'follow' && (
-            <div className="r10-faces" role="group" aria-label="Who the TV follows">
-              {view.crew.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  className={'r10-face' + (follow === c.id ? ' on' : '')}
-                  aria-pressed={follow === c.id}
-                  aria-label={`Follow ${c.short}`}
-                  title={c.short}
-                  disabled={busy}
-                  onClick={() => void gmRun('gm.stage.camera', { camera: 'follow', follow: c.id })}
-                >
-                  <img src={c.portrait} alt="" className="r3-px" />
-                </button>
-              ))}
-            </div>
-          )}
-          <div className="r10-hint">{camLine}</div>
+    <section className="gx-tv" aria-label="The TV">
+      <div className="gx-h2">The TV</div>
+      {tv ? (
+        <div className="r12-status">
+          <span className="r12-dot" aria-hidden="true" />
+          The TV is connected.
         </div>
-        <div className="r12-tvcol">
-          <span className="r5-sec">On the TV now</span>
-          <div className="r12-tvprev">
-            <iframe src="/?as=stage" title="What the TV shows now" tabIndex={-1} aria-hidden="true" />
-          </div>
-          <div className="r10-hint">The TV gets only what everyone may see: the party's map, no pockets, nothing hidden.</div>
-        </div>
+      ) : (
+        <div className="r12-status r10-dimtxt">No TV is connected.</div>
+      )}
+      <div className="r12-tvprev gx-tvprev">
+        <iframe src="/?as=stage" title="What the TV shows now" tabIndex={-1} aria-hidden="true" />
       </div>
-      {join && (
-        <div className="app-gmjoin">
-          <span className="r5-sec">Getting everyone in</span>
-          <div className="r12-seg3 app-gmjoinseg" role="group" aria-label="The join card on the TV">
-            <button type="button" className={join.show ? 'on' : ''} aria-pressed={join.show} disabled={busy} onClick={() => void gmRun('gm.stage.join', { show: true })}>
-              On the TV
+      <div className="r5-sec" style={{ marginTop: 4 }}>
+        Camera
+      </div>
+      <div className="r12-seg3" role="group" aria-label="The TV's camera">
+        {CAMS.map(([id, name]) => (
+          <button key={id} type="button" className={camera === id ? 'on' : ''} aria-pressed={camera === id} disabled={busy} onClick={() => void gmRun('gm.stage.camera', { camera: id })}>
+            {name}
+          </button>
+        ))}
+      </div>
+      {camera === 'follow' && (
+        <div className="r10-faces" role="group" aria-label="Who the TV follows">
+          {view.crew.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              className={'r10-face' + (follow === c.id ? ' on' : '')}
+              aria-pressed={follow === c.id}
+              aria-label={`Follow ${c.short}`}
+              title={c.short}
+              disabled={busy}
+              onClick={() => void gmRun('gm.stage.camera', { camera: 'follow', follow: c.id })}
+            >
+              <img src={c.portrait} alt="" className="r3-px" />
             </button>
-            <button type="button" className={join.show ? '' : 'on'} aria-pressed={!join.show} disabled={busy} onClick={() => void gmRun('gm.stage.join', { show: false })}>
-              Hidden
-            </button>
-          </div>
-          <div className="r10-hint">Shows the wifi password. Hide it once everyone's in.</div>
-          <JoinCard join={join} />
+          ))}
         </div>
       )}
+      <div className="r10-hint">{camLine}</div>
     </section>
+  )
+}
+
+/** The join card on the TV: the wifi and the URL, until everyone's in. */
+export function JoinSection({ view }: { view: View }) {
+  const { join, film } = view.stage
+  const busy = !!film && serverClock.now() / 1000 < film.ends
+  if (!join) return null
+  return (
+    <div className="app-gmjoin" style={{ marginTop: 0 }}>
+      <div className="r12-seg3 app-gmjoinseg" role="group" aria-label="The join card on the TV">
+        <button type="button" className={join.show ? 'on' : ''} aria-pressed={join.show} disabled={busy} onClick={() => void gmRun('gm.stage.join', { show: true })}>
+          On the TV
+        </button>
+        <button type="button" className={join.show ? '' : 'on'} aria-pressed={!join.show} disabled={busy} onClick={() => void gmRun('gm.stage.join', { show: false })}>
+          Hidden
+        </button>
+      </div>
+      <div className="r10-hint">Shows the wifi password. Hide it once everyone's in.</div>
+      <JoinCard join={join} />
+    </div>
   )
 }

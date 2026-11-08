@@ -1,0 +1,18 @@
+# The GM's map picker and the GM tab's Maps: every map, in three places, the way the station is built.
+# Every map must be listed exactly once. `under` tucks a map beneath the one above it (behind a door on that floor).
+# The Executive floors run top down, like the building. DRAFT for Peter to rearrange.
+
+- title: Deck 2 and the dock
+  maps: [patience, promenade, event-horizon, med]
+
+- title: The Executive floors
+  maps:
+    - deck-9
+    - deck-8
+    - {map: secure, under: 1}
+    - {map: vault, under: 2}
+    - deck-7
+    - deck-6
+
+- title: Below, and down the cable
+  maps: [bots, lift, cab, terminal]

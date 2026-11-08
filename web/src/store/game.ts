@@ -43,6 +43,12 @@ interface GameStore {
   burnSeen: BurnView | null
   /** The GM looking at one player's screen, read-only (`/?as=tally`): nothing here may act as them. */
   preview: string | null
+  /** In the sandbox's wall (`/?as=tally&act=1`) that seat can act: it's that player, for testing. */
+  acting: boolean
+  /** The GM's map picker: open to go somewhere, or to send one token somewhere. */
+  mapPicker: { token: string | null } | null
+  /** The map the GM was looking at before this one. */
+  lastMap: string | null
   /** The last GM action the server refused, shown in the GM column and the GM tab until the next one works. */
   gmError: string
   /** M8: the latest change on each chip ("c:<character>", "t:<token>"), playing for FX_LIFE ms. `n` restarts it. */
@@ -53,6 +59,7 @@ interface GameStore {
   setLocal: (l: { token: string; at: Vec3 } | null) => void
   setGmMap: (m: string) => void
   setPins: (on: boolean) => void
+  setMapPicker: (p: { token: string | null } | null) => void
   openPick: (stat: StatKey, entry?: number) => void
   openRoll: (rollId: string, resume?: boolean) => void
   closeDialog: () => void
@@ -65,6 +72,12 @@ function readPins() {
   } catch {
     return true
   }
+}
+
+/** `#scene/deck-8` opens the GM's Scene on that map, so a reload keeps your place. */
+function readGmMap(): string | null {
+  const [tab, map] = location.hash.slice(1).split('/')
+  return tab === 'scene' && map ? map : null
 }
 
 const DRAG_TTL = 1500 // a relayed drag with no follow-up expires, so a dropped dragger can't freeze a token
@@ -94,7 +107,7 @@ export const useGame = create<GameStore>((set, get) => {
       let dialog = get().dialog
       const isGm = f.view.me.role === 'gm'
       const resume = get().resumeCheck
-      if (resume && !dialog && !isGm) {
+      if (resume && !dialog && !isGm && !isReadOnly(get())) {
         const mine = f.view.rolls.find((r) => r.by === f.view.me.seat && r.open && !get().dismissed[r.id])
         if (mine) dialog = { kind: 'roll', rollId: mine.id, resume: true }
       }
@@ -134,7 +147,9 @@ export const useGame = create<GameStore>((set, get) => {
     remote: {},
     local: null,
     selected: null,
-    gmMap: null,
+    gmMap: readGmMap(),
+    mapPicker: null,
+    lastMap: null,
     pins: readPins(),
     socket: null,
     authLost: false,
@@ -146,6 +161,7 @@ export const useGame = create<GameStore>((set, get) => {
     callTick: 0,
     burnSeen: null,
     preview: previewSeat(),
+    acting: new URLSearchParams(location.search).get('act') === '1',
     gmError: '',
     fx: {},
     connect: () => {
@@ -155,7 +171,7 @@ export const useGame = create<GameStore>((set, get) => {
         onFrame,
         (status) => set(status === 'live' ? { status, resumeCheck: true } : { status }),
         () => set({ authLost: true }),
-        as ? `/ws?as=${encodeURIComponent(as)}` : '/ws',
+        as ? `/ws?as=${encodeURIComponent(as)}${get().acting ? '&act=1' : ''}` : '/ws',
       )
       set({ socket })
       socket.start()
@@ -166,7 +182,12 @@ export const useGame = create<GameStore>((set, get) => {
     },
     select: (selected) => set({ selected }),
     setLocal: (local) => set({ local }),
-    setGmMap: (gmMap) => set({ gmMap }),
+    setGmMap: (gmMap) => {
+      const was = get().gmMap ?? get().view?.party_map ?? null
+      if (location.hash.slice(1).split('/')[0] === 'scene') history.replaceState(null, '', `#scene/${gmMap}`)
+      set({ gmMap, lastMap: was && was !== gmMap ? was : get().lastMap })
+    },
+    setMapPicker: (mapPicker) => set({ mapPicker }),
     setPins: (pins) => {
       try {
         localStorage.setItem(PINS_KEY, pins ? '1' : '0')
@@ -176,7 +197,7 @@ export const useGame = create<GameStore>((set, get) => {
       set({ pins })
     },
     openPick: (stat, entry = -1) => {
-      if (!get().preview) set({ dialog: { kind: 'pick', stat, entry } })
+      if (!isReadOnly(get())) set({ dialog: { kind: 'pick', stat, entry } })
     },
     openRoll: (rollId, resume = false) => set({ dialog: { kind: 'roll', rollId, resume } }),
     closeDialog: () => {
@@ -186,13 +207,16 @@ export const useGame = create<GameStore>((set, get) => {
   }
 })
 
+/** Looking through someone's screen: nothing done here may act as them. */
+export const isReadOnly = (s: { preview: string | null; acting: boolean }) => !!s.preview && !s.acting
+
 /** Which seat this window is viewing as, if it's the GM's read-only view of a player. */
 function previewSeat(): string | null {
   return new URLSearchParams(location.search).get('as') || null
 }
 
 export const send = (type: string, args: Record<string, unknown>): Promise<Ack> => {
-  if (useGame.getState().preview) return Promise.resolve({ id: null, ok: false, code: 'read_only' }) // the server refuses it too
+  if (isReadOnly(useGame.getState())) return Promise.resolve({ id: null, ok: false, code: 'read_only' }) // the server refuses it too
   return useGame.getState().socket?.send(type, args) ?? Promise.resolve({ id: null, ok: false, code: 'offline' })
 }
 

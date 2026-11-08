@@ -30,7 +30,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 - **Every change follows one path:** `commands.py` (permission check) → events → `state.apply`, logged by `store.py`.
 - **Only `views.project()` sends state out.** Anything players must not see is filtered there, and gets a leak test in `server/tests/`.
 - **Positions are world coordinates** (X, Y, Z) per map, never pixels.
-- **Content** (characters, NPCs, items, maps and the objects on them, presets, the natural-1 insults, the cutscene cues) is YAML in `content/`, not code.
+- **Content** (characters, NPCs, items, maps and the objects on them, how the GM's map picker groups them (`map_groups.yaml`), presets, the sandbox's `scenarios/`, the natural-1 insults, the cutscene cues) is YAML in `content/`, not code.
 - **Dice are rolled only on the server** (`rules.py`, from `commands.py`). The roller's screen gets the dice to animate. Everyone else gets each die only once it has landed there. `web/src/roll/rollfx.js` is generated from R6, and `rollfx.test.ts` checks it still draws exactly what R6 draws.
 
 ## Working here
@@ -38,5 +38,5 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 - `make up` runs the app on http://localhost:8070. `make dev` hot-reloads on :5173. `make test` runs all tests. `make passcode` shows the GM passcode. `make reset-world` wipes the saved game.
 - Node isn't installed on this Mac. npm runs in Docker (see `make test-web`). The server tests use uv: `cd server && uv run pytest`.
 - **Hosting:** the table's copy runs on parker at http://parker.local (port 80; the README's "Hosting it at the table"). `git pull && make up` there updates it. Peter's Mac can still run its own on 8070.
-- To test two seats on one machine, use http://localhost:8070 for one and http://127.0.0.1:8070 for the other.
+- **To test, use the sandbox:** `make sandbox` copies the real save to http://localhost:8072 (GM passcode `test`) with hot reload, and the GM tab gains Bench (scenarios, moments, forced dice, firing any animation) and Seats (every player and the TV at once, each able to act). It only exists when the server starts with `LSO_SANDBOX=1`; parker never sets it. `make sandbox` again starts over from the save.
 - **Git:** commit straight to `main` and push. No branches, no pull requests.

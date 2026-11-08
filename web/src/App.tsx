@@ -99,6 +99,7 @@ function TvScreen({ onLogout }: { onLogout?: () => void }) {
 function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
   const isGm = me.role === 'gm'
   const preview = useGame((s) => s.preview)
+  const acting = useGame((s) => s.acting)
   const tab = useHashTab(isGm)
   const connect = useGame((s) => s.connect)
   const disconnect = useGame((s) => s.disconnect)
@@ -114,7 +115,7 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
   }, [connect, disconnect])
 
   return (
-    <div className={'r4 th-meridian' + (preview ? ' app-preview' : '')}>
+    <div className={'r4 th-meridian' + (preview && !acting ? ' app-preview' : '')}>
       <div ref={world} className="app-rollworld">
         <Header tab={tab} isGm={isGm} onLogout={onLogout} />
         {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : tab === 'codex' ? <Codex /> : tab === 'station' ? <Station /> : <Placeholder tab={tab} />}

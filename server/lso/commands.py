@@ -853,7 +853,7 @@ def handle(
         token = _str(args, "token")
         t = state.tokens.get(token)
         if t is None or t.kind != "npc":
-            raise _invalid("only an NPC token has health here: the crew's is on the rail")
+            raise _invalid("only an NPC token has health here: the crew's is gm.vitals.set")
         hp = args.get("hp")
         if not isinstance(hp, int) or isinstance(hp, bool):
             raise _invalid("hp must be a whole number")

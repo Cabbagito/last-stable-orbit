@@ -1,0 +1,22 @@
+# A setup to test from. See fight-at-the-bar.yaml.
+id: heist-deck-8
+name: The heist, deck 8 at Alert
+note: The crew at the entrance, cones showing
+party_map: deck-8
+maps:
+  deck-8: {mood: alert, switches: {cameras: 1}, shown: [guarded-door, checkpoint]}
+tokens:
+  - {kind: crew, ref: ves, map: deck-8, at: [17.8, 4.0, 0]}
+  - {kind: crew, ref: tomo, map: deck-8, at: [16.9, 3.6, 0]}
+  - {kind: crew, ref: lale, map: deck-8, at: [16.0, 3.3, 0]}
+  - {kind: crew, ref: marlo, map: deck-8, at: [17.0, 4.8, 0]}
+  - {kind: crew, ref: tally, map: deck-8, at: [16.0, 4.4, 0]}
+  - {kind: npc, ref: guard, map: deck-8, at: [13.0, 5.0, 0]}
+inventory:
+  lale: [fob-watch, {item: credits, count: 120}]
+  marlo: [stun-rings, {item: credits, count: 60}]
+  tally: [tally-notebook, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, {item: credits, count: 90}]
+  tomo: [sourdough-jar, {item: credits, count: 140}]
+codex: [lale, marlo, tally, ves, tomo, rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health]
+station: [patience, promenade, event-horizon, deck-6, deck-7, deck-8]

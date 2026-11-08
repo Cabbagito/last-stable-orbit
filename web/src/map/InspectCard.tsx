@@ -1,14 +1,12 @@
 import { useEffect, useState, type CSSProperties } from 'react'
-import { GiveRow, Pocket, Step, Vitals } from '../gm/parts'
-import { mapList } from '../gm/SendCrew'
+import { Cross, GiveRow, Pocket, Step, Vitals } from '../gm/parts'
 import { Closeup, CodexButton, InspectBlock, Inspector } from '../inspect/Inspector'
 import { useItemTip } from '../inspect/ItemTip'
 import { findObject } from '../inspect/objects'
 import { ring } from '../lib/ring'
 import { STAT_LOOK, statIcon } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
-import { gmRoll, gmRun, send, useGame, type GmRollMode } from '../store/game'
-import { fighterIn, fightOn } from '../fight/fights'
+import { gmRoll, gmRun, isReadOnly, send, useGame, type GmRollMode } from '../store/game'
 import { seatsLabel } from '../slots/slots'
 import { STATS, type MapObject, type SlotsCard, type TokenView } from '../types'
 
@@ -32,18 +30,26 @@ export function InspectCard() {
   }, [unseen, found?.mapId, found?.obj.id])
 
   if (!view || !selected) return null
-  const close = (
+  // the GM's cards close from their corner, which leaves their one row for what they can do
+  const close = isGm ? null : (
     <button type="button" className="r4-btn app-small" onClick={() => select(null)} style={{ marginLeft: 'auto' }}>
       Close
     </button>
   )
+  const corner = isGm && (
+    <button type="button" className="gx-x gx-cardx" aria-label="Close" onClick={() => select(null)}>
+      <Cross />
+    </button>
+  )
+  const cardClass = 'app-card' + (isGm ? ' gm' : '')
 
   if (found) {
     const { mapId, obj } = found
     const map = view.maps[mapId]
     const art = map.moods.find((m) => m.id === map.mood)?.base ?? map.moods[0].base
     return (
-      <aside aria-label={obj.name} className="app-card">
+      <aside aria-label={obj.name} className={cardClass}>
+        {corner}
         <Inspector
           label={`OBJECT · ${map.name.toUpperCase()}`}
           name={obj.name}
@@ -74,7 +80,8 @@ export function InspectCard() {
   const crew = t.kind === 'crew' ? view.crew.find((c) => c.id === t.ref) : undefined
   const pockets = crew ? view.inventory[crew.id] ?? [] : []
   return (
-    <aside aria-label={t.name} className="app-card">
+    <aside aria-label={t.name} className={cardClass}>
+      {corner}
       <Inspector
         label={`${crew ? 'CREW' : 'NPC'} · ${t.role.toUpperCase()}`}
         name={crew ? crew.name : t.name}
@@ -93,7 +100,10 @@ export function InspectCard() {
               </span>
             )
           ) : (
-            t.mood && <span className="app-ins-sub">{t.mood}.</span>
+            <>
+              {t.mood && <span className="app-ins-sub">{t.mood}.</span>}
+              {isGm && t.health !== undefined && <Step who={t.name} label="HP" tone="hp" value={t.hp ?? 0} max={t.health} showMax onChange={(hp) => void gmRun('gm.npc.hp', { token: t.id, hp })} />}
+            </>
           )
         }
         actions={
@@ -104,6 +114,7 @@ export function InspectCard() {
                 {t.hidden ? 'Show' : 'Hide'}
               </button>
             )}
+            <SendTo t={t} />
             {isGm && !crew && (
               <button type="button" className="r4-btn app-small" onClick={() => void gmRun('gm.token.remove', { token: t.id })}>
                 Remove
@@ -118,17 +129,15 @@ export function InspectCard() {
             <Vitals c={crew} />
           </div>
         )}
-        {isGm && !crew && <NpcHealth token={t.id} map={t.map} name={t.name} />}
         {t.hidden && <div className="r10-warn">HIDDEN FROM PLAYERS</div>}
-        {t.note && <div className="app-ins-txt">{t.note}</div>}
-        <SendTo t={t} onSent={() => select(null)} />
+        {isGm && !crew && t.stats && <NpcRolls key={t.id} t={t} stats={t.stats} />}
+        {t.note && <div className="app-ins-txt app-ins-gap">{t.note}</div>}
         {isGm && t.gm_note && (
           <div className="r10-gmn">
             <span className="r4-lab">ONLY YOU SEE THIS</span>
             <div className="app-ins-txt">{t.gm_note}</div>
           </div>
         )}
-        {isGm && !crew && t.stats && <NpcRolls key={t.id} t={t} stats={t.stats} />}
         {isGm && crew && (
           <InspectBlock label="ON HAND">
             <div className="r10-pkrow" style={{ marginTop: 6 }}>
@@ -157,7 +166,7 @@ export function InspectCard() {
  */
 function SlotSeats({ mapId, obj, game, isGm }: { mapId: string; obj: MapObject; game: SlotsCard; isGm: boolean }) {
   const select = useGame((s) => s.select)
-  const preview = useGame((s) => s.preview)
+  const readOnly = useGame(isReadOnly)
   const full = game.taken >= game.seats
   const sit = async () => {
     const ack = await send('slots.sit', { map: mapId, object: obj.id })
@@ -183,7 +192,7 @@ function SlotSeats({ mapId, obj, game, isGm }: { mapId: string; obj: MapObject; 
         </button>
       ) : (
         !game.out && (
-          <button type="button" className="sl-cta" disabled={full || !!preview} onClick={() => void sit()}>
+          <button type="button" className="sl-cta" disabled={full || readOnly} onClick={() => void sit()}>
             {full ? 'WAIT FOR A SEAT' : `PLAY · ${game.pull} CREDITS A PULL`}
           </button>
         )
@@ -257,46 +266,14 @@ function NpcRolls({ t, stats }: { t: TokenView; stats: NonNullable<TokenView['st
   )
 }
 
-/** M8: an NPC's health, on its card, while it's in a fight (the crew's is on the rail). */
-function NpcHealth({ token, map, name }: { token: string; map: string; name: string }) {
-  const x = useGame((s) => fighterIn(fightOn(s.view, map), token))
-  if (!x) return null
+/** The GM moves one token to another map, from the map picker: up the stairs, down the vent. */
+function SendTo({ t }: { t: TokenView }) {
+  const isGm = useGame((s) => s.view?.me.role === 'gm')
+  const setMapPicker = useGame((s) => s.setMapPicker)
+  if (!isGm) return null
   return (
-    <div className="r10-cvit">
-      <Step who={name} label="HP" tone="hp" value={x.hp} max={x.health} onChange={(hp) => void gmRun('gm.npc.hp', { token, hp })} />
-    </div>
-  )
-}
-
-/**
- * The GM moves one token to another map: up the stairs, down the vent. It lands at that map's entrance, for the GM to
- * drag where it should be. The rest of the crew and the party's map stay put.
- */
-function SendTo({ t, onSent }: { t: TokenView; onSent: () => void }) {
-  const view = useGame((s) => s.view)
-  const preview = useGame((s) => s.preview)
-  if (!view || view.me.role !== 'gm' || preview) return null
-  return (
-    <InspectBlock label="SEND TO">
-      <select
-        className="app-select"
-        value=""
-        aria-label={`Send ${t.name} to another map`}
-        onChange={(e) => {
-          if (!e.target.value) return
-          void gmRun('gm.token.send', { token: t.id, map: e.target.value })
-          onSent() // it's gone from this map
-        }}
-      >
-        <option value="">Another map…</option>
-        {mapList(view)
-          .filter((m) => m.arrive && m.id !== t.map)
-          .map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.name}
-            </option>
-          ))}
-      </select>
-    </InspectBlock>
+    <button type="button" className="r4-btn app-small" onClick={() => setMapPicker({ token: t.id })}>
+      Send to…
+    </button>
   )
 }

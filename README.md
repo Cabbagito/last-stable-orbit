@@ -26,6 +26,15 @@ Open http://localhost:8070 and click a character, or choose "I'm the GM" and typ
 
 The GM can also load a preset from the GM column (Session 1 at the bar, or the bar after hours), which resets positions, moods, vitals and inventories without wiping anything.
 
+## Testing on a copy
+
+```
+make sandbox       # a fresh copy of your save on http://localhost:8072, GM passcode: test
+make sandbox-down  # stop it
+```
+
+Code and content hot-reload, and your real save is never touched. The GM tab gains **Bench** (load a scenario from `content/scenarios/`, keep and go back to moments, force the next die, fire any roll, Burn, film or event) and **Seats** (every player and the TV, live, each able to act). None of it exists without `LSO_SANDBOX=1`.
+
 ## Hosting it at the table
 
 Players join the wifi and open one short URL. Nobody needs an IP address or an app. On parker (the NixOS desktop) it runs from this checkout, and `system/lso.nix` in the parker repo gives it the name `parker.local` and brings it up on every boot. To update it: `git pull && make up`.
@@ -40,7 +49,7 @@ LSO_WIFI_SSID=YourNetwork
 LSO_WIFI_PASSWORD='your password'      # single quotes keep $ and # as typed
 ```
 
-Those values make the **join card**: the wifi and the URL, as words and QR codes. Nobody can load a page before they're on the wifi, so the card sits on the TV, and in the GM tab under The TV, where the GM can hide it once everyone's in. Only the TV and the GM's screens get it, never a player's feed or the login screen. Leave `LSO_JOIN_URL` out and there is no card, as on a public server.
+Those values make the **join card**: the wifi and the URL, as words and QR codes. Nobody can load a page before they're on the wifi, so the card sits on the TV, and in the GM tab under Session, where the GM can hide it once everyone's in. Only the TV and the GM's screens get it, never a player's feed or the login screen. Leave `LSO_JOIN_URL` out and there is no card, as on a public server.
 
 Everyone must be on the same network as the server: a guest wifi usually stops devices reaching each other.
 
