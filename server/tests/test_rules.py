@@ -7,6 +7,7 @@ import pytest
 from lso.auth import Viewer
 from lso.commands import CommandError, handle
 from lso.config import ROOT
+from conftest import place_dax
 from lso.content import load_content
 from lso.engine import Engine
 from lso.models import GameState
@@ -42,13 +43,14 @@ def codes(fn):
 async def test_seeded_from_default_preset(engine):
     s = engine.state
     assert s.seq == 1 and s.party_map == "event-horizon"
-    assert s.maps["event-horizon"].mood == "open"
+    assert s.maps["event-horizon"].mood == "after"
     assert {t.ref for t in s.tokens.values() if t.kind == "crew"} == {"lale", "marlo", "tally", "ves", "tomo"}
     assert s.vitals["ves"].hp == 4 and s.vitals["ves"].entropy == 2
     assert "hired-gun" not in s.tokens
 
 
 async def test_players_move_only_their_own_token(engine, content):
+    place_dax(engine)
     ack, changed = await run(engine, VES, "token.move", {"token": "ves", "at": [5, 5, 0]})
     assert ack["ok"] and changed and engine.state.tokens["ves"].at == (5, 5, 0)
     ack, _ = await run(engine, VES, "token.move", {"token": "dax", "at": [5, 5, 0]})
@@ -115,14 +117,15 @@ async def test_load_preset(engine):
     await run(engine, GM, "gm.map.mood", {"map": "event-horizon", "mood": "stand"})
     await run(engine, GM, "gm.world.load_preset", {"preset": "bar-after-hours"})
     s = engine.state
-    assert s.maps["event-horizon"].mood == "after" and s.tokens["cleaner-14"].hidden and "fixer" not in s.tokens
+    assert s.maps["event-horizon"].mood == "after" and not s.tokens["cleaner-14"].hidden and "fixer" not in s.tokens
 
 
 def test_player_projection_hides_secrets(engine, content):
+    place_dax(engine)
     st = engine.state.model_copy(deep=True)
     st.tokens["cleaner-14"].hidden = True
     view = json.dumps(project(st, content, VES))
-    assert "cleaner-14" not in view and "Cleaner Unit 14" not in view and "Its eyes slide" not in view
+    assert "cleaner-14" not in view and "The Cleaner" not in view and "Its eyes slide" not in view
     assert "gm_note" not in view
     for n in content.npcs.values():  # no NPC's GM note, visible token or not
         if n.gm_note:

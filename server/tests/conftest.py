@@ -47,3 +47,11 @@ def seat(client):
         return {"cookie": f"{COOKIE}={token}"}
 
     return login
+
+
+def place_dax(engine) -> None:
+    """The default preset is the pitch, and Dax has left by then. Tests that need a visible NPC with a sheet put him back."""
+    from lso.models import TokenState
+
+    state = TokenState(kind="npc", ref="dax", map="event-horizon", at=(11.6, 1.05, 0)).model_dump()
+    engine._commit("system", None, [("token.placed", {"token": "dax", "state": state})], {})

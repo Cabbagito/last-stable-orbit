@@ -8,6 +8,7 @@ import pytest
 
 from lso.auth import Viewer
 from lso.config import ROOT
+from conftest import place_dax
 from lso.content import load_content
 from lso.engine import Engine
 from lso.models import RULES, GameState
@@ -82,6 +83,7 @@ async def test_locked_entries_never_reach_a_player_or_the_tv(engine, content):
 async def test_see_also_and_the_scene_skip_a_locked_page(engine):
     eh = entry(engine, TALLY, "event-horizon")
     assert [s["id"] for s in eh["see"]] == []  # Dax, the table, the slots and the mural are all still locked
+    place_dax(engine)
     v = project(engine.state, engine.content, TALLY)
     assert v["tokens"]["dax"]["codex"] is None
     assert (await run(engine, GM, "gm.codex.unlock", {"entry": "dax"}))["ok"]

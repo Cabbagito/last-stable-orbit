@@ -48,15 +48,57 @@
   counted: true
   text: Station credits. Good anywhere on Ergo.
 
-- id: invitation
-  name: The invitation
+# Each character's own letter, from the bible's session 1. The meeting line and each person's terms are the bible's;
+# the note and wax sentence and the way the terms are put are DRAFT. Only the holder and the GM ever see one.
+- id: letter-lale
+  name: Lale's letter
   icon: icons/items/note.png
-  codex: invitation
+  codex: letter
   kind: note
   text: |-
-    A folded paper note, the only paper you've seen on Ergo.
-    "The Event Horizon, tonight. Ask for the table under the mural. Drinks are on me."
-    No name, just a drop of red wax.
+    A folded note, sealed with a drop of red wax.
+    "The Event Horizon, after closing. You're on the list."
+    A slot for your patient.
+
+- id: letter-marlo
+  name: Marlo's letter
+  icon: icons/items/note.png
+  codex: letter
+  kind: note
+  text: |-
+    A folded note, sealed with a drop of red wax.
+    "The Event Horizon, after closing. You're on the list."
+    Your debts, cleared.
+
+- id: letter-tally
+  name: Tally's letter
+  icon: icons/items/note.png
+  codex: letter
+  kind: note
+  text: |-
+    A folded note, sealed with a drop of red wax.
+    "The Event Horizon, after closing. You're on the list."
+    "Would you, please?"
+
+- id: letter-ves
+  name: Ves's letter
+  icon: icons/items/note.png
+  codex: letter
+  kind: note
+  text: |-
+    A folded note, sealed with a drop of red wax.
+    "The Event Horizon, after closing. You're on the list."
+    Your file, destroyed.
+
+- id: letter-tomo
+  name: Tomo's letter
+  icon: icons/items/note.png
+  codex: letter
+  kind: note
+  text: |-
+    A folded note, sealed with a drop of red wax.
+    "The Event Horizon, after closing. You're on the list."
+    Your file, destroyed.
 
 - id: tally-notebook
   name: Tally's notebook
@@ -76,14 +118,14 @@
   text: A keyed chit with the founder's ring stamped on it. It opens a door you haven't found yet.
 
 - id: maintenance-log
-  name: Unit 14's maintenance log
+  name: Unit 14's log
   icon: icons/items/note.png
   codex: maintenance-log
   kind: note
-  text: |-
-    CLEANER UNIT 14 · shift log, The Event Horizon.
-    Spills cleaned: 3. Hours within two metres of the table under the mural: 14 of 16.
-    Nothing was spilled at that table.
+  text: |-  # DRAFT wording
+    CLEANER UNIT 14 · log, from cradle 14.
+    Its hours within two metres of each person, most first.
+    Old Dax and Dr. Vos are near the top.
 
 - id: founder-log-1
   name: "Founder's audio log #1"
@@ -93,3 +135,56 @@
   text: |-
     Summary: Ilija, years ago, laughing. The station's new mind keeps rearranging his calendar "to make him happy", and he keeps putting dinner back in.
     "Some things you don't optimise. You just show up."
+
+# Session 1's other items, from the bible's table. What each one does is the bible's; the wording is DRAFT, and they
+# borrow existing icons. "[Peter to fill in]" marks what the bible doesn't say yet.
+- id: burner-key
+  name: Burner key
+  icon: icons/items/access-chit.png
+  kind: key
+  text: A one-use hacking device. It gets through one hack with no roll.
+
+- id: brochure
+  name: The brochure
+  icon: icons/items/note.png
+  kind: note
+  text: |-
+    The founder of Ergo, a saint, and the schedule for tomorrow's Vigil.
+    "No one on Ergo waits more than 11 minutes."
+    "No one has ever beaten the slots."
+
+- id: gumshoe-card
+  name: The Gumshoe's card
+  icon: icons/items/note.png
+  kind: note
+  text: |-
+    A card with a name and a date on the back.
+    The victim: [Peter to fill in]. The date: [Peter to fill in].
+
+- id: antidote
+  name: Antidote
+  icon: icons/items/splice-kit.png
+  kind: gear
+  text: One antidote, 3 doses. Wakes someone who's been sedated. Anyone can give a dose.
+
+- id: admissions-record
+  name: Admissions record
+  icon: icons/items/note.png
+  kind: note
+  text: |-
+    The Med Bay's admissions for the night of the scrubbed alley.
+    Who came in that night: [Peter to fill in].
+
+- id: cleaning-log
+  name: Cleaning log
+  icon: icons/items/note.png
+  kind: note
+  text: |-
+    CLEANER DISPATCH · jobs, all logged.
+    The alley was scrubbed. There's no report to go with it.
+
+- id: coin-pouch
+  name: Coin pouch
+  icon: icons/items/credits.png
+  kind: gear
+  text: A pouch with too many coins in it. They can be spent.

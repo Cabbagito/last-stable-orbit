@@ -5,6 +5,7 @@
 # stats: the die for each stat, like the crew's. The GM rolls an NPC by stat. Only the GM ever sees them.
 # health: shown only as its HP ring, while it's in a fight (M8). The enemies' come from the bible; the rest are drafts.
 # The dice are DRAFTS from Round 12 of the UI canvas, for Peter to set.
+# A line marked DRAFT is wording that isn't in the Campaign Bible, for Peter to edit.
 
 - id: dax
   name: Old Dax
@@ -16,11 +17,11 @@
   mood: Watching the door
   note: Keeps one table nobody sits at.
   codex: dax
-  gm_note: His family has kept the founder's table and the bar for 300 years. Holds the stockroom door in session 4.
+  gm_note: "His family has kept the founder's table and the bar for 300 years. Holds the stockroom door in session 4. Irena's lover; they meet in the hidey-hole behind the Bot bays' boiler. He hates what the slots do to his regulars. Two favours for now: the slots, and the bar fight on day 1. He sees the rope after night one and trusts the crew less on day 2."
 
 - id: fixer
-  name: The fixer
-  role: Fixer
+  name: Lucan Merrow
+  role: The Fixer
   portrait: portraits/fixer.gif
   color: "#ff5a4a"
   stats: {body: 12, reflex: 10, tech: 12, intel: 12, cool: 20, empathy: 4}
@@ -28,11 +29,11 @@
   mood: Patient
   note: Asked nicely.
   codex: fixer
-  gm_note: "Uploaded man in a chassis. Thinks a rich client hired him; the client is ISCO. Final boss at the lift: 10 health, d20, Very hard to hit."
+  gm_note: "Uploaded man in a chassis. Thinks a rich client hired him; the client is ISCO. After the bar, ISCO tells him the truth and manipulates him; he stays for the money and kills Dax. Final boss at the lift: 10 health, d20, Very hard to hit."
 
 - id: cleaner-14
-  name: Cleaner Unit 14
-  role: Cleaner, ISCO
+  name: Unit 14
+  role: The Cleaner
   portrait: portraits/cleaner-14.gif
   codex: unit-14
   color: "#c9bcff"
@@ -49,8 +50,9 @@
   color: "#c9bcff"
   stats: {body: 4, reflex: 6, tech: 4, intel: 6, cool: 12, empathy: 6}
   health: 2  # DRAFT for Peter
-  mood: Winning
-  note: Has never lost.
+  mood: Wonderful  # DRAFT, from his line "I feel wonderful now"
+  note: "\"I used to win money on this.\""
+  gm_note: "The alley's killer, sedated and back at his machine, alone. He and a friend secretly won small sums by standing up together; when the friend decided to stop and leave, he followed him into the alley. Ask him directly and he cheerfully admits it: \"Oh yes, that was me. I feel wonderful now.\""
 
 - id: happy-resident
   name: Happy resident
@@ -94,7 +96,7 @@
   health: 2  # DRAFT for Peter
   mood: Sorry for the wait
   note: The wait is eleven minutes. It's always eleven minutes.
-  gm_note: "ISCO holds Dock 7 at exactly 11:00, the longest wait its dashboard doesn't count. A log says: \"I set the alarm at eleven minutes.\""
+  gm_note: "ISCO holds Dock 7 at exactly 11:00, the longest wait its dashboard doesn't count. A log says: \"I set the alarm at eleven minutes.\" Friendly, asks why they've come, hands over the brochure, and gives each of them a pointer it shouldn't know to give: Lale to the Concierge's desk (\"I'm sorry about your patient\"), Marlo to the Night Market's crowds, Tally to the bar's four machines, Tomo to the only real oven, and Ves away from the side alley, closed for cleaning."
 
 - id: concierge
   name: The Concierge
@@ -168,8 +170,8 @@
 
 # The Executive floors, the Secure floor and the Bot bays (M5). DRAFTS, for Peter to set.
 - id: scientist
-  name: The scientist
-  role: Scientist, the company
+  name: Dr. Irena Vos
+  role: The Analyst
   portrait: portraits/scientist.gif
   codex: scientist
   color: "#f2b544"
@@ -177,19 +179,7 @@
   health: 2  # DRAFT for Peter
   mood: Tired
   note: Talks to her plots more than to people.
-  gm_note: "Decades of ISCO's answers trace back to a handful of events, and the 0.49 plot. She can't prove it; she filed it once and got promoted. She built the probe, and the company confiscated it. Keeps her findings in a hidden folder in her room, and is quietly friends with Dax. After the bar, she finds the crew in the Bot bays."
-
-- id: old-man
-  name: The old man
-  role: The founder's assistant
-  portrait: portraits/steward.gif
-  codex: old-man
-  color: "#8f88a3"
-  stats: {body: 4, reflex: 4, tech: 6, intel: 12, cool: 12, empathy: 12}
-  health: 2  # DRAFT for Peter
-  mood: Awake, for now
-  note: Remembers the founder as a young man remembers his boss.
-  gm_note: "STAND-IN PORTRAIT (the steward's, as on the Maps board); there's no art for him yet. Ilija's young assistant, kept in cryo and thawed two months a year for the charter session, so awake about 50 years. Knows the vault exists, not what's in it. One vote; he has proposed a pause three times and lost. Gives the crew stories of the man behind the saint."
+  gm_note: "Decades of ISCO's answers trace back to a handful of events, and the 0.49 plot. She can't prove it; she filed it once and got promoted. She built the probe, and the company confiscated it. Keeps her findings in a hidden folder in her room on deck 7, and she's always there. The probe's code is in her head, and she gives it to the crew in session 4. Dax's lover; they meet in the hidey-hole behind the Bot bays' boiler, and she's waiting there in session 4. Fetching Unit 14's log for her earns her trust. During the heist Peter rolls for her on purpose: if she trusts the crew she lets it slide and asks them to find where the probe is kept."
 
 - id: spider-mech
   name: Spider mech
@@ -201,4 +191,48 @@
   health: 13  # the bible's enemy card
   mood: Dormant
   note: Six legs, a cluster of red lenses, twin guns under its chin.
-  gm_note: "The company's boss machine; ISCO doesn't run it. Starts on its cradle, dormant during the break-in. Enemy card: 13 health, d12, Hard to hit, fights alone. Heavy guns, so at least 2 damage. At 6 health or less its shell cracks: Normal to hit, and it attacks with a d20. Weak: Tech at Hard, once, blinds its lenses (it loses its next action and is Normal to hit). Strong: too big to grapple, and ISCO can't shut it down for you."
+  gm_note: "The company's boss machine; ISCO doesn't run it. Out of the heist: under repair in the Bot bays from day 2, with techs and guards around it, and getting near it weakens it for the probe run (how much is still open). By session 4 it's gone: mercenaries get hold of it and bring it up the freight lift as the boss. Enemy card: 13 health, d12, Hard to hit, fights alone. Heavy guns, so at least 2 damage. At 6 health or less its shell cracks: Normal to hit, and it attacks with a d20. Weak: Tech at Hard, once, blinds its lenses (it loses its next action and is Normal to hit). Strong: too big to grapple, and ISCO can't shut it down for you."
+
+# The rest of the bible's "Other faces" (added 2026-11-08). The dice and health are flat placeholders, because the
+# bible gives none: DRAFTS for Peter to set. Each borrows another NPC's portrait until the real art is imported.
+- id: ahti
+  name: Ahti
+  role: The Janitor
+  portrait: portraits/steward.gif  # STAND-IN
+  codex: ahti
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  note: A small old man with a mop and headphones.
+  gm_note: "STAND-IN PORTRAIT (the steward's). Has cleaned the executive decks for years, because ISCO's bots aren't allowed up there. He always needs people, so whoever opens his closet door on deck 6 is hired on the spot, overalls included: by day someone barfed, and by night his crew clears the Vigil's flowers off the Secure floor, walking through deck 8's checkpoint."
+
+- id: static
+  name: Static Kováč
+  role: The Ex
+  portrait: portraits/hired-gun.gif  # STAND-IN
+  codex: static
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  note: A crime boss on Ergo, with a chrome plate and eye.  # DRAFT wording
+  gm_note: "STAND-IN PORTRAIT (the hired gun's). Marlo's ex-lover and the person he owes. He borrowed from her to pay off another shark, ran with the money and pointed the shark at her. She had to take the shark out, which Marlo doesn't know, and she wants revenge for all three: leaving her, the money and the shark. Her chrome plate and eye date from the night the shark came. She knows his real face and spots his fakes, so she fully counters him. Her thread plays out at the table with no planned ending, and her crew is a possible fight."
+
+- id: gumshoe
+  name: The Gumshoe
+  role: ""  # the bible leaves it open: The Detective, The Snooper or The Investigator
+  portrait: portraits/vendor.gif  # STAND-IN
+  codex: gumshoe
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  note: "\"They've asked me like 17 times. I have enough paperwork as it is.\""
+  gm_note: "STAND-IN PORTRAIT (the vendor's). A third-party investigator looking into the scrubbed death. He smokes cigars and has refused the survey. Simply trying to solve the case, and asks for help if they find him. He knows of a couple of troublemakers who share mannerisms, possibly one group, and has nothing to do with Marlo's debt. As a joke, he's looking for three other men, and his sketches are all Marlo's faces, with a Cool roll to keep a straight face."
+
+- id: head-of-security
+  name: Head of security
+  role: The company
+  portrait: portraits/guard.gif  # STAND-IN
+  color: "#7fb4ff"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  gm_note: "STAND-IN PORTRAIT (the guard's). On deck 8, one of the few people who know the code to the probe's case."

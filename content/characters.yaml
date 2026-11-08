@@ -4,7 +4,7 @@
 # text: what it covers. downside: what happens every time a roll using it fails.
 # health: where their health starts and the most it can be (the bible's crew table).
 # burn: the signature move, from the bible and the Burn animations canvas. It spends 2 Entropy, can't fail, and
-# plays its film: on the TV, or on every laptop when there's no TV. Peter applies what it does by hand.
+# plays its film on the TV. Peter applies what it does by hand.
 # `cuts` are the films; the first is the one the Burn row plays. Ves's second cut is for outside a fight.
 
 - id: lale
@@ -21,7 +21,7 @@
   burn:
     name: On your feet
     when: On her turn
-    text: Someone she can reach heals 3, even from 0 health.
+    text: Someone she can reach heals 3, even from 0 health. It also clears sedation for the rest of a fight or scene.
     icon: icons/burns/lale.png
     color: "#a8f4c4"
     cuts:

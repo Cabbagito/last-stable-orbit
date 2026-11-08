@@ -30,7 +30,7 @@ pins:
   - {k: "3", label: Beds where they wake up, at: [0.68, 3.98, 0.6]}
   - {k: "4", label: "The nurse's counter", at: [7.64, 4.04, 1]}
   - {k: A, label: Straps on each bed, at: [0.78, 5.18, 0.6]}
-  - {k: B, label: Sedation cart, at: [3.84, 6.54, 0.8]}
+  - {k: B, label: "Sedation cart: one antidote, 3 doses", at: [3.84, 6.54, 0.8]}
   - {k: C, label: PROMENADE on the floor by the door, at: [9.84, 7.44, 0]}
 # Where the crew land when you send them here: one to a bed, waking up, in crew order.
 arrive: [[1.4, 1.1, 0.6], [1.4, 2.9, 0.6], [1.4, 4.7, 0.6], [1.4, 6.5, 0.6], [1.4, 8.3, 0.6]]

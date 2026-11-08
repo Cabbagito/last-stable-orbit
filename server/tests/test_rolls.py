@@ -9,6 +9,7 @@ from lso import rules
 from lso.auth import Viewer
 from lso.commands import sweep
 from lso.config import ROOT
+from conftest import place_dax
 from lso.content import load_content
 from lso.engine import Engine
 from lso.models import DIE_SIDES, STATS, GameState, Npc
@@ -64,7 +65,9 @@ def clock():
 
 @pytest.fixture
 def engine(content, tmp_path, dice, clock):
-    return Engine(content, Store(tmp_path / "t.db"), rng=dice, clock=clock)
+    e = Engine(content, Store(tmp_path / "t.db"), rng=dice, clock=clock)
+    place_dax(e)
+    return e
 
 
 async def run(engine, viewer, kind, args):

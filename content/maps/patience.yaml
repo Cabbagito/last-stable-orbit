@@ -22,7 +22,7 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     name: The steward's desk
     at: [9.92, 3.92, 0.8]
     closeup: [985, 690]
-    text: A polished desk with a little brass lamp. A stack of satisfaction surveys waits on it, one per passenger, every box already ticked.
+    text: A polished desk with a little brass lamp.
 # The Key board's "what's where" (the SmallKey board's Patience). Only the GM sees these.
 pins:
   - {k: "1", label: Cream corridor and portholes, at: [5.24, -0.96, 1.5]}

@@ -89,7 +89,7 @@ entries:
   label: Crew · the face
   sub: A suave man of no particular age.
   art: {src: portraits/marlo.gif, kind: bust, pos: 50% 10%}
-  lead: He talks the way onto the executive decks. Someone anonymously bought up his debts, and now he owes them a favour.
+  lead: He talks the way onto the executive decks. His debts are real, and the job comes with an offer to clear them.  # DRAFT
   blocks:
   - id: work
     h: How he works
@@ -172,10 +172,10 @@ entries:
 - id: fixer
   sec: chars
   npc: fixer
-  label: NPC · fixer
+  label: NPC · the fixer
   art: {src: portraits/fixer.gif, kind: bust, pos: 50% 10%}
   lead: A suave machine in a good suit, an uploaded man in a chassis. He hired the crew for a rich client, and he asked nicely.
-  see: [invitation, event-horizon]
+  see: [letter, event-horizon]
 - id: concierge
   sec: chars
   npc: concierge
@@ -188,7 +188,7 @@ entries:
   npc: steward
   label: NPC · steward
   art: {src: portraits/steward.gif, kind: bust, pos: 50% 10%}
-  lead: The Patience's steward. Knows every passenger by name, and leaves a satisfaction survey for each of them.
+  lead: The Patience's steward. Knows every passenger by name.
   see: [patience]
 - id: dock-clerk
   sec: chars
@@ -221,23 +221,33 @@ entries:
 - id: scientist
   sec: chars
   npc: scientist
-  label: NPC · scientist
+  label: NPC · the analyst
   art: {src: portraits/scientist.gif, kind: bust, pos: 50% 10%}
-  lead: Works on deck 7, behind a solid wall. Talks to her plots more than to people.
+  lead: Works on deck 7, always in her room. Talks to her plots more than to people.
   see: [executive]
-- id: old-man
+- id: ahti  # DRAFT wording, from the bible's Other faces. A stand-in portrait until the real art is imported.
   sec: chars
-  npc: old-man
-  label: NPC · the founder's assistant
+  npc: ahti
+  label: NPC · the janitor
   art: {src: portraits/steward.gif, kind: bust, pos: 50% 10%}
-  lead: He was the founder's young assistant. The company keeps him in cryo on deck 9 and wakes him two months a year for
-    the charter session.
-  blocks:
-  - id: pause
-    h: His vote
-    text: He has one vote on the board. He has proposed a pause three times, and lost each time.
-    locked: true
-  see: [ilija, executive]
+  lead: A small old man with a mop and headphones. He has cleaned the executive decks for years, because ISCO's bots aren't
+    allowed up there.
+  see: [executive]
+- id: static  # DRAFT wording, from the bible's Other faces. A stand-in portrait until the real art is imported.
+  sec: chars
+  npc: static
+  label: NPC · the ex
+  art: {src: portraits/hired-gun.gif, kind: bust, pos: 50% 10%}
+  lead: A crime boss on Ergo, with a chrome plate and eye.
+  see: [ergo]
+- id: gumshoe  # DRAFT wording, from the bible's Other faces. A stand-in portrait until the real art is imported.
+  sec: chars
+  npc: gumshoe
+  label: NPC · investigator
+  art: {src: portraits/vendor.gif, kind: bust, pos: 50% 10%}
+  lead: A third-party investigator looking into a scrubbed death. He smokes cigars, and he has refused the survey.
+  quote: '"They''ve asked me like 17 times. I have enough paperwork as it is."'
+  see: [promenade]
 - id: ilija
   sec: chars
   name: Ilija Tesar
@@ -310,16 +320,15 @@ entries:
   label: Item · cash
   art: {src: icons/items/credits.png, kind: icon}
   lead: Station credits. Good anywhere on Ergo.
-- id: invitation
+- id: letter  # one page for all five letters, with nobody's terms: Codex pages are shared by the whole crew
   sec: items
-  item: invitation
+  name: The letter
   role: Note
   label: Item · note
   art: {src: icons/items/note.png, kind: icon}
-  lead: |-
-    A folded paper note, the only paper you've seen on Ergo.
-    "The Event Horizon, tonight. Ask for the table under the mural. Drinks are on me."
-    No name, just a drop of red wax.
+  lead: |-  # DRAFT, around the bible's meeting line
+    A folded note, sealed with a drop of red wax. The same wax on every one.
+    "The Event Horizon, after closing. You're on the list."
   see: [event-horizon, fixer]
 - id: tally-notebook
   sec: items
@@ -343,11 +352,11 @@ entries:
   role: Note
   label: Item · note
   art: {src: icons/items/note.png, kind: icon}
-  lead: |-
-    CLEANER UNIT 14 · shift log, The Event Horizon.
-    Spills cleaned: 3. Hours within two metres of the table under the mural: 14 of 16.
-    Nothing was spilled at that table.
-  see: [unit-14, table]
+  lead: |-  # DRAFT wording
+    CLEANER UNIT 14 · log, from cradle 14.
+    Its hours within two metres of each person, most first.
+    Old Dax and Dr. Vos are near the top.
+  see: [unit-14]
 - id: founder-log-1
   sec: items
   item: founder-log-1
@@ -393,15 +402,15 @@ entries:
   art: {src: maps/deck-6/base-day.png, px: 1110, cx: 640, y0: 230, k: 1, km: 1, pos: 60% 50%, z: 1.4}
   lead: Glass, quiet carpets and human staff. The company sells booking time with ISCO here. By the founder's rule ISCO has
     no systems on these decks, because the people who review it can't be watched by the thing they review.
-  see: [isco, old-man, secure]
+  see: [isco, secure]
 - id: secure
   sec: world
   name: The Secure floor
   role: Behind the guarded door on deck 8
   label: Place · deck 8
   art: {src: maps/secure/base-day.png, px: 1660, cx: 1130, y0: 150, k: 1, km: 1, pos: 68% 30%, z: 1.3}
-  lead: 'Behind the guarded door: a checkpoint, the company''s confiscated gear, and the founder''s vault, kept like a saint''s
-    shrine, with flowers and candles left at its door.'
+  lead: 'Behind deck 8''s guarded door: a red runner to the founder''s vault, kept like a saint''s shrine, with flowers and
+    candles left at its door. The company keeps its confiscated gear here too.'  # DRAFT
   see: [executive, vault]
 - id: vault
   sec: world
@@ -477,7 +486,7 @@ entries:
   role: The Event Horizon
   label: Object · The Event Horizon
   art: {src: maps/event-horizon/base-open.png, px: 1280, cx: 150, y0: 190, k: 2, km: 1, pos: 10% 40%, z: 2.4}
-  lead: Four white machines in a nook, chiming softly. Nobody here seems to lose.
+  lead: Four white machines in a nook, chiming softly. No one has ever beaten the slots.
   see: [event-horizon, tally]
 - id: ergo
   sec: lore
@@ -708,7 +717,7 @@ entries:
   rows:
   - icon: icons/burns/lale.png
     n: On your feet · Lale
-    d: On her turn, someone she can reach heals 3, even from 0 health.
+    d: On her turn, someone she can reach heals 3, even from 0 health. It also clears sedation for the rest of a fight or scene.
   - icon: icons/burns/marlo.png
     n: Cheap shot · Marlo
     d: On his turn, exactly 1 damage to someone he can reach, and they lose their next action.
@@ -728,8 +737,8 @@ entries:
   role: The same roll
   label: How to play
   art: {src: icons/items/sidearm.png, kind: icon}
-  lead: 'Fights use the same roll. There''s no initiative: Peter moves the spotlight, and an enemy acts after each of your
-    actions. When you attack, the amount you beat the number by sets the damage.'
+  lead: 'Fights use the same roll. When a fight starts, everyone in it rolls Reflex for the turn order. When you attack, the
+    amount you beat the number by sets the damage.'  # DRAFT: the app's turn order (CLAUDE.md), not the bible's "no initiative"
   rows_label: Beat the number by
   rows:
   - n: 0 to 4

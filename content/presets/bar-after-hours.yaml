@@ -1,4 +1,4 @@
-# A second arrangement, mostly for testing preset loading: the bar after hours, crew on their feet.
+# The bar after hours, crew on their feet, before Lucan comes in: Dax at his place and Unit 14 in the corner.
 id: bar-after-hours
 name: The bar after hours
 party_map: event-horizon
@@ -18,20 +18,20 @@ tokens:
   - {kind: crew, ref: marlo, map: event-horizon, at: [11.7, 8.9, 0]}
   - {kind: crew, ref: tally, map: event-horizon, at: [11.9, 4.4, 0]}
   - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
-  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0], hidden: true}
+  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}
 inventory:
-  lale: [fob-watch, {item: credits, count: 120}]
-  marlo: [stun-rings, {item: credits, count: 60}]
-  tally: [tally-notebook, {item: credits, count: 140}]
-  ves: [sidearm, splice-kit, {item: credits, count: 90}, maintenance-log]
-  tomo: [sourdough-jar, {item: credits, count: 140}]
+  lale: [fob-watch, letter-lale, {item: credits, count: 120}]
+  marlo: [stun-rings, letter-marlo, {item: credits, count: 60}]
+  tally: [tally-notebook, letter-tally, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, letter-ves, {item: credits, count: 90}]
+  tomo: [sourdough-jar, letter-tomo, {item: credits, count: 140}]
 
 # The Codex by the end of the night at the bar (DRAFT): session 1's start, plus who and what they met there.
 codex: [lale, marlo, tally, ves, tomo,
         rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health,
         patience, promenade, event-horizon,
         ergo, isco, hole, queue,
-        dax, fixer, concierge, dock-clerk, steward, ilija, invitation, mural, table, slots]
+        dax, fixer, concierge, dock-clerk, steward, ilija, letter, mural, table, slots]
 
 # The Station: places the crew has been, lit and open (the party map and wherever the crew stands are added).
 station: [patience, promenade, event-horizon]

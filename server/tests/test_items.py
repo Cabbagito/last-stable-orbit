@@ -19,7 +19,7 @@ VES = Viewer("ves", "player")
 MARLO = Viewer("marlo", "player")
 TALLY = Viewer("tally", "player")
 
-LOG_TEXT = "Nothing was spilled at that table."  # from Unit 14's maintenance log
+LOG_TEXT = "Old Dax and Dr. Vos are near the top."  # from Unit 14's log
 
 
 @pytest.fixture(scope="module")
@@ -68,7 +68,7 @@ def codes(fn):
 def test_starting_kit_has_counted_credits(engine, content):
     assert content.items["credits"].counted and not content.items["sidearm"].counted
     ves = pockets(engine, "ves")
-    assert [e.item for e in ves] == ["sidearm", "splice-kit", "invitation", "credits"]
+    assert [e.item for e in ves] == ["sidearm", "splice-kit", "letter-ves", "credits"]
     assert held(engine, "ves", "credits").count == 140 and held(engine, "ves", "sidearm").count is None
     assert not any(e.new for p in engine.state.inventory.values() for e in p)  # a starting kit isn't news
     assert all(content.items[i].text for i in content.items)  # every item has a tooltip

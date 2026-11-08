@@ -41,7 +41,7 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     name: The 11:00 board
     at: [4.92, -0.25, 2.5]
     closeup: [1030, 340]
-    text: QUEUE 11:00. It has read 11:00 all day, however long the line. Nobody in the line complains.
+    text: 'QUEUE 11:00. "No one on Ergo waits more than 11 minutes." It has read 11:00 all day, however long the line. Nobody in the line complains.'
   - id: mural
     name: The mural
     at: [13.3, 0, 2.2]
@@ -88,7 +88,7 @@ pins:
   - {k: D, label: Clean alley with a charging dock, at: [32.2, 12.8, 0]}
   - {k: E, label: Service door down to Maintenance, at: [42.5, 0.1, 1.2]}
   - {k: F, label: The bar's small sign outside, at: [38, 0, 3.75]}
-  - {k: G, label: Founder's ring set into the plaza floor, at: [19, 6, 0]}
+  - {k: G, label: "Founder's ring in the plaza floor. Audio log #1: Tech roll or Lale's fob watch", at: [19, 6, 0]}
   - {k: H, label: Plastic plants and the ring bench, at: [42.6, 6.6, 2.1]}
   - {k: J, label: "Second market cart, crates, benches", at: [35.2, 8.2, 1.5]}
   - {k: K, label: Vending machine beside the bar, at: [35.5, 0.5, 2.2]}

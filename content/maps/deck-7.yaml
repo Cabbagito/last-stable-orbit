@@ -33,7 +33,7 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     name: "Her desk"
     at: [3.17, 2.5, 0.83]
     closeup: [960.2, 410.34]
-    text: "A lamp, a folder gone soft at the corners, and a manual for an instrument the company doesn't list."
+    text: "A lamp, and a manual for an instrument the company doesn't list."
   - id: maintenance-door
     name: "The old maintenance door"
     at: [6.87, 1.27, 0.61]
@@ -49,11 +49,6 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     at: [14.17, 0, 2.01]
     closeup: [1770.2, 580.38]
     text: "A wall of screens. Every camera on decks 6 to 9, and one bored person watching them."
-  - id: head-count
-    name: "The head-count terminal"
-    at: [1.53, 9.93, 0.89]
-    closeup: [416, 579.72]
-    text: "A terminal in the first glass office, counting who's on the floor. It's very sure of itself."
   - id: sofa
     name: "The sofa"
     at: [13.42, 10.25, 0.75]
@@ -67,14 +62,13 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
 # What's where, from the Heist playground's floor notes. Only the GM sees these.
 pins:
   - {k: "1", label: "Irena's room. She's always there", at: [3.17, 2.5, 0.83]}
-  - {k: "2", label: "Plots, folder and the probe manual", at: [3.17, 0, 2.29]}
+  - {k: "2", label: "Plots, her hidden folder and the probe manual", at: [3.17, 0, 2.29]}
   - {k: "3", label: "Old maintenance door: the only unseen way into the closet, through her room", at: [6.87, 1.27, 0.61]}
   - {k: "4", label: "Power closet. Loop the cameras here: Tech, Very hard, nobody knows", at: [7.63, 0.7, 1.19]}
   - {k: "5", label: "Security office: the operator sees every camera, decks 6 to 9", at: [14.17, 0, 2.01]}
   - {k: "6", label: "The operator's door, under the camera, in its blind spot", at: [14.03, 4.63, 0.28]}
   - {k: "7", label: "Glass offices connect: a camera-free route full of people", at: [7.67, 11, 0.14]}
   - {k: "8", label: "Duct hatch", at: [0, 7.1, 0.46]}
-  - {k: "A", label: "Head-count terminal, first glass office", at: [1.53, 9.93, 0.89]}
   - {k: "B", label: "Sofa, third office: hide till night", at: [13.42, 10.25, 0.75]}
   - {k: "C", label: "The camera on its pole, watching the closet door", at: [11.82, 4.98, 2.69]}
   - {k: "D", label: "Stairs", at: [18.15, 2.65, 0.89]}

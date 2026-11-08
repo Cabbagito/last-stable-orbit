@@ -21,7 +21,15 @@
 | The slots | **Built** 2026-11-08 and checked on :8071 with six seats (the GM, Tally, three more at the machines and the TV); see "The slots" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | Events: mini-golf | **Built** 2026-11-08 and checked on a copy on :8072 with two seats (the GM and Marlo); see "Events" below. Sent from the GM tab until the top executive floor's map brings its object. Deployed to 8070 the same day, with the heist maps; parker still needs `git pull && make up` |
 | The heist maps | **Built** 2026-11-08 and checked on a copy of the saved game on :8072 as the GM; see "The heist maps" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. Object texts, pins and camera cones are drafts for Peter |
+| The story, against the live bible | **Done** 2026-11-08: the content now matches the live Campaign Bible, and the repo's copy is deleted. See "The story consolidated" below. Tests pass, and it was checked by booting a copy of the saved game. Deployed to 8070 the same day; parker still needs `git pull && make up`. New wording is marked DRAFT in the YAML |
 | M9: Finale screen | Not started |
+
+**The story consolidated** (2026-11-08, against the live bible and the Session planning doc):
+- **Changed:** Lucan Merrow and Dr. Irena Vos by name, the old man cut, a private letter per character instead of the invitation, the rest of session 1's items, Ahti, Static Kováč, the Gumshoe and the head of security added, and the three presets refreshed. The pitch is now After hours with Dax gone. Saved games move over once at boot (rules 5).
+- **Stand-ins:** the four new people borrow other portraits and have flat placeholder dice and health. The real portraits still need importing.
+- **Waiting on Peter:** the clinic upgrades (nothing built; the app can't raise a maximum yet), the Gumshoe's descriptor, the victim's name and date on his card, who's on the admissions record, and the bloodline hint in audio log #1.
+- **Proposed, not built:** session 1's four beat presets (arrival, the open day, after hours, the pitch), and a "scene only" preset load, because loading a preset today resets pockets, health, Entropy and the Codex.
+- **Not in the app yet:** the two new films (their cues show greyed out), a vent on the Patience art (Peter hands Ves the burner key from the GM tab), and the later-session items.
 
 **The heist maps** (2026-11-08, from the Heist maps canvas, https://claude.ai/artifact/LpMi1WHzziSMdTDEoQ9uYk, with what's where from the Heist playground, https://claude.ai/artifact/62VgjT7Grfw2TK9YMSbgsr):
 - **Six separate maps,** each with Day, Night and Alert: decks 6, 7, 8 and 9, the Secure floor and the Bot bays. The Executive tower is gone, along with its deck buttons and deck jump. The art is one flat picture per mood, so Alert doesn't pulse.
@@ -519,7 +527,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   4. **Unlocked at the start of session 1:** the five crew pages, How to play, and the places the crew start in or reach on day one (Patience, the Promenade, the bar). Everything else locked until Peter unlocks it. Default: yes.
   5. **Item art:** cards for items with no art of their own (each note shares one icon today) use a plain text card for now; separate note icons get drawn later on the Icons canvas. Default: yes.
   6. **Station, decided in its design round:** can players open places they haven't visited? Default: the cross-section shows all 11 places, but only ones the crew have been to (or Peter reveals) open.
-  - **Not a question:** the local bible copy (`design/reference/campaign-bible.md`) dates from M1. The live doc has the crew rework and new enemy numbers, so re-read it before writing Codex text. The mech's and fixer's GM notes were corrected to 13 and 10 health on 2026-11-04.
+  - **Not a question:** the Campaign Bible lives only at https://claude.ai/artifact/M1yC81nP1if8VLKYnviCHp. Read it with the Docs tools before writing Codex text, and never copy it back into the repo (the old local copy was deleted on 2026-11-08). The mech's and fixer's GM notes were corrected to 13 and 10 health on 2026-11-04.
   - **Game day decides M7's place:** if session 1 is soon, or players should read the Codex at home first, move M7 (hosting on Railway, backups, the layout checks) ahead of the Station.
 - **How M6 is going** (2026-11-04):
   - **Peter said go** with the defaults above, plus the rules change, and pointed at the new Burn canvas.

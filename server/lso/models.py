@@ -11,8 +11,9 @@ STATS = ("body", "reflex", "tech", "intel", "cool", "empathy")
 DIE_SIDES = (4, 6, 8, 10, 12, 20)
 ENTROPY_MAX = 6
 BURN_COST = 2  # Entropy a Burn spends
-RULES = 4  # the rules version a saved game is on: 1 gave each character their own health, 2 the Codex, 3 the Station,
-# 4 the heist maps (the Executive tower became four separate decks; the Secure floor and the Bot bays were redrawn)
+RULES = 5  # the rules version a saved game is on: 1 gave each character their own health, 2 the Codex, 3 the Station,
+# 4 the heist maps (the Executive tower became four separate decks; the Secure floor and the Bot bays were redrawn),
+# 5 the story consolidated with the live bible (each character's letter replaced the invitation; the old man was cut)
 
 Vec3 = tuple[float, float, float]
 

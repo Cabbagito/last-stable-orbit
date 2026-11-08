@@ -10,7 +10,7 @@ import time
 from .auth import Viewer
 from .commands import CommandError, handle, sweep
 from .content import Content
-from .models import RULES, GameState, MapState
+from .models import RULES, GameState, InvEntry, MapState
 from .state import apply, state_from_preset
 from .store import Store
 
@@ -35,6 +35,7 @@ class Engine:
             saved.get("stage", {}).pop("setup", None)  # the TV / no TV / online choice: the TV is always there now
             self.state = GameState.model_validate(saved)
             self._heist_maps()  # first: the checks below would stop at a map that's gone on purpose
+            self._story_update()  # likewise, for an item, an NPC and Codex pages that are gone on purpose
             self._check_refs()
             self._add_new_maps()
             self._update_rules()
@@ -92,6 +93,31 @@ class Engine:
             if "executive" in self.state.station:
                 events += [("station.shown", {"map": "executive", "shown": False}), ("station.shown", {"map": "deck-6", "shown": True})]
             events.append(("map.removed", {"map": "executive"}))
+        if events:
+            self._commit("system", None, events, {})
+
+    def _story_update(self) -> None:
+        """Rules 5: the content caught up with the live bible. Everyone's invitation becomes their own letter, the old
+        man leaves the map, his page and the invitation's page go (the letter's page is unlocked in its place), and the
+        head-count terminal, cut from deck 7, stops being shown."""
+        if self.state.rules >= 5:
+            return
+        s, events = self.state, []
+        for holder, entries in s.inventory.items():
+            for e in entries:
+                if e.item != "invitation":
+                    continue
+                events.append(("item.taken", {"holder": holder, "uid": e.uid}))
+                letter = InvEntry(uid=f"{e.uid}-letter", item=f"letter-{holder}", new=e.new)
+                events.append(("item.given", {"holder": holder, "entry": letter.model_dump()}))
+        events += [("token.removed", {"token": tid}) for tid, t in s.tokens.items() if t.kind == "npc" and t.ref == "old-man"]
+        gone = [k for k in s.codex if k in ("invitation", "old-man", "old-man/pause")]
+        if gone:
+            events.append(("codex.set", {"keys": gone, "unlocked": False}))
+        if "invitation" in gone:
+            events.append(("codex.set", {"keys": ["letter"], "unlocked": True}))
+        if "deck-7" in s.maps and "head-count" in s.maps["deck-7"].shown:
+            events.append(("object.shown", {"map": "deck-7", "object": "head-count", "shown": False}))
         if events:
             self._commit("system", None, events, {})
 

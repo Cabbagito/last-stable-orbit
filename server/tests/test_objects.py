@@ -18,7 +18,7 @@ GM = Viewer("gm", "gm")
 TALLY = Viewer("tally", "player")
 MARLO = Viewer("marlo", "player")
 EH = "event-horizon"
-SLOTS_TEXT = "Nobody here seems to lose."
+SLOTS_TEXT = "No one has ever beaten the slots."
 
 
 @pytest.fixture(scope="module")

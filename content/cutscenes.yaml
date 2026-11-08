@@ -21,6 +21,21 @@
   sets:
     map: patience
 
+- id: lucan  # DRAFT wording. The film isn't made yet, so this stays greyed out.
+  name: Lucan's film
+  sub: Not made yet. Session 1, before the pitch
+  ends: Ends on the bar after hours, with Dax gone and Lucan at the rope. Send the crew to the founder's table.
+  sets:
+    map: event-horizon
+    mood: after
+    tokens:
+      - {ref: fixer, at: [5.6, 6.0, 0]}
+
+- id: act-1  # DRAFT wording. The film isn't made yet, so this stays greyed out.
+  name: End of Act 1
+  sub: Not made yet. Closes session 1
+  ends: Ends on Dax seeing the rope, a lore quote, and "End of Act 1".
+
 - id: vault-opens
   name: The vault opens
   sub: 33 s, in the heist

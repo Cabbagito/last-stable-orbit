@@ -1,12 +1,13 @@
 # Loaded into an empty database, and from the GM panel at any time.
-# The crew and the fixer sit at the founder's table under the mural (seat() on the Maps board:
-# centre 2.8, 3.7, radius 1.62, Z 0.24). Other NPCs wait in the GM roster, unplaced.
+# The crew and Lucan sit at the founder's table under the mural (seat() on the Maps board:
+# centre 2.8, 3.7, radius 1.62, Z 0.24). The bar is in After hours: Dax has taken the envelope and left, and only
+# Unit 14 stays in the corner. Other NPCs wait in the GM roster, unplaced.
 id: session-1
 name: "Session 1: the pitch at the bar"
 default: true
 party_map: event-horizon
 maps:
-  event-horizon: {mood: open, shown: [mural, slots]}
+  event-horizon: {mood: after, shown: [mural, slots]}
   promenade: {mood: calm, switches: {cameras: 1}}
   deck-6: {mood: day, switches: {cameras: 1}}
   deck-7: {mood: day, switches: {cameras: 1}}
@@ -21,18 +22,14 @@ tokens:
   - {kind: crew, ref: tally, map: event-horizon, at: [1.397, 4.51, 0.24]}
   - {kind: crew, ref: ves, map: event-horizon, at: [1.397, 2.89, 0.24]}
   - {kind: crew, ref: tomo, map: event-horizon, at: [2.8, 2.08, 0.24]}
-  - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
-  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [6.3, 5.4, 0]}
-  - {kind: npc, ref: slot-regular, map: event-horizon, at: [-0.86, 10.35, 0]}
-  - {kind: npc, ref: happy-resident, map: event-horizon, at: [12.1, 7.3, 0]}
-  - {kind: npc, ref: service-droid, map: event-horizon, at: [9.6, 7.9, 0]}
-# Every crew member starts at HP 6, Entropy 2 unless listed under vitals.
+  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}
+# Every crew member starts at their full health and 2 Entropy unless listed under vitals.
 inventory:  # DRAFT starting kit from the bible, for Peter to edit. Lale never carries a weapon.
-  lale: [fob-watch, invitation, {item: credits, count: 140}]
-  marlo: [stun-rings, invitation, {item: credits, count: 140}]
-  tally: [tally-notebook, invitation, {item: credits, count: 140}]
-  ves: [sidearm, splice-kit, invitation, {item: credits, count: 140}]
-  tomo: [sourdough-jar, invitation, {item: credits, count: 140}]
+  lale: [fob-watch, letter-lale, {item: credits, count: 140}]
+  marlo: [stun-rings, letter-marlo, {item: credits, count: 140}]
+  tally: [tally-notebook, letter-tally, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, letter-ves, {item: credits, count: 140}]
+  tomo: [sourdough-jar, letter-tomo, {item: credits, count: 140}]
 
 # The Codex at the start of session 1 (DRAFT): the crew pages, How to play, where they start or reach on day one,
 # and what everyone on Ergo already knows. Everything else stays locked until Peter unlocks it in the GM tab.

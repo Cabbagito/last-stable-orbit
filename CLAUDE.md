@@ -4,7 +4,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 
 ## Sources of truth
 
-- **Story, world and rules:** `design/reference/campaign-bible.md`, a copy of the claude.ai Campaign Bible (https://claude.ai/artifact/M1yC81nP1if8VLKYnviCHp). The live doc may be newer.
+- **Story, world and rules:** the live Campaign Bible (https://claude.ai/artifact/M1yC81nP1if8VLKYnviCHp). Read it with the Docs tools, and never copy it back into the repo.
 - **UI:** `design/reference/ui/R6.dc.html`, the latest round ("Meridian, ruled", modified from round 4's Meridian). Always build from the latest round.
 - **Roll banners, God and the GM's roll modes:** the UI canvas, page "Round 17" (`R17Stage` holds them all).
 - **Codex and Station:** the UI canvas (https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff), pages "Codex, pinned" and "Station". The decisions are in the plan's M6.

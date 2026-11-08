@@ -57,7 +57,7 @@ server/lso/   FastAPI app
 content/      characters, NPCs, items, maps and presets as YAML (edit these, not code)
 assets/       art imported from the claude.ai design artifacts (see assets/manifest.yaml)
 web/          React + TypeScript + Vite; styles copied from the R6 "Meridian, ruled" board
-design/       reference copies of the design boards and the campaign bible
+design/       reference copies of the design boards (the campaign bible is live on claude.ai, never copied here)
 docs/         the build plan
 ```
 

@@ -16,7 +16,7 @@ from lso.views import project
 GM = Viewer("gm", "gm")
 TALLY = Viewer("tally", "player")
 EH = "event-horizon"
-SLOTS_TEXT = "Nobody here seems to lose."
+SLOTS_TEXT = "No one has ever beaten the slots."
 
 
 @pytest.fixture(scope="module")
@@ -102,17 +102,17 @@ def test_view_as_gets_exactly_that_seats_feed_and_no_secrets(client, seat, app):
             assert pv == tv == project(engine.state, engine.content, TALLY)  # the same projection, nothing added
             assert pv["me"] == {"seat": "tally", "role": "player", "char": "tally"}
             raw = json.dumps(pv)
-            for secret in ["cleaner-14", "Cleaner Unit 14", "maintenance-log", "Unit 14's maintenance log", SLOTS_TEXT, "Slot machines", "gm_note"]:
+            for secret in ["cleaner-14", "The Cleaner", "maintenance-log", "Unit 14's log", SLOTS_TEXT, "Slot machines", "gm_note"]:
                 assert secret not in raw, secret
             assert set(pv["inventory"]) == {"tally"}
             assert {o["id"] for o in pv["maps"][EH]["objects"]} == {"mural"}
             assert not {"roster", "presets", "items"} & set(pv)
 
             # it stays live: the GM hides Dax, and the preview loses him exactly as Tally's screen does
-            intent(g, "gm.token.hide", {"token": "dax", "hidden": True}, "d")
+            intent(g, "gm.token.hide", {"token": "fixer", "hidden": True}, "d")
             assert recv(g, "ack")["ok"]
             pv, tv = recv(p, "view")["view"], recv(t, "view")["view"]
-            assert pv == tv and "dax" not in pv["tokens"]
+            assert pv == tv and "fixer" not in pv["tokens"]
 
 
 def test_view_as_is_read_only(client, seat, app):

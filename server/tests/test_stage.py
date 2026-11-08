@@ -12,6 +12,7 @@ from starlette.websockets import WebSocketDisconnect
 from lso.auth import COOKIE, Viewer
 from lso.commands import FILM_LEAD, CommandError, handle
 from lso.config import ROOT
+from conftest import place_dax
 from lso.content import load_content
 from lso.engine import Engine
 from lso.store import Store
@@ -46,7 +47,9 @@ def clock():
 
 @pytest.fixture
 def engine(content, tmp_path, clock):
-    return Engine(content, Store(tmp_path / "t.db"), clock=clock)
+    e = Engine(content, Store(tmp_path / "t.db"), clock=clock)
+    place_dax(e)
+    return e
 
 
 async def ok(engine, viewer, kind, args):
