@@ -20,14 +20,14 @@
 | Events: the Satisfaction Report | **Built** 2026-11-08 and checked on :8071 with two seats (the GM and Marlo); see "Events" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | The slots | **Built** 2026-11-08 and checked on :8071 with six seats (the GM, Tally, three more at the machines and the TV); see "The slots" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | Events: mini-golf | **Built** 2026-11-08 and checked on a copy on :8072 with two seats (the GM and Marlo); see "Events" below. Sent from the GM tab until the top executive floor's map brings its object. Deployed to 8070 the same day, with the heist maps; parker still needs `git pull && make up` |
-| The heist maps | **Built** 2026-11-08 and checked on a copy of the saved game on :8072 as the GM; see "The heist maps" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. Object texts, pins and camera cones are drafts for Peter |
+| The heist maps | **Built** 2026-11-08 and checked on a copy of the saved game on :8072 as the GM; see "The heist maps" below. Deployed to 8070 the same day, except the Station's per-deck picking; parker still needs `git pull && make up`. Object texts, pins and camera cones are drafts for Peter |
 | M9: Finale screen | Not started |
 
 **The heist maps** (2026-11-08, from the Heist maps canvas, https://claude.ai/artifact/LpMi1WHzziSMdTDEoQ9uYk, with what's where from the Heist playground, https://claude.ai/artifact/62VgjT7Grfw2TK9YMSbgsr):
 - **Six separate maps,** each with Day, Night and Alert: decks 6, 7, 8 and 9, the Secure floor and the Bot bays. The Executive tower is gone, along with its deck buttons and deck jump. The art is one flat picture per mood, so Alert doesn't pulse.
 - **Marked on each:** things to inspect (hidden until the GM shows them), GM-only pins, arrival spots, and on the five floors with cameras, the cone. Every position was read off the art and checked on it.
 - **Moving one person between maps:** the GM's token card has "Send to". It lands them at that map's entrance; the rest of the crew and the party's map stay. Players can no longer jump decks themselves.
-- **The Station** keeps one place for the Executive floors (`also` lists the other decks), and any deck lights it. The Codex keeps one page.
+- **The Station** has each deck as its own place, cut along the bands the art already draws: its own highlight, click area, label and crew chips, and you pick a deck there. Going to one lights only that deck. The Codex keeps one page.
 - **A saved game moves over once at boot** (rules 4): tokens on the tower land on the deck they were on, tokens on the Secure floor and Bot bays land at the entrance, and a mood the new art doesn't have becomes Day.
 - **Camera cones:** from the playground's coverage, starting at the pole in the art. Deck 8's pole is by the stairs, so its cone looks back from the stairs instead of towards them; it still keeps the catering lift's route clear. The Secure floor's cone is the playground's, from mid-hall, though the art draws cameras on the walls.
 - **Not done:** the putting green is an object on deck 9, but mini-golf is still sent from the GM tab. The people layers (Silence, the Bot bays' Day 1 to Session 4) aren't presets yet. The Bot bays' art shows the mech under its tarp in every mood.

@@ -61,11 +61,11 @@ def state_from_preset(preset: Preset, content: Content) -> dict:
 
 def station_lit(preset: Preset, content: Content, tokens: dict[str, dict]) -> list[str]:
     """A preset's lit places: its own list, the party map, and wherever the crew stands."""
+    places = {p.map for p in content.station.places} if content.station else set()
     lit = list(preset.station)
     for m in [preset.party_map] + [t["map"] for t in tokens.values() if t["kind"] == "crew"]:
-        p = content.station.place_of(m) if content.station else None
-        if p and p.map not in lit:
-            lit.append(p.map)
+        if m in places and m not in lit:
+            lit.append(m)
     return lit
 
 

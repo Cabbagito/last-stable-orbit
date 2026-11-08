@@ -200,7 +200,7 @@ def check_refs(c: Content) -> None:
         problems += [f"{where}: token id {t.id!r} is a crew member's" for t in st.tokens if t.id in c.characters]
     problems += _codex_problems(c)
     if c.station:
-        problems += [f"station.yaml: unknown map {m!r}" for p in c.station.places for m in [p.map, *p.also] if m not in c.maps]
+        problems += [f"station.yaml: unknown map {p.map!r}" for p in c.station.places if p.map not in c.maps]
     places = {p.map for p in c.station.places} if c.station else set()
     for pr in c.presets.values():
         problems += [f"preset {pr.id}: station {m!r} isn't a place on the Station" for m in pr.station if m not in places]

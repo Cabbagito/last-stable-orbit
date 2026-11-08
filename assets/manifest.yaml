@@ -1089,11 +1089,36 @@ assets:
     bytes: 1452
     width: 550
     height: 420
-  - path: station/lit-executive.png
+  - path: station/lit-deck-9.png
     store: UI
-    asset_id: "7a151ed70eb17dffbf1634b82c22d3de"
-    sha256: "4e6a6d11224172c98725a650b6761b93c03bf0027aa31736a334c32e8f7d0439"
-    bytes: 4674
+    asset_id: "7a151ed70eb17dffbf1634b82c22d3de"  # cut from its lit-executive overlay
+    crop: [350, 60, 426, 82]
+    sha256: "566ad096535d3ee6121075c454b67e67918d2fb66fbf0e097eefce64b15919c1"
+    bytes: 2384
+    width: 550
+    height: 420
+  - path: station/lit-deck-8.png
+    store: UI
+    asset_id: "7a151ed70eb17dffbf1634b82c22d3de"  # cut from its lit-executive overlay
+    crop: [350, 82, 426, 104]
+    sha256: "6e53c418dd8fa00ef71883eee8743843b89bd13a86a3a2846f60a4e20aca5b80"
+    bytes: 1952
+    width: 550
+    height: 420
+  - path: station/lit-deck-7.png
+    store: UI
+    asset_id: "7a151ed70eb17dffbf1634b82c22d3de"  # cut from its lit-executive overlay
+    crop: [350, 104, 426, 126]
+    sha256: "bc04c631b395df26ac2cd12a887292cd22d286d9e5e68690e6ee3ce0cee8a67c"
+    bytes: 2050
+    width: 550
+    height: 420
+  - path: station/lit-deck-6.png
+    store: UI
+    asset_id: "7a151ed70eb17dffbf1634b82c22d3de"  # cut from its lit-executive overlay
+    crop: [350, 126, 426, 148]
+    sha256: "74b21bb53e49d217cb09ab5254086fee099367cba99c33b333ce5a9fe261a124"
+    bytes: 1382
     width: 550
     height: 420
   - path: station/lit-secure.png

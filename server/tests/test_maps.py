@@ -216,12 +216,17 @@ async def test_the_gm_sends_one_token_to_another_map(engine):
     assert not ack["ok"]
 
 
-async def test_any_deck_lights_the_executive_floors_on_the_station(engine):
+async def test_each_deck_is_its_own_place_on_the_station(engine):
+    """The four decks are cut out of one band of the picture: side by side, nothing shared, and only the one you reach lights."""
     await ok(engine, GM, "gm.crew.send", {"map": "deck-9"})
-    assert "deck-6" in engine.state.station and "deck-9" not in engine.state.station
     st = project(engine.state, engine.content, VES)["station"]
-    assert next(p for p in st["places"] if p["id"] == "deck-6")["lit"]
-    assert {c["map"] for c in st["crew"]} == {"deck-6"}
+    assert {p["id"] for p in st["places"] if p["lit"] and p["id"].startswith("deck-")} == {"deck-9"}
+    assert {c["map"] for c in st["crew"]} == {"deck-9"}
+    deck9 = next(p for p in st["places"] if p["id"] == "deck-9")
+    assert deck9["overlay"] == "/assets/station/lit-deck-9.png" and deck9["preview"] == "/assets/maps/deck-9/base-day.png"
+    assert next(p for p in st["places"] if p["id"] == "deck-8")["overlay"] is None
+    tops = {p.map: p.hots[0][1] for p in engine.content.station.places if p.map.startswith("deck-")}
+    assert tops == {"deck-9": 120, "deck-8": 164, "deck-7": 208, "deck-6": 252}
 
 
 def test_a_saved_game_moves_onto_the_heist_maps(tmp_path, content):

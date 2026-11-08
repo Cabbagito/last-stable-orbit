@@ -454,7 +454,6 @@ class StationPlace(Strict):
     has been there, and the boxes you hover. Positions are display px on the 1100 x 840 picture (art framing)."""
 
     map: str
-    also: list[str] = []  # other maps that count as this place: the Executive floors are four decks
     name: str
     dark_name: str | None = None
     where: str
@@ -479,14 +478,10 @@ class Station(Strict):
 
     @model_validator(mode="after")
     def _once(self) -> "Station":
-        ids = [m for p in self.places for m in [p.map, *p.also]]
+        ids = [p.map for p in self.places]
         if len(ids) != len(set(ids)):
             raise ValueError("a map shows on the Station once")
         return self
-
-    def place_of(self, map_id: str) -> StationPlace | None:
-        """The place on the cross-section a map belongs to."""
-        return next((p for p in self.places if map_id == p.map or map_id in p.also), None)
 
 
 class SurveyOption(Strict):

@@ -43,12 +43,12 @@ def place(engine, viewer, map_id):
 
 
 def test_every_map_is_a_place_on_the_station(content):
-    assert {m for p in content.station.places for m in [p.map, *p.also]} == set(content.maps)
+    assert {p.map for p in content.station.places} == set(content.maps)
 
 
 def test_session_one_lights_where_the_crew_has_been(engine):
     s = station(engine, VES)
-    assert len(s["places"]) == 11
+    assert len(s["places"]) == 14
     assert {p["id"] for p in s["places"] if p["lit"]} == DAY_ONE
     eh = place(engine, VES, "event-horizon")
     assert eh["overlay"] == "/assets/station/lit-event-horizon.png" and eh["preview"] == "/assets/maps/event-horizon/base-open.png"

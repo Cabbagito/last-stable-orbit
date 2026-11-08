@@ -12,6 +12,7 @@ art: station/ergo.png
 hole: codex/hole.gif
 labels:
   - {x: 714, y: 728, text: About 3 million km}
+  - {x: 702, y: 106, text: Executive floors}
 
 places:
   - map: patience
@@ -50,15 +51,41 @@ places:
     chip: [1006, 442]
     hots: [[984, 374, 56, 68]]
 
+  - map: deck-9
+    name: "Deck 9: the founder"
+    where: The top of the Executive floors
+    blurb: "His office, kept as he left it, a gallery of his things, and the board's putting green. Closed to almost everyone."
+    lit: station/lit-deck-9.png
+    tags: [{x: 662, y: 136, text: Deck 9}]
+    chip: [748, 142]
+    hots: [[700, 120, 152, 44]]
+
+  - map: deck-8
+    name: "Deck 8: the board"
+    where: The Executive floors
+    blurb: "The boardroom, a wall of green lights, and the guarded door to the Secure floor."
+    lit: station/lit-deck-8.png
+    tags: [{x: 662, y: 180, text: Deck 8}]
+    chip: [748, 186]
+    hots: [[700, 164, 152, 44]]
+
+  - map: deck-7
+    name: "Deck 7: managers"
+    where: The Executive floors
+    blurb: "Managers in glass offices, and one room with somebody's plots on the wall."
+    lit: station/lit-deck-7.png
+    tags: [{x: 662, y: 224, text: Deck 7}]
+    chip: [748, 230]
+    hots: [[700, 208, 152, 44]]
+
   - map: deck-6
-    also: [deck-7, deck-8, deck-9]
-    name: The Executive floors
-    where: Decks 6 to 9
-    blurb: "Glass, quiet carpets, human staff. The company sells booking time with ISCO here. By the founder's rule, ISCO has no systems on these decks."
-    lit: station/lit-executive.png
-    tags: [{x: 702, y: 106, text: Executive floors}]
-    chip: [780, 296]
-    hots: [[700, 120, 152, 176]]
+    name: "Deck 6: arrivals"
+    where: The Executive floors, out of the lift from the Promenade
+    blurb: "Glass, quiet carpets, human staff. Rows of reviewers under a board that only climbs. By the founder's rule, ISCO has no systems on these decks."
+    lit: station/lit-deck-6.png
+    tags: [{x: 662, y: 268, text: Deck 6}]
+    chip: [748, 274]
+    hots: [[700, 252, 152, 44]]
 
   - map: secure
     name: The Secure floor

@@ -512,8 +512,8 @@ def _send_crew(state: GameState, content: Content, map_id: str) -> Events:
 
 def _lit(state: GameState, content: Content, map_id: str) -> Events:
     """The crew is going somewhere: it lights up on the Station."""
-    p = content.station.place_of(map_id) if content.station else None
-    return [("station.shown", {"map": p.map, "shown": True})] if p and p.map not in state.station else []
+    places = {p.map for p in content.station.places} if content.station else set()
+    return [("station.shown", {"map": map_id, "shown": True})] if map_id in places and map_id not in state.station else []
 
 
 def _send_token(state: GameState, content: Content, token: str, map_id: str) -> Events:

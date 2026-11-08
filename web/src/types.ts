@@ -524,7 +524,6 @@ export interface CodexView {
 
 /** One place on the Station's cross-section. A dark one (`lit` false) has no overlay or preview for players. */
 export interface StationPlaceView {
-  also: string[]
   id: string // its map
   name: string
   where: string
