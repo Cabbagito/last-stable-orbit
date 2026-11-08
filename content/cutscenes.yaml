@@ -3,7 +3,8 @@
 # and Stage"). A cue with no file isn't made yet: it shows in the list, greyed out.
 #
 # `sets` is what the cue sets behind the film, so play resumes in the right place when it ends: the map (the
-# party looks at it), its mood and switches, and NPCs placed where the film leaves them. The crew stay put.
+# party looks at it), its mood and switches, and NPCs placed where the film leaves them. The crew stay put: when
+# a film ends on another map, the GM sends them there (Scene, "Send the crew here"), which also works while it plays.
 # Positions are drafts for Peter to adjust.
 
 - id: wait
@@ -12,10 +13,23 @@
 
 - id: intro
   name: "Intro: Patience arrives"
-  sub: About 3 minutes
-  ends: Ends on the Patience map, and play begins.
+  sub: 3:32, opens the campaign
+  ends: Ends on the Patience map, and play begins. Send the crew there if they aren't already.
+  file: films/intro.mp4
+  length: 212.254
+  still: films/intro-still.png
   sets:
     map: patience
+
+- id: vault-opens
+  name: The vault opens
+  sub: 33 s, in the heist
+  ends: Ends on his desk and the recorder. Goes to the founder's vault. Send in whoever walked through the door.
+  file: films/vault-opens.mp4
+  length: 33.0
+  still: films/vault-opens-still.png
+  sets:
+    map: vault
 
 - id: shotgun
   name: "The bar: the shotgun"
@@ -29,3 +43,25 @@
     mood: after
     tokens:
       - {ref: dax, at: [11.6, 1.05, 0]}
+
+- id: ride-down
+  name: The ride down
+  sub: 32 s, the last of the cable
+  ends: Ends on the Terminal room, empty and dark. Send the crew there from the cab.
+  file: films/ride-down.mp4
+  length: 32.0
+  still: films/ride-down-still.png
+  sets:
+    map: terminal
+    mood: empty
+
+- id: thank-you
+  name: Thank you for bringing that
+  sub: 37 s, the Seal goes in
+  ends: Ends on the Terminal room with the Seal in and the face over it. The crew stay where they are.
+  file: films/thank-you.mp4
+  length: 36.667
+  still: films/thank-you-still.png
+  sets:
+    map: terminal
+    mood: seal

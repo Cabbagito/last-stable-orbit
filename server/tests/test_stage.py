@@ -101,7 +101,8 @@ async def test_the_tv_sees_only_what_everyone_may(engine, content):
     assert not any("stats" in t for t in v["tokens"].values())  # NPC dice are the GM's
     shown = set(engine.state.maps[s.party_map].shown)
     assert {o["id"] for o in v["maps"][s.party_map]["objects"]} == shown
-    assert v["stage"]["films"] == [FILM]  # every film, so a cue starts at once
+    assert v["stage"]["films"] == [f"/assets/{c.file}" for c in content.cutscenes.values() if c.file]  # every film, so a cue starts at once
+    assert FILM in v["stage"]["films"] and "-still" not in body  # the stills are the GM's
 
 
 async def test_the_tv_learns_a_roll_as_it_lands(engine, content):
@@ -194,7 +195,7 @@ def test_only_the_gm_plays_films_and_only_made_ones(engine, content):
     with pytest.raises(CommandError) as e:
         handle(TALLY, engine.state, content, "gm.film.play", {"cue": "shotgun"})
     assert e.value.code == "forbidden"
-    for cue in ("intro", "wait", "nope"):
+    for cue in ("wait", "nope"):
         with pytest.raises(CommandError):
             handle(GM, engine.state, content, "gm.film.play", {"cue": cue})
 

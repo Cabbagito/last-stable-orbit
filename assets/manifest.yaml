@@ -6,6 +6,10 @@ stores:
   ICONS: https://claude.ai/artifact/Hi3fgpcXR84e5cy2y7jNBs
   UI: https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff
   SHOTGUN: https://claude.ai/artifact/ExqP99kRwpzUP9Funyg7Sv
+  OPENING: https://claude.ai/artifact/ARhC8AUJVB9jo5vAeYVPC5
+  VAULT: https://claude.ai/artifact/5HvkDaUYvM9YvRMf1Y6SC1
+  RIDE: https://claude.ai/artifact/KC2k29u1n3sa2uUYFDh9EN
+  THANKS: https://claude.ai/artifact/QdKFhDv6hJy2NtnDGyNddj
   BURNS: https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg
   SATISFACTION: https://claude.ai/artifact/Vkpa2f7xbG1pnwFuscAbHc  # no asset store: these are inlined in its page
   SLOTS: https://claude.ai/artifact/EPiC8wXsHQy7o5to3Rd8kj
@@ -683,6 +687,62 @@ assets:
     bytes: 989
     width: 48
     height: 48
+  - path: films/intro.mp4
+    store: OPENING
+    asset_id: "377e7e6a5b2a7a860fcd4b9b01aaba21"
+    sha256: "383cda5147c951e1acca589870e36903580a7e6ceeaa0a5ee5e46787b514e87b"
+    bytes: 14395781
+    width: 960
+    height: 540
+  - path: films/intro-still.png
+    store: OPENING
+    asset_id: "1cdcdd8d4841dbb3e834a2e827e5ffa0"
+    sha256: "d7cd6e1aa554825ed778e7a9563c811b530aa75690ae74b2d20bb072e6fa9d11"
+    bytes: 34286
+    width: 480
+    height: 270
+  - path: films/vault-opens.mp4
+    store: VAULT
+    asset_id: "d0a03faa5f97985b846d5f62c8dd1fe0"
+    sha256: "9c49ff5025ad1848c001ae5a66c6bbf73cd26c506ecb5b8f2bb9a60c6022a770"
+    bytes: 9881233
+    width: 1920
+    height: 1080
+  - path: films/vault-opens-still.png
+    store: VAULT
+    asset_id: "58734faa31b3e746743d7c83cf452be3"
+    sha256: "9f1254b5d338ec7414b511af1ef51a7dcd12c200774c3c6a76de300dadf55935"
+    bytes: 59675
+    width: 480
+    height: 270
+  - path: films/ride-down.mp4
+    store: RIDE
+    asset_id: "c2e3d2d73598dbb4d3144c5c68f3f6a7"
+    sha256: "8c3d1a0f6f69324573ebf119508d12b17ab5a7f52a4cee970d9553e45bac237f"
+    bytes: 4386368
+    width: 1920
+    height: 1080
+  - path: films/ride-down-still.png
+    store: RIDE
+    asset_id: "621b945b6252bb5dabe9c8abd1af98db"
+    sha256: "112725c4b54dfbfc1dc18559f178e36ec70a9e6da4d1f7747ce54c9cae9e4556"
+    bytes: 30813
+    width: 480
+    height: 270
+  - path: films/thank-you.mp4
+    store: THANKS
+    asset_id: "9dc15890da9e94aca116dd3cddcf89db"
+    sha256: "dcb0d29d9351d8dea6a5ae438677532b36ff71c02be99556e0b8aa888f6daea2"
+    bytes: 6233309
+    width: 1920
+    height: 1080
+  - path: films/thank-you-still.png
+    store: THANKS
+    asset_id: "488d1a0bbc298888e3b906333ae3d051"
+    sha256: "9bbe12b28afce662fcc065e9bea851f80dfd5a26e6152298261c38ccbc6637e6"
+    bytes: 28286
+    width: 480
+    height: 270
   - path: films/shotgun.mp4
     store: SHOTGUN
     asset_id: "f5082d83bac9a099d8907e63d85ecc77"

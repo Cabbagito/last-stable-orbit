@@ -416,13 +416,14 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **Cutscenes** are in `content/cutscenes.yaml`, in the order you'll use them. A cue with no file shows as "NOT MADE YET". Each made cue has its file, its length, the GM's still, and `sets`: what it sets behind the film (the party's map, mood, switches, NPCs placed). The shotgun sets the bar after hours with Dax at [11.6, 1.05, 0], his after-hours spot. That position is a draft for "the gap in the rail".
     - `gm.film.play` starts a film 1.5 s after the press (the TV has the file already). It can't be stopped, and while it plays the setup and camera don't change either. The server ends it on time and marks the cue played.
     - The film itself is `assets/films/shotgun.mp4` (35.8 s, 1920×1080, sound baked in), from the shotgun canvas.
+    - **Added 2026-11-08:** the intro (3:32, 960×540), The vault opens (33 s), The ride down (32 s) and Thank you for bringing that (36.7 s), each the approved cut from its canvas, with a storyboard frame as the GM's still. The cue list is in campaign order. A cue leaves the crew where they are, so after a film that changes map the GM presses "Send the crew here" on the Scene; it works while the film plays.
   - **In sync:** every frame and pong carries the server's clock, and each screen keeps its offset from the shortest round trip (`web/src/net/clock.ts`). A screen starts the film at the server moment; one that's late jumps to where everyone is, and one that drifts more than 0.3 s jumps back.
   - **Which screens play it, and who may fetch it:**
     - Only the TV plays it, with all the sound. Players' laptops show the black hole (Round 13's dust) until it ends; they never get the file or the film's name. The GM's laptop keeps working, and the cue list shows its progress.
     - The GM's still is a spoiler, so only the GM gets it.
   - **The GM tab:** Cutscenes is the cue list with a two-step Play, progress while it plays, and PLAYED after. The TV has the status, the camera with faces for Follow one, and "On the TV now", the TV's own screen small and silent (`/?as=stage`).
   - **Loading a preset keeps the table setting:** where you're playing, the camera, and which cues were played.
-  - **Not built:** the waiting loop and the intro, which aren't made yet; a stop button (Peter's call); and the soundboard, ambience and roll sounds (later).
+  - **Not built:** the waiting loop, which isn't rendered yet (only its storyboard frame is on the opening's canvas), and the app has no looping playback for it; a stop button (Peter's call); and the soundboard, ambience and roll sounds (later).
   - **Checked:** 104 server tests (17 new) and 22 web tests. Walked through on a separate test server with the GM, the TV and Tally:
     - the TV's login and start click;
     - the camera following Ves;
