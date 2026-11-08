@@ -19,8 +19,8 @@
 | Always the TV | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV) on a copy of the saved game; see "Changed 2026-11-06: the TV is always there" in Stage. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | Events: the Satisfaction Report | **Built** 2026-11-08 and checked on :8071 with two seats (the GM and Marlo); see "Events" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | The slots | **Built** 2026-11-08 and checked on :8071 with six seats (the GM, Tally, three more at the machines and the TV); see "The slots" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
-| Events: mini-golf | **Built** 2026-11-08 and checked on a copy on :8072 with two seats (the GM and Marlo); see "Events" below. Sent from the GM tab until the top executive floor's map brings its object. Not deployed yet |
-| The heist maps | **Built** 2026-11-08 and checked on a copy of the saved game on :8072 as the GM; see "The heist maps" below. Not deployed yet. Object texts, pins and camera cones are drafts for Peter |
+| Events: mini-golf | **Built** 2026-11-08 and checked on a copy on :8072 with two seats (the GM and Marlo); see "Events" below. Sent from the GM tab until the top executive floor's map brings its object. Deployed to 8070 the same day, with the heist maps; parker still needs `git pull && make up` |
+| The heist maps | **Built** 2026-11-08 and checked on a copy of the saved game on :8072 as the GM; see "The heist maps" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. Object texts, pins and camera cones are drafts for Peter |
 | M9: Finale screen | Not started |
 
 **The heist maps** (2026-11-08, from the Heist maps canvas, https://claude.ai/artifact/LpMi1WHzziSMdTDEoQ9uYk, with what's where from the Heist playground, https://claude.ai/artifact/62VgjT7Grfw2TK9YMSbgsr):
