@@ -86,6 +86,7 @@ class Engine:
             if t.map not in c.maps:
                 bad.append(f"token {tid} -> map {t.map!r}")
         bad += [f"map state {m!r}" for m in s.maps if m not in c.maps]
+        bad += [f"slots at {k!r}" for k in s.slots if not (m := c.maps.get(k.split("/")[0])) or not any(o.id == k.split("/", 1)[-1] and o.game == "slots" for o in m.objects)]
         bad += [f"inventory {h}: item {e.item!r}" for h, es in s.inventory.items() for e in es if e.item not in c.items]
         if s.party_map and s.party_map not in c.maps:
             bad.append(f"party_map {s.party_map!r}")
@@ -134,10 +135,10 @@ class Engine:
             self._commit(viewer.seat, intent_id, events, ack)
             return ack, bool(events)
 
-    async def sweep(self, online: set[str]) -> bool:
+    async def sweep(self, online: set[str], seated: set[str] | None = None) -> bool:
         """Housekeeping the server does on its own (rolls whose roller went quiet). True if anything changed."""
         async with self.lock:
-            events = sweep(self.state, self.clock(), online)
+            events = sweep(self.state, self.clock(), online, self.content, seated)
             if events:
                 self._commit("system", None, events, {})
             return bool(events)

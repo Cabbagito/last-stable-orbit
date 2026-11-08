@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, Overview, Preset, PresetItem, Station
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, Overview, Preset, PresetItem, SlotsGame, Station
 
 log = logging.getLogger("lso.content")
 
@@ -31,6 +31,7 @@ class Content:
     codex_sections: list[CodexSection] = field(default_factory=list)  # the landing's five rows, in order
     station: Station | None = None  # the Station tab's cross-section
     overviews: dict[str, Overview] = field(default_factory=dict)  # little games the GM sends to players' screens
+    slots: SlotsGame | None = None  # the slot machines' rules
     missing_assets: list[str] = field(default_factory=list)
 
     @property
@@ -92,6 +93,12 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
         c.station = _parse(Station, _read(stn), "station.yaml")
     ov = content_dir / "overviews.yaml"
     c.overviews = _by_id(Overview, _read(ov), "overviews.yaml") if ov.is_file() else {}
+    sl = content_dir / "slots.yaml"
+    if sl.is_file():
+        try:
+            c.slots = SlotsGame.model_validate(_read(sl))
+        except ValidationError as e:
+            raise ContentError(f"slots.yaml: {e}") from e
     ins = content_dir / "insults.yaml"
     c.insults = _insults((_read(ins) or {}) if ins.is_file() else {})
     if clash := set(c.characters) & set(c.npcs):
@@ -121,6 +128,12 @@ def _insults(raw) -> dict[str, list[str]]:
 def check_refs(c: Content) -> None:
     problems: list[str] = []
     c.default_preset  # noqa: B018 - raises if not exactly one
+    if c.slots and c.slots.currency not in c.items:
+        problems.append(f"slots: unknown currency {c.slots.currency!r}")
+    if c.slots:
+        problems += [f"slots: unknown audit character {a!r}" for a in c.slots.audit if a not in c.characters]
+    if not c.slots:
+        problems += [f"map {m.id}: object {o.id} is a game, but there's no slots.yaml" for m in c.maps.values() for o in m.objects if o.game]
     for pr in c.presets.values():
         where = f"preset {pr.id}"
         if pr.party_map not in c.maps:
@@ -256,4 +269,6 @@ def asset_paths(c: Content) -> set[str]:
         paths |= {r.icon for r in e.rows if r.icon} | {s.src for s in e.shots}
     for o in c.overviews.values():
         paths |= {p for p in (o.device, o.mask) if p}
+    if c.slots:
+        paths |= set(c.slots.art.model_dump().values())
     return paths

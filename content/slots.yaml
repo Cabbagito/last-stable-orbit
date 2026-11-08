@@ -1,0 +1,26 @@
+# The slot machines (the Slots canvas, https://claude.ai/artifact/EPiC8wXsHQy7o5to3Rd8kj).
+#
+# A pull never pays. What you've lost comes back only when you stand up, and only by how many of the crew stand in the
+# same few seconds. All of them at once is the flood: every machine pays out and goes out of service for good.
+# The machine plays from the object card of any map object marked `game: slots`.
+
+seats: 4
+pull: 10            # credits a pull
+currency: credits   # the item a pull costs and a payback pays
+window: 4           # seconds from the first stand until they're counted
+near_percent: 60    # how many pulls in 100 are near misses: two black holes, the third one notch off
+paid_back: [50, 110, 200, 1000]  # percent of what you lost, by how many stood at once (the last is the flood)
+flood_seconds: 8    # how long the flood stays up, on the machines and the TV
+near_line: SO CLOSE!
+miss_lines: [ALMOST!, NEXT ONE..., SO NEAR!, KEEP GOING]
+out_text: Four white machines in a nook, dark and quiet.
+audit: [tally]      # who gets the AUDIT button: the service page with the real numbers
+art:
+  lit_a: slots/lit-a.png        # the chasing lights, two frames
+  lit_b: slots/lit-b.png
+  dark: slots/dark.png          # out of service
+  crank_up: slots/crank-up.png  # the machine itself, the screen showing through its face
+  crank_mid: slots/crank-mid.png
+  crank_down: slots/crank-down.png
+  reel: slots/reel.png
+  coin: slots/coin.png

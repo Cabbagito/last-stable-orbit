@@ -79,7 +79,7 @@ export function InspectBlock({ label, tone, children }: { label: string; tone?: 
 }
 
 /** A close-up cut from the map's own art: `centre` in display px, shown at 1.5x the art (0.75 display). */
-export function Closeup({ art, display, centre, alt }: { art: string; display: [number, number]; centre: [number, number]; alt: string }) {
+export function Closeup({ art, display, centre, alt, dark }: { art: string; display: [number, number]; centre: [number, number]; alt: string; dark?: boolean }) {
   const k = 0.75
   const w = 278
   const h = 170
@@ -92,6 +92,7 @@ export function Closeup({ art, display, centre, alt }: { art: string; display: [
         backgroundImage: `url(${art})`,
         backgroundSize: `${display[0] * k}px ${display[1] * k}px`,
         backgroundPosition: `${-(centre[0] * k - w / 2)}px ${-(centre[1] * k - h / 2)}px`,
+        filter: dark ? 'brightness(.45) saturate(.4)' : undefined,
       }}
     />
   )

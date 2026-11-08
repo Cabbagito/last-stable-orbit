@@ -171,6 +171,42 @@ export interface MapObject {
   codex: string | null
   seen?: boolean // players: they've looked at it
   shown?: boolean // GM only: players can see it
+  game?: SlotsCard // something to sit down and play
+}
+
+/** How a slot machine's card reads: anyone who can see it knows how full it is, and no more. */
+export interface SlotsCard {
+  kind: 'slots'
+  seats: number
+  taken: number
+  pull: number // credits a pull
+  out: boolean // out of service
+}
+
+/** The machine this player is sitting at. Nobody else gets this; what they've lost stays on the server. */
+export interface SlotView {
+  unit: number
+  page: 'play' | 'wait' | 'lucky' | 'flood' | 'out'
+  pulls: number
+  free: boolean
+  payout: number
+  reels: number[]
+  spin: number // counts pulls: a new number is a new pull to animate
+  near: boolean
+  line: string
+  pull: number
+  window: number // seconds of the stand window
+  until: number | null // when it closes, on the server's clock
+  art: Record<'lit_a' | 'lit_b' | 'dark' | 'crank_up' | 'crank_mid' | 'crank_down' | 'reel' | 'coin', string>
+  audit: { paid_back: number[]; window: number } | null // whoever can audit the machines
+}
+
+/** The TV only: the flood, while it's on. */
+export interface FloodView {
+  at: number
+  ends: number
+  paid: number[]
+  art: Record<'lit_a' | 'lit_b' | 'crank_up' | 'coin', string>
 }
 
 export interface TokenView {
@@ -296,6 +332,7 @@ export interface StageView {
   tv?: boolean // GM only: the TV is connected
   cues?: CueView[] // GM only
   films?: string[] // the TV only: every film, fetched ahead
+  flood?: FloodView // the TV only
   join?: JoinView
 }
 
@@ -343,6 +380,7 @@ export interface View {
   presets?: { id: string; name: string }[] // GM only
   items?: Item[] // GM only: the catalogue, for giving
   overview: OverviewView | null // the overview open on this player's screen; never anyone else's
+  slots: SlotView | null // the slot machine this player is sitting at
   overviews?: { games: { id: string; name: string }[]; open: Record<string, { kind: string; id: string }> } // GM only
 }
 

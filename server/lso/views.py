@@ -11,6 +11,10 @@ Every frame a client receives is built here for that viewer. A player gets:
   arrives, a sealed roll (Hidden, Someone) never says how it came out, and God names only an NPC this viewer can see. Just a die's God roll has its number unless it's sealed.
 The GM gets everything, plus the NPC roster, the presets, the item catalogue and the cue list.
 
+The slots: anyone who can see the machines sees how many seats are taken and whether they work. What happens at a
+machine goes only to the player sitting at it, never to the GM. The rates go only to whoever can audit them. The TV
+hears of the flood, and of nothing else.
+
 Each map also carries its decals and camera cones (everyone sees those). Only the GM gets its pins, the Key
 board's "what's where".
 
@@ -60,7 +64,14 @@ def _link(entry: str | None, open_: set[str]) -> str | None:
     return entry if entry in open_ else None
 
 
-def _objects_view(state: GameState, d, ms, viewer: Viewer, open_: set[str]) -> list[dict]:
+def _slots_card(state: GameState, content: Content, key: str) -> dict:
+    """What a slot machine's card shows anyone who can see it: how full it is, and whether it works. Who's sitting
+    there, and what they've lost, stays out of it."""
+    bank = state.slots.get(key)
+    return {"kind": "slots", "seats": content.slots.seats, "taken": len(bank.seats) if bank else 0, "pull": content.slots.pull, "out": bool(bank and bank.out)}
+
+
+def _objects_view(state: GameState, content: Content, d, ms, viewer: Viewer, open_: set[str]) -> list[dict]:
     """Players get only what the GM has revealed, each marked with whether they've inspected it."""
     shown = set(ms.shown) if ms else set()
     seen = set(state.seen.get(viewer.char or "", []))
@@ -70,6 +81,10 @@ def _objects_view(state: GameState, d, ms, viewer: Viewer, open_: set[str]) -> l
             continue
         v = {"id": o.id, "name": o.name, "at": list(o.at), "text": o.text, "closeup": list(o.closeup) if o.closeup else None, "codex": _link(o.codex, open_)}
         v |= {"shown": o.id in shown} if viewer.is_gm else {"seen": f"{d.id}/{o.id}" in seen}
+        if o.game == "slots" and content.slots:
+            v["game"] = _slots_card(state, content, f"{d.id}/{o.id}")
+            if v["game"]["out"]:
+                v["text"] = content.slots.out_text
         out.append(v)
     return out
 
@@ -101,7 +116,7 @@ def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer, o
         "floors": [f.model_dump() for f in d.floors],
         "mood": ms.mood if ms else d.moods[0].id,
         "values": dict(ms.switches) if ms else {},
-        "objects": _objects_view(state, d, ms, viewer, open_),
+        "objects": _objects_view(state, content, d, ms, viewer, open_),
     }
     if viewer.is_gm:
         out["pins"] = [p.model_dump() for p in d.pins]  # the Key board's "what's where", for the GM's eyes only
@@ -430,6 +445,9 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
             out["burn"]["src"] = url(cut.file)
     else:
         out["burn"] = None
+    if viewer.is_stage and st.flood and content.slots:  # only the TV plays it
+        art = content.slots.art
+        out["flood"] = {"at": st.flood.at, "ends": st.flood.ends, "paid": st.flood.paid, "art": {"lit_a": url(art.lit_a), "lit_b": url(art.lit_b), "crank_up": url(art.crank_up), "coin": url(art.coin)}}
     if viewer.is_gm:
         out["tv"] = "stage" in online
         out["cues"] = [
@@ -511,6 +529,33 @@ def _overview_view(state: GameState, content: Content, viewer: Viewer) -> dict |
     return {**ov.model_dump(), "kind": ov.id, "id": o.id, "device": url(ov.device), "mask": url(ov.mask)}
 
 
+def _slots_view(state: GameState, content: Content, viewer: Viewer) -> dict | None:
+    """The machine this player is sitting at. Theirs alone: nobody else, the GM included, hears how it's going."""
+    game = content.slots
+    if not game or not viewer.char:
+        return None
+    for key, bank in state.slots.items():
+        x = next((x for x in bank.seats if x.char == viewer.char), None)
+        if x:
+            return {
+                "unit": x.unit,
+                "page": x.page,
+                "pulls": x.pulls,
+                "free": x.free,
+                "payout": x.payout,
+                "reels": x.reels,
+                "spin": x.spin,
+                "near": x.near,
+                "line": x.line,
+                "pull": game.pull,
+                "window": game.window,
+                "until": bank.until if x.page == "wait" else None,
+                "art": {k: url(v) for k, v in game.art.model_dump().items()},
+                "audit": {"paid_back": game.paid_back, "window": game.window} if x.char in game.audit else None,
+            }
+    return None
+
+
 def project(state: GameState, content: Content, viewer: Viewer, online: frozenset[str] = frozenset(), join: dict | None = None) -> dict:
     gm = viewer.is_gm
     here = viewer_map(state, viewer)
@@ -536,6 +581,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         "stage": _stage_view(state, content, viewer, online, join),
         "fights": _fights_view(state, content, viewer, here),
         "overview": _overview_view(state, content, viewer),
+        "slots": _slots_view(state, content, viewer),
     }
     if gm:
         view["roster"] = [

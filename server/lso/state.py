@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import RULES, BurnState, Fight, FilmState, GameState, InvEntry, MapState, OverviewState, Preset, PresetItem, RollState, TokenState, Vitals
+from .models import RULES, BurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, OverviewState, Preset, PresetItem, RollState, SlotBank, SlotSeat, TokenState, Vitals
 
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
 
@@ -92,6 +92,26 @@ def _drop_fighter(s: GameState, token: str) -> None:
             f.turn = f.order.index(cur) if cur != token else f.turn % len(f.order)
 
 
+def _slot_seat(s: GameState, key: str, char: str) -> SlotSeat:
+    seat = next((x for x in s.slots[key].seats if x.char == char), None)
+    if seat is None:
+        raise ValueError(f"{char} isn't sitting at {key!r}")
+    return seat
+
+
+def _settle_window(bank: SlotBank) -> None:
+    """A stand window with nobody left standing in it is over."""
+    if not any(x.page == "wait" for x in bank.seats):
+        bank.until = None
+
+
+def _leave_slots(s: GameState, char: str) -> None:
+    """They got up, or the GM sent them somewhere else. What they'd lost is gone."""
+    for bank in s.slots.values():
+        bank.seats = [x for x in bank.seats if x.char != char]
+        _settle_window(bank)
+
+
 def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     s = state.model_copy(deep=True)
     s.seq = seq
@@ -99,18 +119,23 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         fresh = GameState.model_validate({**data["state"], "seq": seq})
         fresh.stage = s.stage  # a preset sets the world, not the table: the camera and films carry over
         fresh.overviews = s.overviews  # and what's open on someone's screen stays open
+        fresh.slots = {k: SlotBank(out=True) for k, b in s.slots.items() if b.out}  # a flood is for good; everyone's up
         return fresh
     if ev_type == "token.moved":
         s.tokens[data["token"]].at = tuple(data["at"])
     elif ev_type == "token.placed":
         s.tokens[data["token"]] = TokenState.model_validate(data["state"])
     elif ev_type == "token.removed":
-        s.tokens.pop(data["token"], None)
+        t = s.tokens.pop(data["token"], None)
+        if t and t.kind == "crew":
+            _leave_slots(s, t.ref)
         _drop_fighter(s, data["token"])
     elif ev_type == "token.sent":  # the GM sent the crew to another map
         t = s.tokens[data["token"]]
         if t.map != data["map"]:
             _drop_fighter(s, data["token"])
+            if t.kind == "crew":
+                _leave_slots(s, t.ref)
         t.map, t.at = data["map"], tuple(data["at"])
     elif ev_type == "map.added":  # a map the content gained after this game was saved
         s.maps[data["map"]] = MapState.model_validate(data["state"])
@@ -212,6 +237,51 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
             s.overviews[char] = OverviewState(kind=data["kind"], id=data["id"])
     elif ev_type == "overview.closed":  # the player closed it, or the GM took it back
         s.overviews.pop(data["char"], None)
+    elif ev_type == "slots.sat":
+        s.slots.setdefault(data["key"], SlotBank()).seats.append(SlotSeat(char=data["char"], unit=int(data["unit"])))
+    elif ev_type == "slots.pulled":
+        x = _slot_seat(s, data["key"], data["char"])
+        x.lost += int(data["cost"])
+        x.pulls += 1
+        x.free, x.spin = False, x.spin + 1
+        x.reels, x.near, x.line = list(data["reels"]), bool(data["near"]), data["line"]
+    elif ev_type == "slots.stood":  # into the stand window; the first to stand opens it
+        s.slots[data["key"]].until = float(data["until"])
+        _slot_seat(s, data["key"], data["char"]).page = "wait"
+    elif ev_type == "slots.sat_back":
+        _slot_seat(s, data["key"], data["char"]).page = "play"
+        _settle_window(s.slots[data["key"]])
+    elif ev_type == "slots.paid":  # the stand window closed: everyone in it gets paid back
+        bank = s.slots[data["key"]]
+        for char, amount in data["paid"].items():
+            x = _slot_seat(s, data["key"], char)
+            x.page, x.payout = "flood" if data["flood"] else "lucky", int(amount)
+            x.lost, x.pulls, x.free = 0, 0, False
+        bank.until = None
+        if data["flood"]:
+            bank.out = True
+            s.stage.flood = FloodState(at=float(data["at"]), ends=float(data["ends"]), paid=[int(v) for v in data["paid"].values()])
+    elif ev_type == "slots.free":  # the free spin, taken
+        x = _slot_seat(s, data["key"], data["char"])
+        x.page, x.free = "play", True
+    elif ev_type == "slots.left":
+        _leave_slots(s, data["char"])
+    elif ev_type == "slots.service":  # the GM took the machines out of service, or put them back
+        bank = s.slots.setdefault(data["key"], SlotBank())
+        bank.out = bool(data["out"])
+        for x in bank.seats:
+            if bank.out:
+                x.page = "out"
+            elif x.page == "out":
+                x.page = "play"
+        if bank.out:
+            bank.until = None
+    elif ev_type == "slots.flood_ended":
+        s.stage.flood = None
+        for bank in s.slots.values():
+            for x in bank.seats:
+                if x.page == "flood":
+                    x.page = "out"
     else:
         raise UnknownEvent(ev_type)
     return s

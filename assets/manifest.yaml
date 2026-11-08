@@ -8,6 +8,7 @@ stores:
   SHOTGUN: https://claude.ai/artifact/ExqP99kRwpzUP9Funyg7Sv
   BURNS: https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg
   SATISFACTION: https://claude.ai/artifact/Vkpa2f7xbG1pnwFuscAbHc  # no asset store: these are inlined in its page
+  SLOTS: https://claude.ai/artifact/EPiC8wXsHQy7o5to3Rd8kj
 assets:
   - path: maps/event-horizon/base-open.png
     store: MAPS
@@ -1234,3 +1235,59 @@ assets:
     bytes: 896
     width: 176
     height: 170
+  - path: slots/lit-a.png
+    store: SLOTS
+    asset_id: "d34b4eec1cdbab62c80b2dd85bbdd176"
+    sha256: "e7f9e0206d5e557621c1dcba7992f51b2c014f3f071c6afaf1f6f2f3e600d34b"
+    bytes: 7241
+    width: 300
+    height: 300
+  - path: slots/lit-b.png
+    store: SLOTS
+    asset_id: "1d99ffe997632c93c1ca6cb41c33153c"
+    sha256: "9808199c4ba222f181d6bddbfc164b573d07d8bc7153fb8d686fe17eec18897b"
+    bytes: 7204
+    width: 300
+    height: 300
+  - path: slots/dark.png
+    store: SLOTS
+    asset_id: "880a7d9eb6349f483b09726a0419336c"
+    sha256: "83493928472e33d907a400ff3492bb7b0dbe66de1481a788fb63665c8388b04e"
+    bytes: 4623
+    width: 300
+    height: 300
+  - path: slots/crank-up.png
+    store: SLOTS
+    asset_id: "6452da39e26eba1ce3436cd43466ed5a"
+    sha256: "3dd9fbda06d3211288141acac12fedc9f886ba0b24521ab6c21348d0e2f3d509"
+    bytes: 7255
+    width: 300
+    height: 300
+  - path: slots/crank-mid.png
+    store: SLOTS
+    asset_id: "08b85259cdfca6c0d3d51cf1b8e7a7b1"
+    sha256: "7f15516581174e07e8eac921745fce7d53656720199e125bf42a87b70c7aff07"
+    bytes: 7308
+    width: 300
+    height: 300
+  - path: slots/crank-down.png
+    store: SLOTS
+    asset_id: "10a95993787555c38c3d0bba441169ed"
+    sha256: "1506b90c02a310ca03e260f8034a18257e97639e9b4421c7b052943bd5724c68"
+    bytes: 7330
+    width: 300
+    height: 300
+  - path: slots/reel.png
+    store: SLOTS
+    asset_id: "4826717f37b9e1ceb8834f467bbe7b37"
+    sha256: "bda2330d8944b6a0c96c2b73651a72895fda6a1f11205123c649396350180b22"
+    bytes: 1566
+    width: 18
+    height: 800
+  - path: slots/coin.png
+    store: SLOTS
+    asset_id: "f689a82cfc9cbea3c4d9941a48a4be27"
+    sha256: "4744e31ce0b479dd2fe243cbc721cbd85857adf02e3442e6004816b3f39c9ff9"
+    bytes: 149
+    width: 8
+    height: 8

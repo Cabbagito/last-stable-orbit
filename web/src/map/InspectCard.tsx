@@ -9,7 +9,8 @@ import { STAT_LOOK, statIcon } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
 import { gmRoll, gmRun, send, useGame, type GmRollMode } from '../store/game'
 import { fighterIn, fightOn } from '../fight/fights'
-import { STATS, type TokenView } from '../types'
+import { seatsLabel } from '../slots/slots'
+import { STATS, type MapObject, type SlotsCard, type TokenView } from '../types'
 
 /**
  * The card for whatever was clicked on the map or in the crew rail: a crew member, an NPC, or a thing in
@@ -46,7 +47,7 @@ export function InspectCard() {
         <Inspector
           label={`OBJECT · ${map.name.toUpperCase()}`}
           name={obj.name}
-          wide={obj.closeup ? <Closeup art={art} display={map.display} centre={obj.closeup} alt={`Close-up: ${obj.name}`} /> : undefined}
+          wide={obj.closeup ? <Closeup art={art} display={map.display} centre={obj.closeup} alt={`Close-up: ${obj.name}`} dark={obj.game?.out} /> : undefined}
           media={obj.closeup ? undefined : <span className="app-ins-big app-ins-noicon" aria-hidden="true">OBJECT</span>}
           actions={
             <>
@@ -62,6 +63,7 @@ export function InspectCard() {
         >
           {isGm && !obj.shown && <div className="r10-warn">HIDDEN FROM PLAYERS</div>}
           <div className="app-ins-txt">{obj.text}</div>
+          {obj.game && <SlotSeats mapId={mapId} obj={obj} game={obj.game} isGm={isGm} />}
         </Inspector>
       </aside>
     )
@@ -146,6 +148,47 @@ export function InspectCard() {
         {itemTip}
       </Inspector>
     </aside>
+  )
+}
+
+/**
+ * The seats on a slot machine's card: how many are taken, and a way to sit down. The GM can't play, but can put the
+ * machines out of service, or back.
+ */
+function SlotSeats({ mapId, obj, game, isGm }: { mapId: string; obj: MapObject; game: SlotsCard; isGm: boolean }) {
+  const select = useGame((s) => s.select)
+  const preview = useGame((s) => s.preview)
+  const full = game.taken >= game.seats
+  const sit = async () => {
+    const ack = await send('slots.sit', { map: mapId, object: obj.id })
+    if (ack.ok) select(null)
+  }
+  return (
+    <>
+      {game.out ? (
+        <span className="sl-cap sl-out">OUT OF SERVICE</span>
+      ) : (
+        <div className="sl-seats">
+          <span className="sl-seatpips" aria-hidden="true">
+            {Array.from({ length: game.seats }, (_, i) => (
+              <i key={i} className={i < game.taken ? 'on' : ''} />
+            ))}
+          </span>
+          <span className="sl-cap">{seatsLabel(game.taken, game.seats)}</span>
+        </div>
+      )}
+      {isGm ? (
+        <button type="button" className="r4-btn app-small sl-gmsvc" onClick={() => void gmRun('gm.slots.service', { map: mapId, object: obj.id, out: !game.out })}>
+          {game.out ? 'Back in service' : 'Out of service'}
+        </button>
+      ) : (
+        !game.out && (
+          <button type="button" className="sl-cta" disabled={full || !!preview} onClick={() => void sit()}>
+            {full ? 'WAIT FOR A SEAT' : `PLAY · ${game.pull} CREDITS A PULL`}
+          </button>
+        )
+      )}
+    </>
   )
 }
 

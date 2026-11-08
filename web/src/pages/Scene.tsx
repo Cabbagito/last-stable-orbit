@@ -4,6 +4,7 @@ import { FightStrip } from '../fight/Strip'
 import { GmScene } from '../gm/GmScene'
 import { MoodBar } from '../gm/MoodBar'
 import { MapView } from '../map/MapView'
+import { SlotsLayer } from '../slots/Machine'
 import { OverviewLayer } from '../overview/Overview'
 import { Banners } from '../roll/Banner'
 import { InspectCard } from '../map/InspectCard'
@@ -51,6 +52,7 @@ export function Scene() {
         <Banners where="scene" low={!!fight} />
         <CrewRail />
         <InspectCard />
+        {!isGm && <SlotsLayer />}
         {!isGm && <OverviewLayer />}
       </section>
     </div>

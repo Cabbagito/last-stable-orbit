@@ -18,6 +18,7 @@
 | The TV's turn order | **Built** 2026-11-06 and checked on :8071 with two seats (the GM and the TV); see "Changed 2026-11-06" in M8. Deployed to 8070 the same day, with the NOW marker; parker still needs `git pull && make up`. The sound is for Peter to judge by ear |
 | Always the TV | **Built** 2026-11-06 and checked on :8071 with three seats (the GM, Tally and the TV) on a copy of the saved game; see "Changed 2026-11-06: the TV is always there" in Stage. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | Events: the Satisfaction Report | **Built** 2026-11-08 and checked on :8071 with two seats (the GM and Marlo); see "Events" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
+| The slots | **Built** 2026-11-08 and checked on :8071 with six seats (the GM, Tally, three more at the machines and the TV); see "The slots" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | M9: Finale screen | Not started |
 
 **Rules change, 2026-11-04** (the live bible has the details, under The crew and Rules):
@@ -111,7 +112,17 @@
 - **On the player's screen** the map dims and the service droid rises over it, its face a CRT survey; the sheet stays clear. A player on the Station or Codex tab is moved to the Scene. Closing it leaves a "Last report" line on the map for 9 s.
 - **Nothing comes back:** the answers and the verdict stay on the player's screen, and the log only records that it was sent and closed. Other players and the TV never hear of it (leak tests in `test_overviews.py`).
 - **The survey is content** (`content/overviews.yaml`): its pages, points and endings, scored on the player's screen (`web/src/overview/survey.ts`, tested against the canvas's examples). The droid art and the screen mask came inlined in the canvas's page, so the manifest lists them with no asset id.
-- **Not built yet:** sending one from an object's card, the slots, mini-golf and probe, and the canvas's later captcha.
+- **Not built yet:** sending one from an object's card, mini-golf and probe, and the canvas's later captcha.
+
+**The slots** (2026-11-08, from the Slots canvas, https://claude.ai/artifact/EPiC8wXsHQy7o5to3Rd8kj):
+- **Sitting down:** a map object marked `game: slots` has seat pips and PLAY on its card. Four seats, one each. A player has to be on that map and the GM has to have shown the machines. A fifth sees WAIT FOR A SEAT. Anyone who can see the card sees how many seats are taken, never who.
+- **Playing:** the map dims and the machine rises; the sheet stays clear. A pull costs 10 credits and never pays. The server picks the reels (`rules.spin_reels`) and the page animates them. About six in ten are near misses.
+- **Standing up:** lost nothing, you just get up. Otherwise the first stand opens one shared 4-second window. Whoever stands in it is counted when it closes; SIT BACK DOWN takes you out of it. Payback is lost x 50%, 110%, 200%, then FREE SPIN? (which also loses) or LEAVE. Lost and comfort reset.
+- **The flood:** all four at once is lost x 10 each, and the machines go out of service for good, kept across presets. The TV plays the flood board for 8 seconds, each machine showing what it paid; nobody else gets it. Then the machines read OUT OF SERVICE and the card goes dark.
+- **The GM** has Out of service / Back in service on the card, and nothing else: what happens at a machine never reaches the GM's feed, only the seat count and the credits changing (leak tests in `test_slots.py`).
+- **Tally** has AUDIT on the machine, with the real rates; only whoever is in the file's `audit` list gets them. Numbers and lines are in `content/slots.yaml`.
+- **Defaults taken, not on the canvas:** a player with no socket for 2 minutes loses their machine and what they'd lost. Being sent to another map gives the seat up. Sitting doesn't move the token. The flood is silent, since the canvas gives it no sound.
+- The stand window closes on the server's sweep, so the sweep now runs every 0.25 s, up from 2 s.
 
 **On ultracode:** writing the keyword in a message does turn it on for that message; that's how this plan was made. The paragraph on ultracode further down is outdated.
 

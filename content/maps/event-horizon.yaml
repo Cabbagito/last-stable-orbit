@@ -40,6 +40,7 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     name: Slot machines
     at: [-3.6, 9.267, 1]
     closeup: [300, 560]
+    game: slots
     text: Four white machines in a nook, chiming softly. Nobody here seems to lose.
 # The Key board's "what's where" (board "Key"). Only the GM sees these.
 pins:

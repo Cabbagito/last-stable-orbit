@@ -27,13 +27,15 @@ from .views import url
 
 log = logging.getLogger("lso")
 PUBLIC_ASSET_DIRS = ("icons/",)  # stat icons, dice, items: no spoilers, any logged-in seat may fetch
-SWEEP_EVERY = 2.0  # seconds between roll housekeeping passes
+SWEEP_EVERY = 0.25  # seconds between housekeeping passes: a slot machine's stand window closes on one of these
 AWAY_AFTER = 15.0  # a seat with no socket for this long counts as gone (a Wi-Fi blip doesn't)
+KEEP_MACHINE_FOR = 120.0  # a player with no socket for this long loses their slot machine (a laptop nap doesn't)
 
 
 async def sweeper(engine: Engine, hub: Hub) -> None:
     """Reveal or close rolls whose roller's screen went quiet (laptop asleep, tab closed)."""
     last_seen: dict[str, float] = {}
+    booted = time.time()
     while True:
         await asyncio.sleep(SWEEP_EVERY)
         try:
@@ -41,7 +43,9 @@ async def sweeper(engine: Engine, hub: Hub) -> None:
             for s in hub.online():
                 last_seen[s] = now
             online = {seat for seat, t in last_seen.items() if now - t < AWAY_AFTER}
-            if await engine.sweep(online):
+            # right after a restart nobody has reconnected yet: give them the same grace before freeing machines
+            seated = None if now - booted < KEEP_MACHINE_FOR else {seat for seat, t in last_seen.items() if now - t < KEEP_MACHINE_FOR}
+            if await engine.sweep(online, seated):
                 await hub.broadcast()
         except Exception:
             log.exception("roll sweep failed")

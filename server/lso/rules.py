@@ -93,3 +93,23 @@ def turn_order(fighters: dict[str, tuple[int, int, bool]]) -> list[str]:
     """A fight's turn order (M8). fighters: token -> (Reflex total, its Reflex die, crew?). Highest total first; a tie
     goes to the bigger die, then the crew, then the token id, so it never depends on the order they were picked in."""
     return sorted(fighters, key=lambda t: (-fighters[t][0], -fighters[t][1], not fighters[t][2], t))
+
+
+REEL_SYMBOLS = 5  # the reel art repeats five symbols; 0 is the black hole
+
+
+def spin_reels(rng: Rng, near_percent: int, force_near: bool = False) -> tuple[list[int], bool]:
+    """Where a pull's three reels stop, and whether it's a near miss. No pull ever lines up three of a kind."""
+    if force_near or rng.randrange(100) < near_percent:
+        return [0, 0, 1 if rng.randrange(2) == 0 else 4], True
+    reels = [rng.randrange(REEL_SYMBOLS) for _ in range(3)]
+    if reels[0] == 0 and reels[1] == 0:
+        reels[1] = 2  # two black holes are only ever a near miss
+    if reels[0] == reels[1] == reels[2]:
+        reels[2] = (reels[2] + 2) % REEL_SYMBOLS
+    return reels, False
+
+
+def payback(lost: int, standing: int, paid_back: list[int]) -> int:
+    """What the machine pays someone who lost `lost`, with `standing` of the crew standing at once."""
+    return lost * paid_back[standing - 1] // 100

@@ -11,7 +11,7 @@ import random
 from . import rules
 from .auth import Viewer
 from .content import Content
-from .models import BURN_COST, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_MAX, STATS, GameState, InvEntry, RollState, TokenState
+from .models import BURN_COST, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_MAX, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
 from .state import state_from_preset
 from .views import viewer_map
 
@@ -389,6 +389,105 @@ def _gm_overview(state: GameState, content: Content, kind: str, args: dict) -> E
     raise _invalid(f"unknown intent {kind!r}")
 
 
+def _slots_key(content: Content, args: dict) -> str:
+    """The "map/object" of a slot machine named in an intent."""
+    map_id, obj = _str(args, "map"), _str(args, "object")
+    m = content.maps.get(map_id)
+    if not content.slots or not m or not any(o.id == obj and o.game == "slots" for o in m.objects):
+        raise _invalid("there are no slot machines there")
+    return f"{map_id}/{obj}"
+
+
+def _my_seat(viewer: Viewer, state: GameState) -> tuple[str, SlotBank, SlotSeat]:
+    for key, bank in state.slots.items():
+        for x in bank.seats:
+            if x.char == viewer.char:
+                return key, bank, x
+    raise _invalid("you aren't at a machine")
+
+
+def _credits_changed(state: GameState, currency: str, char: str, delta: int) -> Events:
+    """Change someone's credits; the machines are the one thing that touches them without the GM."""
+    e = next((e for e in state.inventory.get(char, []) if e.item == currency), None)
+    if e:
+        return [("item.counted", {"holder": char, "uid": e.uid, "count": max(0, min(COUNT_MAX, (e.count or 0) + delta))})]
+    entry = InvEntry(uid=f"slots-{state.seq + 1}-{char}", item=currency, count=max(0, min(COUNT_MAX, delta)))
+    return [("item.given", {"holder": char, "entry": entry.model_dump()})]
+
+
+def _slots_intent(viewer: Viewer, state: GameState, content: Content, kind: str, args: dict, rng, now: float) -> Events:
+    game = content.slots
+    if not game or not viewer.char:
+        raise _invalid("the machines are for the crew")
+    char = viewer.char
+
+    if kind == "slots.sit":
+        key = _slots_key(content, args)
+        map_id, obj = key.split("/", 1)
+        ms = state.maps.get(map_id)
+        if map_id != viewer_map(state, viewer) or not ms or obj not in ms.shown:
+            raise _invalid("there are no slot machines here")
+        if any(x.char == char for b in state.slots.values() for x in b.seats):
+            raise _invalid("you're already sitting at a machine")
+        bank = state.slots.get(key) or SlotBank()
+        if bank.out:
+            raise _invalid("the machines are out of service")
+        taken = {x.unit for x in bank.seats}
+        unit = next((u for u in range(1, game.seats + 1) if u not in taken), None)
+        if unit is None:
+            raise _invalid("all the seats are taken")
+        return [("slots.sat", {"key": key, "char": char, "unit": unit})]
+
+    key, bank, seat = _my_seat(viewer, state)
+
+    if kind == "slots.pull":
+        if seat.page != "play":
+            raise _invalid("you can't pull now")
+        have = next((e.count or 0 for e in state.inventory.get(char, []) if e.item == game.currency), 0)
+        if not seat.free and have < game.pull:
+            raise _invalid("insert credits")
+        reels, near = rules.spin_reels(rng, game.near_percent, force_near=seat.free)
+        line = game.near_line if near else game.miss_lines[rng.randrange(len(game.miss_lines))]
+        cost = 0 if seat.free else game.pull
+        events: Events = _credits_changed(state, game.currency, char, -cost) if cost else []
+        return events + [("slots.pulled", {"key": key, "char": char, "cost": cost, "reels": reels, "near": near, "line": line})]
+
+    if kind == "slots.stand":
+        if seat.page != "play":
+            raise _invalid("you can't stand up now")
+        if seat.lost == 0:  # nothing to pay back: you just get up
+            return [("slots.left", {"key": key, "char": char})]
+        return [("slots.stood", {"key": key, "char": char, "until": bank.until if bank.until is not None else now + game.window})]
+
+    if kind == "slots.sit_back":
+        if seat.page != "wait":
+            raise _invalid("you're already sitting")
+        return [("slots.sat_back", {"key": key, "char": char})]
+
+    if kind == "slots.free":
+        if seat.page != "lucky":
+            raise _invalid("there's no free spin to take")
+        return [("slots.free", {"key": key, "char": char})]
+
+    if kind == "slots.leave":
+        if seat.page not in ("lucky", "flood", "out"):
+            raise _invalid("stand up first")
+        return [("slots.left", {"key": key, "char": char})]
+
+    raise _invalid(f"unknown intent {kind!r}")
+
+
+def _slots_close(state: GameState, game, key: str, bank: SlotBank, now: float) -> Events:
+    """The stand window is over: count who stood, and pay each their own lost x the rate. All the seats at once is the
+    flood."""
+    standing = sorted((x for x in bank.seats if x.page == "wait"), key=lambda x: x.unit)
+    paid = {x.char: rules.payback(x.lost, len(standing), game.paid_back) for x in standing}
+    events: Events = []
+    for char, amount in paid.items():
+        events += _credits_changed(state, game.currency, char, amount)
+    return events + [("slots.paid", {"key": key, "paid": paid, "flood": len(standing) == game.seats, "at": now, "ends": now + game.flood_seconds})]
+
+
 def _send_crew(state: GameState, content: Content, map_id: str) -> Events:
     """The whole crew to a map's entrance (its `arrive` spots, in crew order), and it becomes the party's map.
     A hidden crew token stays hidden. One that isn't on any map yet is placed."""
@@ -514,9 +613,18 @@ def _gm_fight(state: GameState, content: Content, kind: str, args: dict, rng, no
     raise _invalid(f"unknown intent {kind!r}")
 
 
-def sweep(state: GameState, now: float, online: set[str]) -> Events:
-    """System housekeeping: rolls whose roller's screen stopped talking to us, and films that have ended."""
+def sweep(state: GameState, now: float, online: set[str], content: Content | None = None, seated: set[str] | None = None) -> Events:
+    """System housekeeping: rolls whose roller's screen stopped talking to us, films that have ended, and the slots'
+    stand windows and flood. `seated` is who still counts as being at the table: anyone else loses their machine."""
     events: Events = []
+    game = content.slots if content else None
+    for key, bank in state.slots.items() if game else ():
+        if bank.until is not None and now >= bank.until:
+            events += _slots_close(state, game, key, bank, now)
+        if seated is not None:
+            events += [("slots.left", {"key": key, "char": x.char}) for x in bank.seats if x.char not in seated and x.page != "wait"]
+    if state.stage.flood and now >= state.stage.flood.ends:
+        events.append(("slots.flood_ended", {}))
     if state.stage.film and now >= state.stage.film.ends:
         events.append(("film.ended", {"cue": state.stage.film.cue}))
     if state.stage.burn and now >= state.stage.burn.ends:
@@ -561,6 +669,9 @@ def handle(
             raise _invalid("there's nothing like that here")
         key = f"{map_id}/{obj}"
         return [] if key in state.seen.get(viewer.char, []) else [("object.seen", {"char": viewer.char, "key": key})]
+
+    if kind.startswith("slots."):
+        return _slots_intent(viewer, state, content, kind, args, rng, now)
 
     if kind == "codex.read":
         # a player opened a page: it, and the blocks they can see on it, aren't new to them any more
@@ -735,6 +846,12 @@ def handle(
 
     if kind.startswith("gm.overview."):
         return _gm_overview(state, content, kind, args)
+
+    if kind == "gm.slots.service":
+        key = _slots_key(content, args)
+        out = bool(args.get("out", True))
+        bank = state.slots.get(key)
+        return [] if bool(bank and bank.out) == out else [("slots.service", {"key": key, "out": out})]
 
     if kind.startswith("gm.item."):
         return _gm_item(state, content, kind, args)

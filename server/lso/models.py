@@ -159,6 +159,7 @@ class MapObject(Strict):
     text: str
     closeup: tuple[float, float] | None = None  # centre of the card's close-up, in the map's display px (art framing, not a position)
     codex: str | None = None
+    game: Literal["slots"] | None = None  # something you can sit down and play, from its card
 
 
 class Decal(Strict):
@@ -578,6 +579,41 @@ class Overview(Strict):
         return self
 
 
+class SlotsArt(Strict):
+    lit_a: str
+    lit_b: str
+    dark: str
+    crank_up: str
+    crank_mid: str
+    crank_down: str
+    reel: str
+    coin: str
+
+
+class SlotsGame(Strict):
+    """The slot machines' rules (content/slots.yaml). A pull never pays; standing up pays back what you lost, by how
+    many of the crew stand in the same few seconds."""
+
+    seats: int
+    pull: int
+    currency: str
+    window: float
+    near_percent: int
+    paid_back: list[int]  # percent of what you lost, by how many stood at once
+    flood_seconds: float
+    near_line: str
+    miss_lines: list[str]
+    out_text: str
+    audit: list[str] = []
+    art: SlotsArt
+
+    @model_validator(mode="after")
+    def _one_rate_per_seat(self) -> "SlotsGame":
+        if len(self.paid_back) != self.seats:
+            raise ValueError("slots: paid_back needs one rate per seat")
+        return self
+
+
 class PresetToken(Strict):
     id: str | None = None
     kind: Literal["crew", "npc"]
@@ -700,6 +736,14 @@ class BurnState(Strict):
     ends: float
 
 
+class FloodState(Strict):
+    """Everyone stood at once: the machines pay out, big on the TV."""
+
+    at: float
+    ends: float
+    paid: list[int]  # what each machine paid
+
+
 class StageState(Strict):
     """The TV: its camera, and the film or Burn playing now, if any."""
 
@@ -707,8 +751,33 @@ class StageState(Strict):
     follow: str | None = None  # a character, for the "follow" camera
     film: FilmState | None = None
     burn: BurnState | None = None
+    flood: FloodState | None = None
     played: list[str] = []  # cues played this campaign, for the GM's list
     join: bool = True  # the join card is on the TV, if the server has one, until the GM hides it
+
+
+class SlotSeat(Strict):
+    """One of the crew at a machine. `lost` is what they've put in since they sat down; only the server knows it."""
+
+    char: str
+    unit: int  # which machine, from 1
+    page: Literal["play", "wait", "lucky", "flood", "out"] = "play"
+    lost: int = 0
+    pulls: int = 0
+    free: bool = False  # the next pull is the free spin
+    payout: int = 0  # the last payback
+    reels: list[int] = [3, 1, 2]  # where each reel stopped
+    spin: int = 0  # counts pulls, so the screen knows a new one to animate
+    near: bool = False
+    line: str = ""
+
+
+class SlotBank(Strict):
+    """A row of slot machines: who's sitting at them, and the stand window, which the first stand opens."""
+
+    seats: list[SlotSeat] = []
+    until: float | None = None  # when the open stand window closes
+    out: bool = False  # out of service
 
 
 class OverviewState(Strict):
@@ -734,3 +803,4 @@ class GameState(Strict):
     station: list[str] = []  # maps lit on the Station for the crew: they've been there, or the GM showed them
     fights: dict[str, Fight] = {}  # map id -> the fight on it: one per map, so a split party can have two
     overviews: dict[str, OverviewState] = {}  # character -> the overview open on their screen, one at a time
+    slots: dict[str, SlotBank] = {}  # "map/object" -> the machines there: who's seated, and whether they still work

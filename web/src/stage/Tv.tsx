@@ -9,6 +9,7 @@ import { Banners, usePlates } from '../roll/Banner'
 import { RollStage } from '../roll/RollStage'
 import { RollSound } from '../roll/sound'
 import { RingPortrait } from '../shell/RingPortrait'
+import { TvFlood } from '../slots/TvFlood'
 import { useGame } from '../store/game'
 import type { MapView, TokenView, Vec3, View } from '../types'
 import { Downside } from './Downside'
@@ -61,6 +62,7 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
           </aside>
         )}
       </div>
+      <TvFlood />
       <Banners where="tv" />
       <RollStage world={world} tv sound={started ? sound.current : null} />
       <Downside />

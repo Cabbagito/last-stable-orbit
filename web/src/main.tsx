@@ -10,6 +10,7 @@ import './styles/station.css'
 import './styles/fight.css'
 import './styles/rolls.css'
 import './styles/overview.css'
+import './styles/slots.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
