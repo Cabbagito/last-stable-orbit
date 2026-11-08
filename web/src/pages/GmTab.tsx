@@ -351,7 +351,7 @@ function MapsSection({ view }: { view: View }) {
 
 function SessionSection({ view }: { view: View }) {
   const [done, setDone] = useState('')
-  const [asking, setAsking] = useState<{ id: string; name: string } | null>(null)
+  const [asking, setAsking] = useState<{ id: string; name: string; scene: boolean } | null>(null)
   const [loaded, setLoaded] = useState('')
   const newSession = async () => {
     const ack = await gmRun('gm.session.new', {})
@@ -359,9 +359,9 @@ function SessionSection({ view }: { view: View }) {
   }
   const load = async () => {
     if (!asking) return
-    const ack = await gmRun('gm.world.load_preset', { preset: asking.id })
+    const ack = await gmRun('gm.world.load_preset', asking.scene ? { preset: asking.id, scene: true } : { preset: asking.id })
     setAsking(null)
-    if (ack.ok) setLoaded(`Loaded "${asking.name}".`)
+    if (ack.ok) setLoaded(`Loaded ${asking.scene ? 'the scene of ' : ''}"${asking.name}".`)
   }
   return (
     <section className="r10-wide" aria-label="Session">
@@ -383,7 +383,17 @@ function SessionSection({ view }: { view: View }) {
               type="button"
               className="r10-btn"
               onClick={() => {
-                setAsking(p)
+                setAsking({ ...p, scene: true })
+                setLoaded('')
+              }}
+            >
+              Scene only
+            </button>
+            <button
+              type="button"
+              className="r10-btn"
+              onClick={() => {
+                setAsking({ ...p, scene: false })
                 setLoaded('')
               }}
             >
@@ -394,7 +404,11 @@ function SessionSection({ view }: { view: View }) {
       </div>
       {asking && (
         <div className="r10-confirm" role="alertdialog" aria-label={`Load ${asking.name}?`}>
-          <div style={{ fontSize: 12.5 }}>Load "{asking.name}"? It replaces every position, mood, vital and pocket.</div>
+          <div style={{ fontSize: 12.5 }}>
+            {asking.scene
+              ? `Load only the scene of "${asking.name}"? It moves everyone and sets every map's mood, and any fight ends. HP, Entropy, pockets and the Codex stay as they are.`
+              : `Load "${asking.name}"? It replaces every position, mood, HP, Entropy, pocket and the Codex.`}
+          </div>
           <div className="r10-go">
             <button type="button" className="r10-btn" onClick={() => void load()}>
               Load it

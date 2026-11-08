@@ -115,7 +115,7 @@ async def test_retried_intent_applies_once(engine):
 
 async def test_load_preset(engine):
     await run(engine, GM, "gm.map.mood", {"map": "event-horizon", "mood": "stand"})
-    await run(engine, GM, "gm.world.load_preset", {"preset": "bar-after-hours"})
+    await run(engine, GM, "gm.world.load_preset", {"preset": "session-1-night"})
     s = engine.state
     assert s.maps["event-horizon"].mood == "after" and not s.tokens["cleaner-14"].hidden and "fixer" not in s.tokens
 

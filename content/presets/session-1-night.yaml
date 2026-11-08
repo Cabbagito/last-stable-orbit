@@ -1,6 +1,8 @@
-# The bar after hours, crew on their feet, before Lucan comes in: Dax at his place and Unit 14 in the corner.
-id: bar-after-hours
-name: The bar after hours
+# Session 1, the night: the bar is in After hours, the crew are outside its door, and the GM sends them in one by one
+# in Reflex order. Dax is at his place, Irena is with him for the first arrival, and Unit 14 is in the corner.
+# Positions are DRAFTS, checked on the art.
+id: session-1-night
+name: "Session 1: after hours, arrivals"
 party_map: event-horizon
 maps:
   event-horizon: {mood: after, switches: {seals_box: 0}, shown: [mural, slots]}
@@ -12,12 +14,15 @@ maps:
   secure: {mood: day, switches: {cameras: 1}}
   lift: {mood: shut, switches: {cameras: 1}}
 tokens:
-  - {kind: crew, ref: ves, map: event-horizon, at: [9.7, 6.2, 0]}
-  - {kind: crew, ref: tomo, map: event-horizon, at: [9.4, 3.9, 0]}
-  - {kind: crew, ref: lale, map: event-horizon, at: [8.2, 8.7, 0]}
-  - {kind: crew, ref: marlo, map: event-horizon, at: [11.7, 8.9, 0]}
-  - {kind: crew, ref: tally, map: event-horizon, at: [11.9, 4.4, 0]}
+  # outside the bar's door, on the Promenade
+  - {kind: crew, ref: ves, map: promenade, at: [37.0, 2.0, 0]}
+  - {kind: crew, ref: tomo, map: promenade, at: [38.0, 2.6, 0]}
+  - {kind: crew, ref: lale, map: promenade, at: [36.4, 3.2, 0]}
+  - {kind: crew, ref: marlo, map: promenade, at: [39.6, 3.2, 0]}
+  - {kind: crew, ref: tally, map: promenade, at: [37.4, 4.0, 0]}
+  # in the bar
   - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
+  - {kind: npc, ref: scientist, map: event-horizon, at: [11.3, 3.9, 0]}
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}
 inventory:
   lale: [fob-watch, letter-lale, {item: credits, count: 120}]

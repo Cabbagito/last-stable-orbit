@@ -177,6 +177,6 @@ def test_an_old_save_gets_the_day_one_codex(content, tmp_path):
 
 
 async def test_a_preset_brings_its_own_codex(engine):
-    assert (await run(engine, GM, "gm.world.load_preset", {"preset": "bar-after-hours"}))["ok"]
+    assert (await run(engine, GM, "gm.world.load_preset", {"preset": "session-1-night"}))["ok"]
     ids = {e["id"] for e in codex(engine, TALLY)["entries"]}
     assert {"dax", "fixer", "mural", "ilija"} <= ids and "scientist" not in ids

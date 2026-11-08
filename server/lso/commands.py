@@ -881,6 +881,7 @@ def handle(
         preset = content.presets.get(_str(args, "preset"))
         if not preset:
             raise _invalid("unknown preset")
-        return [("world.loaded", {"preset": preset.id, "state": state_from_preset(preset, content)})]
+        data = {"preset": preset.id, "state": state_from_preset(preset, content)}
+        return [("world.loaded", data | {"scene": True} if args.get("scene") is True else data)]
 
     raise _invalid(f"unknown intent {kind!r}")

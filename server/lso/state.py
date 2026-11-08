@@ -120,6 +120,13 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         fresh.stage = s.stage  # a preset sets the world, not the table: the camera and films carry over
         fresh.overviews = s.overviews  # and what's open on someone's screen stays open
         fresh.slots = {k: SlotBank(out=True) for k, b in s.slots.items() if b.out}  # a flood is for good; everyone's up
+        if data.get("scene"):  # only the scene: who stands where and each map's mood. What the crew has and knows stays
+            fresh.vitals, fresh.inventory, fresh.seen = s.vitals, s.inventory, s.seen
+            fresh.codex, fresh.codex_read = s.codex, s.codex_read
+            fresh.station = s.station + [m for m in fresh.station if m not in s.station]
+            for m_id, ms in fresh.maps.items():
+                old = s.maps[m_id].shown if m_id in s.maps else []
+                ms.shown = old + [o for o in ms.shown if o not in old]
         return fresh
     if ev_type == "token.moved":
         s.tokens[data["token"]].at = tuple(data["at"])

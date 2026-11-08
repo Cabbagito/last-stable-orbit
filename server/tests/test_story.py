@@ -14,6 +14,7 @@ from lso.store import Store
 from lso.views import project
 
 CREW = ("lale", "marlo", "tally", "ves", "tomo")
+GM = Viewer("gm", "gm")
 TALLY = Viewer("tally", "player")
 
 
@@ -71,6 +72,56 @@ def test_the_session_1_presets(content):
 
     arrival = content.presets["session-1-arrival"]
     assert arrival.maps["event-horizon"].mood == "open" and "fixer" not in {t.ref for t in arrival.tokens}
+
+
+def test_session_1s_four_beats_are_in_order(content):
+    assert list(content.presets) == ["session-1-arrival", "session-1-day", "session-1-night", "session-1"]
+    crew = lambda p: {t.map for t in p.tokens if t.kind == "crew"}
+    day, night = content.presets["session-1-day"], content.presets["session-1-night"]
+    assert crew(day) == {"promenade"} and day.party_map == "promenade" and day.maps["event-horizon"].mood == "open"
+    assert "gumshoe" in {t.ref for t in day.tokens if t.map == "promenade"}
+    assert crew(night) == {"promenade"} and night.maps["event-horizon"].mood == "after"
+    assert {t.ref for t in night.tokens if t.kind == "npc"} == {"dax", "scientist", "cleaner-14"}
+
+
+async def _load(engine, viewer, **args):
+    ack, _ = await engine.run(viewer, None, "gm.world.load_preset", args)
+    return ack
+
+
+async def test_a_scene_load_keeps_what_the_crew_has_and_knows(engine, content):
+    await _load(engine, GM, preset="session-1-day")
+    await engine.run(GM, None, "gm.item.give", {"holder": "ves", "item": "burner-key"})
+    await engine.run(GM, None, "gm.vitals.set", {"char": "ves", "hp": 1, "entropy": 5})
+    await engine.run(GM, None, "gm.codex.unlock", {"entry": "dax"})
+    await engine.run(GM, None, "gm.object.show", {"map": "promenade", "object": "alley", "shown": True})
+    before = engine.state.model_copy(deep=True)
+
+    assert (await _load(engine, GM, preset="session-1-night", scene=True))["ok"]
+    s = engine.state
+    assert s.inventory == before.inventory and s.vitals == before.vitals and s.vitals["ves"].entropy == 5
+    assert s.codex == before.codex and s.codex_read == before.codex_read and s.seen == before.seen
+    assert "alley" in s.maps["promenade"].shown and set(before.station) <= set(s.station)
+    # and the scene itself moved
+    assert s.maps["event-horizon"].mood == "after" and s.tokens["scientist"].map == "event-horizon"
+    assert s.tokens["ves"].map == "promenade" and "steward" not in s.tokens
+
+
+async def test_a_scene_load_ends_a_fight(engine):
+    await engine.run(GM, None, "gm.fight.start", {"map": "event-horizon", "tokens": ["tomo", "fixer"]})
+    assert engine.state.fights
+    assert (await _load(engine, GM, preset="session-1-day", scene=True))["ok"]
+    assert not engine.state.fights
+
+
+async def test_a_full_load_still_resets_everything(engine):
+    await engine.run(GM, None, "gm.item.give", {"holder": "ves", "item": "burner-key"})
+    assert (await _load(engine, GM, preset="session-1-day"))["ok"]
+    assert not any(e.item == "burner-key" for e in engine.state.inventory["ves"])
+
+
+async def test_only_the_gm_loads_a_scene(engine):
+    assert (await _load(engine, TALLY, preset="session-1-night", scene=True))["code"] == "forbidden"
 
 
 def test_a_saved_game_moves_over_once(content, tmp_path):

@@ -230,7 +230,7 @@ def test_the_choice_of_no_tv_is_gone(engine, content):
 
 async def test_a_preset_keeps_the_table_setting(engine, content):
     await ok(engine, GM, "gm.stage.camera", {"camera": "follow", "follow": "ves"})
-    await ok(engine, GM, "gm.world.load_preset", {"preset": "bar-after-hours"})
+    await ok(engine, GM, "gm.world.load_preset", {"preset": "session-1-night"})
     st = engine.state.stage
     assert (st.camera, st.follow) == ("follow", "ves")
 
