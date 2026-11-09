@@ -179,19 +179,19 @@ async def test_a_film_cant_be_stopped_or_doubled(engine, content, clock):
         with pytest.raises(CommandError) as e:
             handle(GM, engine.state, content, kind, args, now=clock.t + 10)
         assert e.value.code == "invalid"
-    # it ends on its own, and the GM's list says it was played
+    # it ends on its own, and the GM's list has it under its act
     clock.t = engine.state.stage.film.ends + 0.1
     assert await engine.sweep(set())
-    assert engine.state.stage.film is None and engine.state.stage.played == ["shotgun"]
+    assert engine.state.stage.film is None
     cue = {c["id"]: c for c in project(engine.state, content, GM)["stage"]["cues"]}["shotgun"]
-    assert cue["played"] and cue["ready"] and cue["still"] == STILL
+    assert cue["act"] == "Act 3" and cue["ready"] and cue["still"] == STILL
 
 
 async def test_a_film_that_just_ended_can_play_again_before_the_sweep(engine, content, clock):
     await ok(engine, GM, "gm.film.play", {"cue": "shotgun"})
     clock.t = engine.state.stage.film.ends + 0.5  # over, but the sweeper hasn't run yet
     await ok(engine, GM, "gm.film.play", {"cue": "shotgun"})
-    assert engine.state.stage.played == ["shotgun"] and engine.state.stage.film.at > clock.t
+    assert engine.state.stage.film.at > clock.t
 
 
 def test_only_the_gm_plays_films_and_only_made_ones(engine, content):
@@ -220,6 +220,15 @@ def test_a_game_saved_with_the_old_tv_choice_still_loads(content, tmp_path):
     store.commit("system", None, [], old, {})
     e = Engine(content, store)
     assert "setup" not in e.state.stage.model_dump() and "setup" not in project(e.state, content, GM)["stage"]
+
+
+def test_a_game_saved_with_played_cues_still_loads(content, tmp_path):
+    store = Store(tmp_path / "old.db")
+    Engine(content, store)
+    old = store.load_snapshot()[1]
+    old["stage"]["played"] = ["shotgun"]
+    store.commit("system", None, [], old, {})
+    assert "played" not in Engine(content, store).state.stage.model_dump()
 
 
 def test_the_choice_of_no_tv_is_gone(engine, content):

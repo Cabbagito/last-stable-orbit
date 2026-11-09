@@ -2,6 +2,9 @@
 # to the end, with no controls. Each is one video file with its sound baked in (see the doc "LSO — Cutscenes
 # and Stage"). A cue with no file isn't made yet: it shows in the list, greyed out.
 #
+# `act` is the heading the cue sits under in the GM's list. The last films are "Final act" because that's act 4 or
+# 5, depending on whether the crew go for the probe.
+#
 # `sets` is what the cue sets behind the film, so play resumes in the right place when it ends: the map (the
 # party looks at it), its mood and switches, and NPCs placed where the film leaves them. The crew stay put: when
 # a film ends on another map, the GM sends them there (Scene, "Send the crew here"), which also works while it plays.
@@ -9,10 +12,12 @@
 
 - id: wait
   name: "Waiting screen: Ergo and the hole"
+  act: Act 1
   sub: Loops on the TV until the intro plays
 
 - id: intro
   name: "Intro: Patience arrives"
+  act: Act 1
   sub: 3:32, opens the campaign
   ends: Ends on the Patience map, and play begins. Send the crew there if they aren't already.
   file: films/intro.mp4
@@ -23,6 +28,7 @@
 
 - id: lucan  # DRAFT wording. The film isn't made yet, so this stays greyed out.
   name: Lucan's film
+  act: Act 1
   sub: Not made yet. Session 1, before the pitch
   ends: Ends on the bar after hours, with Dax gone and Lucan at the rope. Send the crew to the founder's table.
   sets:
@@ -33,11 +39,13 @@
 
 - id: act-1  # DRAFT wording. The film isn't made yet, so this stays greyed out.
   name: End of Act 1
+  act: Act 1
   sub: Not made yet. Closes session 1
   ends: Ends on Dax seeing the rope, a lore quote, and "End of Act 1".
 
 - id: vault-opens
   name: The vault opens
+  act: Act 3
   sub: 33 s, in the heist
   ends: Ends on his desk and the recorder. Goes to the founder's vault. Send in whoever walked through the door.
   file: films/vault-opens.mp4
@@ -48,6 +56,7 @@
 
 - id: shotgun
   name: "The bar: the shotgun"
+  act: Act 3
   sub: 36 s, ends act 3
   ends: Ends on the bar after hours, with Dax at the gap in the rail. The crew stay where they are.
   file: films/shotgun.mp4
@@ -61,6 +70,7 @@
 
 - id: ride-down
   name: The ride down
+  act: Final act
   sub: 32 s, the last of the cable
   ends: Ends on the Terminal room, empty and dark. Send the crew there from the cab.
   file: films/ride-down.mp4
@@ -72,6 +82,7 @@
 
 - id: thank-you
   name: Thank you for bringing that
+  act: Final act
   sub: 37 s, the Seal goes in
   ends: Ends on the Terminal room with the Seal in and the face over it. The crew stay where they are.
   file: films/thank-you.mp4

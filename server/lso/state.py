@@ -213,8 +213,6 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         s.stage.film = FilmState.model_validate(data)
     elif ev_type == "film.ended":
         s.stage.film = None
-        if data["cue"] not in s.stage.played:
-            s.stage.played.append(data["cue"])
     elif ev_type == "burn.started":
         s.stage.burn = BurnState.model_validate(data)
     elif ev_type == "burn.ended":

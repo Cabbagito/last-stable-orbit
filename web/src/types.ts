@@ -296,12 +296,12 @@ export interface FilmView {
 export interface CueView {
   id: string
   name: string
+  act: string // the heading it sits under
   sub: string
   ends: string
   still: string | null
   length: number | null
   ready: boolean // its film is made
-  played: boolean
 }
 
 export interface JoinQr {

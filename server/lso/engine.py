@@ -39,6 +39,7 @@ class Engine:
         else:
             saved = snap[1]
             saved.get("stage", {}).pop("setup", None)  # the TV / no TV / online choice: the TV is always there now
+            saved.get("stage", {}).pop("played", None)  # which cues had played: no longer tracked
             self.state = GameState.model_validate(saved)
             self._heist_maps()  # first: the checks below would stop at a map that's gone on purpose
             self._story_update()  # likewise, for an item, an NPC and Codex pages that are gone on purpose

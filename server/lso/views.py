@@ -454,12 +454,12 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
             {
                 "id": c.id,
                 "name": c.name,
+                "act": c.act,
                 "sub": c.sub,
                 "ends": c.ends,
                 "still": url(c.still),
                 "length": c.length,
                 "ready": bool(c.file),
-                "played": c.id in st.played,
             }
             for c in content.cutscenes.values()
         ]

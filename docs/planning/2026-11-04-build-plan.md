@@ -441,8 +441,8 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **Which screens play it, and who may fetch it:**
     - Only the TV plays it, with all the sound. Players' laptops show the black hole (Round 13's dust) until it ends; they never get the file or the film's name. The GM's laptop keeps working, and the cue list shows its progress.
     - The GM's still is a spoiler, so only the GM gets it.
-  - **The GM tab:** Cutscenes is the cue list with a two-step Play, progress while it plays, and PLAYED after. The TV has the status, the camera with faces for Follow one, and "On the TV now", the TV's own screen small and silent (`/?as=stage`).
-  - **Loading a preset keeps the table setting:** where you're playing, the camera, and which cues were played.
+  - **The GM tab:** Cutscenes is the cue list, grouped by act (each cue's `act` in `content/cutscenes.yaml`), with a two-step Play and progress while it plays. Which cues have played isn't tracked (dropped 2026-11-09). The TV has the status, the camera with faces for Follow one, and "On the TV now", the TV's own screen small and silent (`/?as=stage`).
+  - **Loading a preset keeps the table setting:** where you're playing and the camera.
   - **Not built:** the waiting loop, which isn't rendered yet (only its storyboard frame is on the opening's canvas), and the app has no looping playback for it; a stop button (Peter's call); and the soundboard, ambience and roll sounds (later).
   - **Checked:** 104 server tests (17 new) and 22 web tests. Walked through on a separate test server with the GM, the TV and Tally:
     - the TV's login and start click;

@@ -319,6 +319,7 @@ class Cutscene(Strict):
 
     id: str
     name: str
+    act: str  # the heading it sits under in the GM's list
     sub: str = ""  # "36 s, ends act 3"
     ends: str = ""  # where play resumes, for the GM
     file: str | None = None  # the video under assets/, with its sound baked in
@@ -785,7 +786,6 @@ class StageState(Strict):
     film: FilmState | None = None
     burn: BurnState | None = None
     flood: FloodState | None = None
-    played: list[str] = []  # cues played this campaign, for the GM's list
     join: bool = True  # the join card is on the TV, if the server has one, until the GM hides it
 
 
