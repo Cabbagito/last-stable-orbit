@@ -176,6 +176,13 @@ assets:
     bytes: 40167
     width: 96
     height: 96
+  - path: portraits/static.gif
+    store: PORTRAITS
+    asset_id: "a225700188153960e770cbce24f60d06"
+    sha256: "3a7bfdd4571731bf6efbfe7ac94f8a961d26551fedaca491a0ddbc668c8fa30b"
+    bytes: 42207
+    width: 96
+    height: 96
   - path: icons/stats/body.png
     store: ICONS
     asset_id: "4e11ef2d2ff1effda9a8adae24eaafb1"
@@ -687,18 +694,27 @@ assets:
     bytes: 989
     width: 48
     height: 48
-  - path: films/intro.mp4
-    store: OPENING
-    asset_id: "377e7e6a5b2a7a860fcd4b9b01aaba21"
-    sha256: "383cda5147c951e1acca589870e36903580a7e6ceeaa0a5ee5e46787b514e87b"
-    bytes: 14395781
-    width: 960
-    height: 540
-  - path: films/intro-still.png
-    store: OPENING
-    asset_id: "1cdcdd8d4841dbb3e834a2e827e5ffa0"
-    sha256: "d7cd6e1aa554825ed778e7a9563c811b530aa75690ae74b2d20bb072e6fa9d11"
-    bytes: 34286
+  # The opening came as a zip (lso_opening.zip), not from an artifact's asset store, so these have no asset id
+  - path: films/opening.mp4
+    store: lso_opening.zip
+    sha256: "d5f9ac46103063daa22d427fa58d138f4996aaf1f01803802894424a0cbc0c91"
+    bytes: 47524863
+    width: 1920
+    height: 1080
+  - path: films/opening-loop.mp4
+    store: lso_opening.zip
+    sha256: "23f6fbb29c3660c45a8c0c79cb8bc5f51eafe391244e98d05523670abf28bed8"
+    bytes: 821078
+    width: 1920
+    height: 1080
+  - path: films/opening-audio.flac
+    store: lso_opening.zip
+    sha256: "c5d262478b66d7a7a79fe5cc36883fd668d9200ff38e4957eddb340fd5469065"
+    bytes: 27602769
+  - path: films/opening-still.png
+    store: lso_opening.zip
+    sha256: "45fdc484036efb32f821225b854d919ea0681b4e783ecb6dd81a9d6933b99aa2"
+    bytes: 33150
     width: 480
     height: 270
   - path: films/vault-opens.mp4

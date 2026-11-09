@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import RULES, BurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, OverviewState, Preset, PresetItem, RollState, SlotBank, SlotSeat, TokenState, Vitals
+from .models import RULES, BurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, OpeningState, OverviewState, Preset, PresetItem, RollState, SlotBank, SlotSeat, TokenState, Vitals
 
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
 
@@ -213,6 +213,12 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         s.stage.film = FilmState.model_validate(data)
     elif ev_type == "film.ended":
         s.stage.film = None
+    elif ev_type == "opening.armed":
+        s.stage.opening = OpeningState(loop_at=float(data["loop_at"]))
+    elif ev_type == "opening.started":
+        s.stage.opening = s.stage.opening.model_copy(update={"film_at": float(data["film_at"]), "ends": float(data["ends"])})
+    elif ev_type in ("opening.cleared", "opening.ended"):
+        s.stage.opening = None
     elif ev_type == "burn.started":
         s.stage.burn = BurnState.model_validate(data)
     elif ev_type == "burn.ended":

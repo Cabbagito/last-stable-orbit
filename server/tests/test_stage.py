@@ -198,7 +198,7 @@ def test_only_the_gm_plays_films_and_only_made_ones(engine, content):
     with pytest.raises(CommandError) as e:
         handle(TALLY, engine.state, content, "gm.film.play", {"cue": "shotgun"})
     assert e.value.code == "forbidden"
-    for cue in ("wait", "nope"):
+    for cue in ("lucan", "nope"):
         with pytest.raises(CommandError):
             handle(GM, engine.state, content, "gm.film.play", {"cue": cue})
 
@@ -268,3 +268,158 @@ def test_a_film_file_reaches_only_the_tv_and_the_gm(client, seat):
         g.send_json({"t": "intent", "id": "p", "type": "gm.film.play", "args": {"cue": "shotgun"}})
         assert recv(g, "ack")["ok"]
         assert get(tally, FILM) == 404  # only the TV fetches films
+
+
+# ---------- the opening ----------
+
+LOOP, MOVIE, AUDIO = "/assets/films/opening-loop.mp4", "/assets/films/opening.mp4", "/assets/films/opening-audio.flac"
+
+
+def stage_of(engine, content, viewer):
+    return project(engine.state, content, viewer)["stage"]
+
+
+async def arm(engine):
+    await ok(engine, GM, "gm.opening.set", {"on": True})
+
+
+async def test_the_opening_is_off_until_the_gm_turns_it_on(engine, content):
+    assert "held" not in stage_of(engine, content, TALLY)
+    assert stage_of(engine, content, STAGE)["opening"] is None
+    assert stage_of(engine, content, GM)["opening_film"]["length"] == 212.25
+
+
+async def test_only_the_gm_turns_the_opening_on_or_plays_it(engine, content):
+    for viewer in (TALLY, STAGE):
+        for kind, args in (("gm.opening.set", {"on": True}), ("gm.opening.play", {})):
+            with pytest.raises(CommandError) as e:
+                handle(viewer, engine.state, content, kind, args)
+            assert e.value.code == "forbidden"
+
+
+async def test_held_players_get_only_that_they_are_held(engine, content, clock):
+    await arm(engine)
+    st = stage_of(engine, content, TALLY)
+    assert st["held"] is True and "opening" not in st and "opening_film" not in st
+    feed = json.dumps(project(engine.state, content, TALLY))
+    assert "films/opening" not in feed and "loop_at" not in feed
+    await ok(engine, GM, "gm.opening.play", {})
+    feed = json.dumps(project(engine.state, content, TALLY))
+    assert "films/opening" not in feed and "film_at" not in feed
+
+
+async def test_the_tv_gets_the_opening_files_and_the_gm_the_times(engine, content, clock):
+    await arm(engine)
+    tv, gm = stage_of(engine, content, STAGE)["opening"], stage_of(engine, content, GM)["opening"]
+    assert (tv["loop"], tv["film"], tv["audio"]) == (LOOP, MOVIE, AUDIO)
+    assert tv["loop_at"] == gm["loop_at"] == clock.t and tv["film_at"] is None
+    assert "audio" not in gm
+
+
+async def test_a_held_player_can_do_nothing(engine, content):
+    await arm(engine)
+    tok = next(t for t, x in engine.state.tokens.items() if x.kind == "crew" and x.ref == "tally")
+    for kind, args in (("token.move", {"token": tok, "at": [1, 1, 0]}), ("roll.start", {"stat": "wits"}), ("burn.use", {})):
+        with pytest.raises(CommandError) as e:
+            handle(TALLY, engine.state, content, kind, args)
+        assert e.value.code == "forbidden"
+
+
+async def test_the_gm_works_while_the_players_are_held(engine, content):
+    await arm(engine)
+    await ok(engine, GM, "gm.stage.join", {"show": False})
+    await ok(engine, GM, "gm.stage.camera", {"camera": "follow", "follow": "tally"})
+
+
+@pytest.mark.parametrize("pressed, beats", [(0.0, 1), (0.1, 2), (2.6, 5), (3.0, 5), (3.1, 6)])
+async def test_the_film_starts_on_a_beat_at_least_the_lead_away(engine, content, clock, pressed, beats):
+    await arm(engine)
+    start = clock.t
+    clock.t += pressed
+    await ok(engine, GM, "gm.opening.play", {})
+    o = engine.state.stage.opening
+    assert o.film_at == pytest.approx(start + beats * 0.75)
+    assert o.film_at - clock.t >= 0.75 - 1e-6
+    assert o.ends == pytest.approx(o.film_at + 212.25)
+
+
+async def test_the_film_hides_the_join_card(engine, content):
+    await arm(engine)
+    assert engine.state.stage.join is True
+    await ok(engine, GM, "gm.opening.play", {})
+    assert engine.state.stage.join is False
+
+
+async def test_the_end_of_the_film_lets_everyone_in(engine, content, clock):
+    await arm(engine)
+    await ok(engine, GM, "gm.opening.play", {})
+    clock.t = engine.state.stage.opening.ends - 1
+    await engine.sweep(set())
+    assert stage_of(engine, content, TALLY)["held"] is True
+    clock.t += 1.5
+    await engine.sweep(set())
+    assert engine.state.stage.opening is None
+    assert "held" not in stage_of(engine, content, TALLY)
+
+
+async def test_the_opening_can_be_turned_off_only_before_the_film(engine, content):
+    await arm(engine)
+    await ok(engine, GM, "gm.opening.set", {"on": False})
+    assert engine.state.stage.opening is None
+    await arm(engine)
+    await ok(engine, GM, "gm.opening.play", {})
+    with pytest.raises(CommandError):
+        handle(GM, engine.state, content, "gm.opening.set", {"on": False}, now=engine.clock())
+
+
+async def test_play_needs_the_opening_on_and_only_works_once(engine, content):
+    with pytest.raises(CommandError):
+        handle(GM, engine.state, content, "gm.opening.play", {})
+    await arm(engine)
+    await ok(engine, GM, "gm.opening.play", {})
+    with pytest.raises(CommandError):
+        handle(GM, engine.state, content, "gm.opening.play", {})
+
+
+async def test_nothing_else_plays_during_the_opening(engine, content):
+    await arm(engine)
+    with pytest.raises(CommandError):
+        handle(GM, engine.state, content, "gm.film.play", {"cue": "shotgun"}, now=engine.clock())
+
+
+async def test_the_opening_cant_start_over_a_film(engine, content):
+    await ok(engine, GM, "gm.film.play", {"cue": "shotgun"})
+    with pytest.raises(CommandError):
+        handle(GM, engine.state, content, "gm.opening.set", {"on": True}, now=engine.clock())
+
+
+async def test_a_preset_keeps_the_opening_on(engine, content):
+    await arm(engine)
+    preset = next(iter(content.presets))
+    await ok(engine, GM, "gm.world.load_preset", {"preset": preset})
+    assert engine.state.stage.opening is not None
+
+
+async def test_the_opening_survives_a_restart(engine, content, tmp_path, clock):
+    await arm(engine)
+    again = Engine(content, Store(tmp_path / "t.db"), clock=clock)
+    assert again.state.stage.opening == engine.state.stage.opening
+
+
+def test_only_the_tv_may_fetch_the_opening_and_it_can_seek(client, seat):
+    gm, tally, tv = seat("gm"), seat("tally"), tv_login(client)
+    assert client.get(MOVIE, headers=tv).status_code == 404  # not until the opening is on
+    with client.websocket_connect("/ws", headers=gm) as g:
+        recv(g, "view")
+        g.send_json({"t": "intent", "id": "o", "type": "gm.opening.set", "args": {"on": True}})
+        assert recv(g, "ack")["ok"]
+        for path in (LOOP, MOVIE, AUDIO):
+            assert client.get(path, headers=tally).status_code == 404
+        seek = client.get(MOVIE, headers=tv | {"range": "bytes=1000-1999"})
+        assert seek.status_code == 206 and len(seek.content) == 1000  # a late-joining TV seeks: it needs this
+
+
+def test_the_opening_numbers_match_the_player_that_came_with_the_files(content):
+    js = (ROOT / "web/src/stage/opening_player.js").read_text()
+    assert f"BEAT: {content.opening.beat}," in js
+    assert f"FILM: {content.opening.length}," in js

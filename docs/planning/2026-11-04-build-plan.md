@@ -1,6 +1,6 @@
 # Last Stable Orbit: recommended build plan
 
-## Progress (updated 2026-11-08)
+## Progress (updated 2026-11-09)
 
 | Milestone | Status |
 |---|---|
@@ -24,7 +24,17 @@
 | The story, against the live bible | **Done** 2026-11-08: the content now matches the live Campaign Bible, and the repo's copy is deleted. See "The story consolidated" below. Includes session 1's four presets and Scene only. Tests pass, and it was checked on a copy of the saved game. Deployed to 8070 the same day; parker still needs `git pull && make up`. New wording is marked DRAFT in the YAML |
 | The GM screen, consolidated | **Built** 2026-11-08 from the canvas "GM screen, consolidated" (https://claude.ai/artifact/Pd3ZR19LyxgnLWWypoaXGs) and checked in the sandbox with a Playwright walk of the GM, a player, and the wall of seats; see "The GM screen, consolidated" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | Whose turn and who you are, on the board | **Built** 2026-11-09 from the canvas "Turn and You markers" (https://claude.ai/artifact/Uqw6WrtbFK1J83vVRrbCek), rows Lift and Ground ring, and checked in the sandbox as Tally, the GM and the TV. In a fight, whoever's turn it is gets a faint glow and a small lift on every screen and the TV, once the Reflex dice have landed. A player's own chip gets a green ring at its feet, and the GM and the TV never see one |
+| The opening | **Built** 2026-11-09 from `lso_opening.zip` and checked on a throwaway copy with three seats (the GM, Tally and the TV), from the login to the film's end; see "The opening" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. The sound is for Peter to judge by ear |
 | M9: Finale screen | Not started |
+
+**The opening** (2026-11-09, from `lso_opening.zip`, whose player code is `web/src/stage/opening_player.js`, kept verbatim):
+- **The GM's Session page** has a step for it. **Hold players** turns it on: the TV loops the stars and the music, and every player who logs in, or is already in, sees the black hole and nothing else. The game sits behind it, inert, and the server refuses a held player's every intent. The GM works normally, so this is when the Patience gets set up.
+- **Play** asks twice and waits for the TV. The film starts on the first beat at least 0.75 s after the press (`commands.beat_after`) and can't be stopped. It hides the join card, which otherwise stays over the loop so people can get in. When the film ends the server clears the opening, and everyone fades into the game. It does not move anyone: the GM sets the scene.
+- **The state** is `stage.opening`: `loop_at`, `film_at`, `ends`, all server time. On means it exists. Only the TV gets the files, and only while it's on; a player's feed says only `held` (leak tests in `test_stage.py`). The paths and numbers are `content/opening.yaml`.
+- **Unlike every other film, its sound is a separate file** (`films/opening-audio.flac`: the 96 s loop, then the film's sound), so the loop repeats seamlessly and the film lands on the beat. The zip's README plays it on the GM's device; here it plays on the TV, because laptops are silent. It goes through the context the TV's start click unlocks, and the video files stay muted. A TV that reloads mid-film jumps back into step after its start click.
+- **The cue list** no longer has "Waiting screen" or "Intro": this replaces both, and `films/intro.mp4` is gone. The music credit (CC BY) is on the login screen.
+- **Checked:** the film started exactly on a beat, its picture stayed within about 10 ms of the shared clock, and a mid-film reload came back within 9 ms with the sound in the right place. Only in Chromium: decoding the FLAC is untested in Safari, where the README says to fall back to a WAV if `load()` fails. A failed load shows a line on the TV.
+- **Not done:** a held player who picked the wrong character can't log out until the GM turns the hold Off.
 
 **The GM screen, consolidated** (2026-11-08, red-teamed and drawn on the canvas above, which Peter approved):
 - **The GM's Scene is one column.** The map dropdown, the title, the crew rail and the hover steppers are gone. The crew are pinned at the top with HP and Entropy always there, and a row takes over the rail's jobs (the ring, a roll spinning, a Burn, Failed?). Here and Things scroll between them, and Just a die sits at the bottom, where pressing a die rolls it. Next turn, the round, Who's in and End sit at the top of the column during a fight.
@@ -445,7 +455,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - The GM's still is a spoiler, so only the GM gets it.
   - **The GM tab:** Cutscenes is the cue list, grouped by act (each cue's `act` in `content/cutscenes.yaml`), with a two-step Play and progress while it plays. Which cues have played isn't tracked (dropped 2026-11-09). The TV has the status, the camera with faces for Follow one, and "On the TV now", the TV's own screen small and silent (`/?as=stage`).
   - **Loading a preset keeps the table setting:** where you're playing and the camera.
-  - **Not built:** the waiting loop, which isn't rendered yet (only its storyboard frame is on the opening's canvas), and the app has no looping playback for it; a stop button (Peter's call); and the soundboard, ambience and roll sounds (later).
+  - **Not built:** a stop button (Peter's call); and the soundboard, ambience and roll sounds (later).
   - **Checked:** 104 server tests (17 new) and 22 web tests. Walked through on a separate test server with the GM, the TV and Tally:
     - the TV's login and start click;
     - the camera following Ves;

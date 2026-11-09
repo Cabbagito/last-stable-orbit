@@ -17,6 +17,7 @@ import type { MapView, TokenView, Vec3, View } from '../types'
 import { Downside } from './Downside'
 import { BurnFilms, FilmPlayer } from './Film'
 import { JoinCard } from './JoinCard'
+import { TvOpening } from './Opening'
 
 /**
  * The TV at the table (the Stage seat). Full screen: the party's map with only what everyone may see, no crew
@@ -72,6 +73,7 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
         <FilmPlayer key={src} src={src} film={view.stage.film} sound={!preview} />
       ))}
       <BurnFilms />
+      <TvOpening sound={started ? sound.current : null} />
       {!started && (
         <div className="app-tvstart">
           <button type="button" className="app-tvgo" onClick={start}>

@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, Overview, Preset, PresetItem, Scenario, SlotsGame, Station
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, Opening, Overview, Preset, PresetItem, Scenario, SlotsGame, Station
 
 log = logging.getLogger("lso.content")
 
@@ -29,6 +29,7 @@ class Content:
     map_groups: list[MapGroup] = field(default_factory=list)  # the GM's map picker
     insults: dict[str, list[str]] = field(default_factory=dict)  # "any" plus one pool per stat
     cutscenes: dict[str, Cutscene] = field(default_factory=dict)  # in the order the GM will use them
+    opening: Opening | None = None  # the waiting loop and the intro film
     codex: dict[str, CodexEntry] = field(default_factory=dict)  # in reading order within each section
     codex_sections: list[CodexSection] = field(default_factory=list)  # the landing's five rows, in order
     station: Station | None = None  # the Station tab's cross-section
@@ -87,6 +88,8 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
     c.map_groups = [_parse(MapGroup, g, "map_groups.yaml") for g in _read(content_dir / "map_groups.yaml")]
     cut = content_dir / "cutscenes.yaml"
     c.cutscenes = _by_id(Cutscene, _read(cut), "cutscenes.yaml") if cut.is_file() else {}
+    op = content_dir / "opening.yaml"
+    c.opening = _parse(Opening, _read(op), "opening.yaml") if op.is_file() else None
     cdx = content_dir / "codex.yaml"
     if cdx.is_file():
         raw = _read(cdx) or {}
@@ -270,6 +273,8 @@ def asset_paths(c: Content) -> set[str]:
         paths |= {d.src for d in m.decals}
     for cue in c.cutscenes.values():
         paths |= {p for p in (cue.file, cue.still) if p}
+    if c.opening:
+        paths |= {c.opening.loop, c.opening.film, c.opening.audio, c.opening.still}
     for sec in c.codex_sections:
         paths |= {t.src for t in sec.tiles + sec.strip}
     if c.station:

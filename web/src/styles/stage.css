@@ -104,3 +104,9 @@
 @keyframes app-bmk-in{0%{background:var(--c);transform:scale(1.3)}100%{background:#000;transform:none}}
 @keyframes app-bmk-glow{0%,100%{box-shadow:0 0 0 1px var(--c)}50%{box-shadow:0 0 0 1px var(--c),0 0 16px -2px var(--c)}}
 @media (prefers-reduced-motion:reduce){.app-flare-ring,.app-bmk-chip{animation:none!important}.app-flare-wave{display:none}}
+
+/* the opening: on the TV over everything but its start screen and log-out; on a player's laptop, over everything */
+.app-film.app-opening{z-index:54}
+.app-film.app-held{z-index:4000}
+.app-openingerr{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);padding:8px 14px;background:#000;color:#ff8a8a;font-size:13px;z-index:6}
+.app-credit{max-width:520px;text-align:center;font-size:11px;line-height:1.5;color:var(--dim)}

@@ -9,6 +9,11 @@ export class RollSound {
   private out: AudioNode | null = null
   private noise: AudioBuffer | null = null
 
+  /** The context the start click unlocked: the opening plays through it too. */
+  get context() {
+    return this.ac
+  }
+
   /** Call from a click: browsers only let sound start from one. */
   unlock() {
     const AC = window.AudioContext

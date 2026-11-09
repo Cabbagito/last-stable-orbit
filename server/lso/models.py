@@ -334,6 +334,19 @@ class Cutscene(Strict):
         return self
 
 
+class Opening(Strict):
+    """The campaign's opening: a waiting loop, then the film, with the sound of both in one separate file."""
+
+    name: str
+    sub: str = ""
+    loop: str  # the picture loop, no sound
+    film: str  # played muted: its sound is in `audio`
+    audio: str  # the music loop, then the film's sound, back to back
+    still: str  # the loop's first frame: its poster, and the GM's thumbnail
+    length: float = Field(gt=0)  # the film, in seconds
+    beat: float = Field(gt=0)  # seconds between the music's beats: the film starts on one
+
+
 CodexSec = Literal["chars", "items", "world", "lore", "rules"]
 CODEX_SECTIONS: tuple[str, ...] = ("chars", "items", "world", "lore", "rules")
 
@@ -770,6 +783,14 @@ class BurnState(Strict):
     ends: float
 
 
+class OpeningState(Strict):
+    """The opening is on: the TV loops and players are held on the black hole until it ends. Times are the server's."""
+
+    loop_at: float  # the music loop's start: every position in the loop is counted from here
+    film_at: float | None = None  # the film starts here, on a beat of the loop. Once it's set it can't be stopped
+    ends: float | None = None
+
+
 class FloodState(Strict):
     """Everyone stood at once: the machines pay out, big on the TV."""
 
@@ -784,6 +805,7 @@ class StageState(Strict):
     camera: Literal["crew", "follow", "roller"] = "crew"
     follow: str | None = None  # a character, for the "follow" camera
     film: FilmState | None = None
+    opening: OpeningState | None = None
     burn: BurnState | None = None
     flood: FloodState | None = None
     join: bool = True  # the join card is on the TV, if the server has one, until the GM hides it

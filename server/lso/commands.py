@@ -26,6 +26,7 @@ OFFLINE_CLOSE_AFTER = 30.0  # a roll this old whose roller has gone away is clos
 STALE_CLOSE_AFTER = 600.0  # nothing stays open longer than this
 
 FILM_LEAD = 1.5  # a film starts this long after the GM presses Play. The TV has every film already
+OPENING_LEAD = 0.75  # the opening's film starts on the first beat at least this long after Play, so the TV hears in time
 BURN_LEAD = 0.4  # and every Burn film, so a Burn starts almost at once
 BURN_HOLD = 0.75  # seconds a Burn film's last frame stays up before the hard cut back
 
@@ -67,7 +68,7 @@ def can_move(viewer: Viewer, state: GameState, token_id: str) -> bool:
         return False
     if viewer.is_gm:
         return True
-    return t.kind == "crew" and t.ref == viewer.char and not t.hidden
+    return t.kind == "crew" and t.ref == viewer.char and not t.hidden and not state.stage.opening
 
 
 def check_drag(viewer: Viewer, state: GameState, args: dict) -> tuple[str, tuple[float, float, float]]:
@@ -270,8 +271,8 @@ def _gm_item(state: GameState, content: Content, kind: str, args: dict) -> Event
 
 
 def film_playing(state: GameState, now: float) -> bool:
-    f = state.stage.film
-    return f is not None and now < f.ends
+    f, o = state.stage.film, state.stage.opening
+    return (f is not None and now < f.ends) or (o is not None and o.ends is not None and now < o.ends)
 
 
 def burn_playing(state: GameState, now: float) -> bool:
@@ -293,7 +294,7 @@ def _burn(state: GameState, content: Content, char: str, cut_id, now: float) -> 
     hp, entropy = (v.hp, v.entropy) if v else (c.health, 2)
     if entropy < BURN_COST:
         raise _invalid(f"a Burn costs {BURN_COST} Entropy")
-    if film_playing(state, now):
+    if state.stage.opening or film_playing(state, now):
         raise _invalid("a film is playing: Burn once it ends")
     if burn_playing(state, now):
         raise _invalid("a Burn is playing: wait for it to end")
@@ -313,6 +314,8 @@ def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: fl
             raise _invalid("unknown cutscene")
         if not cue.file or not cue.length:
             raise _invalid(f"{cue.name} isn't made yet")
+        if state.stage.opening:
+            raise _invalid("the opening is on: play the film once it has ended")
         if film_playing(state, now):
             raise _invalid("a film is playing: it can't be stopped, so wait for it to end")
         if burn_playing(state, now):
@@ -345,6 +348,43 @@ def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: fl
         if not isinstance(show, bool):
             raise _invalid("show must be true or false")
         return [] if show == state.stage.join else [("stage.join_set", {"show": show})]
+
+    raise _invalid(f"unknown intent {kind!r}")
+
+
+def beat_after(loop_at: float, pressed: float, beat: float) -> float:
+    """The first beat of the loop at least OPENING_LEAD seconds after the press."""
+    return round(loop_at + math.ceil(max(0.0, pressed + OPENING_LEAD - loop_at) / beat) * beat, 3)
+
+
+def _gm_opening(state: GameState, content: Content, kind: str, args: dict, now: float) -> Events:
+    """The opening: on, the TV loops and players are held. Play starts the film, which can't be stopped; its end lets them in."""
+    game, o = content.opening, state.stage.opening
+    if not game:
+        raise _invalid("this campaign has no opening")
+
+    if kind == "gm.opening.set":
+        on = args.get("on")
+        if not isinstance(on, bool):
+            raise _invalid("on must be true or false")
+        if on == (o is not None):
+            return []
+        if not on:
+            if o.film_at is not None:
+                raise _invalid("the film has started: it can't be stopped, so wait for it to end")
+            return [("opening.cleared", {})]
+        if film_playing(state, now) or burn_playing(state, now):
+            raise _invalid("a film is playing: turn the opening on once it ends")
+        return [("opening.armed", {"loop_at": round(now, 3)})]
+
+    if kind == "gm.opening.play":
+        if o is None:
+            raise _invalid("turn the opening on first")
+        if o.film_at is not None:
+            raise _invalid("the film has already started")
+        film_at = beat_after(o.loop_at, now, game.beat)
+        events: Events = [("opening.started", {"film_at": film_at, "ends": round(film_at + game.length, 3)})]
+        return events + ([("stage.join_set", {"show": False})] if state.stage.join else [])  # everyone's in
 
     raise _invalid(f"unknown intent {kind!r}")
 
@@ -643,6 +683,8 @@ def sweep(state: GameState, now: float, online: set[str], content: Content | Non
             events += [("slots.left", {"key": key, "char": x.char}) for x in bank.seats if x.char not in seated and x.page != "wait"]
     if state.stage.flood and now >= state.stage.flood.ends:
         events.append(("slots.flood_ended", {}))
+    if state.stage.opening and state.stage.opening.ends is not None and now >= state.stage.opening.ends:
+        events.append(("opening.ended", {}))
     if state.stage.film and now >= state.stage.film.ends:
         events.append(("film.ended", {"cue": state.stage.film.cue}))
     if state.stage.burn and now >= state.stage.burn.ends:
@@ -670,6 +712,9 @@ def handle(
     if not isinstance(args, dict):
         raise _invalid("args must be an object")
     rng = rng or random.SystemRandom()
+
+    if viewer.char and state.stage.opening:
+        raise _forbid("the opening is on: you're let in when it ends")
 
     if kind == "token.move":
         token, at = check_drag(viewer, state, args)
@@ -861,6 +906,9 @@ def handle(
         hp = max(0, min(top, hp))
         cur = top if t.hp is None else t.hp
         return [] if hp == cur else [("npc.hp_set", {"token": token, "hp": hp})]
+
+    if kind.startswith("gm.opening."):
+        return _gm_opening(state, content, kind, args, now)
 
     if kind.startswith(("gm.film.", "gm.stage.")):
         return _gm_stage(state, content, kind, args, now)

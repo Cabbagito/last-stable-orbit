@@ -6,7 +6,7 @@ import { CamerasButton, liveSwitches, pressSwitch, switchLabel } from '../gm/Moo
 import { crewFaces, isFar, moodArt } from '../gm/mapTiles'
 import { Diamond, Eye, GIVE_COUNTED, Pocket, itemAria } from '../gm/parts'
 import { SendCrew } from '../gm/SendCrew'
-import { CutscenesSection, JoinSection, TvSection } from '../gm/StageSections'
+import { CutscenesSection, JoinSection, OpeningSection, TvSection } from '../gm/StageSections'
 import { ViewAs } from '../gm/ViewAs'
 import { useItemTip, type TipBind } from '../inspect/ItemTip'
 import { ring } from '../lib/ring'
@@ -382,7 +382,8 @@ function SessionSection({ view }: { view: View }) {
     setAsking(null)
     if (ack.ok) setLoaded(`Loaded ${asking.scene ? 'the scene of ' : ''}"${asking.name}".`)
   }
-  const { tv, join } = view.stage
+  const { tv, join, opening_film } = view.stage
+  const joinStep = opening_film ? 3 : 2
   return (
     <section className="gx-session" aria-label="Session">
       <div className="gx-stepr">
@@ -399,9 +400,18 @@ function SessionSection({ view }: { view: View }) {
           )}
         </div>
       </div>
-      {join && (
+      {opening_film && (
         <div className="gx-stepr">
           <span className="gx-num">2</span>
+          <div className="gx-stepb">
+            <span className="gx-steph">The opening</span>
+            <OpeningSection view={view} />
+          </div>
+        </div>
+      )}
+      {join && (
+        <div className="gx-stepr">
+          <span className="gx-num">{joinStep}</span>
           <div className="gx-stepb">
             <span className="gx-steph">Get everyone in</span>
             <JoinSection view={view} />
@@ -409,7 +419,7 @@ function SessionSection({ view }: { view: View }) {
         </div>
       )}
       <div className="gx-stepr">
-        <span className="gx-num">{join ? 3 : 2}</span>
+        <span className="gx-num">{join ? joinStep + 1 : joinStep}</span>
         <div className="gx-stepb">
           <span className="gx-steph">Start the session</span>
           <div>

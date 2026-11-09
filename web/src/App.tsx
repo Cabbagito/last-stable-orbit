@@ -10,6 +10,7 @@ import { Station } from './pages/Station'
 import { Scene } from './pages/Scene'
 import { Header, type Tab } from './shell/Header'
 import { LaptopFilm } from './stage/Film'
+import { LaptopHold } from './stage/Opening'
 import { Tv } from './stage/Tv'
 import { useGame } from './store/game'
 import type { Me } from './types'
@@ -105,6 +106,7 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
   const disconnect = useGame((s) => s.disconnect)
   const world = useRef<HTMLDivElement>(null)
   const overview = useGame((s) => s.view?.overview?.id)
+  const held = useGame((s) => !!s.view?.stage.held) // the game stays up behind the black hole, out of reach, so it's ready
   useEffect(() => {
     if (overview && location.hash.slice(1).split('/')[0] !== 'scene') location.hash = 'scene' // it opens over the map
   }, [overview])
@@ -116,7 +118,7 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
 
   return (
     <div className={'r4 th-meridian' + (preview && !acting ? ' app-preview' : '')}>
-      <div ref={world} className="app-rollworld">
+      <div ref={world} className="app-rollworld" {...(held ? { inert: '' } : {})}>
         <Header tab={tab} isGm={isGm} onLogout={onLogout} />
         {tab === 'scene' ? <Scene /> : tab === 'gm' ? <GmTab /> : tab === 'codex' ? <Codex /> : tab === 'station' ? <Station /> : <Placeholder tab={tab} />}
         {tab !== 'scene' && <Banners where="page" />}
@@ -124,6 +126,7 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
       </div>
       <RollStage world={world} />
       <LaptopFilm />
+      {!isGm && <LaptopHold />}
     </div>
   )
 }

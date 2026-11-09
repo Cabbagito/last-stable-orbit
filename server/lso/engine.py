@@ -157,6 +157,8 @@ class Engine:
             bad.append(f"party_map {s.party_map!r}")
         if s.stage.film and s.stage.film.cue not in c.cutscenes:
             bad.append(f"film {s.stage.film.cue!r}")
+        if s.stage.opening and not c.opening:
+            bad.append("the opening")
         from .content import codex_keys
 
         bad += [f"codex {k!r}" for k in s.codex if k not in codex_keys(c)]

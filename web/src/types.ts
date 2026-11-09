@@ -293,6 +293,17 @@ export interface FilmView {
   name?: string // GM only
 }
 
+/** The opening, while it's on. Times are the server's, in seconds. The files only reach the TV. */
+export interface OpeningView {
+  loop_at: number
+  film_at: number | null // set once the GM has pressed Play
+  ends: number | null
+  loop?: string
+  film?: string
+  audio?: string
+  still?: string
+}
+
 export interface CueView {
   id: string
   name: string
@@ -324,6 +335,9 @@ export interface StageView {
   camera: Camera
   follow: string | null
   film: FilmView | null
+  opening?: OpeningView | null // the TV and the GM
+  opening_film?: { name: string; sub: string; still: string; length: number } // GM only
+  held?: boolean // a player only: the opening is on, and this laptop shows only the black hole
   burn: BurnView | null
   tv?: boolean // GM only: the TV is connected
   cues?: CueView[] // GM only

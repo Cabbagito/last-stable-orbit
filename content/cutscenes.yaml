@@ -9,22 +9,8 @@
 # party looks at it), its mood and switches, and NPCs placed where the film leaves them. The crew stay put: when
 # a film ends on another map, the GM sends them there (Scene, "Send the crew here"), which also works while it plays.
 # Positions are drafts for Peter to adjust.
-
-- id: wait
-  name: "Waiting screen: Ergo and the hole"
-  act: Act 1
-  sub: Loops on the TV until the intro plays
-
-- id: intro
-  name: "Intro: Patience arrives"
-  act: Act 1
-  sub: 3:32, opens the campaign
-  ends: Ends on the Patience map, and play begins. Send the crew there if they aren't already.
-  file: films/intro.mp4
-  length: 212.254
-  still: films/intro-still.png
-  sets:
-    map: patience
+#
+# The opening (the waiting loop and the intro film) is not a cue: it has its own step on the GM's Session page. See opening.yaml.
 
 - id: lucan  # DRAFT wording. The film isn't made yet, so this stays greyed out.
   name: Lucan's film

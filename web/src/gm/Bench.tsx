@@ -204,6 +204,18 @@ export function Bench({ view, bench }: { view: View; bench: BenchView }) {
           ]}
         />
         <Fire title="A film" buttons={film ? [[film.name, () => void gmRun('gm.film.play', { cue: film.id })]] : []} />
+        <Fire
+          title="The opening"
+          buttons={
+            view.stage.opening_film
+              ? [
+                  ['Hold players', () => void gmRun('gm.opening.set', { on: true })],
+                  ['Play', () => void gmRun('gm.opening.play', {})],
+                  ['Off', () => void gmRun('gm.opening.set', { on: false })],
+                ]
+              : []
+          }
+        />
         <Fire title="An event" buttons={(view.overviews?.games ?? []).map((g) => [g.name, () => void gmRun('gm.overview.send', { overview: g.id, chars: [c.id] })])} />
       </div>
     </div>
