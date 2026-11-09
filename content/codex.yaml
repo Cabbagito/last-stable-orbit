@@ -233,11 +233,11 @@ entries:
   lead: A small old man with a mop and headphones. He has cleaned the executive decks for years, because ISCO's bots aren't
     allowed up there.
   see: [executive]
-- id: static  # DRAFT wording, from the bible's Other faces. A stand-in portrait until the real art is imported.
+- id: static  # DRAFT wording, from the bible's Other faces.
   sec: chars
   npc: static
   label: NPC · the ex
-  art: {src: portraits/hired-gun.gif, kind: bust, pos: 50% 10%}
+  art: {src: portraits/static.gif, kind: bust, pos: 50% 10%}
   lead: A crime boss on Ergo, with a chrome plate and eye.
   see: [ergo]
 - id: gumshoe  # DRAFT wording, from the bible's Other faces. A stand-in portrait until the real art is imported.

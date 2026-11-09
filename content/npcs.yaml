@@ -228,13 +228,13 @@
   name: Static Kováč
   role: The Ex
   group: Locals
-  portrait: portraits/hired-gun.gif  # STAND-IN
+  portrait: portraits/static.gif
   codex: static
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   note: A crime boss on Ergo, with a chrome plate and eye.  # DRAFT wording
-  gm_note: "STAND-IN PORTRAIT (the hired gun's). Marlo's ex-lover and the person he owes. He borrowed from her to pay off another shark, ran with the money and pointed the shark at her. She had to take the shark out, which Marlo doesn't know, and she wants revenge for all three: leaving her, the money and the shark. Her chrome plate and eye date from the night the shark came. She knows his real face and spots his fakes, so she fully counters him. Her thread plays out at the table with no planned ending, and her crew is a possible fight."
+  gm_note: "Marlo's ex-lover and the person he owes. He borrowed from her to pay off another shark, ran with the money and pointed the shark at her. She had to take the shark out, which Marlo doesn't know, and she wants revenge for all three: leaving her, the money and the shark. Her chrome plate and eye date from the night the shark came. She knows his real face and spots his fakes, so she fully counters him. Her thread plays out at the table with no planned ending, and her crew is a possible fight."
 
 - id: gumshoe
   name: The Gumshoe
