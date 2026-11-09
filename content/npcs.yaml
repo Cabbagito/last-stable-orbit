@@ -804,7 +804,7 @@
   group: Residents
   portrait: portraits/robot-miner.gif
   color: "#a9a2bc"
-  stats: {body: 14, reflex: 4, tech: 8, intel: 6, cool: 12, empathy: 8}  # DRAFT
+  stats: {body: 12, reflex: 4, tech: 8, intel: 6, cool: 12, empathy: 8}  # DRAFT
   health: 2  # DRAFT
   mood: Watching  # DRAFT
   note: Retired from the cable crews. Spends its days on the same bench.  # DRAFT
