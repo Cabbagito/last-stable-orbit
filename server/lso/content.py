@@ -141,6 +141,8 @@ def check_refs(c: Content) -> None:
         problems.append(f"slots: unknown currency {c.slots.currency!r}")
     if c.slots:
         problems += [f"slots: unknown audit character {a!r}" for a in c.slots.audit if a not in c.characters]
+    if c.opening and c.opening.resets_to not in c.presets:
+        problems.append(f"opening: resets_to is an unknown preset {c.opening.resets_to!r}")
     if not c.slots:
         problems += [f"map {m.id}: object {o.id} is a game, but there's no slots.yaml" for m in c.maps.values() for o in m.objects if o.game]
     for pr in (*c.presets.values(), *c.scenarios.values()):
@@ -263,6 +265,7 @@ def asset_paths(c: Content) -> set[str]:
             paths.add(ch.burn.icon)
             paths |= {x.file for x in ch.burn.cuts}
     paths |= {n.portrait for n in c.npcs.values()}
+    paths |= {p.card for p in c.presets.values() if p.card}
     paths |= {i.icon for i in c.items.values()}
     for m in c.maps.values():
         for mood in m.moods:

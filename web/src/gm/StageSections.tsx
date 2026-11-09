@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { serverClock } from '../net/clock'
-import { JoinCard } from '../stage/JoinCard'
+import { bareUrl } from '../stage/JoinCard'
 import { gmRun } from '../store/game'
 import type { Camera, CueView, StageView, View } from '../types'
 
@@ -23,95 +23,120 @@ function filmOn({ film, opening }: StageView) {
 }
 
 /**
- * The opening, on the Session page. On, the TV loops the stars and the music and players' laptops show only the black
- * hole. Play asks twice, and when the film ends the server lets everyone in and turns this off by itself.
+ * The opening, the first row of Cutscenes. Held, the TV loops the stars and the music and players' laptops show only
+ * that. Play asks twice, and when the film ends the server lets everyone in and turns this off by itself. Reset the
+ * game is here rather than in the film, so the intro can be shown without losing the game.
  */
-export function OpeningSection({ view }: { view: View }) {
+function OpeningRow({ view }: { view: View }) {
   const { opening, tv, opening_film: game } = view.stage
-  const [armed, setArmed] = useState(false)
+  const [asking, setAsking] = useState<'play' | 'reset' | null>(null)
+  const [wasReset, setWasReset] = useState(false)
+  const on = !!opening
   const started = opening?.film_at != null
   useTick(started)
+  useEffect(() => {
+    setAsking(null)
+    setWasReset(false)
+  }, [on])
   if (!game) return null
-  const on = !!opening
   const now = serverClock.now() / 1000
   const filmAt = opening?.film_at ?? now
   const el = Math.max(0, now - filmAt)
-  const line = !on
-    ? 'Turn this on before anyone picks their character. Their laptops show only the stars and the station, silent, and the TV loops them with the music, until the film ends.'
+  const held = on && !started
+  const ask = held ? asking : null
+  const sub = !on
+    ? game.sub
     : started
-      ? 'Everyone goes into the game when it ends, and this turns itself off.'
-      : tv
-        ? "The players are held. Set the scene, then press Play. It asks twice, because the film can't be stopped once it starts."
-        : 'The players are held. No TV is connected, so Play waits for it.'
-  const set = (value: boolean) => {
-    setArmed(false)
-    void gmRun('gm.opening.set', { on: value })
+      ? 'Everyone goes into the game when it ends.'
+      : ask === 'play'
+        ? "It can't be stopped once it starts."
+        : ask === 'reset'
+          ? 'Puts every position, mood, HP, Entropy, pocket and the Codex back to the start.'
+          : wasReset
+            ? 'Everything is back to the start.'
+            : tv
+              ? 'Their laptops show the stars, silent, until the film ends.'
+              : 'Their laptops show the stars. Play waits for the TV.'
+  const set = (value: boolean) => void gmRun('gm.opening.set', { on: value })
+  const go = (kind: string, after?: () => void) => {
+    setAsking(null)
+    void gmRun(kind, {}).then((ack) => ack.ok && after?.())
   }
   return (
-    <div className="gx-opening">
-      <div className="r12-seg3 app-gmjoinseg" role="group" aria-label="Hold the players on the opening">
-        <button type="button" className={on ? 'on' : ''} aria-pressed={on} disabled={started || (!on && filmOn(view.stage))} onClick={() => set(true)}>
-          Hold players
-        </button>
-        <button type="button" className={on ? '' : 'on'} aria-pressed={!on} disabled={started} onClick={() => set(false)}>
-          Off
-        </button>
+    <div role="group" aria-label="The opening">
+      <div className="gx-sh">
+        <span className="r5-sec">Opening</span>
       </div>
-      <div className="r10-hint" aria-live="polite">
-        {line}
-      </div>
-      {on && (
-        <div className="r5-rows">
-          <div className={'r5-row r12-cue' + (started ? ' on' : '')}>
-            <img src={game.still} alt="" className="r12-cthumb" />
-            <div className="r12-cmeta">
+      <div className="r5-rows">
+        <div className={'r5-row r12-cue' + (on ? ' on' : '')}>
+          <img src={game.still} alt="" className="r12-cthumb" />
+          <div className="r12-cmeta">
+            <span className="gx-cnamerow">
               <span className="r12-cname">{game.name}</span>
-              <span className="r10-dimtxt">{game.sub}</span>
-              {started && (
-                <>
-                  <span className="r12-prog" role="progressbar" aria-label="The opening, playing" aria-valuemin={0} aria-valuemax={Math.round(game.length)} aria-valuenow={Math.round(el)}>
-                    <span style={{ width: `${Math.min(100, (el / game.length) * 100)}%` }} />
-                  </span>
-                  <span className="r12-ptime">{now < filmAt ? 'Starting on the TV…' : `Playing on the TV · ${mss(el)} of ${mss(game.length)}`}</span>
-                </>
-              )}
-            </div>
-            {!started && (
-              <div className="r12-cact">
-                {armed && tv ? (
-                  <>
-                    <button
-                      type="button"
-                      className="r12-go"
-                      onClick={() => {
-                        setArmed(false)
-                        void gmRun('gm.opening.play', {})
-                      }}
-                    >
-                      Play it now
-                    </button>
-                    <button type="button" className="r10-btn" onClick={() => setArmed(false)}>
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <button type="button" className="r10-btn" disabled={!tv} onClick={() => setArmed(true)}>
-                    Play
-                  </button>
-                )}
-              </div>
+              {held && <span className="r12-tag gx-amber">PLAYERS HELD</span>}
+            </span>
+            <span className="r10-dimtxt" aria-live="polite">
+              {sub}
+            </span>
+            {started && (
+              <>
+                <span className="r12-prog" role="progressbar" aria-label="The opening, playing" aria-valuemin={0} aria-valuemax={Math.round(game.length)} aria-valuenow={Math.round(el)}>
+                  <span style={{ width: `${Math.min(100, (el / game.length) * 100)}%` }} />
+                </span>
+                <span className="r12-ptime">{now < filmAt ? 'Starting on the TV…' : `Playing on the TV · ${mss(el)} of ${mss(game.length)}`}</span>
+              </>
+            )}
+          </div>
+          <div className="r12-cact">
+            {!on && (
+              <button type="button" className="r10-btn" disabled={filmOn(view.stage)} onClick={() => set(true)}>
+                Hold players
+              </button>
+            )}
+            {held && !ask && (
+              <>
+                <button type="button" className="r10-btn" onClick={() => setAsking('reset')}>
+                  Reset the game
+                </button>
+                <button type="button" className="r10-btn" onClick={() => set(false)}>
+                  Let them in
+                </button>
+                <button type="button" className="r10-btn" disabled={!tv} onClick={() => setAsking('play')}>
+                  Play
+                </button>
+              </>
+            )}
+            {ask === 'play' && (
+              <>
+                <button type="button" className="r12-go" disabled={!tv} onClick={() => go('gm.opening.play')}>
+                  Play it now
+                </button>
+                <button type="button" className="r10-btn" onClick={() => setAsking(null)}>
+                  Cancel
+                </button>
+              </>
+            )}
+            {ask === 'reset' && (
+              <>
+                <button type="button" className="r12-go" onClick={() => go('gm.opening.reset', () => setWasReset(true))}>
+                  Reset it
+                </button>
+                <button type="button" className="r10-btn" onClick={() => setAsking(null)}>
+                  Cancel
+                </button>
+              </>
             )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }
 
 /**
- * Round 12's Cutscenes section (board R12TabCutscenes): the cue list in the order you'll use them. Play asks
- * twice, because a film can't be stopped once it starts, and waits for the TV, the only screen that plays films.
- * The cue sets the map behind the film.
+ * Round 12's Cutscenes section (board R12TabCutscenes): the opening, then the cue list in the order you'll use them.
+ * Play asks twice, because a film can't be stopped once it starts, and waits for the TV, the only screen that plays
+ * films. The cue sets the map behind the film.
  */
 export function CutscenesSection({ view }: { view: View }) {
   const { film, tv } = view.stage
@@ -121,13 +146,7 @@ export function CutscenesSection({ view }: { view: View }) {
   const held = !!view.stage.opening
   const busy = held || filmOn(view.stage)
   useTick(busy)
-  const line = held
-    ? 'The opening is on, so the films wait until it has ended.'
-    : busy
-      ? 'A film is playing on the TV, and the laptops are dark until it ends.'
-      : tv
-        ? "Play asks twice, because a film can't be stopped once it starts."
-        : 'No TV is connected, so Play waits for it. On the TV, open the app and pick "This screen is the TV".'
+  const line = held ? 'The films wait until the opening has ended.' : busy ? 'A film is on the TV. The laptops are dark until it ends.' : tv ? '' : 'No TV, so Play waits for it.'
 
   const play = async (q: CueView) => {
     setArmed(null)
@@ -136,10 +155,15 @@ export function CutscenesSection({ view }: { view: View }) {
 
   return (
     <section className="gx-cues" aria-label="Cutscenes">
-      <div className="gx-h2">Cutscenes</div>
-      <div className="r10-hint" aria-live="polite">
-        In the order you'll use them. {line}
+      <div className="gx-h2row">
+        <div className="gx-h2">Cutscenes</div>
+        {line && (
+          <div className="r10-hint" aria-live="polite">
+            {line}
+          </div>
+        )}
       </div>
+      <OpeningRow view={view} />
       {[...new Set(cues.map((q) => q.act))].map((act) => (
         <div key={act} role="group" aria-label={act}>
           <div className="gx-sh">
@@ -203,10 +227,11 @@ const CAMS: [Camera, string][] = [
 ]
 
 /**
- * The TV: whether it's connected, what it shows right now (its own screen, small and silent), and its camera.
+ * The TV: whether it's connected, what it shows right now (its own screen, small and silent), its camera, and the
+ * link and wifi on it.
  */
 export function TvSection({ view }: { view: View }) {
-  const { camera, follow, tv } = view.stage
+  const { camera, follow, tv, join } = view.stage
   const busy = filmOn(view.stage)
   useTick(busy)
   const followed = view.crew.find((c) => c.id === follow)
@@ -218,17 +243,22 @@ export function TvSection({ view }: { view: View }) {
         : 'Shows the whole crew, cuts to whoever rolls, then comes back.'
   return (
     <section className="gx-tv" aria-label="The TV">
-      <div className="gx-h2">The TV</div>
-      {tv ? (
-        <div className="r12-status">
-          <span className="r12-dot" aria-hidden="true" />
-          The TV is connected.
-        </div>
-      ) : (
-        <div className="r12-status r10-dimtxt">No TV is connected.</div>
-      )}
+      <div className="gx-tvhead">
+        <div className="gx-h2">The TV</div>
+        <span className={'gx-tvstat' + (tv ? '' : ' none')} role="status">
+          <i aria-hidden="true" />
+          {tv ? 'Connected' : 'No TV'}
+        </span>
+      </div>
       <div className="r12-tvprev gx-tvprev">
-        <iframe src="/?as=stage" title="What the TV shows now" tabIndex={-1} aria-hidden="true" />
+        {tv ? (
+          <iframe src="/?as=stage" title="What the TV shows now" tabIndex={-1} aria-hidden="true" />
+        ) : (
+          <div className="gx-tvempty">
+            <b>No TV yet</b>
+            <span className="r10-hint">On the TV, open the app and pick "This screen is the TV".</span>
+          </div>
+        )}
       </div>
       <div className="r5-sec" style={{ marginTop: 4 }}>
         Camera
@@ -259,27 +289,17 @@ export function TvSection({ view }: { view: View }) {
         </div>
       )}
       <div className="r10-hint">{camLine}</div>
+      {join && (
+        <button type="button" role="switch" aria-checked={join.show} className={'gx-sw' + (join.show ? ' on' : '')} disabled={busy} onClick={() => void gmRun('gm.stage.join', { show: !join.show })}>
+          <span className="gx-swt">
+            <span className="gx-swn">Link and wifi on the TV</span>
+            <span className="gx-swv">{[bareUrl(join.url), join.ssid].filter(Boolean).join(' · ')}</span>
+          </span>
+          <span className="gx-swtrack" aria-hidden="true">
+            <span />
+          </span>
+        </button>
+      )}
     </section>
-  )
-}
-
-/** The join card on the TV: the wifi and the URL, until everyone's in. */
-export function JoinSection({ view }: { view: View }) {
-  const { join } = view.stage
-  const busy = filmOn(view.stage)
-  if (!join) return null
-  return (
-    <div className="app-gmjoin" style={{ marginTop: 0 }}>
-      <div className="r12-seg3 app-gmjoinseg" role="group" aria-label="The join card on the TV">
-        <button type="button" className={join.show ? 'on' : ''} aria-pressed={join.show} disabled={busy} onClick={() => void gmRun('gm.stage.join', { show: true })}>
-          On the TV
-        </button>
-        <button type="button" className={join.show ? '' : 'on'} aria-pressed={!join.show} disabled={busy} onClick={() => void gmRun('gm.stage.join', { show: false })}>
-          Hidden
-        </button>
-      </div>
-      <div className="r10-hint">Shows the wifi password. Hide it once everyone's in.</div>
-      <JoinCard join={join} />
-    </div>
   )
 }

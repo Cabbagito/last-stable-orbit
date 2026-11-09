@@ -1,41 +1,29 @@
-import type { JoinQr, JoinView } from '../types'
+import type { JoinView } from '../types'
 
-/** A QR code from the server's path, on the white margin scanners need. */
-function Qr({ qr, label }: { qr: JoinQr; label: string }) {
-  const q = 4 // the quiet zone, in modules
+/** A URL as you'd say it: nobody needs to read out the http://. */
+export const bareUrl = (url: string) => url.replace(/^https?:\/\//, '')
+
+function Block({ label, value, link, small }: { label: string; value: string; link?: boolean; small?: string }) {
   return (
-    <svg className="app-joinqr" viewBox={`${-q} ${-q} ${qr.size + q * 2} ${qr.size + q * 2}`} role="img" aria-label={label} shapeRendering="crispEdges">
-      <rect x={-q} y={-q} width={qr.size + q * 2} height={qr.size + q * 2} fill="#fff" />
-      <path d={qr.path} fill="#000" />
-    </svg>
+    <div className="app-joinb">
+      <span className="app-joinlab">{label}</span>
+      <span className={'app-joinval' + (link ? ' link' : '')}>{value}</span>
+      {small && <span className="app-joinsmall">{small}</span>}
+    </div>
   )
 }
 
 /**
- * How to get into the game: the wifi, then the URL. It has to be on a screen everyone can already see, because
- * nobody can load a page until they're on the wifi. Phones can scan the codes; laptops read the words.
+ * How to get into the game: the wifi, then the URL, straight on the TV's picture. It has to be on a screen everyone can
+ * already see, because nobody can load a page until they're on the wifi. `boxed` backs it in black, for over a map,
+ * where the art is too bright to read words on.
  */
-export function JoinCard({ join }: { join: JoinView }) {
+export function JoinCard({ join, boxed }: { join: JoinView; boxed?: boolean }) {
   return (
-    <div className="app-joinsteps">
-      {join.ssid && join.wifi_qr && (
-        <div className="app-joinstep">
-          <Qr qr={join.wifi_qr} label={`QR code to join the wifi network ${join.ssid}`} />
-          <div className="app-jointext">
-            <span className="r5-sec">Join the wifi</span>
-            <span className="app-joinbig">{join.ssid}</span>
-            {join.password && <span className="app-joinbig">{join.password}</span>}
-          </div>
-        </div>
-      )}
-      <div className="app-joinstep">
-        <Qr qr={join.url_qr} label={`QR code to open ${join.url}`} />
-        <div className="app-jointext">
-          <span className="r5-sec">Then open</span>
-          <span className="app-joinbig">{join.url}</span>
-          {join.fallback && <span className="app-joinsmall">If that doesn't load: {join.fallback}</span>}
-        </div>
-      </div>
-    </div>
+    <aside className={'app-tvjoin' + (boxed ? ' boxed' : '')} aria-label="How to join the game">
+      {join.ssid && <Block label="Wifi" value={join.ssid} />}
+      {join.password && <Block label="Password" value={join.password} />}
+      <Block label={join.ssid ? 'Then open' : 'Open'} value={bareUrl(join.url)} link small={join.fallback ? `or ${bareUrl(join.fallback)}` : undefined} />
+    </aside>
   )
 }

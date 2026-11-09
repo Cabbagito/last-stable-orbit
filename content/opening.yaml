@@ -1,4 +1,4 @@
-# The opening: the waiting loop, then the intro film, on the GM's Session page.
+# The opening: the waiting loop, then the intro film, on the GM's On screen page.
 #
 # While it's on, the TV loops the stars and the music and players' laptops show only that loop, silent. The GM's Play
 # starts the film on the music's next beat, and when the film ends everyone is let into the game.
@@ -15,3 +15,4 @@ audio: films/opening-audio.flac
 still: films/opening-still.png
 length: 212.25
 beat: 0.75  # Aphelion is exactly 80 bpm
+resets_to: session-1-arrival  # what Reset the game, while the players are held, puts everything back to

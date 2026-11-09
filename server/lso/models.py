@@ -346,6 +346,7 @@ class Opening(Strict):
     still: str  # the loop's first frame: its poster, and the GM's thumbnail
     length: float = Field(gt=0)  # the film, in seconds
     beat: float = Field(gt=0)  # seconds between the music's beats: the film starts on one
+    resets_to: str  # the preset the GM's Reset the game puts everything back to
 
 
 CodexSec = Literal["chars", "items", "world", "lore", "rules"]
@@ -680,6 +681,9 @@ class Preset(Strict):
 
     id: str
     name: str
+    session: str = ""  # the heading it's under on the GM's Session page
+    blurb: str = ""  # one line under its picture there
+    card: str | None = None  # its picture there
     default: bool = False
     party_map: str
     maps: dict[str, MapState] = {}

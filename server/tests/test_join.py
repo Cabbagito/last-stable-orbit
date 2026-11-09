@@ -80,18 +80,12 @@ def test_no_url_means_no_card_for_anyone(settings, engine, content):
 
 def test_the_card_can_leave_the_wifi_out(settings):
     c = join_card(replace(settings, join_url=URL))
-    assert c["url"] == URL and "ssid" not in c and "wifi_qr" not in c
+    assert c["url"] == URL and "ssid" not in c
 
 
-def test_qr_paths_are_drawable_and_differ(card):
-    for qr in (card["url_qr"], card["wifi_qr"]):
-        assert qr["size"] >= 21 and qr["path"].startswith("M")
-    assert card["url_qr"]["path"] != card["wifi_qr"]["path"]
-
-
-def test_an_open_network_has_no_password_in_its_qr(settings):
+def test_an_open_network_has_no_password(settings):
     c = join_card(replace(settings, join_url=URL, wifi_ssid="open"))
-    assert c["ssid"] == "open" and c["password"] == "" and c["wifi_qr"]["path"]
+    assert c["ssid"] == "open" and c["password"] == ""
 
 
 def test_the_tv_and_the_gm_get_the_card_and_players_never_do(engine, content, card):
@@ -100,7 +94,7 @@ def test_the_tv_and_the_gm_get_the_card_and_players_never_do(engine, content, ca
         assert (j["url"], j["ssid"], j["password"], j["fallback"], j["show"]) == (URL, SSID, PASSWORD, FALLBACK, True)
     leak = json.dumps(project(engine.state, content, TALLY, join=card))
     assert "join" not in project(engine.state, content, TALLY, join=card)["stage"]
-    for secret in (PASSWORD, card["wifi_qr"]["path"], SSID, URL):
+    for secret in (PASSWORD, SSID, URL):
         assert secret not in leak
 
 

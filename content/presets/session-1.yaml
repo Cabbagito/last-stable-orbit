@@ -3,7 +3,10 @@
 # centre 2.8, 3.7, radius 1.62, Z 0.24). The bar is in After hours: Dax has taken the envelope and left, and only
 # Unit 14 stays in the corner. Other NPCs wait in the GM roster, unplaced.
 id: session-1
-name: "Session 1: the pitch at the bar"
+name: "The pitch at the bar"
+session: "Session 1"
+blurb: "The crew and Lucan at the founder's table."
+card: presets/pitch.png
 default: true
 party_map: event-horizon
 maps:

@@ -62,11 +62,7 @@ export function TvOpening({ sound }: { sound: RollSound | null }) {
     <div className={'app-film app-opening' + (opening ? ' on' : '')} aria-hidden={!opening}>
       <Pictures opening={shown} />
       {opening && <div className="app-sr" role="status">The opening is on the TV.</div>}
-      {opening && join?.show && (
-        <aside className="app-tvjoin" aria-label="How to join the game">
-          <JoinCard join={join} />
-        </aside>
-      )}
+      {opening && join?.show && <JoinCard join={join} />}
       {problem && (
         <div className="app-openingerr" role="alert">
           The opening's sound didn't load: {problem}

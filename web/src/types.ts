@@ -317,20 +317,22 @@ export interface CueView {
   ready: boolean // its film is made
 }
 
-export interface JoinQr {
-  size: number // modules a side
-  path: string // an SVG path
-}
-
 /** The join card: only the TV and the GM get it, and only when the server has one. */
 export interface JoinView {
   show: boolean // on the TV
   url: string
-  url_qr: JoinQr
   fallback: string
   ssid?: string
   password?: string
-  wifi_qr?: JoinQr
+}
+
+/** A start of a session, on the GM's Session page. */
+export interface PresetCard {
+  id: string
+  name: string
+  session: string
+  blurb: string
+  card: string | null
 }
 
 export interface StageView {
@@ -389,7 +391,7 @@ export interface View {
   station: StationView | null
   fights: FightView[]
   roster?: RosterNpc[] // GM only
-  presets?: { id: string; name: string }[] // GM only
+  presets?: PresetCard[] // GM only
   items?: Item[] // GM only: the catalogue, for giving
   overview: OverviewView | null // the overview open on this player's screen; never anyone else's
   slots: SlotView | null // the slot machine this player is sitting at

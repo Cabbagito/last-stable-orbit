@@ -17,7 +17,6 @@ from .views import viewer_map
 
 Events = list[tuple[str, dict]]
 COORD_LIMIT = 500.0  # world units; far beyond any map, just stops garbage
-SESSION_ENTROPY = 2  # what "New session" sets everyone's Entropy to
 
 # The sweeper, for a roller whose laptop sleeps or whose tab closes mid-roll:
 GM_ROLL_MODES = ("public", "hidden", "someone", "secret", "god")
@@ -385,6 +384,12 @@ def _gm_opening(state: GameState, content: Content, kind: str, args: dict, now: 
         film_at = beat_after(o.loop_at, now, game.beat)
         events: Events = [("opening.started", {"film_at": film_at, "ends": round(film_at + game.length, 3)})]
         return events + ([("stage.join_set", {"show": False})] if state.stage.join else [])  # everyone's in
+
+    if kind == "gm.opening.reset":  # a button, not the film, so the intro can be watched without losing the game
+        if o is None or o.film_at is not None:
+            raise _invalid("the game can only be reset while the players are held")
+        start = content.presets[game.resets_to]
+        return [("world.loaded", {"preset": start.id, "state": state_from_preset(start, content)})]
 
     raise _invalid(f"unknown intent {kind!r}")
 
@@ -878,15 +883,6 @@ def handle(
         if r.shown < len(r.dice):
             raise _invalid("the dice haven't landed yet")
         return [] if r.failed else [("roll.failed", {"roll": r.id})]
-
-    if kind == "gm.session.new":
-        # Everyone starts a session with 2 Entropy. HP, pockets and the maps carry over.
-        events: Events = []
-        for char in content.characters:
-            cur = state.vitals.get(char)
-            if cur and cur.entropy != SESSION_ENTROPY:
-                events.append(("vitals.set", {"char": char, "hp": cur.hp, "entropy": SESSION_ENTROPY}))
-        return events
 
     if kind == "gm.roll.start":
         return _gm_roll(state, content, args, rng, now)

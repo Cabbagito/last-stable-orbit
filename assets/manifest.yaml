@@ -14,6 +14,7 @@ stores:
   SATISFACTION: https://claude.ai/artifact/Vkpa2f7xbG1pnwFuscAbHc  # no asset store: these are inlined in its page
   SLOTS: https://claude.ai/artifact/EPiC8wXsHQy7o5to3Rd8kj
   HEIST: https://claude.ai/artifact/LpMi1WHzziSMdTDEoQ9uYk
+  SESSION: https://claude.ai/artifact/6pNMrKUZbm3k9d1wy24Rm5
 assets:
   - path: maps/event-horizon/base-open.png
     store: MAPS
@@ -1519,3 +1520,31 @@ assets:
     bytes: 129262
     width: 1110
     height: 700
+  - path: presets/arrival.png
+    store: SESSION
+    asset_id: "4ce0f4231b845e0a4f0a241acca13bba"
+    sha256: "ba73799395f493377492695ab6fb58d3d8b530cc6682c4435e8d400cee1c0c46"
+    bytes: 47948
+    width: 700
+    height: 394
+  - path: presets/open-day.png
+    store: SESSION
+    asset_id: "682cf63e9e90ed6846f9270c59fae827"
+    sha256: "6f445b5f4962084f0a4fc5446734dccccaf226768f2aa20f99a48460ebdae19a"
+    bytes: 48659
+    width: 800
+    height: 450
+  - path: presets/after-hours.png
+    store: SESSION
+    asset_id: "e87c320a71e872fcb157e07652f966f9"
+    sha256: "c2646a0b88f0b687d36328ffe1122dc67c92296a27699bed3bf3550c6d91da65"
+    bytes: 44774
+    width: 480
+    height: 270
+  - path: presets/pitch.png
+    store: SESSION
+    asset_id: "b06cd8dcaaab3c7372ee94086e1bc73e"
+    sha256: "a6cd3d461080834f98e1e8c35d95c0f468c9f904d9e0c714c11c1e5fbcd2bd33"
+    bytes: 54659
+    width: 480
+    height: 270

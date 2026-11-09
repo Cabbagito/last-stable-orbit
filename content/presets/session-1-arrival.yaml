@@ -2,7 +2,10 @@
 # Lucan nowhere yet (he comes at night). The same pockets as "Session 1: the pitch at the bar". Send the crew to the
 # Promenade, then to the bar, from the GM column. Positions are drafts (the Maps boards' own).
 id: session-1-arrival
-name: "Session 1: arrival on the Patience"
+name: "Arrival on the Patience"
+session: "Session 1"
+blurb: "Day one. The crew aboard as it docks."
+card: presets/arrival.png
 party_map: patience
 maps:
   event-horizon: {mood: open, shown: [mural, slots]}

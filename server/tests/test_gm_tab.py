@@ -40,26 +40,6 @@ def intent(ws, kind, args, iid):
     ws.send_json({"t": "intent", "id": iid, "type": kind, "args": args})
 
 
-# ---------- New session ----------
-
-
-async def test_new_session_sets_everyones_entropy_to_two(engine, content):
-    for args in [{"char": "ves", "hp": 3, "entropy": 5}, {"char": "tomo", "entropy": 0}, {"char": "lale", "hp": 1}]:
-        assert (await engine.run(GM, None, "gm.vitals.set", args))[0]["ok"]
-    ack, changed = await engine.run(GM, None, "gm.session.new", {})
-    assert ack["ok"] and changed
-    v = engine.state.vitals
-    assert {c: v[c].entropy for c in content.characters} == {c: 2 for c in content.characters}
-    assert (v["ves"].hp, v["lale"].hp) == (3, 1)  # HP carries over between sessions
-    assert handle(GM, engine.state, content, "gm.session.new", {}) == []  # already there: nothing to log
-
-
-def test_only_the_gm_starts_a_session(engine, content):
-    with pytest.raises(CommandError) as e:
-        handle(TALLY, engine.state, content, "gm.session.new", {})
-    assert e.value.code == "forbidden"
-
-
 # ---------- View as player ----------
 
 

@@ -1,7 +1,10 @@
 # Session 1, the open day: the crew are in the Dock 7 queue with the whole ship (the same passengers as on the Patience), and everyone else is where "arrival on
 # the Patience" has them, with the Gumshoe in the Night Market with his sketches. Positions are DRAFTS, checked on the art.
 id: session-1-day
-name: "Session 1: the open day"
+name: "The open day"
+session: "Session 1"
+blurb: "The crew in the Dock 7 queue, with the whole ship."
+card: presets/open-day.png
 party_map: promenade
 maps:
   event-horizon: {mood: open, shown: [mural, slots]}

@@ -400,6 +400,42 @@ async def test_a_preset_keeps_the_opening_on(engine, content):
     assert engine.state.stage.opening is not None
 
 
+async def test_reset_puts_the_game_back_and_keeps_the_players_held(engine, content):
+    await arm(engine)
+    await ok(engine, GM, "gm.vitals.set", {"char": "ves", "hp": 1, "entropy": 5})
+    await ok(engine, GM, "gm.item.give", {"holder": "ves", "item": "burner-key"})
+    await ok(engine, GM, "gm.map.mood", {"map": "event-horizon", "mood": "stand"})
+    await ok(engine, GM, "gm.opening.reset", {})
+    s, start = engine.state, content.presets[content.opening.resets_to]
+    assert s.stage.opening is not None
+    assert s.maps["event-horizon"].mood == start.maps["event-horizon"].mood
+    assert s.vitals["ves"].hp > 1 and s.vitals["ves"].entropy == 2
+    assert "burner-key" not in [e.item for e in s.inventory["ves"]]
+
+
+async def test_reset_is_only_for_while_the_players_are_held(engine, content):
+    with pytest.raises(CommandError) as e:
+        handle(GM, engine.state, content, "gm.opening.reset", {})
+    assert e.value.code == "invalid"
+    await arm(engine)
+    with pytest.raises(CommandError) as e:
+        handle(TALLY, engine.state, content, "gm.opening.reset", {})
+    assert e.value.code == "forbidden"
+    await ok(engine, GM, "gm.opening.play", {})
+    with pytest.raises(CommandError) as e:
+        handle(GM, engine.state, content, "gm.opening.reset", {})
+    assert e.value.code == "invalid"
+
+
+def test_the_session_cards_are_the_gms_alone(engine, content):
+    cards = project(engine.state, content, GM)["presets"]
+    assert [c["session"] for c in cards] == ["Session 1"] * 4 and all(c["card"].startswith("/assets/presets/") and c["blurb"] for c in cards)
+    for viewer in (TALLY, STAGE):
+        view = json.dumps(project(engine.state, content, viewer))
+        for p in content.presets.values():
+            assert p.card not in view and p.blurb not in view
+
+
 async def test_the_opening_survives_a_restart(engine, content, tmp_path, clock):
     await arm(engine)
     again = Engine(content, Store(tmp_path / "t.db"), clock=clock)

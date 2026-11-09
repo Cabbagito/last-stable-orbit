@@ -2,7 +2,10 @@
 # in Reflex order. Dax is at his place, Irena is with him for the first arrival, and Unit 14 is in the corner.
 # Positions are DRAFTS, checked on the art.
 id: session-1-night
-name: "Session 1: after hours, arrivals"
+name: "After hours, arrivals"
+session: "Session 1"
+blurb: "The bar after hours. The crew outside its door."
+card: presets/after-hours.png
 party_map: event-horizon
 maps:
   event-horizon: {mood: after, switches: {seals_box: 0}, shown: [mural, slots]}

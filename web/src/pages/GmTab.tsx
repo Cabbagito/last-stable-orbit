@@ -6,7 +6,7 @@ import { CamerasButton, liveSwitches, pressSwitch, switchLabel } from '../gm/Moo
 import { crewFaces, isFar, moodArt } from '../gm/mapTiles'
 import { Diamond, Eye, GIVE_COUNTED, Pocket, itemAria } from '../gm/parts'
 import { SendCrew } from '../gm/SendCrew'
-import { CutscenesSection, JoinSection, OpeningSection, TvSection } from '../gm/StageSections'
+import { CutscenesSection, TvSection } from '../gm/StageSections'
 import { ViewAs } from '../gm/ViewAs'
 import { useItemTip, type TipBind } from '../inspect/ItemTip'
 import { ring } from '../lib/ring'
@@ -367,122 +367,72 @@ function MapRow({ view, m, under, open, toggle }: { view: View; m: MapView; unde
   )
 }
 
-/** The start of the night, in order. */
+/**
+ * Where to start the night: one picture for each. Loading one only moves things: everyone's position, the NPCs and each
+ * map's mood. HP, Entropy, pockets and the Codex stay as they are.
+ */
 function SessionSection({ view }: { view: View }) {
-  const [done, setDone] = useState('')
-  const [asking, setAsking] = useState<{ id: string; name: string; scene: boolean } | null>(null)
+  const [picked, setPicked] = useState<string | null>(null)
   const [loaded, setLoaded] = useState('')
-  const newSession = async () => {
-    const ack = await gmRun('gm.session.new', {})
-    if (ack.ok) setDone("Done: everyone's Entropy is 2. HP, pockets and maps are as they were.")
-  }
+  const presets = view.presets ?? []
+  const chosen = presets.find((p) => p.id === picked)
   const load = async () => {
-    if (!asking) return
-    const ack = await gmRun('gm.world.load_preset', asking.scene ? { preset: asking.id, scene: true } : { preset: asking.id })
-    setAsking(null)
-    if (ack.ok) setLoaded(`Loaded ${asking.scene ? 'the scene of ' : ''}"${asking.name}".`)
+    if (!chosen) return
+    const ack = await gmRun('gm.world.load_preset', { preset: chosen.id, scene: true })
+    setPicked(null)
+    if (ack.ok) setLoaded(`Loaded ${chosen.name}.`)
   }
-  const { tv, join, opening_film } = view.stage
-  const joinStep = opening_film ? 3 : 2
   return (
     <section className="gx-session" aria-label="Session">
-      <div className="gx-stepr">
-        <span className="gx-num">1</span>
-        <div className="gx-stepb">
-          <span className="gx-steph">Get the TV on</span>
-          {tv ? (
-            <div className="r12-status">
-              <span className="r12-dot" aria-hidden="true" />
-              The TV is connected.
-            </div>
-          ) : (
-            <div className="r12-status r10-dimtxt">No TV is connected. On the TV, open the app and pick "This screen is the TV".</div>
-          )}
-        </div>
-      </div>
-      {opening_film && (
-        <div className="gx-stepr">
-          <span className="gx-num">2</span>
-          <div className="gx-stepb">
-            <span className="gx-steph">The opening</span>
-            <OpeningSection view={view} />
+      {[...new Set(presets.map((p) => p.session))].map((session) => (
+        <div key={session} role="group" aria-label={session}>
+          <div className="gx-sh">
+            <span className="r5-sec">{session}</span>
           </div>
-        </div>
-      )}
-      {join && (
-        <div className="gx-stepr">
-          <span className="gx-num">{joinStep}</span>
-          <div className="gx-stepb">
-            <span className="gx-steph">Get everyone in</span>
-            <JoinSection view={view} />
-          </div>
-        </div>
-      )}
-      <div className="gx-stepr">
-        <span className="gx-num">{join ? joinStep + 1 : joinStep}</span>
-        <div className="gx-stepb">
-          <span className="gx-steph">Start the session</span>
-          <div>
-            <button type="button" className="r10-cta" style={{ padding: '0 32px' }} onClick={() => void newSession()}>
-              New session
-            </button>
-          </div>
-          <div className={done ? 'r10-done' : 'r10-hint'} aria-live="polite">
-            {done || "Sets everyone's Entropy to 2. HP, pockets and maps stay as they are."}
-          </div>
-        </div>
-      </div>
-      <div className="gx-stepr">
-        <span className="gx-num">·</span>
-        <div className="gx-stepb">
-          <span className="gx-steph">Or start from a preset</span>
-          <div className="r5-rows">
-            {(view.presets ?? []).map((p) => (
-              <div key={p.id} className="r5-row r10-prow">
-                <span className="r10-grow">{p.name}</span>
-                <button
-                  type="button"
-                  className="r10-btn"
-                  onClick={() => {
-                    setAsking({ ...p, scene: true })
-                    setLoaded('')
-                  }}
-                >
-                  Scene only
-                </button>
-                <button
-                  type="button"
-                  className="r10-btn"
-                  onClick={() => {
-                    setAsking({ ...p, scene: false })
-                    setLoaded('')
-                  }}
-                >
-                  Load
-                </button>
-              </div>
+          <div className="gx-cards">
+            {presets.filter((p) => p.session === session).map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                className={'gx-card' + (picked === p.id ? ' on' : '')}
+                aria-pressed={picked === p.id}
+                onClick={() => {
+                  setPicked(picked === p.id ? null : p.id)
+                  setLoaded('')
+                }}
+              >
+                {p.card && <img src={p.card} alt="" />}
+                <span className="gx-cardt">
+                  <span className="gx-cardn">{p.name}</span>
+                  <span className="gx-cardb">{p.blurb}</span>
+                </span>
+              </button>
             ))}
           </div>
-          {asking && (
-            <div className="r10-confirm" role="alertdialog" aria-label={`Load ${asking.name}?`}>
-              <div style={{ fontSize: 12.5 }}>
-                {asking.scene
-                  ? `Load only the scene of "${asking.name}"? It moves everyone and sets every map's mood, and any fight ends. HP, Entropy, pockets and the Codex stay as they are.`
-                  : `Load "${asking.name}"? It replaces every position, mood, HP, Entropy, pocket and the Codex.`}
-              </div>
-              <div className="r10-go">
-                <button type="button" className="r10-btn" onClick={() => void load()}>
-                  Load it
-                </button>
-                <button type="button" className="r10-btn" onClick={() => setAsking(null)}>
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-          {loaded && <div className="r10-done">{loaded}</div>}
         </div>
-      </div>
+      ))}
+      {chosen && (
+        <div className="gx-load" role="alertdialog" aria-label={`Load ${chosen.name}?`}>
+          <div className="gx-loadn">
+            <span className="r5-sec">Start from</span>
+            <span className="r12-cname">{chosen.name}</span>
+          </div>
+          <div className="r10-hint gx-loadm">Moves everyone, places the NPCs, sets every map's mood, and ends any fight. HP, Entropy, pockets and the Codex stay as they are.</div>
+          <div className="r12-cact">
+            <button type="button" className="r12-go" onClick={() => void load()}>
+              Load it
+            </button>
+            <button type="button" className="r10-btn" onClick={() => setPicked(null)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+      {loaded && (
+        <div className="r10-done" aria-live="polite">
+          {loaded}
+        </div>
+      )}
     </section>
   )
 }

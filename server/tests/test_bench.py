@@ -170,7 +170,7 @@ async def test_bench_as_runs_a_players_action_only(content):
     e = make(content, sandbox=True)
     assert (await go(e, GM, "bench.as", {"seat": "ves", "type": "roll.start", "args": {"stat": "cool"}}))["ok"]
     assert next(r for r in e.state.rolls if r.by == "ves")
-    assert not (await go(e, GM, "bench.as", {"seat": "ves", "type": "gm.session.new"}))["ok"]
+    assert not (await go(e, GM, "bench.as", {"seat": "ves", "type": "gm.stage.join", "args": {"show": False}}))["ok"]
 
 
 async def test_pretending_the_tv_is_on(content):

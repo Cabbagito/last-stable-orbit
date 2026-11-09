@@ -60,11 +60,7 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
           </div>
         )}
         <TvFights view={view} sound={started ? sound.current : null} />
-        {view.stage.join?.show && (
-          <aside className="app-tvjoin" aria-label="How to join the game">
-            <JoinCard join={view.stage.join} />
-          </aside>
-        )}
+        {view.stage.join?.show && <JoinCard join={view.stage.join} boxed />}
       </div>
       <TvFlood />
       <Banners where="tv" />

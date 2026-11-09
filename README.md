@@ -49,7 +49,7 @@ LSO_WIFI_SSID=YourNetwork
 LSO_WIFI_PASSWORD='your password'      # single quotes keep $ and # as typed
 ```
 
-Those values make the **join card**: the wifi and the URL, as words and QR codes. Nobody can load a page before they're on the wifi, so the card sits on the TV, and in the GM tab under Session, where the GM can hide it once everyone's in. Only the TV and the GM's screens get it, never a player's feed or the login screen. Leave `LSO_JOIN_URL` out and there is no card, as on a public server.
+Those values make the **join card**: the wifi and the URL, in words big enough to read across the table. Nobody can load a page before they're on the wifi, so the card sits on the TV, and the GM turns it off with a switch in the GM tab, under On screen, once everyone's in. Only the TV and the GM's screens get it, never a player's feed or the login screen. Leave `LSO_JOIN_URL` out and there is no card, as on a public server.
 
 Everyone must be on the same network as the server: a guest wifi usually stops devices reaching each other.
 
