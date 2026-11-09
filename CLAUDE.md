@@ -37,6 +37,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 
 - `make up` runs the app on http://localhost:8070. `make dev` hot-reloads on :5173. `make test` runs all tests. `make passcode` shows the GM passcode. `make reset-world` wipes the saved game.
 - Node isn't installed on this Mac. npm runs in Docker (see `make test-web`). The server tests use uv: `cd server && uv run pytest`.
+- **Keep Peter's running copy current:** whenever you change something, finish by running `make up`, so http://localhost:8070 on his Mac has it. It builds from the working folder, so it includes anything else in progress there. Tell him if it fails.
 - **Hosting:** the table's copy runs on parker at http://parker.local (port 80; the README's "Hosting it at the table"). `git pull && make up` there updates it. Peter's Mac can still run its own on 8070.
 - **To test, use the sandbox:** `make sandbox` copies the real save to http://localhost:8072 (GM passcode `test`) with hot reload, and the GM tab gains Bench (scenarios, moments, forced dice, firing any animation) and Seats (every player and the TV at once, each able to act). It only exists when the server starts with `LSO_SANDBOX=1`; parker never sets it. `make sandbox` again starts over from the save.
 - **Git:** commit straight to `main` and push. No branches, no pull requests.
