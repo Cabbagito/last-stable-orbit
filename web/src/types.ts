@@ -337,7 +337,7 @@ export interface StageView {
   film: FilmView | null
   opening?: OpeningView | null // the TV and the GM
   opening_film?: { name: string; sub: string; still: string; length: number } // GM only
-  held?: boolean // a player only: the opening is on, and this laptop shows only the black hole
+  held?: { loop: string; still: string } // a player only: the opening is on, and this laptop shows only the waiting loop
   burn: BurnView | null
   tv?: boolean // GM only: the TV is connected
   cues?: CueView[] // GM only

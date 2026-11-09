@@ -1,6 +1,6 @@
 # The opening: the waiting loop, then the intro film, on the GM's Session page.
 #
-# While it's on, the TV loops the stars and the music and players' laptops show only the black hole. The GM's Play
+# While it's on, the TV loops the stars and the music and players' laptops show only that loop, silent. The GM's Play
 # starts the film on the music's next beat, and when the film ends everyone is let into the game.
 #
 # Unlike a cue, its sound is a separate file: `audio` is the 96 s music loop, then the film's 212.25 s of sound, back

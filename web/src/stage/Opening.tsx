@@ -3,9 +3,9 @@ import { serverClock } from '../net/clock'
 import type { RollSound } from '../roll/sound'
 import { useGame } from '../store/game'
 import type { OpeningView } from '../types'
-import { BlackHole } from './BlackHole'
 import { JoinCard } from './JoinCard'
 import { OpeningAudio, OpeningScreen, type OpeningTimes } from './opening_player'
+import { useAwake } from './useAwake'
 
 const FADE = 900 // ms the TV keeps its pictures up while they fade back to the map (.app-film's transition)
 
@@ -110,21 +110,45 @@ function Pictures({ opening }: { opening: OpeningView }) {
 }
 
 /**
- * A player's laptop while the GM holds them on the opening: the black hole and nothing else, until the film ends and
- * it fades to the game. Black too until the first view arrives, so nothing of the game flashes up after the login.
+ * A player's laptop while the GM holds them on the opening: the TV's waiting loop, silent, until the film ends and it
+ * fades to the game. Black until the first view arrives, so nothing of the game flashes up after the login. Moving the
+ * mouse shows a way out, for a player who picked the wrong character; the GM's view of a player has none.
  */
-export function LaptopHold() {
+export function LaptopHold({ onLogout }: { onLogout?: () => void }) {
   const view = useGame((s) => s.view)
-  const held = !!view?.stage.held
-  const wasHeld = useRef(false)
+  const held = view?.stage.held ?? null
+  const [kept, setKept] = useState(held)
   useEffect(() => {
-    if (held) wasHeld.current = true
+    if (held) {
+      setKept(held)
+      return
+    }
+    const t = window.setTimeout(() => setKept(null), FADE)
+    return () => window.clearTimeout(t)
   }, [held])
-  const up = held || !view
+  const awake = useAwake()
+  const shown = held ?? kept
+  const up = !!held || !view
   return (
-    <div className={'app-film app-held' + (view && !held && !wasHeld.current ? ' hard' : '') + (up ? ' on' : '')} aria-hidden={!up}>
-      {held && <BlackHole />}
+    <div className={'app-film app-held' + (view && !shown ? ' hard' : '') + (up ? ' on' : '') + (awake ? ' awake' : '')} aria-hidden={!up}>
+      {shown && <HoldLoop loop={shown.loop} still={shown.still} />}
       {held && <div className="app-sr" role="status">The opening is on the TV.</div>}
+      {held && onLogout && (
+        <button type="button" className="r4-btn app-heldexit" onClick={onLogout}>
+          Change character
+        </button>
+      )}
     </div>
   )
+}
+
+function HoldLoop({ loop, still }: { loop: string; still: string }) {
+  const v = useRef<HTMLVideoElement>(null)
+  useEffect(() => {
+    const el = v.current
+    if (!el || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return // the still, for those who asked for no motion
+    el.muted = true // laptops are silent, and browsers only autoplay a muted video
+    el.play().catch(() => undefined)
+  }, [])
+  return <video ref={v} src={loop} poster={still} loop muted playsInline preload="auto" />
 }

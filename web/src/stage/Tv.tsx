@@ -18,6 +18,7 @@ import { Downside } from './Downside'
 import { BurnFilms, FilmPlayer } from './Film'
 import { JoinCard } from './JoinCard'
 import { TvOpening } from './Opening'
+import { useAwake } from './useAwake'
 
 /**
  * The TV at the table (the Stage seat). Full screen: the party's map with only what everyone may see, no crew
@@ -106,25 +107,6 @@ function useScale() {
     return () => window.removeEventListener('resize', on)
   }, [])
   return k
-}
-
-/** True for a few seconds after the mouse moves: the cursor and the log-out show. */
-function useAwake() {
-  const [awake, setAwake] = useState(false)
-  useEffect(() => {
-    let t = 0
-    const on = () => {
-      setAwake(true)
-      window.clearTimeout(t)
-      t = window.setTimeout(() => setAwake(false), 3000)
-    }
-    window.addEventListener('pointermove', on)
-    return () => {
-      window.removeEventListener('pointermove', on)
-      window.clearTimeout(t)
-    }
-  }, [])
-  return awake
 }
 
 interface Cam {

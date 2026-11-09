@@ -272,7 +272,7 @@ def test_a_film_file_reaches_only_the_tv_and_the_gm(client, seat):
 
 # ---------- the opening ----------
 
-LOOP, MOVIE, AUDIO = "/assets/films/opening-loop.mp4", "/assets/films/opening.mp4", "/assets/films/opening-audio.flac"
+LOOP, MOVIE, AUDIO, LOOP_STILL = "/assets/films/opening-loop.mp4", "/assets/films/opening.mp4", "/assets/films/opening-audio.flac", "/assets/films/opening-still.png"
 
 
 def stage_of(engine, content, viewer):
@@ -297,15 +297,15 @@ async def test_only_the_gm_turns_the_opening_on_or_plays_it(engine, content):
             assert e.value.code == "forbidden"
 
 
-async def test_held_players_get_only_that_they_are_held(engine, content, clock):
+async def test_held_players_get_only_the_waiting_loop(engine, content, clock):
     await arm(engine)
     st = stage_of(engine, content, TALLY)
-    assert st["held"] is True and "opening" not in st and "opening_film" not in st
+    assert st["held"] == {"loop": LOOP, "still": LOOP_STILL} and "opening" not in st and "opening_film" not in st
     feed = json.dumps(project(engine.state, content, TALLY))
-    assert "films/opening" not in feed and "loop_at" not in feed
+    assert MOVIE not in feed and AUDIO not in feed and "loop_at" not in feed
     await ok(engine, GM, "gm.opening.play", {})
     feed = json.dumps(project(engine.state, content, TALLY))
-    assert "films/opening" not in feed and "film_at" not in feed
+    assert MOVIE not in feed and AUDIO not in feed and "film_at" not in feed
 
 
 async def test_the_tv_gets_the_opening_files_and_the_gm_the_times(engine, content, clock):
@@ -355,7 +355,7 @@ async def test_the_end_of_the_film_lets_everyone_in(engine, content, clock):
     await ok(engine, GM, "gm.opening.play", {})
     clock.t = engine.state.stage.opening.ends - 1
     await engine.sweep(set())
-    assert stage_of(engine, content, TALLY)["held"] is True
+    assert stage_of(engine, content, TALLY)["held"]
     clock.t += 1.5
     await engine.sweep(set())
     assert engine.state.stage.opening is None
@@ -406,15 +406,16 @@ async def test_the_opening_survives_a_restart(engine, content, tmp_path, clock):
     assert again.state.stage.opening == engine.state.stage.opening
 
 
-def test_only_the_tv_may_fetch_the_opening_and_it_can_seek(client, seat):
+def test_only_the_tv_may_fetch_the_film_and_it_can_seek(client, seat):
     gm, tally, tv = seat("gm"), seat("tally"), tv_login(client)
     assert client.get(MOVIE, headers=tv).status_code == 404  # not until the opening is on
     with client.websocket_connect("/ws", headers=gm) as g:
         recv(g, "view")
         g.send_json({"t": "intent", "id": "o", "type": "gm.opening.set", "args": {"on": True}})
         assert recv(g, "ack")["ok"]
-        for path in (LOOP, MOVIE, AUDIO):
+        for path in (MOVIE, AUDIO):
             assert client.get(path, headers=tally).status_code == 404
+        assert client.get(LOOP, headers=tally).status_code == 200  # the waiting loop is what a held laptop shows
         seek = client.get(MOVIE, headers=tv | {"range": "bytes=1000-1999"})
         assert seek.status_code == 206 and len(seek.content) == 1000  # a late-joining TV seeks: it needs this
 

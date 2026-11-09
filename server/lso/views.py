@@ -36,8 +36,8 @@ starts and ends, and shows the black hole meanwhile. A Burn's film plays on the 
 dark for one: they get who is burning (not the file) and stay on the game, with the Burn's mark on the burner's
 token and rail ring.
 
-The opening: only the TV gets its files and its timing. While it's on, a player's feed says only that they're held,
-and their laptop shows the black hole and nothing else until the film ends.
+The opening: only the TV gets the film, the sound and the timing. While it's on, a player's feed has only the waiting
+loop and its still, and their laptop shows that and nothing else until the film ends.
 """
 
 from __future__ import annotations
@@ -441,7 +441,7 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
         out["film"] = film
     o, game = st.opening, content.opening
     if o and game and viewer.char:
-        out["held"] = True
+        out["held"] = {"loop": url(game.loop), "still": url(game.still)}
     elif viewer.is_stage or viewer.is_gm:
         times = {"loop_at": o.loop_at, "film_at": o.film_at, "ends": o.ends} if o and game else None
         out["opening"] = times | {"loop": url(game.loop), "film": url(game.film), "audio": url(game.audio), "still": url(game.still)} if times and viewer.is_stage else times

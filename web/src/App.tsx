@@ -106,7 +106,7 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
   const disconnect = useGame((s) => s.disconnect)
   const world = useRef<HTMLDivElement>(null)
   const overview = useGame((s) => s.view?.overview?.id)
-  const held = useGame((s) => !!s.view?.stage.held) // the game stays up behind the black hole, out of reach, so it's ready
+  const held = useGame((s) => !!s.view?.stage.held) // the game stays up behind the waiting loop, out of reach, so it's ready
   useEffect(() => {
     if (overview && location.hash.slice(1).split('/')[0] !== 'scene') location.hash = 'scene' // it opens over the map
   }, [overview])
@@ -126,7 +126,7 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
       </div>
       <RollStage world={world} />
       <LaptopFilm />
-      {!isGm && <LaptopHold />}
+      {!isGm && <LaptopHold onLogout={onLogout} />}
     </div>
   )
 }
