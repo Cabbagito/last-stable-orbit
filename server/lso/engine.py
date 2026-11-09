@@ -76,6 +76,9 @@ class Engine:
             data["hp"] = hp
         if self.state.rules < 2 and not self.state.codex and self.content.default_preset.codex:
             events.append(("codex.set", {"keys": list(self.content.default_preset.codex), "unlocked": True}))
+        if self.state.rules < 6 and "music-credit" in self.content.codex:
+            # Rules 6 moved the music credit off the login screen: its page has to be open for the licence's sake
+            events.append(("codex.set", {"keys": ["music-credit"], "unlocked": True}))
         if self.state.rules < 3 and self.content.station:
             # Rules 3 added the Station: light the default preset's places, the party map, and where the crew is
             places = {p.map for p in self.content.station.places}

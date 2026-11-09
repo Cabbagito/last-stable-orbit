@@ -32,7 +32,7 @@ shown) is dark: no lit overlay and no map preview, and the core goes by "The cor
 crew stands, but only on lit places, and never a hidden token.
 
 Films: only the TV gets the files and plays them, with all the sound. A player's laptop gets only when a film
-starts and ends, and shows the black hole meanwhile. A Burn's film plays on the TV too, but the laptops never go
+starts and ends, and shows the opening's waiting loop meanwhile. A Burn's film plays on the TV too, but the laptops never go
 dark for one: they get who is burning (not the file) and stay on the game, with the Burn's mark on the burner's
 token and rail ring.
 
@@ -430,7 +430,7 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
     out: dict = {"camera": st.camera, "follow": st.follow, "film": None}
     if join and (viewer.is_gm or viewer.is_stage):  # the wifi password: never on a player's feed
         out["join"] = join | {"show": st.join}
-    f = st.film
+    f, game = st.film, content.opening
     if f and f.cue in content.cutscenes:
         cue = content.cutscenes[f.cue]
         film: dict = {"at": f.at, "ends": f.ends}
@@ -438,8 +438,10 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
             film["src"] = url(cue.file)
         if viewer.is_gm:
             film |= {"cue": cue.id, "name": cue.name}
+        if viewer.char and game:  # the waiting loop, to look at meanwhile: nothing about this film
+            film |= {"loop": url(game.loop), "still": url(game.still)}
         out["film"] = film
-    o, game = st.opening, content.opening
+    o = st.opening
     if o and game and viewer.char:
         out["held"] = {"loop": url(game.loop), "still": url(game.still)}
     elif viewer.is_stage or viewer.is_gm:

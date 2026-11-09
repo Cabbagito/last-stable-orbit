@@ -6,7 +6,6 @@
 .app-film.hard{transition:none} /* a Burn: a hard cut in, the film, a hard cut back */
 .app-film video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;image-rendering:pixelated;display:block}
 .app-filmsound{position:absolute;left:50%;bottom:24px;transform:translateX(-50%)}
-.app-hole{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated}
 
 /* ---------- the TV ---------- */
 .app-tv{position:fixed;inset:0;background:#000;overflow:hidden;color:var(--ink);font-family:var(--body);cursor:none}
@@ -108,11 +107,10 @@
 /* the opening: on the TV over everything but its start screen and log-out; on a player's laptop, over everything */
 .app-film.app-opening{z-index:54}
 .app-film.app-held{z-index:4000}
-.app-film.app-held,.app-film.app-held video{cursor:none}
-.app-film.app-held.awake,.app-film.app-held.awake video{cursor:default}
+.app-film.app-held{cursor:none}
+.app-film.app-held.awake{cursor:default}
 /* a laptop's window is rarely exactly 16:9, and the disc runs off the bottom of the picture: fill the window, and if it's wide, lose the empty space at the top. Any scale but the TV's, so smooth, not nearest-pixel */
-.app-film.app-held video{object-fit:cover;object-position:50% 100%;image-rendering:auto}
+.app-film video.app-loop{object-fit:cover;object-position:50% 100%;image-rendering:auto;cursor:inherit}
 .app-heldexit{position:absolute;right:16px;top:16px;z-index:2;opacity:0;pointer-events:none;transition:opacity .3s}
 .app-held.awake .app-heldexit,.app-heldexit:focus-visible{opacity:1;pointer-events:auto}
 .app-openingerr{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);padding:8px 14px;background:#000;color:#ff8a8a;font-size:13px;z-index:6}
-.app-credit{max-width:520px;text-align:center;font-size:11px;line-height:1.5;color:var(--dim)}

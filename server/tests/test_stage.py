@@ -208,7 +208,7 @@ async def test_only_the_tv_plays_the_film(engine, content):
     tv, gm, tally = (project(engine.state, content, v)["stage"]["film"] for v in (STAGE, GM, TALLY))
     assert tv["src"] == FILM
     assert "src" not in gm and gm["name"] == "The bar: the shotgun"
-    assert tally == {"at": tv["at"], "ends": tv["ends"]}  # the black hole until it ends; no file, no name
+    assert tally == {"at": tv["at"], "ends": tv["ends"], "loop": LOOP, "still": LOOP_STILL}  # the waiting loop until it ends; not this film's file or name
     assert "shotgun" not in json.dumps(project(engine.state, content, TALLY))
 
 

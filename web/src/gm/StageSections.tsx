@@ -37,7 +37,7 @@ export function OpeningSection({ view }: { view: View }) {
   const filmAt = opening?.film_at ?? now
   const el = Math.max(0, now - filmAt)
   const line = !on
-    ? 'Turn this on before anyone picks their character. Their laptops show only the black hole, and the TV loops the stars and the music, until the film ends.'
+    ? 'Turn this on before anyone picks their character. Their laptops show only the stars and the station, silent, and the TV loops them with the music, until the film ends.'
     : started
       ? 'Everyone goes into the game when it ends, and this turns itself off.'
       : tv

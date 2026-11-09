@@ -610,6 +610,13 @@ entries:
   lead: No aliens have ever been found. There are humans, with as much chrome as they like; uploaded humans in a chassis;
     and native machine minds, like Tally.
   see: [tally, fixer, chrome]
+- id: music-credit
+  sec: lore
+  name: Credits
+  role: Opening music
+  label: Lore · credits
+  art: {src: icons/items/note.png, kind: icon}
+  lead: 'Opening music: "Aphelion" by Scott Buckley, edited, CC BY 4.0, www.scottbuckley.com.au'
 - id: rule-roll
   sec: rules
   name: The roll

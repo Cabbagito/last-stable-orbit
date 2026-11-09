@@ -291,6 +291,8 @@ export interface FilmView {
   src?: string
   cue?: string // GM only
   name?: string // GM only
+  loop?: string // a player only: the waiting loop, which their laptop shows meanwhile
+  still?: string // a player only
 }
 
 /** The opening, while it's on. Times are the server's, in seconds. The files only reach the TV. */

@@ -20,7 +20,7 @@ STAGE = Viewer("stage", "stage")
 TALLY = Viewer("tally", "player")
 VES = Viewer("ves", "player")
 DAY_ONE = {"lale", "marlo", "tally", "ves", "tomo", "rule-roll", "rule-stats", "rule-skills", "rule-entropy", "rule-burns",
-           "rule-fights", "rule-health", "patience", "promenade", "event-horizon", "ergo", "isco", "hole", "queue"}
+           "rule-fights", "rule-health", "patience", "promenade", "event-horizon", "ergo", "isco", "hole", "queue", "music-credit"}
 
 
 @pytest.fixture(scope="module")
@@ -117,7 +117,7 @@ async def test_new_is_per_player(engine):
     assert (await run(engine, TALLY, "codex.read", {"entry": "ergo"}))["ok"]
     assert not entry(engine, TALLY, "ergo")["new"] and entry(engine, VES, "ergo")["new"]
     sec = next(s for s in codex(engine, TALLY)["sections"] if s["id"] == "lore")
-    assert (sec["count"], sec["new"]) == (4, 3)
+    assert (sec["count"], sec["new"]) == (5, 4)
     # reading again changes nothing, and nobody reads a page they can't see
     _, changed = await engine.run(TALLY, None, "codex.read", {"entry": "ergo"})
     assert not changed
@@ -174,6 +174,16 @@ def test_an_old_save_gets_the_day_one_codex(content, tmp_path):
     assert set(e.state.codex) == DAY_ONE and e.state.rules == RULES
     # health isn't touched again: rules 1 already did that
     assert e.state.vitals == old.vitals
+
+
+def test_a_saved_game_gets_the_music_credit_page(content, tmp_path):
+    store = Store(tmp_path / "old.db")
+    Engine(content, store)
+    old = GameState.model_validate(store.load_snapshot()[1])
+    old.rules, old.codex = 5, ["hole"]
+    store.commit("system", None, [], old.model_dump(mode="json"), {})
+    e = Engine(content, store)
+    assert set(e.state.codex) == {"hole", "music-credit"} and e.state.rules == RULES
 
 
 async def test_a_preset_brings_its_own_codex(engine):

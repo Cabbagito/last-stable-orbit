@@ -20,5 +20,5 @@ inventory:
   tally: [tally-notebook, {item: credits, count: 140}]
   ves: [sidearm, splice-kit, {item: credits, count: 90}]
   tomo: [sourdough-jar, {item: credits, count: 140}]
-codex: [lale, marlo, tally, ves, tomo, rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health]
+codex: [lale, marlo, tally, ves, tomo, rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health, music-credit]
 station: [patience, promenade, event-horizon]

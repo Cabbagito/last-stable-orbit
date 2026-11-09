@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { serverClock } from '../net/clock'
 import { useGame } from '../store/game'
 import type { FilmView } from '../types'
-import { BlackHole } from './BlackHole'
+import { LaptopLoop, useLingering } from './LaptopLoop'
 
 const DRIFT = 0.3 // seconds out of step before a playing film jumps back into step
 const TICK = 100 // ms; a timer, not animation frames, so a background tab keeps time too
@@ -112,13 +112,14 @@ export function FilmPlayer({ src, film, sound, hard = false, hold = false }: { s
 }
 
 /**
- * A laptop while a film plays on the TV: a player's shows the black hole until it ends, and the GM's keeps working.
+ * A laptop while a film plays on the TV: a player's shows the opening's waiting loop until it ends, and the GM's keeps working.
  */
 export function LaptopFilm() {
   const film = useGame((s) => s.view?.stage.film)
   const role = useGame((s) => s.view?.me.role)
-  if (!film || role !== 'player') return null
-  return <HoleScreen key={film.at} ends={film.ends} />
+  const shown = useLingering(film)
+  if (!shown || role !== 'player') return null
+  return <LoopScreen key={shown.at} film={shown} live={!!film} />
 }
 
 /**
@@ -140,16 +141,17 @@ export function BurnFilms() {
   )
 }
 
-function HoleScreen({ ends }: { ends: number }) {
+function LoopScreen({ film, live }: { film: FilmView; live: boolean }) {
   const [over, setOver] = useState(false)
   useEffect(() => {
-    const t = window.setTimeout(() => setOver(true), Math.max(0, ends * 1000 - serverClock.now()))
+    const t = window.setTimeout(() => setOver(true), Math.max(0, film.ends * 1000 - serverClock.now()))
     return () => window.clearTimeout(t)
-  }, [ends])
+  }, [film.ends])
+  const up = live && !over
   return (
-    <div className={'app-film' + (over ? '' : ' on')} aria-hidden={over}>
-      {!over && <BlackHole />}
-      {!over && (
+    <div className={'app-film' + (up ? ' on' : '')} aria-hidden={!up}>
+      {film.loop && film.still && <LaptopLoop loop={film.loop} still={film.still} />}
+      {up && (
         <div className="app-sr" role="status">
           A film is playing on the TV.
         </div>

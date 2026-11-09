@@ -125,7 +125,6 @@ export function Login({ onIn }: { onIn: (me: Me) => void }) {
             </button>
           </div>
         )}
-        <div className="app-credit">Opening music: "Aphelion" by Scott Buckley, edited, CC BY 4.0, www.scottbuckley.com.au</div>
       </div>
     </div>
   )
