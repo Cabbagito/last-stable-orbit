@@ -1,4 +1,4 @@
-# Session 1, the open day: the crew are in the Dock 7 queue with the whole ship (the same pilgrims as on the Patience), and everyone else is where "arrival on
+# Session 1, the open day: the crew are in the Dock 7 queue with the whole ship (the same passengers as on the Patience), and everyone else is where "arrival on
 # the Patience" has them, with the Gumshoe in the Night Market with his sketches. Positions are DRAFTS, checked on the art.
 id: session-1-day
 name: "Session 1: the open day"
@@ -13,24 +13,24 @@ maps:
   secure: {mood: day, switches: {cameras: 1}}
   lift: {mood: shut, switches: {cameras: 1}}
 tokens:
-  # in the Dock 7 queue, in the three lanes between the rails: the crew in the middle, the ship's pilgrims either side
-  - {kind: npc, ref: frail-pilgrim, map: promenade, at: [3.7, 3.1, 0]}
-  - {kind: npc, ref: pilgrim-old, map: promenade, at: [4.8, 3.1, 0]}
-  - {kind: npc, ref: pilgrim-flowers, map: promenade, at: [5.9, 3.1, 0]}
-  - {kind: npc, ref: pilgrim-candles, map: promenade, at: [7.0, 3.1, 0]}
-  - {kind: npc, ref: pilgrim-young, map: promenade, at: [8.1, 3.1, 0]}
-  - {kind: npc, ref: pilgrim, map: promenade, at: [9.2, 3.1, 0]}
+  # in the Dock 7 queue, in the three lanes between the rails: the crew in the middle, the ship's passengers either side
+  - {kind: npc, ref: frail-passenger, map: promenade, at: [3.7, 3.1, 0]}
+  - {kind: npc, ref: passenger-old, map: promenade, at: [4.8, 3.1, 0]}
+  - {kind: npc, ref: passenger-flowers, map: promenade, at: [5.9, 3.1, 0]}
+  - {kind: npc, ref: passenger-candles, map: promenade, at: [7.0, 3.1, 0]}
+  - {kind: npc, ref: passenger-young, map: promenade, at: [8.1, 3.1, 0]}
+  - {kind: npc, ref: passenger, map: promenade, at: [9.2, 3.1, 0]}
   - {kind: crew, ref: lale, map: promenade, at: [8.6, 4.8, 0]}
   - {kind: crew, ref: marlo, map: promenade, at: [7.4, 4.8, 0]}
   - {kind: crew, ref: tally, map: promenade, at: [6.2, 4.8, 0]}
   - {kind: crew, ref: ves, map: promenade, at: [5.0, 4.8, 0]}
   - {kind: crew, ref: tomo, map: promenade, at: [3.9, 4.8, 0]}
-  - {kind: npc, ref: pilgrim, map: promenade, at: [3.7, 6.5, 0]}
-  - {kind: npc, ref: pilgrim-old, map: promenade, at: [4.8, 6.5, 0]}
-  - {kind: npc, ref: pilgrim-candles, map: promenade, at: [5.9, 6.5, 0]}
-  - {kind: npc, ref: pilgrim-flowers, map: promenade, at: [7.0, 6.5, 0]}
-  - {kind: npc, ref: pilgrim-candles, map: promenade, at: [8.1, 6.5, 0]}
-  - {kind: npc, ref: pilgrim, map: promenade, at: [9.2, 6.5, 0]}
+  - {kind: npc, ref: passenger, map: promenade, at: [3.7, 6.5, 0]}
+  - {kind: npc, ref: passenger-old, map: promenade, at: [4.8, 6.5, 0]}
+  - {kind: npc, ref: passenger-candles, map: promenade, at: [5.9, 6.5, 0]}
+  - {kind: npc, ref: passenger-flowers, map: promenade, at: [7.0, 6.5, 0]}
+  - {kind: npc, ref: passenger-candles, map: promenade, at: [8.1, 6.5, 0]}
+  - {kind: npc, ref: passenger, map: promenade, at: [9.2, 6.5, 0]}
   # still aboard the Patience
   - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
   # the Promenade, calm

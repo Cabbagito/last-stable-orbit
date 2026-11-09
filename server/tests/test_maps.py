@@ -133,16 +133,16 @@ async def test_the_arrival_preset(engine):
     assert s.maps["promenade"].switches == {"cameras": 1}
     v = project(s, engine.content, VES)
     assert {t["ref"] for t in v["tokens"].values() if t["kind"] == "npc"} == {
-        "frail-pilgrim", "pilgrim", "pilgrim-candles", "pilgrim-flowers", "pilgrim-old", "pilgrim-young", "steward",
+        "frail-passenger", "passenger", "passenger-candles", "passenger-flowers", "passenger-old", "passenger-young", "steward",
     }
 
 
-def test_the_ships_pilgrims_are_the_people_in_the_dock_7_queue(content):
-    def pilgrims(preset, map_id):
-        return sorted(t.ref for t in content.presets[preset].tokens if "pilgrim" in t.ref and t.map == map_id)
+def test_the_ships_passengers_are_the_people_in_the_dock_7_queue(content):
+    def passengers(preset, map_id):
+        return sorted(t.ref for t in content.presets[preset].tokens if "passenger" in t.ref and t.map == map_id)
 
-    assert len(pilgrims("session-1-arrival", "patience")) == 12
-    assert pilgrims("session-1-day", "promenade") == pilgrims("session-1-arrival", "patience")
+    assert len(passengers("session-1-arrival", "patience")) == 12
+    assert passengers("session-1-day", "promenade") == passengers("session-1-arrival", "patience")
 
 
 def test_a_saved_game_gains_the_new_maps(content, tmp_path):

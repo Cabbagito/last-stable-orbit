@@ -17,6 +17,16 @@ from .store import Store
 
 log = logging.getLogger("lso.engine")
 
+# NPC ids that changed, old to new. The Patience's pilgrims became passengers who came to see the Vigil (2026-11-09).
+RENAMED_NPCS = {
+    "frail-pilgrim": "frail-passenger",
+    "pilgrim": "passenger",
+    "pilgrim-flowers": "passenger-flowers",
+    "pilgrim-candles": "passenger-candles",
+    "pilgrim-old": "passenger-old",
+    "pilgrim-young": "passenger-young",
+}
+
 
 class Engine:
     def __init__(self, content: Content, store: Store, rng=None, clock=time.time, sandbox: bool = False):
@@ -43,6 +53,7 @@ class Engine:
             self.state = GameState.model_validate(saved)
             self._heist_maps()  # first: the checks below would stop at a map that's gone on purpose
             self._story_update()  # likewise, for an item, an NPC and Codex pages that are gone on purpose
+            self._renamed_npcs()  # and NPCs that only changed id
             self._check_refs()
             self._add_new_maps()
             self._update_rules()
@@ -129,6 +140,17 @@ class Engine:
             events.append(("object.shown", {"map": "deck-7", "object": "head-count", "shown": False}))
         if events:
             self._commit("system", None, events, {})
+
+    def _renamed_npcs(self) -> None:
+        """NPCs whose id changed: their tokens keep their place and take the new id. Safe to run on every boot."""
+        events = [
+            ("token.placed", {"token": tid, "state": {**t.model_dump(mode="json"), "ref": RENAMED_NPCS[t.ref]}})
+            for tid, t in self.state.tokens.items()
+            if t.kind == "npc" and t.ref in RENAMED_NPCS
+        ]
+        if events:
+            self._commit("system", None, events, {})
+            log.info("renamed %d NPC tokens", len(events))
 
     def _add_new_maps(self) -> None:
         """A game saved before a map existed has no state for it: give it the default preset's (or its first mood)."""

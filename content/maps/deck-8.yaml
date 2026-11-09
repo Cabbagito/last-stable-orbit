@@ -62,7 +62,7 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
 # What's where, from the Heist playground's floor notes. Only the GM sees these.
 pins:
   - {k: "1", label: "The guarded door to the Secure floor. One way in at night, unless you crawl", at: [10.33, 0, 1.94]}
-  - {k: "2", label: "Checkpoint. By day the pilgrims walk through it", at: [10.42, 2.58, 0.92]}
+  - {k: "2", label: "Checkpoint. By day the Vigil's visitors walk through it", at: [10.42, 2.58, 0.92]}
   - {k: "3", label: "Boardroom: soundproofed, good for quiet fights", at: [5.73, 10.4, 0.89]}
   - {k: "4", label: "Head of security: one of the few who know the probe's code", at: [12.62, 11.38, 0.89]}
   - {k: "5", label: "Stairs, down to 7 and up to 9. By day a guard turns people away from 9", at: [18.15, 2.65, 0.89]}

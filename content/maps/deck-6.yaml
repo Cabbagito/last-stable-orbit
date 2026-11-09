@@ -48,7 +48,7 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     name: "The janitor's closet"
     at: [15.25, 1.08, 0.83]
     closeup: [1770.2, 730.14]
-    text: "A mop in a yellow bucket and a lot of flowers. The door is right off the pilgrims' route."
+    text: "A mop in a yellow bucket and a lot of flowers. The door is right off the visitors' route."
   - id: catering-lift
     name: "The catering lift"
     at: [18.45, 7.55, 0.78]

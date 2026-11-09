@@ -10,7 +10,7 @@
 
 - id: dax
   name: Old Dax
-  role: Barkeep
+  role: The Keeper
   group: Locals
   portrait: portraits/dax.gif
   color: "#f2b544"
@@ -221,6 +221,7 @@
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
+  mood: Humming along  # DRAFT
   note: A small old man with a mop and headphones.
   gm_note: "STAND-IN PORTRAIT (the steward's). Has cleaned the executive decks for years, because ISCO's bots aren't allowed up there. He always needs people, so whoever opens his closet door on deck 6 is hired on the spot, overalls included: by day someone barfed, and by night his crew clears the Vigil's flowers off the Secure floor, walking through deck 8's checkpoint."
 
@@ -233,35 +234,39 @@
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
+  mood: Expecting someone  # DRAFT
   note: A crime boss on Ergo, with a chrome plate and eye.  # DRAFT wording
   gm_note: "Marlo's ex-lover and the person he owes. He borrowed from her to pay off another shark, ran with the money and pointed the shark at her. She had to take the shark out, which Marlo doesn't know, and she wants revenge for all three: leaving her, the money and the shark. Her chrome plate and eye date from the night the shark came. She knows his real face and spots his fakes, so she fully counters him. Her thread plays out at the table with no planned ending, and her crew is a possible fight."
 
 - id: gumshoe
   name: The Gumshoe
-  role: ""  # the bible leaves it open: The Detective, The Snooper or The Investigator
+  role: The Detective
   group: Locals
   portrait: portraits/vendor.gif  # STAND-IN
   codex: gumshoe
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
+  mood: Working the case  # DRAFT
   note: "\"They've asked me like 17 times. I have enough paperwork as it is.\""
   gm_note: "STAND-IN PORTRAIT (the vendor's). A third-party investigator looking into the scrubbed death. He smokes cigars and has refused the survey. Simply trying to solve the case, and asks for help if they find him. He knows of a couple of troublemakers who share mannerisms, possibly one group, and has nothing to do with Marlo's debt. As a joke, he's looking for three other men, and his sketches are all Marlo's faces, with a Cool roll to keep a straight face."
 
 - id: head-of-security
   name: Head of security
-  role: The company
+  role: Security, the company
   group: The company
   portrait: portraits/guard.gif  # STAND-IN
   color: "#7fb4ff"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
+  mood: Unbothered  # DRAFT
+  note: Runs deck 8's guards from an office by the checkpoint.  # DRAFT
   gm_note: "STAND-IN PORTRAIT (the guard's). On deck 8, one of the few people who know the code to the probe's case."
 
-# The Patience's passengers (added 2026-11-09): "a liner full of pilgrims", on the eve of the Vigil. Each has its own
+# The Patience's passengers (added 2026-11-09): ordinary people who came to see the Vigil. Each has its own
 # entry so each can get its own face. Every portrait is a STAND-IN, and the names, cards, dice and health are DRAFTS for Peter.
-- id: frail-pilgrim
-  name: Frail pilgrim
+- id: frail-passenger
+  name: Frail passenger
   role: Passenger
   group: Passengers
   portrait: portraits/slot-regular.gif  # STAND-IN
@@ -272,8 +277,8 @@
   note: Came a long way for the Vigil.
   gm_note: "STAND-IN PORTRAIT (the Slot regular's). The wrist under Lale's fingers in the intro film. An ordinary pulse, which she can compare with the sedated people's identical ones in the Med Bay."
 
-- id: pilgrim
-  name: Pilgrim
+- id: passenger
+  name: Passenger
   role: Passenger
   group: Passengers
   portrait: portraits/slot-regular.gif  # STAND-IN
@@ -281,11 +286,11 @@
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   mood: Tired from the crossing
-  note: Here for the Vigil.
+  note: Came to see the Vigil.
   gm_note: "STAND-IN PORTRAIT (the Slot regular's). One of the ship's crowd, on the Patience and then in the Dock 7 queue."
 
-- id: pilgrim-flowers
-  name: Pilgrim with flowers
+- id: passenger-flowers
+  name: Passenger with flowers
   role: Passenger
   group: Passengers
   portrait: portraits/nurse.gif  # STAND-IN
@@ -296,8 +301,8 @@
   note: Brought flowers for the Vigil.
   gm_note: "STAND-IN PORTRAIT (the nurse's). Part of Marlo's audience on the Patience."
 
-- id: pilgrim-candles
-  name: Pilgrim with candles
+- id: passenger-candles
+  name: Passenger with candles
   role: Passenger
   group: Passengers
   portrait: portraits/vendor.gif  # STAND-IN
@@ -308,8 +313,8 @@
   note: Brought candles for the Vigil.
   gm_note: "STAND-IN PORTRAIT (the vendor's). Part of Marlo's audience on the Patience."
 
-- id: pilgrim-old
-  name: Old pilgrim
+- id: passenger-old
+  name: Old passenger
   role: Passenger
   group: Passengers
   portrait: portraits/happy-resident.gif  # STAND-IN
@@ -320,8 +325,8 @@
   note: Has been to every Vigil there was a berth for.
   gm_note: "STAND-IN PORTRAIT (the happy resident's). Part of Marlo's audience on the Patience."
 
-- id: pilgrim-young
-  name: Young pilgrim
+- id: passenger-young
+  name: Young passenger
   role: Passenger
   group: Passengers
   portrait: portraits/dock-clerk.gif  # STAND-IN

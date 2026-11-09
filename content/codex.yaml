@@ -159,7 +159,7 @@ entries:
 - id: dax
   sec: chars
   npc: dax
-  label: NPC · barkeep
+  label: NPC · the keeper
   art: {src: portraits/dax.gif, kind: bust, pos: 50% 10%}
   lead: Runs The Event Horizon, the bar with no cameras. Keeps one table nobody sits at, and two places set at it.
   blocks:
@@ -207,7 +207,7 @@ entries:
 - id: unit-14
   sec: chars
   npc: cleaner-14
-  label: NPC · cleaner
+  label: NPC · the cleaner
   art: {src: portraits/cleaner-14.gif, kind: bust, pos: 50% 10%}
   lead: One of the station's cleaner robots, working The Event Horizon. Its eyes slide away once a loop.
   see: [event-horizon, maintenance-log]
@@ -243,7 +243,7 @@ entries:
 - id: gumshoe  # DRAFT wording, from the bible's Other faces. A stand-in portrait until the real art is imported.
   sec: chars
   npc: gumshoe
-  label: NPC · investigator
+  label: NPC · the detective
   art: {src: portraits/vendor.gif, kind: bust, pos: 50% 10%}
   lead: A third-party investigator looking into a scrubbed death. He smokes cigars, and he has refused the survey.
   quote: '"They''ve asked me like 17 times. I have enough paperwork as it is."'

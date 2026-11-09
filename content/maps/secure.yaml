@@ -69,7 +69,7 @@ pins:
   - {k: "5", label: "Freight controls", at: [28.7, 8.97, 1.19]}
   - {k: "6", label: "Vent, for Ves", at: [29.33, 0, 0.42]}
   - {k: "7", label: "The mech's cradle, empty. It's in the Bot bays and comes back up the lift", at: [27.08, 4.58, 0.14]}
-  - {k: "A", label: "The silence: pilgrims fill the floor here, two guards at the door", at: [14.33, 3.67, 0.28]}
+  - {k: "A", label: "The silence: visitors fill the floor here, two guards at the door", at: [14.33, 3.67, 0.28]}
   - {k: "B", label: "Guard room: one guard asleep at night", at: [4.92, 18.42, 0.83]}
   - {k: "C", label: "Lockup door", at: [7.08, 8.25, 0.69]}
   - {k: "D", label: "Vigil stores. At night Ahti's crew does the flowers here", at: [25.17, 17.5, 1.25]}

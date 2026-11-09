@@ -150,3 +150,15 @@ def test_dax_can_come_back_for_the_tests_that_need_him(engine):
     assert "dax" not in engine.state.tokens
     place_dax(engine)
     assert engine.state.tokens["dax"].map == "event-horizon"
+
+
+def test_a_saved_game_keeps_its_renamed_npcs(content, tmp_path):
+    store = Store(tmp_path / "old.db")
+    Engine(content, store)
+    old = GameState.model_validate(store.load_snapshot()[1])
+    old.tokens["npc-7"] = TokenState(kind="npc", ref="frail-pilgrim", map="patience", at=(7, 7, 0.2))
+    store.commit("system", None, [], old.model_dump(mode="json"), {})
+
+    e = Engine(content, store)  # a stale reference would raise here
+    t = e.state.tokens["npc-7"]
+    assert t.ref == "frail-passenger" and t.map == "patience" and t.at == (7, 7, 0.2)
