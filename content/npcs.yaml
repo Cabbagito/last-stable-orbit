@@ -93,6 +93,78 @@
   note: Paid by the job.
   gm_note: "The fixer's. 4 health, d12, Hard to hit. Respirators, so the gas doesn't touch them. Once the fixer is down, Cool at Normal sends the rest running."
 
+- id: hired-gun-mask
+  name: Hired gun, masked
+  role: Muscle
+  group: Muscle
+  portrait: portraits/hired-gun-mask.gif
+  color: "#ff5a4a"
+  stats: {body: 12, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 4  # the bible's enemy card
+  mood: Silent  # DRAFT
+  note: Helmet, respirator, red lenses. You never see the face.  # DRAFT
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+
+- id: hired-gun-eye
+  name: Hired gun, chrome eye
+  role: Muscle
+  group: Muscle
+  portrait: portraits/hired-gun-eye.gif
+  color: "#ff5a4a"
+  stats: {body: 12, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 4  # the bible's enemy card
+  mood: Watching  # DRAFT
+  note: Runs the crew for Lucan.  # DRAFT
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+
+- id: hired-gun-watch
+  name: Hired gun, watch cap
+  role: Muscle
+  group: Muscle
+  portrait: portraits/hired-gun-watch.gif
+  color: "#ff5a4a"
+  stats: {body: 12, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 4  # the bible's enemy card
+  mood: On the radio  # DRAFT
+  note: Calls the lift, and the shots.  # DRAFT
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+
+- id: hired-gun-patch
+  name: Hired gun, half plate
+  role: Muscle
+  group: Muscle
+  portrait: portraits/hired-gun-patch.gif
+  color: "#ff5a4a"
+  stats: {body: 12, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 4  # the bible's enemy card
+  mood: Staring  # DRAFT
+  note: Half a face of cheap plate. The red eye doesn't blink.  # DRAFT
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+
+- id: hired-gun-skull
+  name: Hired gun, skull cap
+  role: Muscle
+  group: Muscle
+  portrait: portraits/hired-gun-skull.gif
+  color: "#ff5a4a"
+  stats: {body: 12, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 4  # the bible's enemy card
+  mood: Twitchy  # DRAFT
+  note: Cables showing, and a cracked lens over one eye.  # DRAFT
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+
+- id: hired-gun-grille
+  name: Hired gun, grille
+  role: Muscle
+  group: Muscle
+  portrait: portraits/hired-gun-grille.gif
+  color: "#ff5a4a"
+  stats: {body: 12, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 4  # the bible's enemy card
+  mood: Quiet  # DRAFT
+  note: No jaw left. Talks through a speaker, when he talks.  # DRAFT
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+
 # The Promenade and the Patience (M5). Cards, notes and dice are DRAFTS from the bible, for Peter to set.
 - id: dock-clerk
   name: Dock 7 clerk

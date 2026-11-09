@@ -408,6 +408,48 @@ assets:
     bytes: 132429
     width: 96
     height: 96
+  - path: portraits/hired-gun-mask.gif
+    store: PORTRAITS
+    asset_id: "5d98da20e7de715a7272ccf1a303e12f"
+    sha256: "7e2a4410547c0f817c40e5936c264690133ca9a42b9839f9a93d4da12f2e64cd"
+    bytes: 41927
+    width: 96
+    height: 96
+  - path: portraits/hired-gun-eye.gif
+    store: PORTRAITS
+    asset_id: "1f0d7d12bfa594be4fdfba9e23706caf"
+    sha256: "e31d63f2713905f1130de87e9c967fca8bc128cef676fe30eb81ab8a0d7779d3"
+    bytes: 42225
+    width: 96
+    height: 96
+  - path: portraits/hired-gun-watch.gif
+    store: PORTRAITS
+    asset_id: "04d70a2ccc23443c723507e17b1868d6"
+    sha256: "a16e5dc7be625bb833ac2ca01091f2c440829b220dbf1aca29c94969ed9cd52e"
+    bytes: 44177
+    width: 96
+    height: 96
+  - path: portraits/hired-gun-patch.gif
+    store: PORTRAITS
+    asset_id: "e1aeb54d5f1d43066a704ef5dcf480b8"
+    sha256: "5e2ef0e8fe651d69cf3fc13bdb1d37db09375e6ee9425e19b417da53f97781a4"
+    bytes: 47759
+    width: 96
+    height: 96
+  - path: portraits/hired-gun-skull.gif
+    store: PORTRAITS
+    asset_id: "7d99d68b57262b4856af17d85b628a04"
+    sha256: "1fd3e1982ca60fa1a1f5e65ab735283b06e98d0d0d0bc3d02f98fd1021ef717d"
+    bytes: 42604
+    width: 96
+    height: 96
+  - path: portraits/hired-gun-grille.gif
+    store: PORTRAITS
+    asset_id: "83b8ec833f674b418eabe6fdfb078a83"
+    sha256: "be1073330c07046a70af74217c33849f613d92c7d4ba00b66d9365cb18dd89f2"
+    bytes: 42671
+    width: 96
+    height: 96
   - path: icons/stats/body.png
     store: ICONS
     asset_id: "4e11ef2d2ff1effda9a8adae24eaafb1"
