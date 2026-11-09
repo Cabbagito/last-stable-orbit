@@ -450,6 +450,41 @@ assets:
     bytes: 42671
     width: 96
     height: 96
+  - path: portraits/guard-towel.gif
+    store: PORTRAITS
+    asset_id: "1514f0ff6dca084f72f51de9c3cb8b34"
+    sha256: "f94968c831d15584c2c99b1475bfc9fabe112f47be0870b41d9066ed3d7f90bd"
+    bytes: 143603
+    width: 96
+    height: 96
+  - path: portraits/guard-turban.gif
+    store: PORTRAITS
+    asset_id: "625e839ec356e79a4feb479e0f4fe259"
+    sha256: "c968556a03f48b5da91a75b7188029b70357a78778ad2085a777563a9ab0e158"
+    bytes: 149329
+    width: 96
+    height: 96
+  - path: portraits/static-crest.gif
+    store: PORTRAITS
+    asset_id: "1a472351c9a5ad60d0fa42c0f79c6fc5"
+    sha256: "7ad4e15b9675f265b37e1c202fd809ea54720202b4b6ec7624a9921bf61d78e6"
+    bytes: 40573
+    width: 96
+    height: 96
+  - path: portraits/static-door.gif
+    store: PORTRAITS
+    asset_id: "1d2543691cb350dd158d647d71f89a4b"
+    sha256: "a04aa6bbfe4fe0f0d0f982a0119cf2c8b87c809db89e37f2a0f5d84273035286"
+    bytes: 39911
+    width: 96
+    height: 96
+  - path: portraits/static-neon.gif
+    store: PORTRAITS
+    asset_id: "469e6fb3fa2150bdb7765039031e679f"
+    sha256: "0883bf5cb96490f900fd4b256f2292b49edfef2ee08a9c4c5d5dd0e257c8cbcd"
+    bytes: 45158
+    width: 96
+    height: 96
   - path: icons/stats/body.png
     store: ICONS
     asset_id: "4e11ef2d2ff1effda9a8adae24eaafb1"
