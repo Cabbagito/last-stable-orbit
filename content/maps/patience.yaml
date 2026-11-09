@@ -12,6 +12,8 @@ order: 1
 hum: none
 moods:
   - {id: docked, label: Docked, base: maps/patience/base.png, glow: maps/patience/glow.png}
+decals:  # the vent, on the wall at the end of the sofa (art made for the app, not from the Maps canvas)
+  - {id: vent, src: maps/patience/vent.png, box: [44, 48], matrix: [1, 0, 0, 1, 136, 428], img: [0, 0, 44, 48]}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: portholes
     name: The portholes
@@ -23,10 +25,10 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     at: [9.92, 3.92, 0.8]
     closeup: [985, 690]
     text: A polished desk with a little brass lamp.
-  - id: vent  # no art for it yet, so no close-up
+  - id: vent
     name: The vent
-    at: [-0.3, 1.0, 0.8]
-    text: A small vent, low on the wall just past the sofa. Four brass screws, and nobody watching them.
+    at: [0, 7.7, 0.85]
+    text: A small vent, low on the wall at the end of the sofa. Four brass screws, and nobody watching them.
 # The Key board's "what's where" (the SmallKey board's Patience). Only the GM sees these.
 pins:
   - {k: "1", label: Cream corridor and portholes, at: [5.24, -0.96, 1.5]}
@@ -36,6 +38,6 @@ pins:
   - {k: B, label: Brass rail, at: [4.2, 1.5, 0.8]}
   - {k: C, label: Sofa, at: [-0.34, 3.96, 0.5]}
   - {k: D, label: The ship's name on the wall, at: [4.04, -1.56, 2]}
-  - {k: E, label: "The vent: the burner key is inside (hand it to Ves from Pockets)", at: [-0.3, 1.0, 0.8]}
+  - {k: E, label: "The vent: the burner key is inside (hand it to Ves from Pockets)", at: [0, 7.7, 1.2]}
 # Where the crew land when you send them here: just inside the gangway, in crew order.
 arrive: [[10.0, 7.4, 0], [8.4, 7.8, 0], [11.8, 6.8, 0], [10.6, 6.0, 0], [9.0, 6.8, 0]]

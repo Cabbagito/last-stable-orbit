@@ -272,6 +272,18 @@
   note: Came a long way for the Vigil.
   gm_note: "STAND-IN PORTRAIT (the Slot regular's). The wrist under Lale's fingers in the intro film. An ordinary pulse, which she can compare with the sedated people's identical ones in the Med Bay."
 
+- id: pilgrim
+  name: Pilgrim
+  role: Passenger
+  group: Passengers
+  portrait: portraits/slot-regular.gif  # STAND-IN
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  mood: Tired from the crossing
+  note: Here for the Vigil.
+  gm_note: "STAND-IN PORTRAIT (the Slot regular's). One of the ship's crowd, on the Patience and then in the Dock 7 queue."
+
 - id: pilgrim-flowers
   name: Pilgrim with flowers
   role: Passenger
