@@ -14,6 +14,16 @@ const BEATS = [0.45, 0.8, 1.5, T_HIT, T_OFF, T_END]
 
 const secondsSince = (r: RollView) => serverClock.now() / 1000 - r.started
 
+// How wide God's headline is, in ems: Jost's thin capitals plus the .2em between letters. The CSS shrinks a
+// long one ("PASSENGER WITH FLOWERS ROLLS EMPATHY") to fit the board, instead of running it off the edge.
+let ruler: CanvasRenderingContext2D | null | undefined
+function headlineEms(text: string) {
+  if (ruler === undefined) ruler = document.createElement('canvas').getContext('2d')
+  if (!ruler) return text.length * 0.85
+  ruler.font = "200 100px 'Jost', sans-serif"
+  return ruler.measureText(text).width / 100 + text.length * 0.2
+}
+
 /**
  * What a roll does to the whole screen (Round 17). When a die lands the edges of the screen flash in its colour and a
  * natural 1 shakes it; the GM's own rolls do neither. And God's turn: the screen goes grey and dark, a die falls and
@@ -196,7 +206,7 @@ function God({ r, tv, world, loop, onEnd }: { r: RollView; tv: boolean; world: R
           </>
         )}
         {g1 && (
-          <div key={g1} className={`r17-gt r17-g1 ${hit && hidden ? 'b' : 'a'}`}>
+          <div key={g1} className={`r17-gt r17-g1 ${hit && hidden ? 'b' : 'a'}`} style={{ '--ems': headlineEms(g1), '--n': g1.length } as CSSProperties}>
             {g1}
           </div>
         )}
