@@ -143,9 +143,9 @@ assets:
     height: 96
   - path: portraits/slot-regular.gif
     store: PORTRAITS
-    asset_id: "51f224219211073385bbe06f53ba92e1"
-    sha256: "beb164e2e1bddb8e8f18885bd98896ecc0a52456be3ee7aae4f4f292986bdc92"
-    bytes: 55123
+    asset_id: "7b73288ba86d7ee279b25af381769dae"
+    sha256: "2a1e2ee6a644b677e74c87aa29eb88b7663afd4b55db2528160f008407de6c19"
+    bytes: 52967
     width: 96
     height: 96
   - path: portraits/cleaner-14.gif
@@ -195,6 +195,76 @@ assets:
     asset_id: "2e99d63e9adcd74c6918043f5bdc397b"
     sha256: "05e9914dd8bb0d0a09472fa787907c5313f82e5678d93791ca95764357298eb9"
     bytes: 41351
+    width: 96
+    height: 96
+  - path: portraits/frail-passenger.gif
+    store: PORTRAITS
+    asset_id: "2a2c220d1f0c842dd490d034b057beed"
+    sha256: "0690120f5517a7e259bda88c3e838aca8fa1934fddf429e6989d29d75b0d1f20"
+    bytes: 28535
+    width: 96
+    height: 96
+  - path: portraits/passenger-flowers.gif
+    store: PORTRAITS
+    asset_id: "f6741254818a3fff7cb44e01a0bd438e"
+    sha256: "ac28312ce63d79169f24144dc84f413b69d88845c96af6b76a61ad0645e1e107"
+    bytes: 26877
+    width: 96
+    height: 96
+  - path: portraits/passenger-candles.gif
+    store: PORTRAITS
+    asset_id: "c78c8ad5c1a62e9284bad227124186cc"
+    sha256: "559203d87077ed535948bdcba8f24d199acd22b5f92eb2924e9778c036eabf56"
+    bytes: 33574
+    width: 96
+    height: 96
+  - path: portraits/passenger-old.gif
+    store: PORTRAITS
+    asset_id: "05bfe99f3d471afa1772d45511d9c76e"
+    sha256: "1e7567c2f59027f9b39c9b19bf88cde92c34b75a970b8fe0acbbed1b584585fa"
+    bytes: 24896
+    width: 96
+    height: 96
+  - path: portraits/passenger-young.gif
+    store: PORTRAITS
+    asset_id: "9b493ca37b5f360d4d5e499015cc6112"
+    sha256: "d579f808c7456a53934e0fd6768b8e36ded2142e53e2ceba19776a6c84a04dd2"
+    bytes: 26833
+    width: 96
+    height: 96
+  - path: portraits/passenger.gif
+    store: PORTRAITS
+    asset_id: "91b448877be1571657a1dbb449cde997"
+    sha256: "be22d9642f36286eacf650736c1e0cda2fb2dd04ca2d12840b9c47c1d4a608e8"
+    bytes: 24118
+    width: 96
+    height: 96
+  - path: portraits/passenger-tourist.gif
+    store: PORTRAITS
+    asset_id: "7a76fc85ceaf646053581f58e1f78791"
+    sha256: "a957d4170d9951954cef4a87cc7c5183db94f04aa61d0d26c7e218062f84188d"
+    bytes: 25007
+    width: 96
+    height: 96
+  - path: portraits/passenger-traveller.gif
+    store: PORTRAITS
+    asset_id: "6d910253ec25611ffe0b2d40413559ce"
+    sha256: "85cbe24e33f7b7b426a7d12d9e12478c036376bd812dcb75ad1efa4f3a609adb"
+    bytes: 24143
+    width: 96
+    height: 96
+  - path: portraits/ahti.gif
+    store: PORTRAITS
+    asset_id: "5b56132f5e496ddc7d7fe9c9cc0a1d4a"
+    sha256: "3fbf7b2f98fa78245c33326b2b0bb0665538700e8736d45858f3d5516f073a97"
+    bytes: 40487
+    width: 96
+    height: 96
+  - path: portraits/head-of-security.gif
+    store: PORTRAITS
+    asset_id: "40ea972fa0dc7421665bf604f4d8a980"
+    sha256: "99d5e082aec4e719cda5c4590f839fd2a4fd166ada5aafcdc7342db844b027bb"
+    bytes: 37319
     width: 96
     height: 96
   - path: icons/stats/body.png

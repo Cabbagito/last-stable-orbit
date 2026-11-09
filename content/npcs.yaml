@@ -48,7 +48,7 @@
   gm_note: "No cameras in the bar, but Unit 14 is always somewhere near the crew's table. ISCO's eyes."
 
 - id: slot-regular
-  name: Slot regular
+  name: Rudi Fenn  # DRAFT name, chosen 2026-11-09
   role: Resident
   group: Locals
   portrait: portraits/slot-regular.gif
@@ -57,7 +57,7 @@
   health: 2  # DRAFT for Peter
   mood: Wonderful  # DRAFT, from his line "I feel wonderful now"
   note: "\"I used to win money on this.\""
-  gm_note: "The alley's killer, sedated and back at his machine, alone. He and a friend secretly won small sums by standing up together; when the friend decided to stop and leave, he followed him into the alley. Ask him directly and he cheerfully admits it: \"Oh yes, that was me. I feel wonderful now.\""
+  gm_note: "The alley's killer, sedated and back at his machine, alone. He and a friend, Jonah Pell, secretly won small sums by standing up together; when the friend decided to stop and leave, he followed him into the alley. Ask him directly and he cheerfully admits it: \"Oh yes, that was me. I feel wonderful now.\""
 
 - id: happy-resident
   name: Happy resident
@@ -121,8 +121,8 @@
   gm_note: One of ISCO's masks, at the info desk. It doesn't matter if players poke at it.
 
 - id: steward
-  name: Patience steward
-  role: Steward
+  name: Mira  # DRAFT name, chosen 2026-11-09
+  role: Patience steward
   group: Locals
   portrait: portraits/steward.gif
   codex: steward
@@ -216,14 +216,14 @@
   name: Ahti
   role: The Janitor
   group: Locals
-  portrait: portraits/steward.gif  # STAND-IN
+  portrait: portraits/ahti.gif
   codex: ahti
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   mood: Humming along  # DRAFT
   note: A small old man with a mop and headphones.
-  gm_note: "STAND-IN PORTRAIT (the steward's). Has cleaned the executive decks for years, because ISCO's bots aren't allowed up there. He always needs people, so whoever opens his closet door on deck 6 is hired on the spot, overalls included: by day someone barfed, and by night his crew clears the Vigil's flowers off the Secure floor, walking through deck 8's checkpoint."
+  gm_note: "Has cleaned the executive decks for years, because ISCO's bots aren't allowed up there. He always needs people, so whoever opens his closet door on deck 6 is hired on the spot, overalls included: by day someone barfed, and by night his crew clears the Vigil's flowers off the Secure floor, walking through deck 8's checkpoint."
 
 - id: static
   name: Static Kováč
@@ -249,90 +249,114 @@
   health: 2  # DRAFT placeholder
   mood: Working the case  # DRAFT
   note: "\"They've asked me like 17 times. I have enough paperwork as it is.\""
-  gm_note: "A third-party investigator looking into the scrubbed death. He smokes cigars and has refused the survey. Simply trying to solve the case, and asks for help if they find him. He knows of a couple of troublemakers who share mannerisms, possibly one group, and has nothing to do with Marlo's debt. As a joke, he's looking for three other men, and his sketches are all Marlo's faces, with a Cool roll to keep a straight face."
+  gm_note: "A third-party investigator looking into the scrubbed death of Jonah Pell. He smokes cigars and has refused the survey. Simply trying to solve the case, and asks for help if they find him. He knows of a couple of troublemakers who share mannerisms, possibly one group, and has nothing to do with Marlo's debt. As a joke, he's looking for three other men, and his sketches are all Marlo's faces, with a Cool roll to keep a straight face."
 
 - id: head-of-security
-  name: Head of security
-  role: Security, the company
+  name: Vera Lind  # DRAFT name, chosen 2026-11-09
+  role: Head of security, the company
   group: The company
-  portrait: portraits/guard.gif  # STAND-IN
+  portrait: portraits/head-of-security.gif
   color: "#7fb4ff"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   mood: Unbothered  # DRAFT
   note: Runs deck 8's guards from an office by the checkpoint.  # DRAFT
-  gm_note: "STAND-IN PORTRAIT (the guard's). On deck 8, one of the few people who know the code to the probe's case."
+  gm_note: "On deck 8, one of the few people who know the code to the probe's case."
 
 # The Patience's passengers (added 2026-11-09): ordinary people who came to see the Vigil. Each has its own
-# entry so each can get its own face. Every portrait is a STAND-IN, and the names, cards, dice and health are DRAFTS for Peter.
+# entry with its own face (Portraits canvas, round 2). The cards, dice and health are DRAFTS for Peter.
 - id: frail-passenger
   name: Frail passenger
   role: Passenger
   group: Passengers
-  portrait: portraits/slot-regular.gif  # STAND-IN
+  portrait: portraits/frail-passenger.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   mood: Breathing carefully
   note: Came a long way for the Vigil.
-  gm_note: "STAND-IN PORTRAIT (the Slot regular's). The wrist under Lale's fingers in the intro film. An ordinary pulse, which she can compare with the sedated people's identical ones in the Med Bay."
+  gm_note: "The wrist under Lale's fingers in the intro film. An ordinary pulse, which she can compare with the sedated people's identical ones in the Med Bay."
 
 - id: passenger
   name: Passenger
   role: Passenger
   group: Passengers
-  portrait: portraits/slot-regular.gif  # STAND-IN
+  portrait: portraits/passenger.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   mood: Tired from the crossing
   note: Came to see the Vigil.
-  gm_note: "STAND-IN PORTRAIT (the Slot regular's). One of the ship's crowd, on the Patience and then in the Dock 7 queue."
+  gm_note: "One of the ship's crowd, on the Patience and then in the Dock 7 queue."
 
 - id: passenger-flowers
   name: Passenger with flowers
   role: Passenger
   group: Passengers
-  portrait: portraits/nurse.gif  # STAND-IN
+  portrait: portraits/passenger-flowers.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   mood: Enthralled
   note: Brought flowers for the Vigil.
-  gm_note: "STAND-IN PORTRAIT (the nurse's). Part of Marlo's audience on the Patience."
+  gm_note: "Part of Marlo's audience on the Patience."
 
 - id: passenger-candles
   name: Passenger with candles
   role: Passenger
   group: Passengers
-  portrait: portraits/vendor.gif  # STAND-IN
+  portrait: portraits/passenger-candles.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   mood: Laughing
   note: Brought candles for the Vigil.
-  gm_note: "STAND-IN PORTRAIT (the vendor's). Part of Marlo's audience on the Patience."
+  gm_note: "Part of Marlo's audience on the Patience."
 
 - id: passenger-old
   name: Old passenger
   role: Passenger
   group: Passengers
-  portrait: portraits/happy-resident.gif  # STAND-IN
+  portrait: portraits/passenger-old.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   mood: Not convinced
   note: Has been to every Vigil there was a berth for.
-  gm_note: "STAND-IN PORTRAIT (the happy resident's). Part of Marlo's audience on the Patience."
+  gm_note: "In the lounge on the Patience, then the Dock 7 queue."
 
 - id: passenger-young
   name: Young passenger
   role: Passenger
   group: Passengers
-  portrait: portraits/dock-clerk.gif  # STAND-IN
+  portrait: portraits/passenger-young.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   mood: Hanging on every word
   note: First Vigil.
-  gm_note: "STAND-IN PORTRAIT (the Dock 7 clerk's). Part of Marlo's audience on the Patience."
+  gm_note: "Part of Marlo's audience on the Patience."
+
+- id: passenger-tourist
+  name: Tourist
+  role: Passenger
+  group: Passengers
+  portrait: portraits/passenger-tourist.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  mood: Taking it all in  # DRAFT
+  note: Here for the spectacle more than the founder.  # DRAFT
+  gm_note: "In the lounge on the Patience, then the Dock 7 queue."
+
+- id: passenger-traveller
+  name: Traveller
+  role: Passenger
+  group: Passengers
+  portrait: portraits/passenger-traveller.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  mood: Dozing  # DRAFT
+  note: Has slept through most of the trip.  # DRAFT
+  gm_note: "In the lounge on the Patience, then the Dock 7 queue."

@@ -26,10 +26,10 @@ tokens:
   - {kind: crew, ref: ves, map: promenade, at: [5.0, 4.8, 0]}
   - {kind: crew, ref: tomo, map: promenade, at: [3.9, 4.8, 0]}
   - {kind: npc, ref: passenger, map: promenade, at: [3.7, 6.5, 0]}
-  - {kind: npc, ref: passenger-old, map: promenade, at: [4.8, 6.5, 0]}
+  - {kind: npc, ref: passenger-tourist, map: promenade, at: [4.8, 6.5, 0]}
   - {kind: npc, ref: passenger-candles, map: promenade, at: [5.9, 6.5, 0]}
   - {kind: npc, ref: passenger-flowers, map: promenade, at: [7.0, 6.5, 0]}
-  - {kind: npc, ref: passenger-candles, map: promenade, at: [8.1, 6.5, 0]}
+  - {kind: npc, ref: passenger-traveller, map: promenade, at: [8.1, 6.5, 0]}
   - {kind: npc, ref: passenger, map: promenade, at: [9.2, 6.5, 0]}
   # still aboard the Patience
   - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}

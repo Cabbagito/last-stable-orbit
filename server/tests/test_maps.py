@@ -133,7 +133,8 @@ async def test_the_arrival_preset(engine):
     assert s.maps["promenade"].switches == {"cameras": 1}
     v = project(s, engine.content, VES)
     assert {t["ref"] for t in v["tokens"].values() if t["kind"] == "npc"} == {
-        "frail-passenger", "passenger", "passenger-candles", "passenger-flowers", "passenger-old", "passenger-young", "steward",
+        "frail-passenger", "passenger", "passenger-candles", "passenger-flowers", "passenger-old", "passenger-tourist",
+        "passenger-traveller", "passenger-young", "steward",
     }
 
 

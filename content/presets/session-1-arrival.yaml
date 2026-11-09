@@ -18,17 +18,17 @@ tokens:
   - {kind: crew, ref: lale, map: patience, at: [7.714, 5.998, 0]}  # alone at the table with her patient, two fingers on a wrist
   - {kind: npc, ref: frail-passenger, map: patience, at: [7.043, 7.277, 0.2]}
   - {kind: crew, ref: marlo, map: patience, at: [3.041, 8.116, 0]}  # mid-story, with three standing round him
-  - {kind: npc, ref: passenger, map: patience, at: [4.314, 7.8, 0]}
-  - {kind: npc, ref: passenger, map: patience, at: [3.219, 6.713, 0]}
-  - {kind: npc, ref: passenger-old, map: patience, at: [2.218, 6.652, 0]}
+  - {kind: npc, ref: passenger-candles, map: patience, at: [4.314, 7.8, 0]}
+  - {kind: npc, ref: passenger-flowers, map: patience, at: [3.219, 6.713, 0]}
+  - {kind: npc, ref: passenger-young, map: patience, at: [2.218, 6.652, 0]}
   # the rest of the lounge: the other table, the carpet, and the corridor behind the rope
-  - {kind: npc, ref: passenger-flowers, map: patience, at: [1.7, 3.85, 0.2]}
-  - {kind: npc, ref: passenger-candles, map: patience, at: [2.9, 2.65, 0.2]}
-  - {kind: npc, ref: passenger-old, map: patience, at: [3.3, 5.5, 0.2]}
-  - {kind: npc, ref: passenger-young, map: patience, at: [4.5, 4.3, 0.2]}
-  - {kind: npc, ref: passenger-candles, map: patience, at: [6.093, 3.377, 0]}
-  - {kind: npc, ref: passenger-candles, map: patience, at: [2.416, 0.647, 0]}
-  - {kind: npc, ref: passenger-flowers, map: patience, at: [3.241, 0.723, 0]}
+  - {kind: npc, ref: passenger-old, map: patience, at: [1.7, 3.85, 0.2]}
+  - {kind: npc, ref: passenger-tourist, map: patience, at: [2.9, 2.65, 0.2]}
+  - {kind: npc, ref: passenger, map: patience, at: [3.3, 5.5, 0.2]}
+  - {kind: npc, ref: passenger-traveller, map: patience, at: [4.5, 4.3, 0.2]}
+  - {kind: npc, ref: passenger, map: patience, at: [6.093, 3.377, 0]}
+  - {kind: npc, ref: passenger-flowers, map: patience, at: [2.416, 0.647, 0]}
+  - {kind: npc, ref: passenger-candles, map: patience, at: [3.241, 0.723, 0]}
   - {kind: npc, ref: passenger, map: patience, at: [9.799, 1.304, 0]}
   - {kind: crew, ref: tally, map: patience, at: [6.3, 0.7, 0]}  # at the middle porthole, writing in the notebook
   - {kind: crew, ref: ves, map: patience, at: [0.6, 5.3, 0.2]}  # on the sofa, leaning on Tomo, eyeing the vent

@@ -225,11 +225,11 @@ entries:
   art: {src: portraits/scientist.gif, kind: bust, pos: 50% 10%}
   lead: Works on deck 7, always in her room. Talks to her plots more than to people.
   see: [executive]
-- id: ahti  # DRAFT wording, from the bible's Other faces. A stand-in portrait until the real art is imported.
+- id: ahti  # DRAFT wording, from the bible's Other faces.
   sec: chars
   npc: ahti
   label: NPC · the janitor
-  art: {src: portraits/steward.gif, kind: bust, pos: 50% 10%}
+  art: {src: portraits/ahti.gif, kind: bust, pos: 50% 10%}
   lead: A small old man with a mop and headphones. He has cleaned the executive decks for years, because ISCO's bots aren't
     allowed up there.
   see: [executive]
