@@ -541,6 +541,27 @@ assets:
     bytes: 31277
     width: 96
     height: 96
+  - path: portraits/tech-welder.gif
+    store: PORTRAITS
+    asset_id: "b5f562dcd819baa9ce922dc1704c948d"
+    sha256: "62c4ded5529bb02c0406d5d1635cce133b07be812b42e5e186e1e098d79eecd0"
+    bytes: 36324
+    width: 96
+    height: 96
+  - path: portraits/tech-lamp.gif
+    store: PORTRAITS
+    asset_id: "2cebf8d1f342c99342fcdb0e29efdbe0"
+    sha256: "119740f5347c0cc59dc8ffbcd638ce6b3c09d1649cbca89ed02a3fa0f83c7d41"
+    bytes: 40644
+    width: 96
+    height: 96
+  - path: portraits/tech-chief.gif
+    store: PORTRAITS
+    asset_id: "5c32685dd76e9b7c7458b2d2e103677b"
+    sha256: "d7d34c237d4a3918f6b16703209262b5a5dd213601821cbb65896440a6d9081a"
+    bytes: 36071
+    width: 96
+    height: 96
   - path: icons/stats/body.png
     store: ICONS
     asset_id: "4e11ef2d2ff1effda9a8adae24eaafb1"

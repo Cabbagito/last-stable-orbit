@@ -361,6 +361,42 @@
   note: Has watched the same corridor for nine years.  # DRAFT
   gm_note: "The bored operator from deck 6's gossip."
 
+- id: tech-welder
+  name: Welder
+  role: Tech, the company
+  group: The company
+  portrait: portraits/tech-welder.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 6, tech: 12, intel: 6, cool: 8, empathy: 4}  # DRAFT
+  health: 2  # DRAFT
+  mood: Mid-weld  # DRAFT
+  note: Welds the mech's plates back on. Goggles up, soot on the cheek.  # DRAFT
+  gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
+
+- id: tech-lamp
+  name: Diagnostics tech
+  role: Tech, the company
+  group: The company
+  portrait: portraits/tech-lamp.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 6, tech: 12, intel: 10, cool: 8, empathy: 6}  # DRAFT
+  health: 2  # DRAFT
+  mood: Absorbed  # DRAFT
+  note: Headlamp on, eyes on the tablet, never on you.  # DRAFT
+  gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
+
+- id: tech-chief
+  name: Chief tech
+  role: Tech, the company
+  group: The company
+  portrait: portraits/tech-chief.gif
+  color: "#7fb4ff"
+  stats: {body: 6, reflex: 4, tech: 20, intel: 12, cool: 12, empathy: 6}  # DRAFT
+  health: 2  # DRAFT
+  mood: Unhurried  # DRAFT
+  note: Thirty years on the company's machines, and a loupe screwed into one eye.  # DRAFT
+  gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
+
 - id: cleaner-bot
   name: Unit 3  # the generic cleaner; units are numbered in primes, and Unit 14 is the one that watches
   role: Cleaner, ISCO
