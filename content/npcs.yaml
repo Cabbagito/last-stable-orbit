@@ -397,6 +397,105 @@
   note: Thirty years on the company's machines, and a loupe screwed into one eye.  # DRAFT
   gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
 
+- id: board-chair
+  name: Chair of the board
+  role: The board, the company
+  group: The company
+  portrait: portraits/board-chair.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 4, tech: 6, intel: 12, cool: 20, empathy: 8}  # DRAFT
+  health: 2  # DRAFT
+  mood: Composed  # DRAFT
+  note: Has never once raised her voice.  # DRAFT
+
+- id: board-young
+  name: Board member
+  role: The board, the company
+  group: The company
+  portrait: portraits/board-young.gif
+  color: "#7fb4ff"
+  stats: {body: 6, reflex: 6, tech: 8, intel: 10, cool: 12, empathy: 4}  # DRAFT
+  health: 2  # DRAFT
+  mood: Pleased with himself  # DRAFT
+  note: Youngest on the board, and wants you to know it.  # DRAFT
+
+- id: board-old
+  name: Board member
+  role: The board, the company
+  group: The company
+  portrait: portraits/board-old.gif
+  color: "#7fb4ff"
+  stats: {body: 6, reflex: 4, tech: 4, intel: 8, cool: 12, empathy: 10}  # DRAFT
+  health: 2  # DRAFT
+  mood: Jovial  # DRAFT
+  note: Thirty years on the board. Laughs first, and longest.  # DRAFT
+
+- id: scientist-junior
+  name: Junior analyst
+  role: Scientist, the company
+  group: The company
+  portrait: portraits/scientist-junior.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 6, tech: 12, intel: 12, cool: 6, empathy: 8}  # DRAFT
+  health: 2  # DRAFT
+  mood: Puzzled  # DRAFT
+  note: Thinks the 0.49 plot is a bug in their own code.  # DRAFT
+
+- id: scientist-physicist
+  name: Physicist
+  role: Scientist, the company
+  group: The company
+  portrait: portraits/scientist-physicist.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 4, tech: 12, intel: 20, cool: 8, empathy: 6}  # DRAFT
+  health: 2  # DRAFT
+  mood: Uneasy  # DRAFT
+  note: Measures the hole, and doesn't like what it says.  # DRAFT
+
+- id: receptionist
+  name: Receptionist
+  role: The company
+  group: The company
+  portrait: portraits/receptionist.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 6, tech: 8, intel: 8, cool: 12, empathy: 12}  # DRAFT
+  health: 2  # DRAFT
+  mood: Polite  # DRAFT
+  note: Deck 8's front desk. Can find anyone, and won't.  # DRAFT
+
+- id: clerk
+  name: Clerk
+  role: The company
+  group: The company
+  portrait: portraits/clerk.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 4, tech: 8, intel: 8, cool: 10, empathy: 4}  # DRAFT
+  health: 2  # DRAFT
+  mood: Filing  # DRAFT
+  note: Files the reviewers' approvals. Has never read one.  # DRAFT
+
+- id: chef
+  name: Chef
+  role: Canteen, the company
+  group: The company
+  portrait: portraits/chef.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 8, tech: 6, intel: 6, cool: 10, empathy: 10}  # DRAFT
+  health: 2  # DRAFT
+  mood: Tasting  # DRAFT
+  note: Feeds the whole floor at noon and judges every plate that comes back.  # DRAFT
+
+- id: kitchen-hand
+  name: Kitchen hand
+  role: Canteen, the company
+  group: The company
+  portrait: portraits/kitchen-hand.gif
+  color: "#7fb4ff"
+  stats: {body: 6, reflex: 8, tech: 4, intel: 6, cool: 8, empathy: 8}  # DRAFT
+  health: 2  # DRAFT
+  mood: Listening  # DRAFT
+  note: Carries the plates, hears everything said over lunch.  # DRAFT
+
 - id: cleaner-bot
   name: Unit 3  # the generic cleaner; units are numbered in primes, and Unit 14 is the one that watches
   role: Cleaner, ISCO

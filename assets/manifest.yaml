@@ -562,6 +562,69 @@ assets:
     bytes: 36071
     width: 96
     height: 96
+  - path: portraits/board-chair.gif
+    store: PORTRAITS
+    asset_id: "8b019ec9b47743557cb876571bc582f0"
+    sha256: "af3ab91df300fc43290ee7e890fd7fc838f2d92c3c552e42169e020c27f1dcee"
+    bytes: 30941
+    width: 96
+    height: 96
+  - path: portraits/board-young.gif
+    store: PORTRAITS
+    asset_id: "7a0c1b43e98451abe72b306b57f056d9"
+    sha256: "21c8433fa3ad315a0ce08110a48c73555e056867965d5868390e22255c85d67e"
+    bytes: 30065
+    width: 96
+    height: 96
+  - path: portraits/board-old.gif
+    store: PORTRAITS
+    asset_id: "237257ce153131ffa6ea980dcd7623f3"
+    sha256: "7bd5ffa46a8603d10cb9dc261c2fccbeac294574d60d520560a73499196cf331"
+    bytes: 30817
+    width: 96
+    height: 96
+  - path: portraits/scientist-junior.gif
+    store: PORTRAITS
+    asset_id: "554ea1adbb0633eed980ad3c4c5744f3"
+    sha256: "5ea0ea494571c184eadc3b4119d3cd8e34493ec6b5eee35c1fe99a63ccdfcdd7"
+    bytes: 86700
+    width: 96
+    height: 96
+  - path: portraits/scientist-physicist.gif
+    store: PORTRAITS
+    asset_id: "9f3a5f88f6d6206661ac1dbbc9bafb92"
+    sha256: "3cc60bdbbcdfa62ff241fa6995acc49652198c82d9e68fe4e3ee77bb353c538f"
+    bytes: 88635
+    width: 96
+    height: 96
+  - path: portraits/receptionist.gif
+    store: PORTRAITS
+    asset_id: "454cf0c3bc486bbe0376054831afd6b5"
+    sha256: "88edb33da36056a68de35d681e507b55e8e5bffd3bbfa70c2666602518d6d9f4"
+    bytes: 27324
+    width: 96
+    height: 96
+  - path: portraits/clerk.gif
+    store: PORTRAITS
+    asset_id: "746c088d9193f5d434d3d7f555557415"
+    sha256: "b88d05171a1de1a7b61780c434730f769b21f2d71c6d4f7c24945158086fdd9b"
+    bytes: 28127
+    width: 96
+    height: 96
+  - path: portraits/chef.gif
+    store: PORTRAITS
+    asset_id: "e9c45205a486da83da9bc999efab2929"
+    sha256: "2eca1d060a6d063436400811abf30942ecf1f4c4d1df1d2b007b79ff59df4457"
+    bytes: 80320
+    width: 96
+    height: 96
+  - path: portraits/kitchen-hand.gif
+    store: PORTRAITS
+    asset_id: "d00e1c37b2abc79910e5816269af1b47"
+    sha256: "3c8d41eef4f99408aa77dc7157164e77d34f46d5f57d391cec3d209cd9f0a7c8"
+    bytes: 89343
+    width: 96
+    height: 96
   - path: icons/stats/body.png
     store: ICONS
     asset_id: "4e11ef2d2ff1effda9a8adae24eaafb1"
