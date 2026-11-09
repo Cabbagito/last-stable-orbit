@@ -12,7 +12,7 @@
   mask: overviews/droid-screen-mask.png
   tint: paper
   burns: true
-  survey:
+  survey: &survey
     intro:
       header: ERGO HOSPITALITY
       title: [GUEST SATISFACTION, REPORT]
@@ -89,6 +89,17 @@
       title: [OF COURSE!, "I'LL COME BACK LATER."]
       button: BYE
       toast: Not now. It will come back.
+
+# The same report on the spotless replacement droid that rolls up five seconds after the crew wrecks the first:
+# the same questions, no cigar burns.
+- id: satisfaction-new
+  name: Satisfaction Report, new droid
+  device: overviews/service-droid.png
+  screen: [186, 108, 528, 510]
+  mask: overviews/droid-screen-mask.png
+  tint: paper
+  burns: false
+  survey: *survey
 
 # From the Mini-golf canvas (https://claude.ai/artifact/LdXDGzq7yTFWV4s13G5h3y), its "drag to putt" board.
 # One putt on deck 9, just for fun: nothing comes back to the GM. Send it to each player who's there for it.

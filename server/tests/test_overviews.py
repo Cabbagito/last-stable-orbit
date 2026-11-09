@@ -67,7 +67,11 @@ async def test_the_gm_sees_what_can_be_sent_and_whose_screen_has_one_open(engine
     v = view(engine, GM)
     assert v["overview"] is None
     assert v["overviews"] == {
-        "games": [{"id": "satisfaction", "name": "Satisfaction Report"}, {"id": "golf", "name": "Mini-golf"}],
+        "games": [
+            {"id": "satisfaction", "name": "Satisfaction Report"},
+            {"id": "satisfaction-new", "name": "Satisfaction Report, new droid"},
+            {"id": "golf", "name": "Mini-golf"},
+        ],
         "open": {},
     }
     await ok(engine, GM, "gm.overview.send", {"overview": "satisfaction", "chars": ["ves"]})
@@ -175,3 +179,10 @@ def test_the_droid_reaches_only_whoever_has_it_open(client, seat):
             pass
         assert f["ok"], f
     assert get(marlo) == 200 and get(ves) == 404
+
+
+async def test_the_new_droid_asks_the_same_questions_without_the_burns(engine):
+    old, new = engine.content.overviews["satisfaction"], engine.content.overviews["satisfaction-new"]
+    assert old.burns and not new.burns and old.survey == new.survey and old.device == new.device
+    await ok(engine, GM, "gm.overview.send", {"overview": "satisfaction-new", "chars": ["marlo"]})
+    assert view(engine, MARLO)["overview"]["kind"] == "satisfaction-new"
