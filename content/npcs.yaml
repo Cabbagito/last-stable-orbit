@@ -171,6 +171,42 @@
   note: Stands where the company's lift starts.
   gm_note: "The company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, d8, Normal to hit; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Hard ends one without a fight. They radio: if a fight runs long, more come."
 
+- id: guard-rookie
+  name: Rookie guard
+  role: Guard, the company
+  group: The company
+  portrait: portraits/guard-rookie.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
+  mood: Keen  # DRAFT
+  note: Three weeks on the job, and very keen to check your pass.  # DRAFT
+  gm_note: "Another face for the guard squad: the same enemy card as the security guard."
+
+- id: guard-sergeant
+  name: Guard sergeant
+  role: Guard, the company
+  group: The company
+  portrait: portraits/guard-sergeant.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
+  mood: Settled in  # DRAFT
+  note: Twenty years of night shifts and one good chair.  # DRAFT
+  gm_note: "Another face for the guard squad: the same enemy card as the security guard."
+
+- id: guard-riot
+  name: Riot guard
+  role: Guard, the company
+  group: The company
+  portrait: portraits/guard-riot.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
+  mood: On alert  # DRAFT
+  note: Helmet on, visor up, already sure it was you.  # DRAFT
+  gm_note: "Another face for the guard squad: the same enemy card as the security guard."
+
 - id: cleaner-bot
   name: Unit 3  # the generic cleaner; units are numbered in primes, and Unit 14 is the one that watches
   role: Cleaner, ISCO
@@ -516,3 +552,47 @@
   mood: Would love your feedback
   note: Spotless. Same smile.
   gm_note: "Rolls up five seconds after the crew wrecks the first one. Send \"Satisfaction Report, new droid\"."
+
+- id: resident-student
+  name: Student
+  role: Resident
+  group: Residents
+  portrait: portraits/resident-student.gif
+  color: "#a9a2bc"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 8, empathy: 8}  # DRAFT
+  health: 2  # DRAFT
+  mood: Explaining  # DRAFT
+  note: Studies something about the hole. Can explain it, at length.  # DRAFT
+
+- id: resident-beanie
+  name: Scrubber fixer
+  role: Resident
+  group: Residents
+  portrait: portraits/resident-beanie.gif
+  color: "#a9a2bc"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 8, empathy: 8}  # DRAFT
+  health: 2  # DRAFT
+  mood: Laughing  # DRAFT
+  note: Fixes air scrubbers. Laughs at his own jokes first.  # DRAFT
+
+- id: resident-coral
+  name: Resident
+  role: Resident
+  group: Residents
+  portrait: portraits/resident-coral.gif
+  color: "#a9a2bc"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 8, empathy: 8}  # DRAFT
+  health: 2  # DRAFT
+  mood: Quiet  # DRAFT
+  note: Going to the Vigil for her mother.  # DRAFT
+
+- id: resident-shopkeeper
+  name: Shopkeeper
+  role: Resident
+  group: Residents
+  portrait: portraits/resident-shopkeeper.gif
+  color: "#a9a2bc"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 8, empathy: 8}  # DRAFT
+  health: 2  # DRAFT
+  mood: Opinionated  # DRAFT
+  note: Sells spare parts and opinions. The opinions are free.  # DRAFT

@@ -359,6 +359,55 @@ assets:
     bytes: 43384
     width: 96
     height: 96
+  - path: portraits/guard-rookie.gif
+    store: PORTRAITS
+    asset_id: "ece6ad73a7408cd26c4b60c05996e35f"
+    sha256: "86e56c9a2be9661b2b611a3ebe95b086833e51c8d647bb5b5af58326a0919c69"
+    bytes: 35014
+    width: 96
+    height: 96
+  - path: portraits/guard-sergeant.gif
+    store: PORTRAITS
+    asset_id: "3e6190be1cde29261cd389ea5259cd40"
+    sha256: "ae2d77f859741b49ac2591643b4850f40bff506391f875362a0b59ea95b791bd"
+    bytes: 33136
+    width: 96
+    height: 96
+  - path: portraits/guard-riot.gif
+    store: PORTRAITS
+    asset_id: "a85aab9d078ad759c4ff400aab24c836"
+    sha256: "08b59fe8b92ee7cb329eee617bb342452e7b3c21a0ee61125b92ca4f4b75cbe6"
+    bytes: 34557
+    width: 96
+    height: 96
+  - path: portraits/resident-student.gif
+    store: PORTRAITS
+    asset_id: "79b93057c9dbe98ed363e6140c30d1f8"
+    sha256: "3ef1b902ee237446741d93932dbc273458c76c14428ffb2ec922eb93c5bc2b21"
+    bytes: 135372
+    width: 96
+    height: 96
+  - path: portraits/resident-beanie.gif
+    store: PORTRAITS
+    asset_id: "861adf447a85d7c350f13798cf83cf9c"
+    sha256: "57f96309354c60d534a18f0f49bbf66986b843496d491bc29289103d07bf6a36"
+    bytes: 131560
+    width: 96
+    height: 96
+  - path: portraits/resident-coral.gif
+    store: PORTRAITS
+    asset_id: "02b2d5e649dc91a2d55729550f7b002d"
+    sha256: "ccc64e7646769ac593e072ea5ce340c24617ec3e181eebb787df9b3240213592"
+    bytes: 134925
+    width: 96
+    height: 96
+  - path: portraits/resident-shopkeeper.gif
+    store: PORTRAITS
+    asset_id: "5d6b4445cbd9b900860f1649e377c1f3"
+    sha256: "6b1e3db63c5c5c0e933c933370dd19adb1ea32940b29aa2d0f95c0a902192c9e"
+    bytes: 132429
+    width: 96
+    height: 96
   - path: icons/stats/body.png
     store: ICONS
     asset_id: "4e11ef2d2ff1effda9a8adae24eaafb1"
