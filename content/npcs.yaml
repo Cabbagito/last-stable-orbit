@@ -257,3 +257,65 @@
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   gm_note: "STAND-IN PORTRAIT (the guard's). On deck 8, one of the few people who know the code to the probe's case."
+
+# The Patience's passengers (added 2026-11-09): "a liner full of pilgrims", on the eve of the Vigil. Each has its own
+# entry so each can get its own face. Every portrait is a STAND-IN, and the names, cards, dice and health are DRAFTS for Peter.
+- id: frail-pilgrim
+  name: Frail pilgrim
+  role: Passenger
+  group: Passengers
+  portrait: portraits/slot-regular.gif  # STAND-IN
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  mood: Breathing carefully
+  note: Came a long way for the Vigil.
+  gm_note: "STAND-IN PORTRAIT (the Slot regular's). The wrist under Lale's fingers in the intro film. An ordinary pulse, which she can compare with the sedated people's identical ones in the Med Bay."
+
+- id: pilgrim-flowers
+  name: Pilgrim with flowers
+  role: Passenger
+  group: Passengers
+  portrait: portraits/nurse.gif  # STAND-IN
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  mood: Enthralled
+  note: Brought flowers for the Vigil.
+  gm_note: "STAND-IN PORTRAIT (the nurse's). Part of Marlo's audience on the Patience."
+
+- id: pilgrim-candles
+  name: Pilgrim with candles
+  role: Passenger
+  group: Passengers
+  portrait: portraits/vendor.gif  # STAND-IN
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  mood: Laughing
+  note: Brought candles for the Vigil.
+  gm_note: "STAND-IN PORTRAIT (the vendor's). Part of Marlo's audience on the Patience."
+
+- id: pilgrim-old
+  name: Old pilgrim
+  role: Passenger
+  group: Passengers
+  portrait: portraits/happy-resident.gif  # STAND-IN
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  mood: Not convinced
+  note: Has been to every Vigil there was a berth for.
+  gm_note: "STAND-IN PORTRAIT (the happy resident's). Part of Marlo's audience on the Patience."
+
+- id: pilgrim-young
+  name: Young pilgrim
+  role: Passenger
+  group: Passengers
+  portrait: portraits/dock-clerk.gif  # STAND-IN
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  mood: Hanging on every word
+  note: First Vigil.
+  gm_note: "STAND-IN PORTRAIT (the Dock 7 clerk's). Part of Marlo's audience on the Patience."

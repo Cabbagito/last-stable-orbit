@@ -14,12 +14,17 @@ maps:
   secure: {mood: day, switches: {cameras: 1}}
   lift: {mood: shut, switches: {cameras: 1}}
 tokens:
-  # aboard the Patience
-  - {kind: crew, ref: lale, map: patience, at: [10.0, 7.4, 0]}
-  - {kind: crew, ref: marlo, map: patience, at: [8.4, 7.8, 0]}
-  - {kind: crew, ref: tally, map: patience, at: [11.8, 6.8, 0]}
-  - {kind: crew, ref: ves, map: patience, at: [7.0, 1.2, 0]}
-  - {kind: crew, ref: tomo, map: patience, at: [5.0, 7.4, 0]}
+  # aboard the Patience, where the intro film left everyone (the opening canvas's "The waiting room")
+  - {kind: crew, ref: lale, map: patience, at: [8.2, 4.35, 0]}  # beside the armchair, two fingers on a wrist
+  - {kind: npc, ref: frail-pilgrim, map: patience, at: [6.45, 4.55, 0.2]}
+  - {kind: crew, ref: marlo, map: patience, at: [4.6, 5.55, 0]}  # mid-story, with the table for an audience
+  - {kind: npc, ref: pilgrim-flowers, map: patience, at: [1.7, 3.85, 0.2]}
+  - {kind: npc, ref: pilgrim-candles, map: patience, at: [2.9, 2.65, 0.2]}
+  - {kind: npc, ref: pilgrim-old, map: patience, at: [3.3, 5.5, 0.2]}
+  - {kind: npc, ref: pilgrim-young, map: patience, at: [4.5, 4.3, 0.2]}
+  - {kind: crew, ref: tally, map: patience, at: [6.3, 0.7, 0]}  # at the middle porthole, writing in the notebook
+  - {kind: crew, ref: ves, map: patience, at: [0.6, 5.3, 0.2]}  # on the sofa, leaning on Tomo, eyeing the vent
+  - {kind: crew, ref: tomo, map: patience, at: [0.7, 4.0, 0.2]}  # on the sofa, admiring a loaf
   - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
   # the Promenade, calm
   - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}

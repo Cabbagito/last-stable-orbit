@@ -41,7 +41,8 @@
 - **Waiting on Peter:** the clinic upgrades (nothing built; the app can't raise a maximum yet), the Gumshoe's descriptor, the victim's name and date on his card, who's on the admissions record, and the bloodline hint in audio log #1.
 - **Session 1's four presets** (built 2026-11-08, listed in beat order in the GM tab): arrival on the Patience, the open day (the crew in the Dock 7 queue, the Gumshoe in the Night Market), after hours (the crew outside the bar's door, Dax and Irena inside, Unit 14 in the corner), and the pitch. Positions are drafts, checked on the art.
 - **Scene only** (built 2026-11-08): each preset in the GM tab has Scene only beside Load. It moves everyone and sets each map's mood and switches, and any fight ends. HP, Entropy, pockets, the Codex, what's been inspected, lit Station places and things already shown on a map all stay. Load still replaces everything. Checked in a browser as the GM, on a copy of the saved game on :8073.
-- **Not in the app yet:** the two new films (their cues show greyed out), a vent on the Patience art (Peter hands Ves the burner key from the GM tab), and the later-session items.
+- **The Patience's opening** (2026-11-09): the arrival preset stages everyone as the intro film leaves them, with five pilgrims (`Passengers` in the GM's Add list), each on a stand-in portrait for Peter to swap. Who they are is a draft.
+- **Not in the app yet:** the two new films (their cues show greyed out), art for the Patience's vent (it's an object the GM reveals; Peter hands Ves the burner key from the GM tab), and the later-session items.
 
 **The heist maps** (2026-11-08, from the Heist maps canvas, https://claude.ai/artifact/LpMi1WHzziSMdTDEoQ9uYk, with what's where from the Heist playground, https://claude.ai/artifact/62VgjT7Grfw2TK9YMSbgsr):
 - **Six separate maps,** each with Day, Night and Alert: decks 6, 7, 8 and 9, the Secure floor and the Bot bays. The Executive tower is gone, along with its deck buttons and deck jump. The art is one flat picture per mood, so Alert doesn't pulse.
@@ -489,7 +490,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **The bar** got its Key board's 23 pins and its arrive spots inside the street door.
   - **New preset, "Session 1: arrival on the Patience":** the crew aboard, the steward, the Promenade's people in place, the bar waiting as in "the pitch at the bar", and the same pockets. `session-1` stays the default for an empty database. The intro cue now sets Patience behind its film.
   - **Drafts for Peter:** the new things-to-inspect texts, the new NPCs' cards and dice, the pin labels, and every position.
-  - **Not done:** Patience's passengers (the board used other NPCs' portraits as stand-ins, so there's no passenger art). Moving a single crew member to another map (only the whole crew moves).
+  - **Not done:** Moving a single crew member to another map (only the whole crew moves).
   - **Part 2, the other eight (2026-11-04),** after Peter said "Yes, the other eight":
     - **Built here, one at a time** (no workflow was asked for): the Executive floors, the Secure floor, the Lift station, the founder's vault, the Bot bays, the crawler cab, the Terminal room and the Med Bay. Every board, key and its art came from the live Maps canvas; the art is 31 map layers (two Terminal glows were byte-identical, so they share one file).
     - **The Executive floors are a tower.** The board's `oy = 150 + (9 − deck) × 450` is height here: each deck is 12.5 Z above the one below (450 / 36), so deck 6's floor is Z 0 and deck 9's is Z 37.5, with origin (360, 1500). A test checks this matches the board's formula on every deck. Positions stay world X, Y, Z.
