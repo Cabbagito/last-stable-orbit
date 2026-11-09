@@ -485,6 +485,62 @@ assets:
     bytes: 45158
     width: 96
     height: 96
+  - path: portraits/robot-cook.gif
+    store: PORTRAITS
+    asset_id: "c9a07a140fd54167d8e07e15d8cdb235"
+    sha256: "4f7dabe32bf14fc783829dd9ea009c41441caca8fd4fae611574adf566a4bcf7"
+    bytes: 132131
+    width: 96
+    height: 96
+  - path: portraits/robot-miner.gif
+    store: PORTRAITS
+    asset_id: "f5acb692c85fcc3233746b2e6d34adb1"
+    sha256: "ed391635930ca1833f4874a79c96ae86941dc0b3120bfa324a56d15c327a58a0"
+    bytes: 134745
+    width: 96
+    height: 96
+  - path: portraits/robot-reader.gif
+    store: PORTRAITS
+    asset_id: "b20d01cbf20379cb5a1cb7c1668d46f6"
+    sha256: "aade3fb456ae250248a81793fd828869f59bd6e0acb817e86ce1b022c557d355"
+    bytes: 133622
+    width: 96
+    height: 96
+  - path: portraits/lucan-brute.gif
+    store: PORTRAITS
+    asset_id: "d3774cc15789d7aac555c6ac1d325fd6"
+    sha256: "642022e122c8aa5959668a30b85079e4cf9ef9acf94d43e211cae4c261daec78"
+    bytes: 35569
+    width: 96
+    height: 96
+  - path: portraits/lucan-dog.gif
+    store: PORTRAITS
+    asset_id: "c488d2a02ad97fb05b572f766a91dcbe"
+    sha256: "6a8c29cc950c267d81875ce67a3737e1e68279a89c0fb76fc723f5bc13cc4968"
+    bytes: 36883
+    width: 96
+    height: 96
+  - path: portraits/reviewer-a.gif
+    store: PORTRAITS
+    asset_id: "f13972bfaff75e470a2001382619e998"
+    sha256: "7a66f02c1d771d642997724f006651e130bc9e4a2a1422bc28885ec441ba363a"
+    bytes: 30982
+    width: 96
+    height: 96
+  - path: portraits/reviewer-b.gif
+    store: PORTRAITS
+    asset_id: "2ae4e0aa212ea524740e46bdd8a9adb3"
+    sha256: "bc6a4915e84a75ac36fb136499ec3c68feb4a1921e8f5ab80168aa923a3910b8"
+    bytes: 31041
+    width: 96
+    height: 96
+  - path: portraits/camera-operator.gif
+    store: PORTRAITS
+    asset_id: "ae5f1f87a12cee4d64ef90c5e0c8c22f"
+    sha256: "60538f94afa1c459fe644bb3ee9a44b95f7894040874a5358e8a3345395b2b5a"
+    bytes: 31277
+    width: 96
+    height: 96
   - path: icons/stats/body.png
     store: ICONS
     asset_id: "4e11ef2d2ff1effda9a8adae24eaafb1"

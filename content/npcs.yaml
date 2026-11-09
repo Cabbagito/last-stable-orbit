@@ -165,6 +165,30 @@
   note: No jaw left. Talks through a speaker, when he talks.  # DRAFT
   gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
 
+- id: lucan-brute
+  name: Lucan's brute
+  role: Muscle
+  group: Muscle
+  portrait: portraits/lucan-brute.gif
+  color: "#ff5a4a"
+  stats: {body: 20, reflex: 6, tech: 8, intel: 6, cool: 20, empathy: 4}  # DRAFT
+  health: 6  # DRAFT
+  mood: Waiting for an order  # DRAFT
+  note: Built in Lucan's likeness, in black, by someone who left out the charm.  # DRAFT
+  gm_note: "A machine of Lucan's, not an upload. Placeholder dice and health."
+
+- id: lucan-dog
+  name: Lucan's dog
+  role: Muscle
+  group: Muscle
+  portrait: portraits/lucan-dog.gif
+  color: "#ff5a4a"
+  stats: {body: 10, reflex: 20, tech: 4, intel: 6, cool: 12, empathy: 4}  # DRAFT
+  health: 3  # DRAFT
+  mood: Straining at nothing  # DRAFT
+  note: Fast, all claws and fins, and it doesn't bark first.  # DRAFT
+  gm_note: "Lucan's robot dog. Placeholder dice and health."
+
 # The Promenade and the Patience (M5). Cards, notes and dice are DRAFTS from the bible, for Peter to set.
 - id: dock-clerk
   name: Dock 7 clerk
@@ -302,6 +326,40 @@
   mood: Ready  # DRAFT
   note: Towel on her head, sleeves rolled to nothing.  # DRAFT
   gm_note: "One of the two off-duty guards who walk out of deck 6's showers at shift change for a fight in towels. The guard's enemy card."
+
+- id: reviewer-a
+  name: Reviewer
+  role: Reviewer, the company
+  group: The company
+  portrait: portraits/reviewer-a.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 4, tech: 10, intel: 10, cool: 8, empathy: 6}  # DRAFT
+  health: 2  # DRAFT
+  mood: Approving  # DRAFT
+  note: Approves each part because each part looks fine.  # DRAFT
+
+- id: reviewer-b
+  name: Reviewer
+  role: Reviewer, the company
+  group: The company
+  portrait: portraits/reviewer-b.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 4, tech: 10, intel: 10, cool: 8, empathy: 6}  # DRAFT
+  health: 2  # DRAFT
+  mood: Approving  # DRAFT
+  note: Same desk, same screen, same green tick.  # DRAFT
+
+- id: camera-operator
+  name: Camera operator
+  role: The company
+  group: The company
+  portrait: portraits/camera-operator.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 6, tech: 10, intel: 6, cool: 12, empathy: 4}  # DRAFT
+  health: 2  # DRAFT
+  mood: Bored  # DRAFT
+  note: Has watched the same corridor for nine years.  # DRAFT
+  gm_note: "The bored operator from deck 6's gossip."
 
 - id: cleaner-bot
   name: Unit 3  # the generic cleaner; units are numbered in primes, and Unit 14 is the one that watches
@@ -728,3 +786,36 @@
   health: 2  # DRAFT
   mood: Opinionated  # DRAFT
   note: Sells spare parts and opinions. The opinions are free.  # DRAFT
+
+- id: robot-cook
+  name: Stall cook
+  role: Resident, machine mind
+  group: Residents
+  portrait: portraits/robot-cook.gif
+  color: "#a9a2bc"
+  stats: {body: 8, reflex: 6, tech: 10, intel: 6, cool: 10, empathy: 10}  # DRAFT
+  health: 2  # DRAFT
+  mood: Busy  # DRAFT
+  note: Runs a noodle stall. Its visor glows brighter when you order seconds.  # DRAFT
+
+- id: robot-miner
+  name: Old miner
+  role: Resident, machine mind
+  group: Residents
+  portrait: portraits/robot-miner.gif
+  color: "#a9a2bc"
+  stats: {body: 14, reflex: 4, tech: 8, intel: 6, cool: 12, empathy: 8}  # DRAFT
+  health: 2  # DRAFT
+  mood: Watching  # DRAFT
+  note: Retired from the cable crews. Spends its days on the same bench.  # DRAFT
+
+- id: robot-reader
+  name: Reader
+  role: Resident, machine mind
+  group: Residents
+  portrait: portraits/robot-reader.gif
+  color: "#a9a2bc"
+  stats: {body: 4, reflex: 6, tech: 8, intel: 12, cool: 10, empathy: 10}  # DRAFT
+  health: 2  # DRAFT
+  mood: Reading  # DRAFT
+  note: Reads paper books, slowly, on purpose. Knits its own scarves.  # DRAFT
