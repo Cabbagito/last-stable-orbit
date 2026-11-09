@@ -2,8 +2,10 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { objectKey } from '../inspect/objects'
 import { proj, unproj } from '../lib/proj'
 import { hpRing, plainRing, ring } from '../lib/ring'
-import { fighterIn } from '../fight/fights'
+import { fighterIn, turnNow } from '../fight/fights'
+import { useLanding } from '../fight/Strip'
 import { ChipFx } from '../fx/ChipFx'
+import { serverClock } from '../net/clock'
 import { send, useGame } from '../store/game'
 import type { MapView as MapDef, MapObject, TokenView, Vec3 } from '../types'
 import { RingPortrait } from '../shell/RingPortrait'
@@ -27,6 +29,7 @@ const ZMIN = 0.3
 const ZMAX = 3
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
 const DRAG_HZ = 50 // ms between live drag frames
+const YOU = '#5ee08c' // your own chip's stem and the ring at its feet
 
 /** One isometric map: art layers per mood and switch, tokens on top, pan / zoom / drag. */
 export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenView[]; canMove: (t: TokenView) => boolean }) {
@@ -42,6 +45,8 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
   const setLocal = useGame((s) => s.setLocal)
   const crewList = useGame((s) => s.view?.crew)
   const fight = useGame((s) => s.view?.fights?.find((f) => f.map === map.id))
+  useLanding(fight) // re-render when the dice have landed: that's when the turn shows on the board
+  const myChar = useGame((s) => s.view?.me.char)
   const rolls = useGame((s) => s.view?.rolls)
   const calls = useGame((s) => s.calls)
   useGame((s) => s.callTick) // re-render when a callout fades
@@ -200,6 +205,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
 
   const scale = cam ? clamp(0.8 / cam.zoom, 0.6, 1.8) : 1
   const callouts = calloutsBy(rolls ?? [], calls, Date.now(), (r) => (r.god ? null : r.token)) // God has the whole screen
+  const turn = turnNow(fight, serverClock.now() / 1000)
   return (
     <div
       ref={box}
@@ -219,8 +225,10 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
           {tokens.map((t) => {
             const [x, y] = proj(map.origin, where(t))
             const on = selected === t.id
-            const foot = on ? '#ffffff' : t.color
             const crew = t.kind === 'crew' ? crewList?.find((c) => c.id === t.ref) : undefined
+            const mine = !!crew && crew.id === myChar
+            const isTurn = turn === t.id
+            const foot = on ? '#ffffff' : mine ? YOU : t.color
             // an NPC in a fight on this map shows its health, in its faction's colour (M8)
             const fighter = crew ? undefined : fighterIn(fight, t.id)
             const r = crew ? ring(crew.hp, crew.entropy, 64, 9, crew.health) : fighter ? hpRing(fighter.hp, fighter.health, t.color, 64, 5) : plainRing(t.color, 64, 5)
@@ -231,27 +239,32 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
               <button
                 key={t.id}
                 type="button"
-                className={'r3-tok' + (t.hidden ? ' app-hiddentok' : '') + (canMove(t) ? '' : ' app-fixedtok')}
-                aria-label={t.name + (t.hidden ? ' (hidden from players)' : '') + (call ? `, ${calloutSpeech(call.r)}` : '') + (burn ? `, ${burnSpeech(burn)}` : '')}
+                className={'r3-tok' + (t.hidden ? ' app-hiddentok' : '') + (canMove(t) ? '' : ' app-fixedtok') + (isTurn ? ' app-tokturn' : '')}
+                aria-label={t.name + (mine ? ' (you)' : '') + (t.hidden ? ' (hidden from players)' : '') + (isTurn ? ', their turn' : '') + (call ? `, ${calloutSpeech(call.r)}` : '') + (burn ? `, ${burnSpeech(burn)}` : '')}
                 onPointerDown={(e) => onTokenDown(e, t)}
                 onPointerEnter={() => setHover(t.id)}
                 onPointerLeave={() => setHover((h) => (h === t.id ? null : h))}
                 style={{ left: x, top: y, transform: `scale(${scale * (t.size ?? 1)})`, zIndex: Math.round(y) + (call || burn || hover === t.id ? 3000 : 0) }}
               >
+                {mine && <span className="app-youring" style={{ '--you': YOU } as React.CSSProperties} />}
                 <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${foot}`, background: 'rgba(0,0,0,.35)' }} />
                 <span style={{ position: 'absolute', left: '50%', bottom: 8, width: 1.5, height: 36, marginLeft: -0.75, background: foot }} />
-                <ChipFx id={crew ? `c:${crew.id}` : `t:${t.id}`} down={down} style={{ position: 'absolute', left: 0, top: 0, width: 64, height: 64 }}>
-                  <RingPortrait src={t.portrait} ring={r} size={64} />
-                </ChipFx>
-                {call && isSpinning(call.r) && <Orbit stat={call.r.stat} />}
+                {/* everything that belongs to the head, so it all lifts together on their turn */}
+                <span className="app-tokhead">
+                  {isTurn && <span className="app-tokglow" />}
+                  <ChipFx id={crew ? `c:${crew.id}` : `t:${t.id}`} down={down} style={{ position: 'absolute', left: 0, top: 0, width: 64, height: 64 }}>
+                    <RingPortrait src={t.portrait} ring={r} size={64} />
+                  </ChipFx>
+                  {call && isSpinning(call.r) && <Orbit stat={call.r.stat} />}
+                  {burn && <Flare m={burn} />}
+                  {t.hidden && (
+                    <b className="r10-eyeb" aria-hidden="true">
+                      <Eye off size={14} />
+                    </b>
+                  )}
+                </span>
                 {call && !isSpinning(call.r) && <Chip key={calloutKey(call.r)} r={call.r} fading={call.fading} />}
-                {burn && <Flare m={burn} />}
                 {burn && <BurnCallout key={burn.at} m={burn} side="s-t" />}
-                {t.hidden && (
-                  <b className="r10-eyeb" aria-hidden="true">
-                    <Eye off size={14} />
-                  </b>
-                )}
                 {!call && !burn && hover === t.id && !on && local?.token !== t.id && (
                   <span className="app-tag" aria-hidden="true">
                     {t.name}

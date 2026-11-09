@@ -91,8 +91,21 @@
 @keyframes app-fxrise{0%{opacity:0;transform:translateY(8px)}16%{opacity:1;transform:none}72%{opacity:1;transform:translateY(-4px)}100%{opacity:0;transform:translateY(-12px)}}
 @keyframes app-fxfall{0%{opacity:0;transform:translateY(-6px)}16%{opacity:1;transform:none}72%{opacity:1;transform:translateY(3px)}100%{opacity:0;transform:translateY(12px)}}
 
+/* ---------------------------------------------------------------- on the board (the "Turn and You markers" canvas) */
+/* whose turn: the head lifts a little over a faint glow. All of it stays out of the chip's click area. */
+.app-tokhead{position:absolute;left:0;top:0;width:64px;height:64px;transform-origin:32px 64px;transition:transform .3s ease}
+.app-tokturn .app-tokhead{transform:translateY(-6px) scale(1.16)}
+.app-tokglow{position:absolute;left:-30px;top:-30px;width:124px;height:124px;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgba(255,255,255,.62) 50%,rgba(255,255,255,.24) 68%,transparent 100%);animation:app-tokglow 2.6s ease-in-out infinite}
+@keyframes app-tokglow{0%,100%{opacity:.55}50%{opacity:1}}
+/* a roll's number, a Burn's mark and the name move up to clear the lifted head */
+.app-tokturn .r17-chipw,.app-tokturn .r7-call.s-t{bottom:calc(100% + 24px)}
+.app-tokturn .app-tag{bottom:calc(100% + 20px)}
+/* who you are: a ring at your own chip's feet */
+.app-youring{position:absolute;left:50%;bottom:-5px;width:50px;height:26px;margin-left:-25px;border-radius:50%;box-sizing:border-box;pointer-events:none;border:2px solid var(--you);background:color-mix(in srgb,var(--you) 20%,transparent);box-shadow:0 0 0 1px rgba(0,0,0,.6),0 0 8px color-mix(in srgb,var(--you) 55%,transparent)}
+
 @media (prefers-reduced-motion: reduce){
   .fx-layer{display:none}
+  .app-tokhead{transition:none}.app-tokglow{animation:none;opacity:.85}
   .app-fx,.app-fslot,.app-fhead,.app-fdiv,.app-tvfslot,.app-tvfhead,.app-tvfpos{animation:none!important;transition:none!important}
   .app-freel{animation:none}
 }

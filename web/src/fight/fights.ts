@@ -62,6 +62,14 @@ export function nextUp(f: FightView): string | null {
   return null
 }
 
+/** Whose turn the board marks at server time t (s). Nobody's while any dice are landing, as on the strip, so the
+ * mark never gives away who goes first. */
+export function turnNow(f: FightView | undefined, t: number): string | null {
+  if (!f?.now) return null
+  const { place } = landing(f)
+  return f.fighters.some((x) => t < place[x.token]) ? null : f.now
+}
+
 export interface Slot {
   i: number // which of the three copies of the order, times n, plus k
   k: number // index into the order

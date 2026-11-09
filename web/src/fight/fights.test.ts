@@ -1,11 +1,28 @@
 import { describe, expect, it } from 'vitest'
 import type { FightView, Fighter } from '../types'
-import { carousel, diceDue, landing, nextUp, shownOrder } from './fights'
+import { carousel, diceDue, landing, nextUp, shownOrder, turnNow } from './fights'
 
 const x = (token: string, hp = 3, joined = 100): Fighter => ({ token, kind: 'npc', ref: token, name: token, portrait: '', color: '', hp, health: 4, ini: 5, joined })
 const fight = (over: Partial<FightView> = {}): FightView => ({
   map: 'eh', name: 'EH', round: 1, now: 'gun', started: 100, rolled: ['tomo', 'gun', 'lale'],
   fighters: [x('gun'), x('tomo'), x('lale')], ...over,
+})
+
+describe('the turn mark on the board', () => {
+  it('waits for every die, so it never gives away who goes first', () => {
+    const f = fight()
+    expect(turnNow(f, 100.5)).toBeNull()
+    expect(turnNow(f, 200)).toBe('gun')
+  })
+  it('steps aside while someone who joined late rolls', () => {
+    const f = fight({ fighters: [x('gun'), x('tomo'), x('lale'), x('late', 3, 150)] })
+    expect(turnNow(f, 150.5)).toBeNull()
+    expect(turnNow(f, 200)).toBe('gun')
+  })
+  it('marks nobody with no fight, or when the turn is hidden from this viewer', () => {
+    expect(turnNow(undefined, 200)).toBeNull()
+    expect(turnNow(fight({ now: null }), 200)).toBeNull()
+  })
 })
 
 describe('the dice landing', () => {

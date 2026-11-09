@@ -1,10 +1,12 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { proj } from '../lib/proj'
 import { hpRing, plainRing, ring } from '../lib/ring'
-import { fighterIn } from '../fight/fights'
+import { fighterIn, turnNow } from '../fight/fights'
+import { useLanding } from '../fight/Strip'
 import { TvFights } from '../fight/TvFights'
 import { ChipFx } from '../fx/ChipFx'
 import { MapLayers } from '../map/MapLayers'
+import { serverClock } from '../net/clock'
 import { Banners, usePlates } from '../roll/Banner'
 import { RollStage } from '../roll/RollStage'
 import { RollSound } from '../roll/sound'
@@ -172,6 +174,8 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
   const remote = useGame((s) => s.remote)
   const [W, H] = map.display
   const fight = view.fights?.find((f) => f.map === map.id)
+  useLanding(fight) // re-render when the dice have landed: that's when the turn shows on the board
+  const turn = turnNow(fight, serverClock.now() / 1000)
 
   useLayoutEffect(() => {
     const el = box.current
@@ -210,12 +214,15 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
             const fighter = c ? undefined : fighterIn(fight, t.id)
             const r = c ? ring(c.hp, c.entropy, 64, 9, c.health) : fighter ? hpRing(fighter.hp, fighter.health, t.color, 64, 5) : plainRing(t.color, 64, 5)
             return (
-              <span key={t.id} className="r3-tok app-fixedtok" role="img" aria-label={t.name} style={{ left: x, top: y, zIndex: Math.round(y), transform: t.size && t.size !== 1 ? `scale(${t.size})` : undefined }}>
+              <span key={t.id} className={'r3-tok app-fixedtok' + (turn === t.id ? ' app-tokturn' : '')} role="img" aria-label={t.name + (turn === t.id ? ', their turn' : '')} style={{ left: x, top: y, zIndex: Math.round(y), transform: t.size && t.size !== 1 ? `scale(${t.size})` : undefined }}>
                 <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${t.color}`, background: 'rgba(0,0,0,.35)' }} />
                 <span style={{ position: 'absolute', left: '50%', bottom: 8, width: 1.5, height: 36, marginLeft: -0.75, background: t.color }} />
-                <ChipFx id={c ? `c:${c.id}` : `t:${t.id}`} down={c ? c.hp <= 0 : !!fighter && fighter.hp <= 0} style={{ position: 'absolute', left: 0, top: 0, width: 64, height: 64 }}>
-                  <RingPortrait src={t.portrait} ring={r} size={64} />
-                </ChipFx>
+                <span className="app-tokhead">
+                  {turn === t.id && <span className="app-tokglow" />}
+                  <ChipFx id={c ? `c:${c.id}` : `t:${t.id}`} down={c ? c.hp <= 0 : !!fighter && fighter.hp <= 0} style={{ position: 'absolute', left: 0, top: 0, width: 64, height: 64 }}>
+                    <RingPortrait src={t.portrait} ring={r} size={64} />
+                  </ChipFx>
+                </span>
               </span>
             )
           })}

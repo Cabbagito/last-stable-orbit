@@ -13,10 +13,10 @@ const VISIBLE = 7 // slots across; the outer ones fade
 const REEL = ['7', '2', '9', '4', '1', '8', '7']
 
 /** When each fighter's number lands and takes its place; re-renders as each one does. */
-export function useLanding(fight: FightView) {
+export function useLanding(fight: FightView | undefined) {
   const [, tick] = useState(0)
-  const { land, place } = landing(fight)
-  const key = fight.fighters.map((x) => `${x.token}@${x.joined ?? 0}`).join(',') + `:${fight.started}`
+  const { land, place }: ReturnType<typeof landing> = fight ? landing(fight) : { land: {}, place: {} }
+  const key = fight ? fight.fighters.map((x) => `${x.token}@${x.joined ?? 0}`).join(',') + `:${fight.started}` : ''
   useEffect(() => {
     const now = serverClock.now() / 1000
     const at = [...Object.values(land), ...Object.values(place)].filter((s) => s > now).map((s) => (s - now) * 1000 + 30)
