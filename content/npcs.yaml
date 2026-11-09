@@ -279,6 +279,30 @@
   note: Helmet on, visor up, already sure it was you.  # DRAFT
   gm_note: "Another face for the guard squad: the same enemy card as the security guard."
 
+- id: guard-towel
+  name: Off-duty guard
+  role: Guard, the company, off duty
+  group: The company
+  portrait: portraits/guard-towel.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
+  mood: Dripping  # DRAFT
+  note: Off duty, dripping, and not letting this go.  # DRAFT
+  gm_note: "One of the two off-duty guards who walk out of deck 6's showers at shift change for a fight in towels. The guard's enemy card."
+
+- id: guard-turban
+  name: Off-duty guard, turban
+  role: Guard, the company, off duty
+  group: The company
+  portrait: portraits/guard-turban.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
+  mood: Ready  # DRAFT
+  note: Towel on her head, sleeves rolled to nothing.  # DRAFT
+  gm_note: "One of the two off-duty guards who walk out of deck 6's showers at shift change for a fight in towels. The guard's enemy card."
+
 - id: cleaner-bot
   name: Unit 3  # the generic cleaner; units are numbered in primes, and Unit 14 is the one that watches
   role: Cleaner, ISCO
@@ -405,6 +429,42 @@
   mood: Expecting someone  # DRAFT
   note: A crime boss on Ergo, with a chrome plate and eye.  # DRAFT wording
   gm_note: "Marlo's ex-lover and the person he owes. He borrowed from her to pay off another shark, ran with the money and pointed the shark at her. She had to take the shark out, which Marlo doesn't know, and she wants revenge for all three: leaving her, the money and the shark. Her chrome plate and eye date from the night the shark came. She knows his real face and spots his fakes, so she fully counters him. Her thread plays out at the table with no planned ending, and her crew is a possible fight."
+
+- id: static-crest
+  name: Crest
+  role: Static's crew
+  group: Static's crew
+  portrait: portraits/static-crest.gif
+  color: "#8f88a3"
+  stats: {body: 8, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}  # DRAFT
+  health: 3  # DRAFT
+  mood: Grinning  # DRAFT
+  note: Pink crest, studs, grins at everything.  # DRAFT
+  gm_note: "Static Kováč's people, the possible fight on Marlo's thread. Placeholder dice and health."
+
+- id: static-door
+  name: Door
+  role: Static's crew
+  group: Static's crew
+  portrait: portraits/static-door.gif
+  color: "#8f88a3"
+  stats: {body: 12, reflex: 8, tech: 4, intel: 6, cool: 12, empathy: 4}  # DRAFT
+  health: 4  # DRAFT
+  mood: Unimpressed  # DRAFT
+  note: A chrome brow and no small talk.  # DRAFT
+  gm_note: "Static Kováč's people, the possible fight on Marlo's thread. Placeholder dice and health."
+
+- id: static-neon
+  name: Neon
+  role: Static's crew
+  group: Static's crew
+  portrait: portraits/static-neon.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 10, tech: 12, intel: 8, cool: 10, empathy: 6}  # DRAFT
+  health: 3  # DRAFT
+  mood: Watching  # DRAFT
+  note: A tattoo that glows, and pink eyes to match.  # DRAFT
+  gm_note: "Static Kováč's people, the possible fight on Marlo's thread. Placeholder dice and health."
 
 - id: gumshoe
   name: The Gumshoe
