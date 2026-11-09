@@ -7,7 +7,7 @@ import type { Camera, CueView, StageView, View } from '../types'
 const mss = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`
 
 /** Re-render every half second while `on`: a film's progress. */
-function useTick(on: boolean) {
+export function useTick(on: boolean) {
   const [, set] = useState(0)
   useEffect(() => {
     if (!on) return
@@ -17,7 +17,7 @@ function useTick(on: boolean) {
 }
 
 /** A film is on the TV, a cue or the opening's: it can't be stopped, and the TV can't be changed while it plays. */
-function filmOn({ film, opening }: StageView) {
+export function filmOn({ film, opening }: StageView) {
   const now = serverClock.now() / 1000
   return (!!film && now < film.ends) || (!!opening?.ends && now < opening.ends)
 }

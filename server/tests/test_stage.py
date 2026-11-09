@@ -11,6 +11,7 @@ from starlette.websockets import WebSocketDisconnect
 
 from lso.auth import COOKIE, Viewer
 from lso.commands import FILM_LEAD, CommandError, handle
+from lso.models import CAMERA_PAN_MAX, CAMERA_ZOOM_MAX
 from lso.config import ROOT
 from conftest import place_dax
 from lso.content import load_content
@@ -460,3 +461,29 @@ def test_the_opening_numbers_match_the_player_that_came_with_the_files(content):
     js = (ROOT / "web/src/stage/opening_player.js").read_text()
     assert f"BEAT: {content.opening.beat}," in js
     assert f"FILM: {content.opening.length}," in js
+
+
+def test_the_gm_nudges_the_tvs_shot(engine, content):
+    nudged = lambda args: handle(GM, engine.state, content, "gm.stage.nudge", args)  # noqa: E731
+    assert nudged({"zoom": 1, "x": -1}) == [("stage.nudged", {"zoom": 1, "pan": [-1, 0]})]
+    assert nudged({"reset": True}) == []  # already plain: nothing to change, no event
+    assert nudged({"zoom": 99, "y": 99})[0][1] == {"zoom": CAMERA_ZOOM_MAX, "pan": [0, CAMERA_PAN_MAX]}
+    with pytest.raises(CommandError):
+        nudged({"zoom": "closer"})
+    with pytest.raises(CommandError):
+        handle(TALLY, engine.state, content, "gm.stage.nudge", {"zoom": 1})
+
+
+@pytest.mark.asyncio
+async def test_a_new_shot_clears_the_nudge_and_players_never_get_it(engine, content):
+    await ok(engine, GM, "gm.stage.camera", {"camera": "follow", "follow": "ves"})
+    await ok(engine, GM, "gm.stage.nudge", {"zoom": 2, "x": 3})
+    assert project(engine.state, content, STAGE)["stage"]["zoom"] == 2
+    assert project(engine.state, content, GM)["stage"]["pan"] == [3, 0]
+    player = project(engine.state, content, TALLY)["stage"]
+    assert "zoom" not in player and "pan" not in player
+    await ok(engine, GM, "gm.stage.camera", {"camera": "follow", "follow": "tally"})  # the next person: same zoom, centred
+    assert (engine.state.stage.zoom, engine.state.stage.pan) == (2, (0, 0))
+    await ok(engine, GM, "gm.stage.nudge", {"y": 1})
+    await ok(engine, GM, "gm.stage.camera", {"camera": "crew"})  # a new kind of shot: plain again
+    assert (engine.state.stage.zoom, engine.state.stage.pan) == (0, (0, 0))

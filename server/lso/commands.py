@@ -11,7 +11,7 @@ import random
 from . import rules
 from .auth import Viewer
 from .content import Content
-from .models import BURN_COST, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_MAX, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
+from .models import BURN_COST, CAMERA_PAN_MAX, CAMERA_ZOOM_MAX, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_MAX, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
 from .state import state_from_preset
 from .views import viewer_map
 
@@ -305,6 +305,11 @@ def _burn(state: GameState, content: Content, char: str, cut_id, now: float) -> 
     ]
 
 
+def _stepped(value: int, args: dict, key: str, most: int) -> int:
+    """`value` moved by the steps in `args[key]`, if any, and kept within `most` either way."""
+    return max(-most, min(most, value + (_int(args, key) if key in args else 0)))
+
+
 def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: float) -> Events:
     """Films and the TV. A film can't be stopped once it starts, so nothing here touches one that's playing."""
     if kind == "gm.film.play":
@@ -341,6 +346,15 @@ def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: fl
         if (camera, follow) == (state.stage.camera, state.stage.follow):
             return []
         return [("stage.camera_set", {"camera": camera, "follow": follow})]
+
+    if kind == "gm.stage.nudge":  # zoom and pan the shot, by steps from where it is, or put it back
+        st = state.stage
+        zoom, x, y = 0, 0, 0
+        if args.get("reset") is not True:
+            zoom = _stepped(st.zoom, args, "zoom", CAMERA_ZOOM_MAX)
+            x = _stepped(st.pan[0], args, "x", CAMERA_PAN_MAX)
+            y = _stepped(st.pan[1], args, "y", CAMERA_PAN_MAX)
+        return [] if (zoom, (x, y)) == (st.zoom, tuple(st.pan)) else [("stage.nudged", {"zoom": zoom, "pan": [x, y]})]
 
     if kind == "gm.stage.join":
         show = args.get("show")

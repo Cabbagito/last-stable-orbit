@@ -428,6 +428,8 @@ def viewer_map(state: GameState, viewer: Viewer) -> str:
 def _stage_view(state: GameState, content: Content, viewer: Viewer, online: frozenset[str], join: dict | None) -> dict:
     st = state.stage
     out: dict = {"camera": st.camera, "follow": st.follow, "film": None}
+    if viewer.is_gm or viewer.is_stage:
+        out |= {"zoom": st.zoom, "pan": list(st.pan)}
     if join and (viewer.is_gm or viewer.is_stage):  # the wifi password: never on a player's feed
         out["join"] = join | {"show": st.join}
     f, game = st.film, content.opening

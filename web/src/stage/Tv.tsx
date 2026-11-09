@@ -119,32 +119,41 @@ const ROW_GAP = 8
 const ROW_FOOT = 18
 const UNDER_BANNER = 0.28 // the share of the screen a roller's token sits below the middle, clear of the banner
 const CREW_MAX = 1.25
-const ONE_MAX = 1.5
+const ONE_SPAN = 480 // how many world px tall the shot of one person is, on any size of screen: just their surroundings
+const ZOOM_STEP = 1.25 // the GM's nudges: each step of zoom, and each step of pan as a share of the screen
+const PAN_STEP = 0.1
+
+interface Nudge {
+  zoom: number
+  pan: [number, number]
+}
 
 /**
  * Frame some points on the map (world px): as close as `max` allows while every point fits, never further out
  * than the whole map, and kept on the art where the map is bigger than the screen. `lower` moves them down the
  * screen by that much, under the banner. `bottom` is what the turn order covers along the bottom edge: the points
- * fit above it, and the art still runs under it.
+ * fit above it, and the art still runs under it. `nudge` is the GM's zoom and pan on top of the shot.
  */
-function frame(size: [number, number], map: MapView, pts: [number, number][], max: number, lower = 0, bottom = 0): Cam {
+function frame(size: [number, number], map: MapView, pts: [number, number][], max: number, lower = 0, bottom = 0, nudge?: Nudge): Cam {
   const [w, h] = size
   const clear = h - bottom
   const [W, H] = map.display
   const all = Math.min(w / W, h / H)
-  if (!pts.length) return { zoom: all, px: (w - W * all) / 2, py: (h - H * all) / 2 }
   const xs = pts.map((p) => p[0])
   const ys = pts.map((p) => p[1])
-  const x0 = Math.min(...xs) - PAD_X
-  const x1 = Math.max(...xs) + PAD_X
-  const y0 = Math.min(...ys) - PAD_TOP
-  const y1 = Math.max(...ys) + PAD_BOTTOM
-  const zoom = Math.max(all, Math.min(max, w / (x1 - x0), clear / (y1 - y0)))
+  const x0 = pts.length ? Math.min(...xs) - PAD_X : 0
+  const x1 = pts.length ? Math.max(...xs) + PAD_X : W
+  const y0 = pts.length ? Math.min(...ys) - PAD_TOP : 0
+  const y1 = pts.length ? Math.max(...ys) + PAD_BOTTOM : H
+  const shot = pts.length ? Math.min(max, w / (x1 - x0), clear / (y1 - y0)) : all
+  const zoom = Math.max(all, shot * ZOOM_STEP ** (nudge?.zoom ?? 0))
+  const cx = (x0 + x1) / 2 + ((nudge?.pan[0] ?? 0) * PAN_STEP * w) / zoom
+  const cy = (y0 + y1) / 2 + ((nudge?.pan[1] ?? 0) * PAN_STEP * h) / zoom
   const keep = (p: number, view: number, world: number) => (world * zoom >= view ? Math.min(0, Math.max(view - world * zoom, p)) : (view - world * zoom) / 2)
   return {
     zoom,
-    px: keep(w / 2 - ((x0 + x1) / 2) * zoom, w, W),
-    py: keep(clear / 2 + lower - ((y0 + y1) / 2) * zoom, h, H),
+    px: keep(w / 2 - cx * zoom, w, W),
+    py: keep(clear / 2 + lower - cy * zoom, h, H),
   }
 }
 
@@ -175,13 +184,15 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
   const bottom = rows ? (Math.min(size[0] / 1440, size[1] / 810) || 1) * (ROW_FOOT + rows * ROW_H + (rows - 1) * ROW_GAP) : 0
   // with a fight on, everyone in it stays in the shot, clear of the turn order
   const party = tokens.filter((t) => t.kind === 'crew' || fighterIn(fight, t.id))
+  const close = size[1] / ONE_SPAN
+  const nudge: Nudge = { zoom: view.stage.zoom ?? 0, pan: view.stage.pan ?? [0, 0] }
   const cam = !size[0]
     ? null
     : rolling
-      ? frame(size, map, [at(rolling)], ONE_MAX, size[1] * UNDER_BANNER, bottom)
+      ? frame(size, map, [at(rolling)], close, size[1] * UNDER_BANNER, bottom) // the cut to a roller stays the plain close-up
       : camera === 'follow' && followed
-        ? frame(size, map, [at(followed)], ONE_MAX, 0, bottom)
-        : frame(size, map, party.map(at), CREW_MAX, 0, bottom)
+        ? frame(size, map, [at(followed)], close, 0, bottom, nudge)
+        : frame(size, map, party.map(at), CREW_MAX, 0, bottom, nudge)
 
   return (
     <div ref={box} className="app-mapbox app-tvmap">

@@ -2,6 +2,7 @@ import { fightOn } from '../fight/fights'
 import { FightStrip } from '../fight/Strip'
 import { GmScene } from '../gm/GmScene'
 import { MoodBar } from '../gm/MoodBar'
+import { TvCameraBar } from '../gm/TvCameraBar'
 import { AwayBar, MapPicker } from '../gm/MapPicker'
 import { MapView } from '../map/MapView'
 import { SlotsLayer } from '../slots/Machine'
@@ -50,6 +51,7 @@ export function Scene() {
             <MapView key={map.id} map={map} tokens={tokens} canMove={canMove} />
             <div className="app-placewrap">
               {isGm && <AwayBar map={map} />}
+              {isGm && <TvCameraBar view={view} />}
               {isGm && <MoodBar map={map} />}
               {isGm ? (
                 <button type="button" className="gx-placebtn" aria-haspopup="dialog" title="Go somewhere else (M)" onClick={() => useGame.getState().setMapPicker({ token: null })}>

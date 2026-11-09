@@ -769,6 +769,8 @@ class RollState(Strict):
 
 
 CAMERAS = ("crew", "follow", "roller")  # the TV's camera: the whole crew, one of them, or cut to whoever rolls
+CAMERA_ZOOM_MAX = 4  # how many steps the GM can zoom the TV's shot each way
+CAMERA_PAN_MAX = 30  # and move it, each way
 
 
 class FilmState(Strict):
@@ -809,6 +811,8 @@ class StageState(Strict):
 
     camera: Literal["crew", "follow", "roller"] = "crew"
     follow: str | None = None  # a character, for the "follow" camera
+    zoom: int = 0  # the GM's nudge to the shot, in steps closer (or further, below 0)
+    pan: tuple[int, int] = (0, 0)  # and steps off its centre, across and down
     film: FilmState | None = None
     opening: OpeningState | None = None
     burn: BurnState | None = None

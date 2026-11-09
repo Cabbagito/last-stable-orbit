@@ -338,6 +338,8 @@ export interface PresetCard {
 export interface StageView {
   camera: Camera
   follow: string | null
+  zoom?: number // the TV and the GM: the GM's nudge to the shot, in steps
+  pan?: [number, number]
   film: FilmView | null
   opening?: OpeningView | null // the TV and the GM
   opening_film?: { name: string; sub: string; still: string; length: number } // GM only

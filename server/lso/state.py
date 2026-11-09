@@ -209,6 +209,7 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         _trim_rolls(s)
     elif ev_type == "party.map_set":
         s.party_map = data["map"]
+        s.stage.pan = (0, 0)  # the shot starts centred on the new map
     elif ev_type == "film.started":
         s.stage.film = FilmState.model_validate(data)
     elif ev_type == "film.ended":
@@ -226,7 +227,12 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "stage.setup_set":
         pass  # an old log's TV / no TV / online choice: the TV is always there now
     elif ev_type == "stage.camera_set":
+        if data["camera"] != s.stage.camera:  # a new kind of shot starts fresh; the next person in Follow keeps the zoom
+            s.stage.zoom = 0
+        s.stage.pan = (0, 0)
         s.stage.camera, s.stage.follow = data["camera"], data.get("follow")
+    elif ev_type == "stage.nudged":
+        s.stage.zoom, s.stage.pan = data["zoom"], tuple(data["pan"])
     elif ev_type == "stage.join_set":
         s.stage.join = data["show"]
     elif ev_type == "fight.started":
