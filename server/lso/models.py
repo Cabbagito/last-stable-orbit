@@ -773,6 +773,29 @@ CAMERA_ZOOM_MAX = 4  # how many steps the GM can zoom the TV's shot each way
 CAMERA_PAN_MAX = 30  # and move it, each way
 
 
+class Sound(Strict):
+    """One clip on the GM's soundboard."""
+
+    id: str
+    name: str
+    file: str  # under assets/
+
+
+class SoundCategory(Strict):
+    """One button on the GM's top bar, and the sounds it opens."""
+
+    id: str
+    name: str
+    sounds: list[Sound] = Field(min_length=1)
+
+
+class SoundPlayed(Strict):
+    """A press on the soundboard, at `at` (server time). The TV plays each one it hasn't played."""
+
+    id: str
+    at: float
+
+
 class FilmState(Strict):
     """A film playing now: every screen that plays it starts it at `at` (server time) and stops at `ends`."""
 
@@ -818,6 +841,7 @@ class StageState(Strict):
     burn: BurnState | None = None
     flood: FloodState | None = None
     join: bool = True  # the join card is on the TV, if the server has one, until the GM hides it
+    sounds: list[SoundPlayed] = []  # the last few soundboard presses, for the TV
 
 
 class SlotSeat(Strict):

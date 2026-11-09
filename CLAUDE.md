@@ -31,7 +31,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 - **Every change follows one path:** `commands.py` (permission check) → events → `state.apply`, logged by `store.py`.
 - **Only `views.project()` sends state out.** Anything players must not see is filtered there, and gets a leak test in `server/tests/`.
 - **Positions are world coordinates** (X, Y, Z) per map, never pixels.
-- **Content** (characters, NPCs, items, maps and the objects on them, how the GM's map picker groups them (`map_groups.yaml`), presets, the sandbox's `scenarios/`, the natural-1 insults, the cutscene cues) is YAML in `content/`, not code.
+- **Content** (characters, NPCs, items, maps and the objects on them, how the GM's map picker groups them (`map_groups.yaml`), presets, the sandbox's `scenarios/`, the natural-1 insults, the cutscene cues, the soundboard) is YAML in `content/`, not code.
 - **Dice are rolled only on the server** (`rules.py`, from `commands.py`). The roller's screen gets the dice to animate. Everyone else gets each die only once it has landed there. `web/src/roll/rollfx.js` is generated from R6, and `rollfx.test.ts` checks it still draws exactly what R6 draws.
 
 ## Working here

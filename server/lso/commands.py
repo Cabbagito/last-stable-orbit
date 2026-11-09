@@ -920,6 +920,12 @@ def handle(
     if kind.startswith("gm.opening."):
         return _gm_opening(state, content, kind, args, now)
 
+    if kind == "gm.sound.play":  # over anything, films included: it's only a noise, and the GM's call
+        sound = content.sounds.get(_str(args, "sound"))
+        if not sound:
+            raise _invalid("unknown sound")
+        return [("stage.sound_played", {"id": sound.id, "at": round(now, 3)})]
+
     if kind.startswith(("gm.film.", "gm.stage.")):
         return _gm_stage(state, content, kind, args, now)
 

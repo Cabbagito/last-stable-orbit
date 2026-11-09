@@ -335,6 +335,18 @@ export interface PresetCard {
   card: string | null
 }
 
+/** One button on the GM's top bar, and the sounds it opens. */
+export interface SoundCategory {
+  id: string
+  name: string
+  sounds: { id: string; name: string }[]
+}
+
+export interface SoundPlayed {
+  id: string
+  at: number // server time, in seconds
+}
+
 export interface StageView {
   camera: Camera
   follow: string | null
@@ -348,6 +360,9 @@ export interface StageView {
   tv?: boolean // GM only: the TV is connected
   cues?: CueView[] // GM only
   films?: string[] // the TV only: every film, fetched ahead
+  soundboard?: SoundCategory[] // GM only
+  sound_files?: Record<string, string> // the TV only: every sound by id, fetched ahead
+  sounds?: SoundPlayed[] // the TV only: the last few presses
   flood?: FloodView // the TV only
   join?: JoinView
 }

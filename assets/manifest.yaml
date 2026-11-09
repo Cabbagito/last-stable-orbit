@@ -1765,3 +1765,75 @@ assets:
     bytes: 54659
     width: 480
     height: 270
+  - path: sounds/fight/body_fall.mp3
+    store: lso_soundboard.zip
+    sha256: "1f866825af033be8eeb3ce692f2c432bd312406cadd292d1c19b8accee152cc2"
+  - path: sounds/fight/bottle_smash.mp3
+    store: lso_soundboard.zip
+    sha256: "9f6b70ce21c90a0e8fd947f47fbb7e22f80721d9b8515486132eb0fb8e693a69"
+  - path: sounds/fight/chair_break.mp3
+    store: lso_soundboard.zip
+    sha256: "ff2c8ecb294e8ef36cfce3ecb81bc52a08b99342108f708e244c54decca86da3"
+  - path: sounds/fight/glass_break.mp3
+    store: lso_soundboard.zip
+    sha256: "4f9f58d38bc26579d7022b6299cae9ceaa6eafb96a0fe89bd04fc78e77e7f348"
+  - path: sounds/fight/metal_bonk.mp3
+    store: lso_soundboard.zip
+    sha256: "c05bd30692e179bf54e227e8a857aeeed1bed27bc1f617dc134f97c770d52c71"
+  - path: sounds/fight/punch.mp3
+    store: lso_soundboard.zip
+    sha256: "bb6e1cc91f05b5fab7c6c7a2a2c560b2de6715c693f01eae77f59878430a600c"
+  - path: sounds/fight/punch_combo.mp3
+    store: lso_soundboard.zip
+    sha256: "f3da3cc68770681587193068ab50480cb099e173e9b50bd0716f22ec52ded4ac"
+  - path: sounds/fight/punch_heavy.mp3
+    store: lso_soundboard.zip
+    sha256: "ba8a50e3342754396c0e08fdaac90e36b436952f0ba76cfcac5a303c33ba929b"
+  - path: sounds/fight/stun_hit.mp3
+    store: lso_soundboard.zip
+    sha256: "89f331aa35819406e9cbcaf2767dd16881efd056020d00fb4637288e73e195c5"
+  - path: sounds/fight/swing_miss.mp3
+    store: lso_soundboard.zip
+    sha256: "e7b1a654c6f2303f601d4c22d0139f353ecd148c194bcff79e6e937466533222"
+  - path: sounds/droid/droid_alarm.mp3
+    store: lso_soundboard.zip
+    sha256: "b190e9b4abacc7da77191a5803e299368836048029e2a47e5d74e7e391a6687d"
+  - path: sounds/droid/droid_grumble.mp3
+    store: lso_soundboard.zip
+    sha256: "737e9e0dce71696de70e22620f5a4834c2c74b03bff61c9625eee68b115fd06f"
+  - path: sounds/droid/droid_happy.mp3
+    store: lso_soundboard.zip
+    sha256: "4ac0471d3f14707076609743f0c47fdb91317f3d9afb7ca44f60ea718e47eb51"
+  - path: sounds/droid/droid_question.mp3
+    store: lso_soundboard.zip
+    sha256: "f12873d2d8f1965d4f9cc90c7dacfcca3fa364d3e2a1def503ff30a60a933d12"
+  - path: sounds/droid/main_approach.mp3
+    store: lso_soundboard.zip
+    sha256: "e9ca3af58729b333cb0cddb2ef6cfce280cd7b1eba3d516975b8988f4922455f"
+  - path: sounds/droid/main_destroyed.mp3
+    store: lso_soundboard.zip
+    sha256: "2f02cd1471c4666d2c2edcc8a0c03908759ebdca84358580c6d9228ff9828171"
+  - path: sounds/droid/spotless_approach.mp3
+    store: lso_soundboard.zip
+    sha256: "5a78dbad8daeae8ea6b488f569ef0f903a2054421d5c356b398d6f3f5beb4f19"
+  - path: sounds/droid/spotless_destroyed.mp3
+    store: lso_soundboard.zip
+    sha256: "8367115e8585226320538dd78b9c0b00ebfd521159c2e549c7419331eb9b8e50"
+  - path: sounds/heist/access_denied.mp3
+    store: lso_soundboard.zip
+    sha256: "7b4a62866fa1796a2542dbdac825ca3d4926d70576b22b58605b3ea26e2e1943"
+  - path: sounds/heist/access_granted.mp3
+    store: lso_soundboard.zip
+    sha256: "87ea065d285850f6ae8b35d1b0199ff98b89516126dd811a765e23b6a262d0f8"
+  - path: sounds/heist/hacking.mp3
+    store: lso_soundboard.zip
+    sha256: "cb1a7072d3d15d5f763a5604116d6b6da626874eb11b51977bf32c8a0e6106c7"
+  - path: sounds/heist/vent_crawl.mp3
+    store: lso_soundboard.zip
+    sha256: "3b8dd62e95e7a9bf21ad3fe76f3cbd843f93e20d934dba90a92e5ca7d6e54ec5"
+  - path: sounds/bits/bad_recorder.mp3
+    store: lso_soundboard.zip
+    sha256: "9b46c653004c34efe4203456e9088fa5492c8b3098b5b79f692381fb9a12c7bd"
+  - path: sounds/bits/sad_trombone.mp3
+    store: lso_soundboard.zip
+    sha256: "5aa90effa0e3abea2d715c82653b8aea34a1385d62adc1586100d4bfb26d8e53"

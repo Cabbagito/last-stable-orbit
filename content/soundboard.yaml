@@ -1,0 +1,42 @@
+# The GM's soundboard: each heading is a button on the GM's top bar, and its sounds are what that button opens.
+# Sounds play only on the TV. Ids have to be unique across the whole board.
+
+- id: fight
+  name: Fight
+  sounds:
+    - { id: punch, name: Punch, file: sounds/fight/punch.mp3 }
+    - { id: punch_heavy, name: Heavy punch, file: sounds/fight/punch_heavy.mp3 }
+    - { id: punch_combo, name: Punch combo, file: sounds/fight/punch_combo.mp3 }
+    - { id: swing_miss, name: Swing and a miss, file: sounds/fight/swing_miss.mp3 }
+    - { id: stun_hit, name: Stun hit, file: sounds/fight/stun_hit.mp3 }
+    - { id: metal_bonk, name: Metal bonk, file: sounds/fight/metal_bonk.mp3 }
+    - { id: body_fall, name: Body fall, file: sounds/fight/body_fall.mp3 }
+    - { id: chair_break, name: Chair break, file: sounds/fight/chair_break.mp3 }
+    - { id: bottle_smash, name: Bottle smash, file: sounds/fight/bottle_smash.mp3 }
+    - { id: glass_break, name: Glass break, file: sounds/fight/glass_break.mp3 }
+
+- id: droid
+  name: Droid
+  sounds:
+    - { id: droid_happy, name: Happy, file: sounds/droid/droid_happy.mp3 }
+    - { id: droid_question, name: Question, file: sounds/droid/droid_question.mp3 }
+    - { id: droid_grumble, name: Grumble, file: sounds/droid/droid_grumble.mp3 }
+    - { id: droid_alarm, name: Alarm, file: sounds/droid/droid_alarm.mp3 }
+    - { id: main_approach, name: Main approach, file: sounds/droid/main_approach.mp3 }
+    - { id: main_destroyed, name: Main destroyed, file: sounds/droid/main_destroyed.mp3 }
+    - { id: spotless_approach, name: Spotless approach, file: sounds/droid/spotless_approach.mp3 }
+    - { id: spotless_destroyed, name: Spotless destroyed, file: sounds/droid/spotless_destroyed.mp3 }
+
+- id: heist
+  name: Heist
+  sounds:
+    - { id: access_granted, name: Access granted, file: sounds/heist/access_granted.mp3 }
+    - { id: access_denied, name: Access denied, file: sounds/heist/access_denied.mp3 }
+    - { id: hacking, name: Hacking, file: sounds/heist/hacking.mp3 }
+    - { id: vent_crawl, name: Vent crawl, file: sounds/heist/vent_crawl.mp3 }
+
+- id: bits
+  name: Bits
+  sounds:
+    - { id: sad_trombone, name: Sad trombone, file: sounds/bits/sad_trombone.mp3 }
+    - { id: bad_recorder, name: Bad recorder, file: sounds/bits/bad_recorder.mp3 }

@@ -1,6 +1,6 @@
 # Last Stable Orbit: recommended build plan
 
-## Progress (updated 2026-11-09)
+## Progress (updated 2026-11-10)
 
 | Milestone | Status |
 |---|---|
@@ -25,6 +25,7 @@
 | The GM screen, consolidated | **Built** 2026-11-08 from the canvas "GM screen, consolidated" (https://claude.ai/artifact/Pd3ZR19LyxgnLWWypoaXGs) and checked in the sandbox with a Playwright walk of the GM, a player, and the wall of seats; see "The GM screen, consolidated" below. Deployed to 8070 the same day; parker still needs `git pull && make up` |
 | Whose turn and who you are, on the board | **Built** 2026-11-09 from the canvas "Turn and You markers" (https://claude.ai/artifact/Uqw6WrtbFK1J83vVRrbCek), rows Lift and Ground ring, and checked in the sandbox as Tally, the GM and the TV. In a fight, whoever's turn it is gets a faint glow and a small lift on every screen and the TV, once the Reflex dice have landed. A player's own chip gets a green ring at its feet, and the GM and the TV never see one |
 | The opening | **Built** 2026-11-09 from `lso_opening.zip` and checked on a throwaway copy with three seats (the GM, Tally and the TV), from the login to the film's end; see "The opening" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. The sound is for Peter to judge by ear |
+| The soundboard | **Built** 2026-11-10 from `lso_soundboard.zip` and checked in the sandbox with the GM and the TV connected. `content/soundboard.yaml` lists 24 clips under four buttons on the GM's top bar (Fight, Droid, Heist, Bits), left of Live. `gm.sound.play` puts the press in the state, and only the TV gets the files and plays them, overlapping, already decoded. Greyed out with no TV connected. Parker needs `git pull && make up`. |
 | M9: Finale screen | Not started |
 
 **The GM's Session and On screen pages** (2026-11-09, from the canvas https://claude.ai/artifact/6pNMrKUZbm3k9d1wy24Rm5):

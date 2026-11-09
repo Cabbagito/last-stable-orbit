@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import RULES, BurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, OpeningState, OverviewState, Preset, PresetItem, RollState, SlotBank, SlotSeat, TokenState, Vitals
+from .models import RULES, BurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, OpeningState, OverviewState, Preset, PresetItem, RollState, SlotBank, SlotSeat, SoundPlayed, TokenState, Vitals
 
+SOUNDS_KEPT = 8  # soundboard presses kept for the TV: a quick run of them can land in one frame
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
 
 
@@ -233,6 +234,8 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         s.stage.camera, s.stage.follow = data["camera"], data.get("follow")
     elif ev_type == "stage.nudged":
         s.stage.zoom, s.stage.pan = data["zoom"], tuple(data["pan"])
+    elif ev_type == "stage.sound_played":
+        s.stage.sounds = [*s.stage.sounds[-(SOUNDS_KEPT - 1):], SoundPlayed.model_validate(data)]
     elif ev_type == "stage.join_set":
         s.stage.join = data["show"]
     elif ev_type == "fight.started":

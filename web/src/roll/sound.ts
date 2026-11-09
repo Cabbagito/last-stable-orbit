@@ -35,6 +35,20 @@ export class RollSound {
     this.ac = null
   }
 
+  /** A sound file, decoded ahead so it can play the moment it's asked for. */
+  decode(bytes: ArrayBuffer): Promise<AudioBuffer | null> {
+    return this.ac ? this.ac.decodeAudioData(bytes) : Promise.resolve(null)
+  }
+
+  /** A soundboard clip. Pressing again overlaps it, as a second punch would. */
+  clip(buffer: AudioBuffer) {
+    if (!this.ac) return
+    const s = this.ac.createBufferSource()
+    s.buffer = buffer
+    s.connect(this.out!)
+    s.start()
+  }
+
   private osc(type: Wave, f0: number, f1: number, t0: number, dur: number, g0: number, g1: number, peakAt?: number) {
     const a = this.ac!
     const o = a.createOscillator()

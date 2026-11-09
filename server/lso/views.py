@@ -31,6 +31,8 @@ The Station: everyone but the TV gets all of Ergo's places, but a place the crew
 shown) is dark: no lit overlay and no map preview, and the core goes by "The core". Players see where each of the
 crew stands, but only on lit places, and never a hidden token.
 
+The soundboard: the GM gets the names, the TV gets the files and the presses, and players get neither.
+
 Films: only the TV gets the files and plays them, with all the sound. A player's laptop gets only when a film
 starts and ends, and shows the opening's waiting loop meanwhile. A Burn's film plays on the TV too, but the laptops never go
 dark for one: they get who is burning (not the file) and stay on the game, with the Burn's mark on the burner's
@@ -478,8 +480,11 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
             }
             for c in content.cutscenes.values()
         ]
+        out["soundboard"] = [{"id": c.id, "name": c.name, "sounds": [{"id": s.id, "name": s.name} for s in c.sounds]} for c in content.soundboard]
     if viewer.is_stage:
         out["films"] = [url(c.file) for c in content.cutscenes.values() if c.file]  # fetched ahead, so a cue starts at once
+        out["sound_files"] = {s.id: url(s.file) for s in content.sounds.values()}  # fetched ahead too, so a press plays at once
+        out["sounds"] = [p.model_dump() for p in st.sounds]
     return out
 
 

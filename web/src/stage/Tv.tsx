@@ -18,6 +18,7 @@ import { Downside } from './Downside'
 import { BurnFilms, FilmPlayer } from './Film'
 import { JoinCard } from './JoinCard'
 import { TvOpening } from './Opening'
+import { TvSounds } from './TvSounds'
 import { useAwake } from './useAwake'
 
 /**
@@ -71,6 +72,7 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
       ))}
       <BurnFilms />
       <TvOpening sound={started ? sound.current : null} />
+      <TvSounds sound={started ? sound.current : null} />
       {!started && (
         <div className="app-tvstart">
           <button type="button" className="app-tvgo" onClick={start}>

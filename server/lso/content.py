@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, Opening, Overview, Preset, PresetItem, Scenario, SlotsGame, Station
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, Opening, Overview, Preset, PresetItem, Scenario, SlotsGame, Sound, SoundCategory, Station
 
 log = logging.getLogger("lso.content")
 
@@ -35,7 +35,12 @@ class Content:
     station: Station | None = None  # the Station tab's cross-section
     overviews: dict[str, Overview] = field(default_factory=dict)  # little games the GM sends to players' screens
     slots: SlotsGame | None = None  # the slot machines' rules
+    soundboard: list[SoundCategory] = field(default_factory=list)  # the GM's top bar, in order
     missing_assets: list[str] = field(default_factory=list)
+
+    @property
+    def sounds(self) -> dict[str, Sound]:
+        return {s.id: s for c in self.soundboard for s in c.sounds}
 
     @property
     def default_preset(self) -> Preset:
@@ -90,6 +95,8 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
     c.cutscenes = _by_id(Cutscene, _read(cut), "cutscenes.yaml") if cut.is_file() else {}
     op = content_dir / "opening.yaml"
     c.opening = _parse(Opening, _read(op), "opening.yaml") if op.is_file() else None
+    board = content_dir / "soundboard.yaml"
+    c.soundboard = [_parse(SoundCategory, g, "soundboard.yaml") for g in _read(board)] if board.is_file() else []
     cdx = content_dir / "codex.yaml"
     if cdx.is_file():
         raw = _read(cdx) or {}
@@ -141,6 +148,8 @@ def check_refs(c: Content) -> None:
         problems.append(f"slots: unknown currency {c.slots.currency!r}")
     if c.slots:
         problems += [f"slots: unknown audit character {a!r}" for a in c.slots.audit if a not in c.characters]
+    if len(c.sounds) != sum(len(g.sounds) for g in c.soundboard):
+        problems.append("soundboard: two sounds share an id")
     if c.opening and c.opening.resets_to not in c.presets:
         problems.append(f"opening: resets_to is an unknown preset {c.opening.resets_to!r}")
     if not c.slots:
@@ -278,6 +287,7 @@ def asset_paths(c: Content) -> set[str]:
         paths |= {p for p in (cue.file, cue.still) if p}
     if c.opening:
         paths |= {c.opening.loop, c.opening.film, c.opening.audio, c.opening.still}
+    paths |= {s.file for s in c.sounds.values()}
     for sec in c.codex_sections:
         paths |= {t.src for t in sec.tiles + sec.strip}
     if c.station:

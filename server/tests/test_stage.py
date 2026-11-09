@@ -271,6 +271,61 @@ def test_a_film_file_reaches_only_the_tv_and_the_gm(client, seat):
         assert get(tally, FILM) == 404  # only the TV fetches films
 
 
+# ---------- the soundboard ----------
+
+PUNCH = "/assets/sounds/fight/punch.mp3"
+
+
+async def test_a_press_reaches_only_the_tv(engine, content, clock):
+    await ok(engine, GM, "gm.sound.play", {"sound": "punch"})
+    assert stage_of(engine, content, STAGE)["sounds"] == [{"id": "punch", "at": clock.t}]
+    assert "sounds" not in stage_of(engine, content, GM)
+    assert "sounds" not in stage_of(engine, content, TALLY)
+
+
+def test_only_the_tv_gets_the_files_and_only_the_gm_the_names(engine, content):
+    tv, gm, player = (stage_of(engine, content, v) for v in (STAGE, GM, TALLY))
+    assert tv["sound_files"]["punch"] == PUNCH and "soundboard" not in tv
+    assert [c["id"] for c in gm["soundboard"]] == ["fight", "droid", "heist", "bits"]
+    assert "sound_files" not in gm and "/assets/" not in json.dumps(gm["soundboard"])
+    assert "sound_files" not in player and "soundboard" not in player
+
+
+async def test_only_the_gm_plays_a_sound_and_only_a_real_one(engine):
+    for viewer in (TALLY, STAGE):
+        ack, _ = await engine.run(viewer, None, "gm.sound.play", {"sound": "punch"})
+        assert not ack["ok"]
+    ack, _ = await engine.run(GM, None, "gm.sound.play", {"sound": "kazoo"})
+    assert not ack["ok"]
+
+
+async def test_a_sound_can_play_over_a_film(engine, content, clock):
+    await ok(engine, GM, "gm.film.play", {"cue": "shotgun"})
+    clock.t += FILM_LEAD + 1
+    await ok(engine, GM, "gm.sound.play", {"sound": "punch"})
+    assert stage_of(engine, content, STAGE)["sounds"][-1]["id"] == "punch"
+
+
+async def test_only_the_last_few_presses_are_kept(engine, content, clock):
+    for _ in range(20):
+        clock.t += 1
+        await ok(engine, GM, "gm.sound.play", {"sound": "punch"})
+    played = stage_of(engine, content, STAGE)["sounds"]
+    assert len(played) == 8 and played[-1]["at"] == clock.t
+
+
+def test_a_sound_file_reaches_only_the_tv_and_the_gm(client, seat):
+    gm, tally, tv = seat("gm"), seat("tally"), tv_login(client)
+    get = lambda who: client.get(PUNCH, headers=who).status_code  # noqa: E731
+    assert get(tv) == 200 and get(gm) == 200
+    assert get(tally) == 404
+
+
+def test_every_sound_on_the_board_exists(content):
+    assert len(content.sounds) == 24
+    assert not [m for m in content.missing_assets if m.startswith("sounds/")]
+
+
 # ---------- the opening ----------
 
 LOOP, MOVIE, AUDIO, LOOP_STILL = "/assets/films/opening-loop.mp4", "/assets/films/opening.mp4", "/assets/films/opening-audio.flac", "/assets/films/opening-still.png"
