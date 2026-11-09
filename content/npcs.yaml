@@ -62,7 +62,7 @@
 - id: happy-resident
   name: Happy resident
   role: Resident
-  group: Locals
+  group: Residents
   portrait: portraits/happy-resident.gif
   color: "#a9a2bc"
   stats: {body: 6, reflex: 6, tech: 4, intel: 6, cool: 8, empathy: 12}
@@ -172,16 +172,76 @@
   gm_note: "The company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, d8, Normal to hit; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Hard ends one without a fight. They radio: if a fight runs long, more come."
 
 - id: cleaner-bot
-  name: Cleaner bot
+  name: Unit 3  # the generic cleaner; units are numbered in primes, and Unit 14 is the one that watches
   role: Cleaner, ISCO
   group: ISCO
-  portrait: portraits/cleaner-3.gif  # Unit 3, so the generic cleaners don't wear Unit 14's face
+  portrait: portraits/cleaner-3.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
   health: 2  # DRAFT for Peter
   mood: Busy
   note: Already cleaning where you're about to step.
   gm_note: ISCO's eyes and hands below the line. They scrubbed the side alley before anyone reported the death there.
+
+- id: cleaner-7
+  name: Unit 7
+  role: Cleaner, ISCO
+  group: ISCO
+  portrait: portraits/cleaner-7.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
+  health: 2  # DRAFT for Peter
+  mood: Busy
+  note: Already cleaning where you're about to step.
+  gm_note: ISCO's eyes and hands below the line.
+
+- id: cleaner-11
+  name: Unit 11
+  role: Cleaner, ISCO
+  group: ISCO
+  portrait: portraits/cleaner-11.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
+  health: 2  # DRAFT for Peter
+  mood: Busy
+  note: Already cleaning where you're about to step.
+  gm_note: ISCO's eyes and hands below the line.
+
+- id: cleaner-13
+  name: Unit 13
+  role: Cleaner, ISCO
+  group: ISCO
+  portrait: portraits/cleaner-13.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
+  health: 2  # DRAFT for Peter
+  mood: Busy
+  note: Already cleaning where you're about to step.
+  gm_note: ISCO's eyes and hands below the line.
+
+- id: cleaner-19
+  name: Unit 19
+  role: Cleaner, ISCO
+  group: ISCO
+  portrait: portraits/cleaner-19.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
+  health: 2  # DRAFT for Peter
+  mood: Busy
+  note: Already cleaning where you're about to step.
+  gm_note: ISCO's eyes and hands below the line.
+
+- id: cleaner-23
+  name: Unit 23
+  role: Cleaner, ISCO
+  group: ISCO
+  portrait: portraits/cleaner-23.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
+  health: 2  # DRAFT for Peter
+  mood: Busy
+  note: Already cleaning where you're about to step.
+  gm_note: ISCO's eyes and hands below the line.
 
 # The Executive floors, the Secure floor and the Bot bays (M5). DRAFTS, for Peter to set.
 - id: scientist
@@ -360,3 +420,99 @@
   mood: Dozing  # DRAFT
   note: Has slept through most of the trip.  # DRAFT
   gm_note: "In the lounge on the Patience, then the Dock 7 queue."
+
+# Residents of Ergo (added 2026-11-09, Portraits canvas round 3). The first three start the day-1 bar fight at The
+# Event Horizon; next time the crew sees them they're quite happy. Cards, dice and health are DRAFTS for Peter.
+- id: brawler-crane
+  name: Crane operator
+  role: Resident
+  group: Residents
+  portrait: portraits/brawler-crane.gif
+  color: "#a9a2bc"
+  stats: {body: 12, reflex: 6, tech: 6, intel: 4, cool: 4, empathy: 4}  # DRAFT
+  health: 3  # DRAFT
+  mood: Three drinks past friendly  # DRAFT
+  note: Built like the cranes he runs.  # DRAFT
+  gm_note: Starts the day-1 bar fight. Helping Dax end it is a favour.
+
+- id: brawler-grin
+  name: The grin
+  role: Resident
+  group: Residents
+  portrait: portraits/brawler-grin.gif
+  color: "#a9a2bc"
+  stats: {body: 6, reflex: 12, tech: 4, intel: 6, cool: 8, empathy: 6}  # DRAFT
+  health: 2  # DRAFT
+  mood: Having a great time  # DRAFT
+  note: A missing tooth, and a plaster over the last fight.  # DRAFT
+  gm_note: Joins the day-1 bar fight for fun.
+
+- id: brawler-hauler
+  name: Hauler
+  role: Resident
+  group: Residents
+  portrait: portraits/brawler-hauler.gif
+  color: "#a9a2bc"
+  stats: {body: 10, reflex: 8, tech: 6, intel: 6, cool: 12, empathy: 4}  # DRAFT
+  health: 3  # DRAFT
+  mood: Off shift  # DRAFT
+  note: Doesn't start fights. Finishes them.  # DRAFT
+  gm_note: The day-1 bar fight's last one standing, if nobody stops her.
+
+- id: resident-noodles
+  name: Noodle gran
+  role: Resident
+  group: Residents
+  portrait: portraits/resident-noodles.gif
+  color: "#a9a2bc"
+  stats: {body: 4, reflex: 4, tech: 4, intel: 8, cool: 12, empathy: 10}  # DRAFT
+  health: 2  # DRAFT
+  mood: Content  # DRAFT
+  note: Same stall every night for forty years.  # DRAFT
+
+- id: resident-courier
+  name: Courier
+  role: Resident
+  group: Residents
+  portrait: portraits/resident-courier.gif
+  color: "#a9a2bc"
+  stats: {body: 6, reflex: 12, tech: 8, intel: 6, cool: 6, empathy: 6}  # DRAFT
+  health: 2  # DRAFT
+  mood: Late  # DRAFT
+  note: Always running, always late, always fine.  # DRAFT
+
+- id: resident-nightshift
+  name: Night-shift worker
+  role: Resident
+  group: Residents
+  portrait: portraits/resident-nightshift.gif
+  color: "#a9a2bc"
+  stats: {body: 8, reflex: 6, tech: 10, intel: 6, cool: 8, empathy: 8}  # DRAFT
+  health: 2  # DRAFT
+  mood: Going home  # DRAFT
+  note: Cable maintenance. Tired and content.  # DRAFT
+
+# The Satisfaction Report droid (added 2026-11-09). Send its survey from the GM tab's overviews.
+- id: survey-droid
+  name: Survey droid
+  role: Satisfaction Report, ISCO
+  group: ISCO
+  portrait: portraits/survey-droid.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 6, tech: 12, intel: 8, cool: 20, empathy: 10}  # DRAFT
+  health: 2  # DRAFT
+  mood: Would love your feedback
+  note: Cigar burns on its face, and still smiling.
+  gm_note: "Turns up whenever someone bad-mouths the station, even mid-heist. Send the Satisfaction Report overview. The burns are the Gumshoe's."
+
+- id: survey-droid-new
+  name: Survey droid, new
+  role: Satisfaction Report, ISCO
+  group: ISCO
+  portrait: portraits/survey-droid-new.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 6, tech: 12, intel: 8, cool: 20, empathy: 10}  # DRAFT
+  health: 2  # DRAFT
+  mood: Would love your feedback
+  note: Spotless. Same smile.
+  gm_note: "Rolls up five seconds after the crew wrecks the first one. Send \"Satisfaction Report, new droid\"."

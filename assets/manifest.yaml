@@ -268,6 +268,97 @@ assets:
     bytes: 37319
     width: 96
     height: 96
+  - path: portraits/brawler-crane.gif
+    store: PORTRAITS
+    asset_id: "3a6906f82a0f564a13251a548eb468d9"
+    sha256: "cee14d36b63f5ca24b7df1392e033f14145f36faf52d4e1dbb1cd586510097c7"
+    bytes: 130297
+    width: 96
+    height: 96
+  - path: portraits/brawler-grin.gif
+    store: PORTRAITS
+    asset_id: "a0feceb56df1b3593c85b594d010d0d9"
+    sha256: "3a27c378c4f9f5bb33a2e1c09430d908d5bdf0e2818b964e064c8d505398fda8"
+    bytes: 129485
+    width: 96
+    height: 96
+  - path: portraits/brawler-hauler.gif
+    store: PORTRAITS
+    asset_id: "2c3b05bdc97ea44d5dc3a71764f2882a"
+    sha256: "bf7b993ec71bc534c45973ed43f8ba5819caf4336fe3f89f9746632cb58b6087"
+    bytes: 133767
+    width: 96
+    height: 96
+  - path: portraits/resident-noodles.gif
+    store: PORTRAITS
+    asset_id: "f7cc10c44f14f804d7200787713a132d"
+    sha256: "34c5e4e68e7d831275c3fa4d63c1441f37106d3afc4bcaad49528dc52cddd72e"
+    bytes: 131934
+    width: 96
+    height: 96
+  - path: portraits/resident-courier.gif
+    store: PORTRAITS
+    asset_id: "2fa5a235994cfb2a6c017c2b07336efc"
+    sha256: "a8272afc5fed63e93dbb45ca50d54682d0a10801be1071bcbc8501d6e22a7eef"
+    bytes: 129043
+    width: 96
+    height: 96
+  - path: portraits/resident-nightshift.gif
+    store: PORTRAITS
+    asset_id: "3b1571974c05365efea1de0124661bba"
+    sha256: "f43f2c75535af0236ea21610752d97217f882b467ea42e366bdc6cef9d5fb17f"
+    bytes: 130280
+    width: 96
+    height: 96
+  - path: portraits/survey-droid.gif
+    store: PORTRAITS
+    asset_id: "8cd4589e1cdc8ebee12948fd989432e0"
+    sha256: "efda92c76a5e3c782865c54986830a135324f6559677359b4223ea9b19800158"
+    bytes: 34349
+    width: 96
+    height: 96
+  - path: portraits/survey-droid-new.gif
+    store: PORTRAITS
+    asset_id: "6782b8a136e5ecfe2147985684eb0d87"
+    sha256: "9f614692c04600632f9837db1dd33bc9f730c0d5db6b40dd694e3d89e189a47c"
+    bytes: 28683
+    width: 96
+    height: 96
+  - path: portraits/cleaner-7.gif
+    store: PORTRAITS
+    asset_id: "076284a18bfa0fc9c4a7c02fc59d65e4"
+    sha256: "ebb4d423387b8f6fa8facae65857605938ff25a5759f6441d9ee382e2da73828"
+    bytes: 42483
+    width: 96
+    height: 96
+  - path: portraits/cleaner-11.gif
+    store: PORTRAITS
+    asset_id: "92adfb344ca97ceb0259aaaeeb8e1b6e"
+    sha256: "31aec73508171fe03a9af2d00389e6af744ff851c7866a41d9b17fd8f2adce43"
+    bytes: 42685
+    width: 96
+    height: 96
+  - path: portraits/cleaner-13.gif
+    store: PORTRAITS
+    asset_id: "8b8fe918088f301454d6d2dd66beaff3"
+    sha256: "93e7094baa62029a9f8b48ee21c91653550d0fdd8aa3f3adeeae836049d0d00d"
+    bytes: 41883
+    width: 96
+    height: 96
+  - path: portraits/cleaner-19.gif
+    store: PORTRAITS
+    asset_id: "d7fb28b6f439925c8f3d8862624dd48b"
+    sha256: "074ce8a8b6e09b6f4c2f257b853969bd9f783ab8a79905bc8c651e3885a81dc5"
+    bytes: 42578
+    width: 96
+    height: 96
+  - path: portraits/cleaner-23.gif
+    store: PORTRAITS
+    asset_id: "bbb6d752ea8bca86055a58ac6f243b7f"
+    sha256: "55e1fccc2cf2ad9f0ddbcf4682d62621244ccbf17658193142e9496ed3c1814b"
+    bytes: 43384
+    width: 96
+    height: 96
   - path: icons/stats/body.png
     store: ICONS
     asset_id: "4e11ef2d2ff1effda9a8adae24eaafb1"
