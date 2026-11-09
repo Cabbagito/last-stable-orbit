@@ -240,11 +240,11 @@ entries:
   art: {src: portraits/static.gif, kind: bust, pos: 50% 10%}
   lead: A crime boss on Ergo, with a chrome plate and eye.
   see: [ergo]
-- id: gumshoe  # DRAFT wording, from the bible's Other faces. A stand-in portrait until the real art is imported.
+- id: gumshoe  # DRAFT wording, from the bible's Other faces.
   sec: chars
   npc: gumshoe
   label: NPC · the detective
-  art: {src: portraits/vendor.gif, kind: bust, pos: 50% 10%}
+  art: {src: portraits/gumshoe.gif, kind: bust, pos: 50% 10%}
   lead: A third-party investigator looking into a scrubbed death. He smokes cigars, and he has refused the survey.
   quote: '"They''ve asked me like 17 times. I have enough paperwork as it is."'
   see: [promenade]

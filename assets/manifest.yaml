@@ -183,6 +183,20 @@ assets:
     bytes: 42207
     width: 96
     height: 96
+  - path: portraits/gumshoe.gif
+    store: PORTRAITS
+    asset_id: "1c63831a72214461573c6826be31e072"
+    sha256: "4e191129ef50c51e5ab893d7988b3f920ead75be521073b63c03d0c9bb6d8945"
+    bytes: 91067
+    width: 96
+    height: 96
+  - path: portraits/cleaner-3.gif
+    store: PORTRAITS
+    asset_id: "2e99d63e9adcd74c6918043f5bdc397b"
+    sha256: "05e9914dd8bb0d0a09472fa787907c5313f82e5678d93791ca95764357298eb9"
+    bytes: 41351
+    width: 96
+    height: 96
   - path: icons/stats/body.png
     store: ICONS
     asset_id: "4e11ef2d2ff1effda9a8adae24eaafb1"
