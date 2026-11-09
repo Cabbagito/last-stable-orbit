@@ -111,6 +111,7 @@
 .app-film.app-held.awake{cursor:default}
 /* a laptop's window is rarely exactly 16:9, and the disc runs off the bottom of the picture: fill the window, and if it's wide, lose the empty space at the top. Any scale but the TV's, so smooth, not nearest-pixel */
 .app-film video.app-loop{object-fit:cover;object-position:50% 100%;image-rendering:auto;cursor:inherit}
-.app-heldexit{position:absolute;right:16px;top:16px;z-index:2;opacity:0;pointer-events:none;transition:opacity .3s}
-.app-held.awake .app-heldexit,.app-heldexit:focus-visible{opacity:1;pointer-events:auto}
+.app-heldbar{position:absolute;right:16px;top:16px;z-index:2;display:flex;gap:8px;opacity:0;pointer-events:none;transition:opacity .3s}
+.app-held.awake .app-heldbar,.app-heldbar:has(:focus-visible){opacity:1;pointer-events:auto}
+.app-heldbar .app-iconbtn{width:44px;height:44px;background:var(--fill);border-color:var(--btnline);color:var(--ink)}
 .app-openingerr{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);padding:8px 14px;background:#000;color:#ff8a8a;font-size:13px;z-index:6}

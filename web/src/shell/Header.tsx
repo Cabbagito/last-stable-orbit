@@ -56,7 +56,7 @@ export function Header({ tab, isGm, onLogout }: { tab: Tab; isGm: boolean; onLog
 }
 
 /** Full screen for the whole app, so the map gets the browser's toolbar space too. Esc also leaves it. */
-function FullscreenButton() {
+export function FullscreenButton() {
   const [on, setOn] = useState(() => !!document.fullscreenElement)
   useEffect(() => {
     const sync = () => setOn(!!document.fullscreenElement)
