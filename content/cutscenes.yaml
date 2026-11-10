@@ -30,7 +30,7 @@
   name: End of Act 1
   act: Act 1
   sub: 70 s, closes session 1
-  ends: Ends on Dax looking at the rope, then the card, "Thank you for your patience." and "End of Act 1".
+  ends: Ends on Dax looking at the rope, then the card, "Whatever brought you here, we hope you find what you came for." and "End of Act 1".
   file: films/act-1.mp4
   length: 70.0
   still: films/act-1-still.png
