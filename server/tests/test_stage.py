@@ -199,9 +199,15 @@ def test_only_the_gm_plays_films_and_only_made_ones(engine, content):
     with pytest.raises(CommandError) as e:
         handle(TALLY, engine.state, content, "gm.film.play", {"cue": "shotgun"})
     assert e.value.code == "forbidden"
-    for cue in ("lucan", "nope"):
-        with pytest.raises(CommandError):
-            handle(GM, engine.state, content, "gm.film.play", {"cue": cue})
+    # every Act 1 to final act film is made now, so an unmade cue is made up for the test: a copy with no file
+    unmade = content.cutscenes["shotgun"].model_copy(update={"id": "unmade", "file": None, "length": None})
+    content.cutscenes["unmade"] = unmade
+    try:
+        for cue in ("unmade", "nope"):
+            with pytest.raises(CommandError):
+                handle(GM, engine.state, content, "gm.film.play", {"cue": cue})
+    finally:
+        del content.cutscenes["unmade"]
 
 
 async def test_only_the_tv_plays_the_film(engine, content):

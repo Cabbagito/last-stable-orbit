@@ -20,10 +20,10 @@ maps:
   lift: {mood: shut}
   bots: {mood: night}
 tokens:
-  - {kind: npc, ref: fixer, map: event-horizon, at: [4.203, 2.89, 0.24]}
+  - {kind: npc, ref: fixer, map: event-horizon, at: [1.397, 4.51, 0.24]}  # the founder's set place, under Ilija, facing the room
   - {kind: crew, ref: lale, map: event-horizon, at: [4.203, 4.51, 0.24]}
   - {kind: crew, ref: marlo, map: event-horizon, at: [2.8, 5.32, 0.24]}
-  - {kind: crew, ref: tally, map: event-horizon, at: [1.397, 4.51, 0.24]}
+  - {kind: crew, ref: tally, map: event-horizon, at: [4.203, 2.89, 0.24]}
   - {kind: crew, ref: ves, map: event-horizon, at: [1.397, 2.89, 0.24]}
   - {kind: crew, ref: tomo, map: event-horizon, at: [2.8, 2.08, 0.24]}
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}

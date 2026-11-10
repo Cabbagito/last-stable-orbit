@@ -15,6 +15,8 @@ stores:
   SLOTS: https://claude.ai/artifact/EPiC8wXsHQy7o5to3Rd8kj
   HEIST: https://claude.ai/artifact/LpMi1WHzziSMdTDEoQ9uYk
   SESSION: https://claude.ai/artifact/6pNMrKUZbm3k9d1wy24Rm5
+  LUCAN: https://claude.ai/artifact/T2xXLmwT2NUCEaLPjLEnv5  # rendered in a claude.ai session by cutscenes/lucan_film.py
+  ACT1: https://claude.ai/artifact/JtqLYHVrERiB9xAjAhPpvV  # rendered in a claude.ai session by cutscenes/act1_film.py
 assets:
   - path: maps/event-horizon/base-open.png
     store: MAPS
@@ -1988,3 +1990,27 @@ assets:
     bytes: 1740873
     width: 1920
     height: 1080
+  - path: films/lucan.mp4
+    store: LUCAN
+    sha256: "3c5e89df94c477842c4c4eb8a07421b59225e2a14245038ea3169ae0fd669736"
+    bytes: 1961004
+    width: 1920
+    height: 1080
+  - path: films/lucan-still.png
+    store: LUCAN
+    sha256: "94d5fc7c8e0f98830111da0258976affba1b2d5b4fbd26d7e3bd2ffa5d2e0e52"
+    bytes: 29884
+    width: 480
+    height: 270
+  - path: films/act-1.mp4
+    store: ACT1
+    sha256: "8a8f0c078fbaa69660263955e1971c41fa57aace519ecb238ea1eaae3b85e147"
+    bytes: 5535083
+    width: 1920
+    height: 1080
+  - path: films/act-1-still.png
+    store: ACT1
+    sha256: "e404d5d5c0c34b9c3c3aae67368d4833df2eeb39d43904300e6d8e3041b510ba"
+    bytes: 16602
+    width: 480
+    height: 270
