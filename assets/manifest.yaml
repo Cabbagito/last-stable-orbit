@@ -1874,6 +1874,13 @@ assets:
     bytes: 101721
     width: 1110
     height: 700
+  - path: presets/shotgun.png  # cropped from maps/event-horizon/base-stand.png, the founder's table: (290, 180) to (770, 450)
+    store: MAPS
+    asset_id: ""
+    sha256: "e8c98b100c9741dbc3e5a51020323c60a2406c61197d3a2a1b03ac74814e3427"
+    bytes: 43620
+    width: 480
+    height: 270
   - path: presets/arrival.png
     store: SESSION
     asset_id: "4ce0f4231b845e0a4f0a241acca13bba"

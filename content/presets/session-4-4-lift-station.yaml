@@ -1,0 +1,118 @@
+# Session 4 or 5, the final sequence: the crew come out of the old founder-era passages into the Lift station. Two of
+# the fixer's hired guns hold the blast door, the first fight. Lucan waits hidden alone on the glass floor behind it, for
+# the final fight once the door opens (the Door open mood). The spider mech and Lucan's dog wait hidden together in the
+# freight hall, for when the crew skipped the probe run and Peter wants them here instead. The station above is hunting
+# them, the same as for the probe run. The cab and the terminal have nobody in them. DRAFTS.
+id: session-4-lift-station
+name: "The lift station"
+session: "Session 4"
+blurb: "Out of the old passages, to the top of the cable."
+card: maps/lift/base-open.png
+party_map: lift
+maps:
+  event-horizon: {mood: stand, switches: {hatch: 1, gas: 0}, shown: [mural, slots]}
+  promenade: {mood: hunted, shown: [queue-board, mural, window, founders-ring, satisfaction]}
+  deck-6: {mood: alert}
+  deck-7: {mood: alert}
+  deck-8: {mood: alert}
+  deck-9: {mood: alert}
+  secure: {mood: alert, shown: [vault-door, flowers]}
+  lift: {mood: shut}
+  cab: {mood: top}
+  terminal: {mood: empty}
+  bots: {mood: heist}
+  med: {mood: white, shown: [screen]}
+tokens:
+  # the crew in the old wood passage, where they come in
+  - {kind: crew, ref: lale, map: lift, at: [1.6, 21.6, 0]}
+  - {kind: crew, ref: marlo, map: lift, at: [2.6, 20.8, 0]}
+  - {kind: crew, ref: tally, map: lift, at: [2.8, 22.4, 0]}
+  - {kind: crew, ref: ves, map: lift, at: [3.8, 21.4, 0]}
+  - {kind: crew, ref: tomo, map: lift, at: [4.6, 22.2, 0]}
+  # two hired guns hold the blast door. Lucan is hidden on the glass behind it; the mech and the dog hidden in the hall
+  - {kind: npc, ref: hired-gun-watch, map: lift, at: [24.0, 18.2, 0]}  # calls the lift
+  - {kind: npc, ref: hired-gun-eye, map: lift, at: [27.4, 18.6, 0]}
+  - {kind: npc, ref: fixer, map: lift, at: [18.0, 7.0, 0.05], hidden: true}
+  - {kind: npc, ref: spider-mech, map: lift, at: [19.6, 20.6, 0], hidden: true}
+  - {kind: npc, ref: lucan-dog, map: lift, at: [22.0, 21.4, 0], hidden: true}
+  - {kind: npc, ref: scientist, map: bots, at: [3.1, 0.4, 0]}  # still in the hidey-hole
+  # the Bot bays with the mech gone: only the cleaners on their pads and the droid at dispatch. BOLT-7 is hidden on pad 7
+  - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
+  - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
+  - {kind: npc, ref: cleaner-11, map: bots, at: [13.55, 12.45, 0]}
+  - {kind: npc, ref: cleaner-13, map: bots, at: [15.25, 12.5, 0]}
+  - {kind: npc, ref: service-droid, map: bots, at: [11.4, 9.6, 0]}
+  - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}
+  # the bar: Lucan has gone down to the lift, and left the brute and two hired guns
+  - {kind: npc, ref: lucan-brute, map: event-horizon, at: [15.7, 1.05, 0]}
+  - {kind: npc, ref: hired-gun, map: event-horizon, at: [5.9, 10.6, 0]}
+  - {kind: npc, ref: hired-gun-grille, map: event-horizon, at: [11.8, 8.9, 0]}
+  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}
+  # the Promenade, hunting them: mercenaries on the way to the company lift, the guards with them, and few residents out
+  - {kind: npc, ref: hired-gun-eye, map: promenade, at: [22.4, 2.0, 0]}  # runs the crew for Lucan
+  - {kind: npc, ref: hired-gun-watch, map: promenade, at: [23.9, 2.4, 0]}
+  - {kind: npc, ref: guard, map: promenade, at: [25.9, 2.9, 0]}
+  - {kind: npc, ref: guard-rookie, map: promenade, at: [27.1, 4.4, 0]}
+  - {kind: npc, ref: hired-gun-skull, map: promenade, at: [21.0, 7.0, 0]}  # the plaza
+  - {kind: npc, ref: hired-gun-patch, map: promenade, at: [31.0, 6.0, 0]}  # the market
+  - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}
+  - {kind: npc, ref: cleaner-7, map: promenade, at: [13.2, 1.2, 0]}
+  - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}
+  - {kind: npc, ref: resident-coral, map: promenade, at: [17.2, 5.4, 0]}
+  - {kind: npc, ref: robot-cook, map: promenade, at: [27.9, 0.9, 0]}
+  - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}
+  - {kind: npc, ref: gumshoe, map: promenade, at: [33.5, 8.6, 0]}
+  - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.7, 11.0, 0]}
+  - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}
+  - {kind: npc, ref: static, map: promenade, at: [22.5, -8.5, 0], hidden: true}
+  - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
+  - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
+  - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
+  # deck 6, where the passenger lift comes in: three mercenaries and two guards. Ahti is hidden in his closet
+  - {kind: npc, ref: hired-gun, map: deck-6, at: [11.48, 3.38, 0]}  # at the desk
+  - {kind: npc, ref: hired-gun-skull, map: deck-6, at: [12.27, 7.04, 0]}
+  - {kind: npc, ref: hired-gun-mask, map: deck-6, at: [17.77, 8.77, 0]}
+  - {kind: npc, ref: guard, map: deck-6, at: [16.45, 4.84, 0]}
+  - {kind: npc, ref: guard-rookie, map: deck-6, at: [7.99, 8.98, 0]}
+  - {kind: npc, ref: ahti, map: deck-6, at: [14.67, 1.47, 0], hidden: true}
+  # deck 7: three mercenaries, one guard, the operator at the monitors
+  - {kind: npc, ref: camera-operator, map: deck-7, at: [13.37, 3.57, 0]}
+  - {kind: npc, ref: hired-gun-patch, map: deck-7, at: [12.5, 6.5, 0]}
+  - {kind: npc, ref: hired-gun, map: deck-7, at: [8.08, 4.03, 0]}
+  - {kind: npc, ref: hired-gun-grille, map: deck-7, at: [9.35, 10.85, 0]}
+  - {kind: npc, ref: guard, map: deck-7, at: [15.28, 6.19, 0]}
+  # deck 8: three mercenaries, two guards at the checkpoint and the lounge, and the head of security in her office
+  - {kind: npc, ref: guard-riot, map: deck-8, at: [10.45, 2.95, 0]}  # the checkpoint
+  - {kind: npc, ref: hired-gun, map: deck-8, at: [16.3, 4.35, 0]}  # the stairs
+  - {kind: npc, ref: hired-gun-mask, map: deck-8, at: [12.5, 6.2, 0]}
+  - {kind: npc, ref: hired-gun-patch, map: deck-8, at: [6.91, 8.8, 0]}
+  - {kind: npc, ref: guard, map: deck-8, at: [4.57, 8.62, 0]}
+  - {kind: npc, ref: head-of-security, map: deck-8, at: [12.62, 11.38, 0]}
+  # deck 9, off the way up: two mercenaries and a guard
+  - {kind: npc, ref: hired-gun-grille, map: deck-9, at: [17.0, 4.6, 0]}
+  - {kind: npc, ref: hired-gun-skull, map: deck-9, at: [11.0, 6.0, 0]}
+  - {kind: npc, ref: guard, map: deck-9, at: [5.23, 2.96, 0]}
+  # the Secure floor, where the probe is: five mercenaries and two guards
+  - {kind: npc, ref: hired-gun-eye, map: secure, at: [11.93, 4.38, 0]}  # at the vault door
+  - {kind: npc, ref: hired-gun-mask, map: secure, at: [17.94, 4.38, 0]}
+  - {kind: npc, ref: hired-gun, map: secure, at: [8.0, 3.0, 0]}  # in the lockup, by the probe
+  - {kind: npc, ref: hired-gun-watch, map: secure, at: [28.0, 8.0, 0]}  # at the freight controls
+  - {kind: npc, ref: hired-gun-skull, map: secure, at: [16.4, 21.0, 0]}  # the door from deck 8
+  - {kind: npc, ref: guard-riot, map: secure, at: [12.6, 11.3, 0]}  # by the ring
+  - {kind: npc, ref: guard-rookie, map: secure, at: [13.6, 21.0, 0]}
+  - {kind: npc, ref: nurse, map: med, at: [7.6, 2.9, 0]}
+  - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
+inventory:  # the starting kit; a scene load leaves what the crew actually carries alone
+  lale: [fob-watch, letter-lale, {item: credits, count: 140}]
+  marlo: [stun-rings, letter-marlo, {item: credits, count: 140}]
+  tally: [tally-notebook, letter-tally, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, letter-ves, {item: credits, count: 140}]
+  tomo: [sourdough-jar, letter-tomo, {item: credits, count: 140}]
+
+codex: [lale, marlo, tally, ves, tomo,
+        rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health,
+        patience, promenade, event-horizon,
+        ergo, isco, hole, queue,
+        dax, fixer, concierge, dock-clerk, steward, ilija, letter, mural, table, slots, music-credit]
+
+station: [patience, promenade, event-horizon, deck-6, deck-7, deck-8, deck-9, secure, vault, bots, lift]

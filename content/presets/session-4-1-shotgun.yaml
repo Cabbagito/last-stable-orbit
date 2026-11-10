@@ -1,0 +1,106 @@
+# Session 4 opens where Session 3 ends: the bar after hours, the Seal's box open in the founder's table, and the crew sat
+# round it with Dax behind them and his shotgun. Unit 14 is in its corner, the cleaner that sees it. The fixer's hired
+# guns, Lucan, his brute and his dog wait hidden in the black past the street door, for when they storm in (switch the bar
+# to Last stand for the fight, and the Hatch for the way out). Upstairs is the heist's night, now on alert. DRAFTS.
+id: session-4-shotgun
+name: "The shotgun"
+session: "Session 4"
+blurb: "The Seal in their hands, and Dax's shotgun behind them."
+card: presets/shotgun.png  # its own crop: every bar mood is already in the players' view
+party_map: event-horizon
+maps:
+  event-horizon: {mood: after, switches: {seals_box: 1}, shown: [mural, slots]}
+  promenade: {mood: calm, shown: [queue-board, mural, window, founders-ring, satisfaction]}
+  deck-6: {mood: alert}
+  deck-7: {mood: alert}
+  deck-8: {mood: alert}
+  deck-9: {mood: alert}
+  secure: {mood: alert, shown: [vault-door, flowers]}
+  lift: {mood: shut}
+  bots: {mood: heist}
+  med: {mood: white, shown: [screen]}
+tokens:
+  # the crew round the founder's table, the box open in front of them
+  - {kind: crew, ref: lale, map: event-horizon, at: [1.397, 2.89, 0.24]}
+  - {kind: crew, ref: marlo, map: event-horizon, at: [1.397, 4.51, 0.24]}
+  - {kind: crew, ref: tally, map: event-horizon, at: [2.8, 5.32, 0.24]}
+  - {kind: crew, ref: ves, map: event-horizon, at: [4.203, 4.51, 0.24]}
+  - {kind: crew, ref: tomo, map: event-horizon, at: [4.203, 2.89, 0.24]}
+  - {kind: npc, ref: dax, map: event-horizon, at: [6.3, 5.4, 0]}  # at the rope, behind them, racking it
+  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}  # it saw
+  # hidden in the black below the street door: the hired guns who storm in, then Lucan, his brute and his dog
+  - {kind: npc, ref: hired-gun, map: event-horizon, at: [10.37, 19.57, 0], hidden: true}
+  - {kind: npc, ref: hired-gun-mask, map: event-horizon, at: [11.2, 18.73, 0], hidden: true}
+  - {kind: npc, ref: hired-gun-skull, map: event-horizon, at: [12.03, 17.9, 0], hidden: true}
+  - {kind: npc, ref: hired-gun-patch, map: event-horizon, at: [12.87, 17.07, 0], hidden: true}
+  - {kind: npc, ref: hired-gun-grille, map: event-horizon, at: [13.7, 16.23, 0], hidden: true}
+  - {kind: npc, ref: fixer, map: event-horizon, at: [12.85, 21.22, 0], hidden: true}
+  - {kind: npc, ref: lucan-brute, map: event-horizon, at: [13.68, 20.38, 0], hidden: true}
+  - {kind: npc, ref: lucan-dog, map: event-horizon, at: [14.52, 19.55, 0], hidden: true}
+  # deck 6, minutes after the heist: the desk guard and the patrol, awake now. Ahti is hidden in his closet
+  - {kind: npc, ref: guard, map: deck-6, at: [11.48, 3.38, 0]}
+  - {kind: npc, ref: guard-rookie, map: deck-6, at: [17.77, 8.77, 0]}
+  - {kind: npc, ref: ahti, map: deck-6, at: [14.67, 1.47, 0], hidden: true}
+  # deck 7: the operator at the monitors, the guard and the head of security, who has come out of Irena's room
+  - {kind: npc, ref: camera-operator, map: deck-7, at: [13.37, 3.57, 0]}
+  - {kind: npc, ref: guard, map: deck-7, at: [12.5, 6.5, 0]}
+  - {kind: npc, ref: head-of-security, map: deck-7, at: [8.08, 4.03, 0]}
+  # deck 8: the checkpoint, the stairs and the open floor
+  - {kind: npc, ref: guard-riot, map: deck-8, at: [10.45, 2.95, 0]}
+  - {kind: npc, ref: guard-sergeant, map: deck-8, at: [16.3, 4.35, 0]}
+  - {kind: npc, ref: guard-rookie, map: deck-8, at: [12.5, 6.2, 0]}
+  # deck 9: the stairs and the office door
+  - {kind: npc, ref: guard-riot, map: deck-9, at: [17.0, 4.6, 0]}
+  - {kind: npc, ref: guard, map: deck-9, at: [11.0, 6.0, 0]}
+  # the Secure floor: the vault found open, the sergeant up and at the ring
+  - {kind: npc, ref: guard, map: secure, at: [11.93, 4.38, 0]}
+  - {kind: npc, ref: guard-riot, map: secure, at: [17.94, 4.38, 0]}
+  - {kind: npc, ref: guard-rookie, map: secure, at: [13.6, 21.0, 0]}
+  - {kind: npc, ref: guard-sergeant, map: secure, at: [12.6, 11.3, 0]}
+  # the Bot bays: the frame empty, the techs and guards still around it. BOLT-7 is hidden on pad 7
+  - {kind: npc, ref: guard, map: bots, at: [10.97, 4.57, 0]}
+  - {kind: npc, ref: guard-riot, map: bots, at: [18.57, 2.37, 0]}
+  - {kind: npc, ref: tech-welder, map: bots, at: [12.57, 3.97, 0]}
+  - {kind: npc, ref: tech-chief, map: bots, at: [16.77, 6.77, 0]}
+  - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
+  - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
+  - {kind: npc, ref: cleaner-11, map: bots, at: [13.55, 12.45, 0]}
+  - {kind: npc, ref: cleaner-13, map: bots, at: [15.25, 12.5, 0]}
+  - {kind: npc, ref: service-droid, map: bots, at: [11.4, 9.6, 0]}
+  - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}
+  # Irena, back in the hidey-hole, hidden until the crew comes down
+  - {kind: npc, ref: scientist, map: bots, at: [3.1, 0.4, 0], hidden: true}
+  # the Promenade late at night, as on heist night
+  - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}
+  - {kind: npc, ref: cleaner-7, map: promenade, at: [13.2, 1.2, 0]}
+  - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}
+  - {kind: npc, ref: resident-coral, map: promenade, at: [17.2, 5.4, 0]}
+  - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}
+  - {kind: npc, ref: guard-rookie, map: promenade, at: [23.9, 2.4, 0]}
+  - {kind: npc, ref: guard, map: promenade, at: [25.9, 2.9, 0]}
+  - {kind: npc, ref: guard-sergeant, map: promenade, at: [22.4, 2.0, 0]}
+  - {kind: npc, ref: guard-riot, map: promenade, at: [27.1, 4.4, 0]}
+  - {kind: npc, ref: robot-cook, map: promenade, at: [27.9, 0.9, 0]}
+  - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}
+  - {kind: npc, ref: gumshoe, map: promenade, at: [33.5, 8.6, 0]}
+  - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.7, 11.0, 0]}
+  - {kind: npc, ref: static, map: promenade, at: [22.5, -8.5, 0], hidden: true}
+  - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
+  - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
+  - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
+  - {kind: npc, ref: nurse, map: med, at: [7.6, 2.9, 0]}
+  - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
+inventory:  # the starting kit; a scene load leaves what the crew actually carries alone
+  lale: [fob-watch, letter-lale, {item: credits, count: 140}]
+  marlo: [stun-rings, letter-marlo, {item: credits, count: 140}]
+  tally: [tally-notebook, letter-tally, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, letter-ves, {item: credits, count: 140}]
+  tomo: [sourdough-jar, letter-tomo, {item: credits, count: 140}]
+
+codex: [lale, marlo, tally, ves, tomo,
+        rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health,
+        patience, promenade, event-horizon,
+        ergo, isco, hole, queue,
+        dax, fixer, concierge, dock-clerk, steward, ilija, letter, mural, table, slots, music-credit]
+
+station: [patience, promenade, event-horizon, deck-6, deck-7, deck-8, deck-9, secure, vault, bots]
