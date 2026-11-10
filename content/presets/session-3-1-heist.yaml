@@ -40,18 +40,15 @@ tokens:
   - {kind: npc, ref: guard-riot, map: deck-8, at: [10.45, 2.95, 0]}
   - {kind: npc, ref: guard-sergeant, map: deck-8, at: [16.3, 4.35, 0]}  # at the stairs
   - {kind: npc, ref: guard-rookie, map: deck-8, at: [12.5, 6.2, 0]}
-  - {kind: npc, ref: guard, map: deck-8, at: [6.5, 4.5, 0]}  # by the lounge
   # deck 9: the office door is locked, with one camera on it, and two guards on the floor
   - {kind: npc, ref: guard-riot, map: deck-9, at: [17.0, 4.6, 0]}  # at the top of the stairs
   - {kind: npc, ref: guard, map: deck-9, at: [11.0, 6.0, 0]}  # outside the office door
-  # the Secure floor, ready for a fight: guards at the vault door, the door from deck 8 and either side of the ring, one asleep in the guard room. Ahti's crew do the flowers in the stores after 22:00
+  # the Secure floor, ready for a fight: two guards at the vault door, one at the door from deck 8, one by the ring, one asleep in the guard room. Ahti's crew do the flowers in the stores after 22:00
   - {kind: npc, ref: guard-sergeant, map: secure, at: [2.17, 20.97, 0]}  # off duty, asleep
   - {kind: npc, ref: guard, map: secure, at: [11.93, 4.38, 0]}  # at the vault door
   - {kind: npc, ref: guard-riot, map: secure, at: [17.94, 4.38, 0]}
   - {kind: npc, ref: guard-rookie, map: secure, at: [13.6, 21.0, 0]}  # the door from deck 8
-  - {kind: npc, ref: guard, map: secure, at: [16.4, 21.0, 0]}
-  - {kind: npc, ref: guard-riot, map: secure, at: [12.6, 11.3, 0]}  # either side of the ring
-  - {kind: npc, ref: guard-sergeant, map: secure, at: [17.8, 11.3, 0]}
+  - {kind: npc, ref: guard-riot, map: secure, at: [12.6, 11.3, 0]}  # by the ring
   - {kind: npc, ref: ahti, map: secure, at: [28.17, 20.57, 0], hidden: true}  # a hidden copy, in the Vigil stores
   # the Bot bays: the frame stands empty, with two techs and two guards still around it. BOLT-7 is hidden on pad 7
   - {kind: npc, ref: guard, map: bots, at: [10.97, 4.57, 0]}
