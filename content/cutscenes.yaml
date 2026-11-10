@@ -81,6 +81,15 @@
     tokens:
       - {ref: dax, at: [11.6, 1.05, 0]}
 
+- id: keepers-end
+  name: The Keeper's End
+  act: Final act
+  sub: 41 s, session 4, once the crew are out of the bar
+  ends: Ends on black, after Dax under the mural. Lucan and his dog found him alone, so it plays the same whether he fought beside the crew or not. Nothing changes on the maps.
+  file: films/keepers-end.mp4
+  length: 41.0
+  still: films/keepers-end-still.png
+
 - id: ride-down
   name: The ride down
   act: Final act

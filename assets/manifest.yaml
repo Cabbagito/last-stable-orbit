@@ -18,6 +18,7 @@ stores:
   LUCAN: https://claude.ai/artifact/T2xXLmwT2NUCEaLPjLEnv5  # rendered in a claude.ai session by cutscenes/lucan_film.py
   ACT1: https://claude.ai/artifact/JtqLYHVrERiB9xAjAhPpvV  # rendered in a claude.ai session by cutscenes/act1_film.py
   ACT2: https://claude.ai/artifact/9ksVobCNWc7bZ8op3XB2sX  # the storyboards; rendered in a claude.ai session by cutscenes/vigil_film.py and act2end_film.py
+  KEEPER: https://claude.ai/artifact/G3omhDn8wAePmtBzufSGHv  # the storyboard; rendered in a claude.ai session by cutscenes/keeper_film.py
 assets:
   - path: maps/event-horizon/base-open.png
     store: MAPS
@@ -2037,5 +2038,17 @@ assets:
     store: ACT2
     sha256: "9da0d9b604137b7b9427b13245a2f920d41c973faf4c09c207d61699e1854c0b"
     bytes: 32868
+    width: 480
+    height: 270
+  - path: films/keepers-end.mp4
+    store: KEEPER
+    sha256: "b91791a1545008ec861f3482724abdd8e4d145bf89a68ead30d233c07fca2f79"
+    bytes: 2257217
+    width: 1920
+    height: 1080
+  - path: films/keepers-end-still.png
+    store: KEEPER
+    sha256: "6a05a60126aa9bc93006c31c34c21597f0c9663205261c8a0961d4aee896a4ba"
+    bytes: 16999
     width: 480
     height: 270
