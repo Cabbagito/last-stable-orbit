@@ -2042,13 +2042,13 @@ assets:
     height: 270
   - path: films/keepers-end.mp4
     store: KEEPER
-    sha256: "e017d46b21ba7b98f62fdbcd55372b85612a82160c0a2e632d78f624e63402bd"
-    bytes: 2278885
+    sha256: "9c7310824b96f7475ce00d5cff107c3da3313ff286b4f725b49b75feea95cfaf"
+    bytes: 2276007
     width: 1920
     height: 1080
   - path: films/keepers-end-still.png
     store: KEEPER
-    sha256: "6035d2886ecacd62670f1c21491093a00fd33d88432d9c3cbea0377194b1a381"
-    bytes: 16818
+    sha256: "94d02e5c520188fbcf67fd3855dbc212cb21d65e2cc2e55a0b6b9109ecbae634"
+    bytes: 16856
     width: 480
     height: 270
