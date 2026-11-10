@@ -120,9 +120,6 @@ body {
   isolation: isolate;
   transform-origin: 0 0;
 }
-.app-gas {
-  transition: opacity 2.4s ease;
-}
 .app-hiddentok {
   opacity: 0.4;
 }

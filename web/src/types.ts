@@ -101,7 +101,7 @@ export interface SwitchDef {
 export interface OverlayDef {
   id: string
   src: string
-  layer: 'patch' | 'gas'
+  layer: 'patch'
   mood: string
   switch: string
   value: number

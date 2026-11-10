@@ -75,15 +75,17 @@ async def test_gm_only_intents(engine, content):
 
 async def test_map_mood_and_switches(engine, content):
     assert (await run(engine, GM, "gm.map.mood", {"map": "event-horizon", "mood": "stand"}))[0]["ok"]
-    assert (await run(engine, GM, "gm.map.switch", {"map": "event-horizon", "switch": "gas", "value": 3}))[0]["ok"]
+    assert (await run(engine, GM, "gm.map.switch", {"map": "terminal", "switch": "feed", "value": 3}))[0]["ok"]
     assert (await run(engine, GM, "gm.map.switch", {"map": "event-horizon", "switch": "hatch", "value": True}))[0]["ok"]
+    assert engine.state.maps["terminal"].switches["feed"] == 3
     ms = engine.state.maps["event-horizon"]
-    assert ms.mood == "stand" and ms.switches == {"gas": 3, "hatch": 1}
+    assert ms.mood == "stand" and ms.switches == {"hatch": 1}
     bad = [
-        {"map": "event-horizon", "switch": "gas", "value": 4},
+        {"map": "terminal", "switch": "feed", "value": 6},
+        {"map": "event-horizon", "switch": "gas", "value": 1},
         {"map": "event-horizon", "switch": "hatch", "value": 2},
         {"map": "event-horizon", "switch": "nope", "value": 1},
-        {"map": "nowhere", "switch": "gas", "value": 1},
+        {"map": "nowhere", "switch": "hatch", "value": 1},
     ]
     for args in bad:
         assert codes(lambda: handle(GM, engine.state, content, "gm.map.switch", args)) == "invalid"

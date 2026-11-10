@@ -108,7 +108,7 @@
   health: 4  # the bible's enemy card
   mood: Bored
   note: Paid by the job.
-  gm_note: "The fixer's. 4 health, d12, Hard to hit. Respirators, so the gas doesn't touch them. Once the fixer is down, Cool at Normal sends the rest running."
+  gm_note: "The fixer's. 4 health, d12, Hard to hit. Once the fixer is down, Cool at Normal sends the rest running."
 
 - id: hired-gun-mask
   name: Hired gun, masked

@@ -18,13 +18,9 @@ moods:
 switches:
   - {id: seals_box, label: "Seal's box", type: bool, moods: [after]}
   - {id: hatch, label: Hatch, type: bool, moods: [stand]}
-  - {id: gas, label: Gas, type: level, max: 3, moods: [stand]}
-overlays:  # drawn in this order: patches over the base, gas over the glow
+overlays:  # patches, drawn over the base
   - {id: box-open, src: maps/event-horizon/patch-box.png, layer: patch, mood: after, switch: seals_box, value: 1}
   - {id: hatch-open, src: maps/event-horizon/patch-hatch.png, layer: patch, mood: stand, switch: hatch, value: 1}
-  - {id: gas-1, src: maps/event-horizon/gas-1.png, layer: gas, mood: stand, switch: gas, value: 1}
-  - {id: gas-2, src: maps/event-horizon/gas-2.png, layer: gas, mood: stand, switch: gas, value: 2}
-  - {id: gas-3, src: maps/event-horizon/gas-3.png, layer: gas, mood: stand, switch: gas, value: 3}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   # at: where the marker sits, in world X, Y, Z. closeup: the centre of the card's close-up of the art,
   # in display px (the 2560 x 1440 space tokens are drawn in).

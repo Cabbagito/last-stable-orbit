@@ -4,7 +4,7 @@ const HUM: Record<Hum, string> = { bar: 'r3-hum', street: 'r3-hum app-hum-street
 
 /**
  * A map's art, in its board's order: one base per mood (the current one shown), patches its switches show,
- * decals (the black hole moving in a window), the glow, decals over the glow (the Terminal room's face), gas,
+ * decals (the black hole moving in a window), the glow, decals over the glow (the Terminal room's face)
  * and the Terminal room's station feed.
  */
 export function MapLayers({ map }: { map: MapView }) {
@@ -37,11 +37,6 @@ export function MapLayers({ map }: { map: MapView }) {
         .filter((d) => d.over)
         .map((d) => (
           <Decal key={d.id} d={d} mood={map.mood} />
-        ))}
-      {map.overlays
-        .filter((o) => o.layer === 'gas')
-        .map((o) => (
-          <img key={o.id} className="r3-map app-gas" src={o.src} alt="" draggable={false} style={{ width: W, height: H, opacity: shown(o) }} />
         ))}
       {map.feed && <Feed f={map.feed} values={map.values} />}
     </>

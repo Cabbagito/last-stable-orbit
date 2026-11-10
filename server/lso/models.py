@@ -159,7 +159,7 @@ class Overlay(Strict):
 
     id: str
     src: str
-    layer: Literal["patch", "gas"] = "patch"
+    layer: Literal["patch"] = "patch"
     mood: str
     switch: str
     value: int = 1

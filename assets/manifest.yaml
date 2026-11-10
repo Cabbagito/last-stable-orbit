@@ -72,27 +72,6 @@ assets:
     bytes: 14486
     width: 1280
     height: 720
-  - path: maps/event-horizon/gas-1.png
-    store: MAPS
-    asset_id: "bbd777f48fa50c407056f2bc4890d8d2"
-    sha256: "7f477c80bb5c94842d10efdc2e267773a1e057766584b2a9cf5a7f0b8cae24d6"
-    bytes: 21923
-    width: 1280
-    height: 720
-  - path: maps/event-horizon/gas-2.png
-    store: MAPS
-    asset_id: "81b446fbd6a0d90989fcb7c33e90fb17"
-    sha256: "01991f42e888130a31065d38de40422e04254a44db29180db6cf369e7f82e213"
-    bytes: 38806
-    width: 1280
-    height: 720
-  - path: maps/event-horizon/gas-3.png
-    store: MAPS
-    asset_id: "bfae8b7f77913378ff544a34f534377a"
-    sha256: "6927bdb68054b464067a9a64bef890258fce0974448bc12b15cc292aed33c34a"
-    bytes: 48655
-    width: 1280
-    height: 720
   - path: portraits/lale.gif
     store: PORTRAITS
     asset_id: "5256eee66c5ddc27ba8488eb7ab0f6bc"

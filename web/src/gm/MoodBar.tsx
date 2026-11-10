@@ -5,7 +5,7 @@ import type { MapView, SwitchDef } from '../types'
 export const liveSwitches = (map: MapView) =>
   map.switches.filter((s) => !s.moods.length || s.moods.includes(map.mood))
 
-/** "Gas 2/3", "Hatch: on". A level switch steps up one each press and wraps to 0. */
+/** "Minutes down here 12/30", "Hatch: on". A level switch steps up one each press and wraps to 0. */
 export function switchLabel(s: SwitchDef, v: number) {
   return s.type === 'level' ? `${s.label} ${v}/${s.max}` : `${s.label}: ${v ? 'on' : 'off'}`
 }
