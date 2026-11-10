@@ -2018,8 +2018,8 @@ assets:
     height: 270
   - path: films/vigil.mp4
     store: ACT2
-    sha256: "17f15f0360672fdece1ed8b0821c4e5ffbed97f813ac9ef22469cdf43f80cb59"
-    bytes: 3540071
+    sha256: "6ff80d012e143388ea1d8f194f276a27d4139b715383380a5300566f1ffbbe7b"
+    bytes: 3575463
     width: 1920
     height: 1080
   - path: films/vigil-still.png
@@ -2030,8 +2030,8 @@ assets:
     height: 270
   - path: films/act-2.mp4
     store: ACT2
-    sha256: "003ea6503e7f103fed9474e3e00043390891d29403599c3ec52b83fc1e1b0380"
-    bytes: 2976292
+    sha256: "371bbd42fd6fb7413bfe5238a7e96899c2d9c436fa6db0c75386e39aea8035ce"
+    bytes: 2507009
     width: 1920
     height: 1080
   - path: films/act-2-still.png
