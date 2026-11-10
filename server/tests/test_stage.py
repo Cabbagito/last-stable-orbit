@@ -514,7 +514,7 @@ async def test_reset_is_only_for_while_the_players_are_held(engine, content):
 
 def test_the_session_cards_are_the_gms_alone(engine, content):
     cards = project(engine.state, content, GM)["presets"]
-    assert [c["session"] for c in cards] == ["Session 1"] * 4 + ["Session 2"] * 2 and all(c["card"].startswith("/assets/") and c["blurb"] for c in cards)
+    assert [c["session"] for c in cards] == ["Session 1"] * 4 + ["Session 2"] * 2 + ["Session 3"] and all(c["card"].startswith("/assets/") and c["blurb"] for c in cards)
     for viewer in (TALLY, STAGE):
         view = json.dumps(project(engine.state, content, viewer))
         for p in content.presets.values():

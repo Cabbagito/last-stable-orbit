@@ -15,6 +15,7 @@ moods:
   - {id: day, label: Day, base: maps/bots/base-day.png}
   - {id: night, label: Night, base: maps/bots/base-night.png}
   - {id: alert, label: Alert, base: maps/bots/base-alert.png}
+  - {id: heist, label: Heist night, base: maps/bots/base-heist.png}  # Night, with the repair frame empty (scripts/empty_bot_frame.py)
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: cradles
     name: "The cradles"

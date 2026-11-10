@@ -1884,6 +1884,13 @@ assets:
     bytes: 129262
     width: 1110
     height: 700
+  - path: maps/bots/base-heist.png  # generated from base-night.png by scripts/empty_bot_frame.py
+    store: HEIST
+    asset_id: ""
+    sha256: "4ea5ba401ea1cc79428ad50d1550b423e746e86804debb4c65ac8cde854ba29b"
+    bytes: 101721
+    width: 1110
+    height: 700
   - path: presets/arrival.png
     store: SESSION
     asset_id: "4ce0f4231b845e0a4f0a241acca13bba"

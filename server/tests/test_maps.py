@@ -190,9 +190,10 @@ async def test_the_heist_maps_are_separate_with_day_night_alert(engine):
     gm = project(engine.state, engine.content, GM)["maps"]
     assert "executive" not in gm
     for m in HEIST:
-        assert [x["id"] for x in gm[m]["moods"]] == ["day", "night", "alert"], m
+        assert [x["id"] for x in gm[m]["moods"]][:3] == ["day", "night", "alert"], m
         assert all(x["glow"] is None for x in gm[m]["moods"]), m  # the new art is one flat picture per mood
         assert gm[m]["objects"] and gm[m]["pins"], m
+    assert [x["id"] for x in gm["bots"]["moods"]][3:] == ["heist"]  # the Bot bays also have heist night, with the repair frame empty
     assert {m: bool(gm[m]["cameras"]) for m in HEIST} == {"deck-6": True, "deck-7": True, "deck-8": True, "deck-9": True, "secure": True, "bots": False}
     assert gm["deck-9"]["objects"][0]["id"] == "signet"
 

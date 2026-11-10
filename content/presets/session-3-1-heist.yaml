@@ -1,0 +1,113 @@
+# Session 3, the heist: night, and the crew start on deck 6. Who's where is the Heist playground's Night layer. The Bot bays
+# use the Heist night mood, whose art has the repair frame empty: the mech has gone, and there is no chip for it until its fight.
+id: session-3-heist
+name: "The heist"
+session: "Session 3"
+blurb: "Night. The crew on deck 6, the decks dark."
+card: maps/deck-9/base-night.png
+party_map: deck-6
+maps:
+  event-horizon: {mood: after, switches: {seals_box: 0}, shown: [mural, slots]}
+  promenade: {mood: calm, switches: {cameras: 0}, shown: [queue-board, mural, window, founders-ring, satisfaction]}
+  deck-6: {mood: night, switches: {cameras: 0}}
+  deck-7: {mood: night, switches: {cameras: 0}}
+  deck-8: {mood: night, switches: {cameras: 0}}
+  deck-9: {mood: night, switches: {cameras: 0}}
+  secure: {mood: night, switches: {cameras: 0}, shown: [vault-door, flowers]}
+  lift: {mood: shut, switches: {cameras: 0}}
+  bots: {mood: heist}
+  med: {mood: white, shown: [screen]}
+tokens:
+  # the crew, out of the lift on deck 6
+  - {kind: crew, ref: lale, map: deck-6, at: [8.6, 1.2, 0]}
+  - {kind: crew, ref: marlo, map: deck-6, at: [7.0, 1.2, 0]}
+  - {kind: crew, ref: tally, map: deck-6, at: [5.4, 1.2, 0]}
+  - {kind: crew, ref: ves, map: deck-6, at: [7.8, 2.7, 0]}
+  - {kind: crew, ref: tomo, map: deck-6, at: [6.2, 2.7, 0]}
+  # deck 6: a guard at the desk and one patrolling the rows. Ahti is hidden in his closet, the towel guards in the showers
+  - {kind: npc, ref: guard, map: deck-6, at: [11.48, 3.38, 0]}
+  - {kind: npc, ref: guard-rookie, map: deck-6, at: [17.77, 8.77, 0]}  # the patrol
+  - {kind: npc, ref: ahti, map: deck-6, at: [14.67, 1.47, 0], hidden: true}  # whoever opens his door is hired
+  - {kind: npc, ref: guard-towel, map: deck-6, at: [1.6, 9.8, 0], hidden: true}
+  - {kind: npc, ref: guard-turban, map: deck-6, at: [1.6, 11.6, 0], hidden: true}
+  # deck 7: Irena at her desk lamp, the operator at the monitors, one manager working late
+  - {kind: npc, ref: scientist, map: deck-7, at: [1.97, 4.77, 0]}
+  - {kind: npc, ref: camera-operator, map: deck-7, at: [13.37, 3.57, 0]}
+  - {kind: npc, ref: scientist-junior, map: deck-7, at: [9.35, 10.85, 0]}
+  - {kind: npc, ref: guard, map: deck-7, at: [12.5, 6.5, 0]}  # on the open floor, between the offices and the power closet
+  - {kind: npc, ref: head-of-security, map: deck-7, at: [4.2, 3.4, 0]}  # in Irena's room
+  # deck 8: the checkpoint, the stairs and the open floor
+  - {kind: npc, ref: guard-riot, map: deck-8, at: [10.45, 2.95, 0]}
+  - {kind: npc, ref: guard-sergeant, map: deck-8, at: [16.3, 4.35, 0]}  # at the stairs
+  - {kind: npc, ref: guard-rookie, map: deck-8, at: [12.5, 6.2, 0]}
+  - {kind: npc, ref: guard, map: deck-8, at: [6.5, 4.5, 0]}  # by the lounge
+  # deck 9: the office door is locked, with one camera on it, and two guards on the floor
+  - {kind: npc, ref: guard-riot, map: deck-9, at: [17.0, 4.6, 0]}  # at the top of the stairs
+  - {kind: npc, ref: guard, map: deck-9, at: [11.0, 6.0, 0]}  # outside the office door
+  # the Secure floor, ready for a fight: guards at the vault door, the door from deck 8 and either side of the ring, one asleep in the guard room. Ahti's crew do the flowers in the stores after 22:00
+  - {kind: npc, ref: guard-sergeant, map: secure, at: [2.17, 20.97, 0]}  # off duty, asleep
+  - {kind: npc, ref: guard, map: secure, at: [11.93, 4.38, 0]}  # at the vault door
+  - {kind: npc, ref: guard-riot, map: secure, at: [17.94, 4.38, 0]}
+  - {kind: npc, ref: guard-rookie, map: secure, at: [13.6, 21.0, 0]}  # the door from deck 8
+  - {kind: npc, ref: guard, map: secure, at: [16.4, 21.0, 0]}
+  - {kind: npc, ref: guard-riot, map: secure, at: [12.6, 11.3, 0]}  # either side of the ring
+  - {kind: npc, ref: guard-sergeant, map: secure, at: [17.8, 11.3, 0]}
+  - {kind: npc, ref: ahti, map: secure, at: [28.17, 20.57, 0], hidden: true}  # a hidden copy, in the Vigil stores
+  # the Bot bays: the frame stands empty, with two techs and two guards still around it. BOLT-7 is hidden on pad 7
+  - {kind: npc, ref: guard, map: bots, at: [10.97, 4.57, 0]}
+  - {kind: npc, ref: guard-riot, map: bots, at: [18.57, 2.37, 0]}
+  - {kind: npc, ref: tech-welder, map: bots, at: [12.57, 3.97, 0]}
+  - {kind: npc, ref: tech-chief, map: bots, at: [16.77, 6.77, 0]}
+  - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
+  - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
+  - {kind: npc, ref: cleaner-11, map: bots, at: [13.55, 12.45, 0]}
+  - {kind: npc, ref: cleaner-13, map: bots, at: [15.25, 12.5, 0]}
+  - {kind: npc, ref: service-droid, map: bots, at: [11.4, 9.6, 0]}
+  - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}  # hidden, on the pad numbered 7
+  # the bar after hours, and the Promenade and Med Bay at the end of the day
+  - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
+  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}
+  - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}
+  - {kind: npc, ref: cleaner-7, map: promenade, at: [13.2, 1.2, 0]}
+  - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [20.4, 1.5, 0.3]}
+  - {kind: npc, ref: resident-coral, map: promenade, at: [17.2, 5.4, 0]}
+  - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}  # by the service door down to the Bot bays
+  - {kind: npc, ref: guard-rookie, map: promenade, at: [23.9, 2.4, 0]}
+  - {kind: npc, ref: guard, map: promenade, at: [25.9, 2.9, 0]}
+  # more on the way to the company's lift: getting up there is part of the heist
+  - {kind: npc, ref: guard-sergeant, map: promenade, at: [22.4, 2.0, 0]}
+  - {kind: npc, ref: guard-riot, map: promenade, at: [27.1, 4.4, 0]}
+  - {kind: npc, ref: guard, map: promenade, at: [21.0, 7.0, 0]}  # patrolling the plaza
+  - {kind: npc, ref: guard-rookie, map: promenade, at: [31.0, 6.0, 0]}  # patrolling the market
+  - {kind: npc, ref: robot-cook, map: promenade, at: [27.9, 0.9, 0]}
+  - {kind: npc, ref: resident-noodles, map: promenade, at: [27.5, 2.2, 0.3]}
+  - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}
+  - {kind: npc, ref: gumshoe, map: promenade, at: [33.5, 8.6, 0]}
+  - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.7, 11.0, 0]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [43.3, 2.7, 0]}
+  - {kind: npc, ref: robot-miner, map: promenade, at: [41.3, 7.5, 0.3]}
+  - {kind: npc, ref: static, map: promenade, at: [22.5, -8.5, 0], hidden: true}
+  - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
+  - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
+  - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
+  - {kind: npc, ref: nurse, map: med, at: [7.6, 2.9, 0]}
+  - {kind: npc, ref: happy-resident, map: med, at: [1.4, 1.1, 0.6]}
+  - {kind: npc, ref: passenger-old, map: med, at: [1.4, 2.9, 0.6]}
+  - {kind: npc, ref: frail-passenger, map: med, at: [1.4, 4.7, 0.6]}
+  # still aboard the Patience
+  - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
+inventory:  # the starting kit; a scene load leaves what the crew actually carries alone
+  lale: [fob-watch, letter-lale, {item: credits, count: 140}]
+  marlo: [stun-rings, letter-marlo, {item: credits, count: 140}]
+  tally: [tally-notebook, letter-tally, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, letter-ves, {item: credits, count: 140}]
+  tomo: [sourdough-jar, letter-tomo, {item: credits, count: 140}]
+
+codex: [lale, marlo, tally, ves, tomo,
+        rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health,
+        patience, promenade, event-horizon,
+        ergo, isco, hole, queue,
+        dax, fixer, concierge, dock-clerk, steward, ilija, letter, mural, table, slots, music-credit]
+
+station: [patience, promenade, event-horizon, deck-6, deck-7, deck-8, secure]
