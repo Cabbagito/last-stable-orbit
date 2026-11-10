@@ -2018,26 +2018,26 @@ assets:
     height: 270
   - path: films/vigil.mp4
     store: ACT2
-    sha256: "5b17ea3285fdc029cc6927e89ffdb36e68a04799493840c9aa7decb2213ee84b"
-    bytes: 3561798
+    sha256: "17f15f0360672fdece1ed8b0821c4e5ffbed97f813ac9ef22469cdf43f80cb59"
+    bytes: 3540071
     width: 1920
     height: 1080
   - path: films/vigil-still.png
     store: ACT2
-    sha256: "9f450af055316be4397e65f0ca6758ed2facb52b78a4002c77bbf1921a45e962"
-    bytes: 59533
+    sha256: "db561497e36195e34a59be5d8d314887118c5c3111d194b97e5e82698097c908"
+    bytes: 63980
     width: 480
     height: 270
   - path: films/act-2.mp4
     store: ACT2
-    sha256: "8a232f496f6b1b7f2656e6ee2782c2f3605b0812d41cf7968b03486817cac025"
-    bytes: 1470294
+    sha256: "003ea6503e7f103fed9474e3e00043390891d29403599c3ec52b83fc1e1b0380"
+    bytes: 2976292
     width: 1920
     height: 1080
   - path: films/act-2-still.png
     store: ACT2
-    sha256: "9da0d9b604137b7b9427b13245a2f920d41c973faf4c09c207d61699e1854c0b"
-    bytes: 32868
+    sha256: "d903cc8950ed5a8567adc7d188dd0089374ec815fd8ebed13965ea7d803b5025"
+    bytes: 43114
     width: 480
     height: 270
   - path: films/keepers-end.mp4
