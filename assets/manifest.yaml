@@ -1994,8 +1994,8 @@ assets:
     height: 1080
   - path: films/lucan.mp4
     store: LUCAN
-    sha256: "d7ee31acbebd5be921374848baa232a944e4c69a09f90415167cadc2065b5b29"
-    bytes: 2395933
+    sha256: "e4c227fea6eb0dec69546edeba07217811597f5e1456c9ce6f73039db7bbb5b5"
+    bytes: 2397646
     width: 1920
     height: 1080
   - path: films/lucan-still.png
@@ -2006,8 +2006,8 @@ assets:
     height: 270
   - path: films/act-1.mp4
     store: ACT1
-    sha256: "37f5329aaf51d75d803a933ffb779bb9509c4a2254760e76b1204fc9c2315966"
-    bytes: 4927050
+    sha256: "b72462d71f15d0a978214c02d69f3d603bab36fbd9717c54a2487b6badb6d6e1"
+    bytes: 4931880
     width: 1920
     height: 1080
   - path: films/act-1-still.png
