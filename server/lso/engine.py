@@ -191,7 +191,7 @@ class Engine:
         bad += [f"station {m!r}" for m in s.station if m not in places]
         if s.stage.burn and s.stage.burn.char not in c.characters:
             bad.append(f"burn {s.stage.burn.char!r}")
-        if s.stage.follow and s.stage.follow not in c.characters:
+        if s.stage.follow and s.stage.follow not in c.characters and s.stage.follow not in s.tokens:
             bad.append(f"camera follow {s.stage.follow!r}")
         for m, f in s.fights.items():
             if m not in c.maps:

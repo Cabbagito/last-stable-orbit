@@ -180,7 +180,7 @@ function TvMap({ map, tokens, view, focus }: { map: MapView; tokens: TokenView[]
   const at = (t: TokenView) => proj(map.origin, where(t))
   const crew = tokens.filter((t) => t.kind === 'crew')
   const { camera, follow } = view.stage
-  const followed = crew.find((t) => t.ref === follow)
+  const followed = crew.find((t) => t.ref === follow) ?? tokens.find((t) => t.id === follow)
   const rolling = camera === 'roller' && focus ? tokens.find((t) => t.id === focus) : undefined
   const rows = view.fights?.length ?? 0
   const bottom = rows ? (Math.min(size[0] / 1440, size[1] / 810) || 1) * (ROW_FOOT + rows * ROW_H + (rows - 1) * ROW_GAP) : 0

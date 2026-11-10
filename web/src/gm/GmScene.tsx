@@ -12,7 +12,8 @@ import { RingPortrait } from '../shell/RingPortrait'
 import { Flare, burnSpeech, useBurnMark } from '../stage/BurnMark'
 import { gmRoll, gmRun, useGame } from '../store/game'
 import type { CrewMember, MapView, RosterNpc, TokenView, View } from '../types'
-import { Cross, Diamond, ENTROPY_MAX, Eye, MiniStep } from './parts'
+import { CameraIcon, Cross, Diamond, ENTROPY_MAX, Eye, MiniStep } from './parts'
+import { filmOn } from './StageSections'
 
 const DICE = [4, 6, 8, 10, 12, 20]
 const DIE_MODES = [
@@ -156,8 +157,29 @@ function NpcRow({ t, isNow, open }: { t: TokenView; isNow: boolean; open: () => 
         {t.role && <span className="gx-role">{t.role}</span>}
       </div>
       <MiniStep who={t.name} label="HP" tone="hp" value={hp} max={t.health ?? hp} showMax onChange={(v) => void gmRun('gm.npc.hp', { token: t.id, hp: v })} />
+      <FollowButton t={t} />
       <EyeButton name={t.name} hidden={!!t.hidden} onToggle={() => void gmRun('gm.token.hide', { token: t.id, hidden: !t.hidden })} />
     </div>
+  )
+}
+
+/** Puts the TV's camera on this NPC, or back on the crew if it's already there. */
+function FollowButton({ t }: { t: TokenView }) {
+  const stage = useGame((s) => s.view?.stage)
+  const on = stage?.camera === 'follow' && stage.follow === t.id
+  const label = t.hidden ? `Show ${t.name} to follow them` : on ? `Stop following ${t.name}` : `Follow ${t.name} on the TV`
+  return (
+    <button
+      type="button"
+      className={'r10-ico gx-eye gx-follow' + (on ? ' on' : '')}
+      aria-pressed={on}
+      aria-label={label}
+      title={label}
+      disabled={!!t.hidden || (!!stage && filmOn(stage))}
+      onClick={() => void gmRun('gm.stage.camera', on ? { camera: 'crew' } : { camera: 'follow', follow: t.id })}
+    >
+      <CameraIcon />
+    </button>
   )
 }
 

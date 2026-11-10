@@ -239,7 +239,7 @@
   stats: {body: 6, reflex: 8, tech: 10, intel: 8, cool: 10, empathy: 8}
   health: 2  # DRAFT for Peter
   mood: Haggling
-  note: Noodles, chrome, implants. Whatever you need, by tonight.
+  note: Chrome, implants, fittings. Whatever you need, by tonight.
   gm_note: Contacts and supplies for the crew in session 1.
 
 - id: nurse
@@ -609,6 +609,18 @@
   mood: Humming along  # DRAFT
   note: A small old man with a mop and headphones.
   gm_note: "Has cleaned the executive decks for years, because ISCO's bots aren't allowed up there. He always needs people, so whoever opens his closet door on deck 6 is hired on the spot, overalls included: by day someone barfed, and by night his crew clears the Vigil's flowers off the Secure floor, walking through deck 8's checkpoint."
+
+- id: bolt-7
+  name: BOLT-7
+  role: The Lookout, machine mind  # DRAFT
+  group: Locals
+  portrait: portraits/bolt-7.gif  # the cyan version from the Portraits canvas; its background is still the slot bank
+  color: "#5fd8e6"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 4  # DRAFT placeholder
+  mood: On watch  # DRAFT
+  note: A lookout with nobody to look out for.  # DRAFT, from the bible
+  gm_note: "Ves's side quest, and only the Ves player knows him. Lookout on her old crew, sold off as surplus when she got out through a vent while he held the door; he believes she never came back. An offworld machine ISCO never registered, so the cleaners clean around him like furniture. Depressed and literal, and he'll talk about the old days to anyone, Tomo included. \"Hello, Vesna. You're late.\" The heart of it is Ves telling him she came back. By day the bible has him on the gantry over the Dock 7 queue, timing it; at night he sleeps in a spare cradle in the Bot bays."
 
 - id: static
   name: Static Kováč

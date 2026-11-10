@@ -67,7 +67,7 @@ async def test_a_new_npcs_secrets_stay_with_the_gm(engine, content):
 def test_the_session_1_presets(content):
     pitch = content.presets["session-1"]
     assert pitch.maps["event-horizon"].mood == "after"
-    on_map = {t.ref for t in pitch.tokens}
+    on_map = {t.ref for t in pitch.tokens if t.map == "event-horizon"}
     assert on_map == set(CREW) | {"fixer", "cleaner-14"}  # Dax has left, and only Unit 14 stays
 
     arrival = content.presets["session-1-arrival"]
@@ -75,13 +75,13 @@ def test_the_session_1_presets(content):
 
 
 def test_session_1s_four_beats_are_in_order(content):
-    assert list(content.presets) == ["session-1-arrival", "session-1-day", "session-1-night", "session-1"]
+    assert list(content.presets)[:4] == ["session-1-arrival", "session-1-day", "session-1-night", "session-1"]
     crew = lambda p: {t.map for t in p.tokens if t.kind == "crew"}
     day, night = content.presets["session-1-day"], content.presets["session-1-night"]
     assert crew(day) == {"promenade"} and day.party_map == "promenade" and day.maps["event-horizon"].mood == "open"
     assert "gumshoe" in {t.ref for t in day.tokens if t.map == "promenade"}
-    assert crew(night) == {"promenade"} and night.maps["event-horizon"].mood == "after"
-    assert {t.ref for t in night.tokens if t.kind == "npc"} == {"dax", "scientist", "cleaner-14"}
+    assert crew(night) == {"event-horizon"} and all(t.hidden for t in night.tokens if t.kind == "crew") and night.maps["event-horizon"].mood == "after"
+    assert {t.ref for t in night.tokens if t.kind == "npc" and t.map == "event-horizon"} == {"dax", "scientist", "cleaner-14"}
 
 
 async def _load(engine, viewer, **args):
@@ -104,7 +104,7 @@ async def test_a_scene_load_keeps_what_the_crew_has_and_knows(engine, content):
     assert "alley" in s.maps["promenade"].shown and set(before.station) <= set(s.station)
     # and the scene itself moved
     assert s.maps["event-horizon"].mood == "after" and s.tokens["scientist"].map == "event-horizon"
-    assert s.tokens["ves"].map == "promenade" and "steward" not in s.tokens
+    assert s.tokens["ves"].map == "event-horizon" and s.tokens["ves"].hidden and "steward" not in s.tokens
 
 
 async def test_a_scene_load_ends_a_fight(engine):

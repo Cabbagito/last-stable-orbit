@@ -341,8 +341,11 @@ def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: fl
         follow = args.get("follow", state.stage.follow)
         if camera == "follow" and follow is None:
             follow = next(iter(content.characters), None)
-        if follow is not None and follow not in content.characters:
-            raise _invalid("follow must be a crew member")
+        token = state.tokens.get(follow) if isinstance(follow, str) else None
+        if follow is not None and follow not in content.characters and token is None:
+            raise _invalid("follow must be a crew member or a token")
+        if token and token.kind == "npc" and token.hidden:
+            raise _invalid("that token is hidden from the TV: show it first")
         if (camera, follow) == (state.stage.camera, state.stage.follow):
             return []
         return [("stage.camera_set", {"camera": camera, "follow": follow})]

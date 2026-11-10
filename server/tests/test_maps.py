@@ -66,7 +66,7 @@ async def test_everyone_sees_the_cameras_and_the_moving_window(engine):
     assert len([c for c in m["cameras"]["cones"] if c["mood"] == "calm"]) == 6
     assert len([c for c in m["cameras"]["cones"] if c["mood"] == "hunted"]) == 6
     assert all(len(c["pts"]) == 8 for c in m["cameras"]["cones"])
-    assert m["values"].get("cameras") == 1  # the default preset turns them on
+    assert m["values"].get("cameras") == 0  # every session starts with them off
     assert m["decals"][0]["src"] == "/assets/maps/promenade/hole.gif"
     assert "maps/promenade/hole.gif" in referenced_assets(project(engine.state, engine.content, VES))
     assert m["hum"] == "street"
@@ -130,7 +130,7 @@ async def test_the_arrival_preset(engine):
     s = engine.state
     assert s.party_map == "patience"
     assert all(crew_token(s, c).map == "patience" for c in CREW)
-    assert s.maps["promenade"].switches == {"cameras": 1}
+    assert s.maps["promenade"].switches == {"cameras": 0}
     v = project(s, engine.content, VES)
     assert {t["ref"] for t in v["tokens"].values() if t["kind"] == "npc"} == {
         "frail-passenger", "passenger", "passenger-candles", "passenger-flowers", "passenger-old", "passenger-tourist",
@@ -156,7 +156,7 @@ def test_a_saved_game_gains_the_new_maps(content, tmp_path):
     store.commit("system", None, [], old.model_dump(mode="json"), {})
     e = Engine(content, store)
     assert set(e.state.maps) == set(content.maps)
-    assert e.state.maps["promenade"] == MapState(mood="calm", switches={"cameras": 1})
+    assert e.state.maps["promenade"] == MapState(mood="calm", switches={"cameras": 0})
     assert e.state.maps["patience"] == MapState(mood="docked")
     # and the GM can set a new map's mood straight away
     from lso.commands import handle

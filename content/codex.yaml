@@ -202,7 +202,7 @@ entries:
   npc: vendor
   label: NPC · vendor
   art: {src: portraits/vendor.gif, kind: bust, pos: 50% 10%}
-  lead: Sells noodles, chrome and implants at the Night Market. Whatever you need, by tonight.
+  lead: Runs the chrome clinic at the Night Market. Chrome, implants, fittings. Whatever you need, by tonight.
   see: [promenade, chrome]
 - id: unit-14
   sec: chars

@@ -1,39 +1,49 @@
+import { useEffect, useRef, useState } from 'react'
 import { gmRun } from '../store/game'
-import type { View } from '../types'
+import type { MapView, View } from '../types'
 import { filmOn, useTick } from './StageSections'
 
-const nudge = (args: Record<string, unknown>) => void gmRun('gm.stage.nudge', args)
-
-const PANS: { label: string; args: { x?: number; y?: number }; turn: number }[] = [
-  { label: 'left', args: { x: -1 }, turn: 180 },
-  { label: 'up', args: { y: -1 }, turn: 270 },
-  { label: 'down', args: { y: 1 }, turn: 90 },
-  { label: 'right', args: { x: 1 }, turn: 0 },
-]
-
-function Chevron({ turn }: { turn: number }) {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" style={{ transform: `rotate(${turn}deg)` }}>
-      <path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />
-    </svg>
-  )
-}
-
 /**
- * The TV's camera, on the Scene tab: what it looks at (the crew, one of them, or whoever rolls), and quick zoom and
- * pan on top of that shot, while you watch the TV. Picking a new shot centres it again.
+ * What the TV looks at, on the Scene tab: the whole crew, whoever rolls, one of the crew, or anyone else on this map.
+ * The NPC rows in the column have their own camera button too.
  */
-export function TvCameraBar({ view }: { view: View }) {
-  const { camera, follow, zoom = 0, pan = [0, 0] } = view.stage
+export function TvCameraBar({ view, map }: { view: View; map: MapView }) {
+  const { camera, follow } = view.stage
   const busy = filmOn(view.stage) // the camera can't change under a film
   useTick(busy)
+  const [open, setOpen] = useState(false)
+  const root = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const away = (e: PointerEvent) => {
+      if (!root.current?.contains(e.target as Node)) setOpen(false)
+    }
+    const esc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('pointerdown', away, true) // capturing: the map keeps its own clicks to itself
+    document.addEventListener('keydown', esc)
+    return () => {
+      document.removeEventListener('pointerdown', away, true)
+      document.removeEventListener('keydown', esc)
+    }
+  }, [open])
+
   const shoot = (args: Record<string, unknown>) => void gmRun('gm.stage.camera', args)
-  const moved = zoom !== 0 || pan[0] !== 0 || pan[1] !== 0
+  const here = Object.values(view.tokens)
+    .filter((t) => t.map === map.id && t.kind === 'npc' && !t.hidden) // the TV can't follow what it isn't shown
+    .sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id))
+  const followed = camera === 'follow' && follow ? view.tokens[follow] : undefined
+  const npc = followed?.kind === 'npc' ? followed : undefined
+
   return (
     <div className="r10-mood r10-cam" role="group" aria-label="The TV's camera">
-      <span className="r10-camlabel">TV camera</span>
       <button type="button" className={camera === 'crew' ? 'on' : ''} aria-pressed={camera === 'crew'} disabled={busy} title="Keep the whole crew in frame" onClick={() => shoot({ camera: 'crew' })}>
         Crew
+      </button>
+      <button type="button" className={camera === 'roller' ? 'on' : ''} aria-pressed={camera === 'roller'} disabled={busy} title="Show the crew, cut to whoever rolls, then come back" onClick={() => shoot({ camera: 'roller' })}>
+        Rolls
       </button>
       {view.crew.map((c) => {
         const on = camera === 'follow' && follow === c.id
@@ -43,27 +53,33 @@ export function TvCameraBar({ view }: { view: View }) {
           </button>
         )
       })}
-      <button type="button" className={camera === 'roller' ? 'on' : ''} aria-pressed={camera === 'roller'} disabled={busy} title="Show the crew, cut to whoever rolls, then come back" onClick={() => shoot({ camera: 'roller' })}>
-        Rolls
-      </button>
-      <button type="button" className="r10-camic" aria-label="Zoom out" title="Zoom out" disabled={busy} onClick={() => nudge({ zoom: -1 })}>
-        <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-          <path d="M2 6h8" stroke="currentColor" strokeWidth="1.4" />
-        </svg>
-      </button>
-      <button type="button" className="r10-camic" aria-label="Zoom in" title="Zoom in" disabled={busy} onClick={() => nudge({ zoom: 1 })}>
-        <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-          <path d="M2 6h8M6 2v8" stroke="currentColor" strokeWidth="1.4" />
-        </svg>
-      </button>
-      {PANS.map((p) => (
-        <button key={p.label} type="button" className="r10-camic" aria-label={`Move the camera ${p.label}`} title={`Move the camera ${p.label}`} disabled={busy} onClick={() => nudge(p.args)}>
-          <Chevron turn={p.turn} />
+      <div ref={root} className="gx-sbcat">
+        <button type="button" className={'r10-campick' + (npc || open ? ' on' : '')} aria-expanded={open} disabled={busy || here.length === 0} title="Follow someone else on this map" onClick={() => setOpen(!open)}>
+          {npc ? npc.name : 'In this map'}
+          <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M2 8l4-4 4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />
+          </svg>
         </button>
-      ))}
-      <button type="button" disabled={busy || !moved} title="Back to the plain shot" onClick={() => nudge({ reset: true })}>
-        Recentre
-      </button>
+        {open && (
+          <div className="gx-sbmenu r10-cammenu" role="group" aria-label="Follow someone on this map">
+            {here.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                className={npc?.id === t.id ? 'on' : ''}
+                aria-pressed={npc?.id === t.id}
+                onClick={() => {
+                  shoot({ camera: 'follow', follow: t.id })
+                  setOpen(false)
+                }}
+              >
+                <img src={t.portrait} alt="" className="r3-px" />
+                {t.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

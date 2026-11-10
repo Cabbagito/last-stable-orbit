@@ -11,13 +11,14 @@ default: true
 party_map: event-horizon
 maps:
   event-horizon: {mood: after, shown: [mural, slots]}
-  promenade: {mood: calm, switches: {cameras: 1}}
-  deck-6: {mood: day, switches: {cameras: 1}}
-  deck-7: {mood: day, switches: {cameras: 1}}
-  deck-8: {mood: day, switches: {cameras: 1}}
-  deck-9: {mood: day, switches: {cameras: 1}}
-  secure: {mood: day, switches: {cameras: 1}}
-  lift: {mood: shut, switches: {cameras: 1}}
+  promenade: {mood: calm, switches: {cameras: 0}}
+  deck-6: {mood: day, switches: {cameras: 0}}
+  deck-7: {mood: day, switches: {cameras: 0}}
+  deck-8: {mood: day, switches: {cameras: 0}}
+  deck-9: {mood: day, switches: {cameras: 0}}
+  secure: {mood: day, switches: {cameras: 0}}
+  lift: {mood: shut, switches: {cameras: 0}}
+  bots: {mood: night}
 tokens:
   - {kind: npc, ref: fixer, map: event-horizon, at: [4.203, 2.89, 0.24]}
   - {kind: crew, ref: lale, map: event-horizon, at: [4.203, 4.51, 0.24]}
@@ -26,6 +27,15 @@ tokens:
   - {kind: crew, ref: ves, map: event-horizon, at: [1.397, 2.89, 0.24]}
   - {kind: crew, ref: tomo, map: event-horizon, at: [2.8, 2.08, 0.24]}
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}
+  - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}  # by the service door down to the Bot bays
+  # the Bot bays at night, fuller than by day: Units 11 and 13 have come home to their own pads, 19 and 23 are on 2 and 5,
+  # and a service droid is at the dispatch terminal. Pad 3 is empty because Unit 3 is out in the alley.
+  - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
+  - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
+  - {kind: npc, ref: cleaner-11, map: bots, at: [13.55, 12.45, 0]}
+  - {kind: npc, ref: cleaner-13, map: bots, at: [15.25, 12.5, 0]}
+  - {kind: npc, ref: service-droid, map: bots, at: [11.4, 9.6, 0]}
+  - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}  # hidden, on the pad numbered 7
 # Every crew member starts at their full health and 2 Entropy unless listed under vitals.
 inventory:  # DRAFT starting kit from the bible, for Peter to edit. Lale never carries a weapon.
   lale: [fob-watch, letter-lale, {item: credits, count: 140}]

@@ -51,6 +51,16 @@ async def sweeper(engine: Engine, hub: Hub) -> None:
             log.exception("roll sweep failed")
 
 
+def asset_response(f: Path, request: Request) -> Response:
+    """Send art so a browser checks for a new version on every load: 304 when it's unchanged, the new file when it isn't."""
+    st = f.stat()
+    tag = f'"{st.st_mtime_ns:x}-{st.st_size:x}"'
+    headers = {"Cache-Control": "no-cache", "ETag": tag}
+    if tag in request.headers.get("if-none-match", ""):
+        return Response(status_code=304, headers=headers)
+    return FileResponse(f, headers=headers)
+
+
 class LoginBody(BaseModel):
     seat: str | None = None  # a character id: players just pick who they are. "stage": the TV
     passcode: str | None = None  # the GM's passcode
@@ -146,13 +156,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         rel = f.relative_to(root).as_posix() if f.is_relative_to(root) else ""
         if not v:
             if rel in request.app.state.login_assets and f.is_file():
-                return FileResponse(f, headers={"Cache-Control": "private, max-age=86400"})
+                return asset_response(f, request)
             raise HTTPException(401)
         if not rel or not f.is_file():
             raise HTTPException(404)
         if not v.is_gm and not rel.startswith(PUBLIC_ASSET_DIRS) and rel not in request.app.state.hub.allowed_assets(v):
             raise HTTPException(404)  # same answer as a missing file: guessing a URL tells you nothing
-        return FileResponse(f, headers={"Cache-Control": "private, max-age=86400"})
+        return asset_response(f, request)
 
     def origin_ok(ws: WebSocket) -> bool:
         origin = ws.headers.get("origin")

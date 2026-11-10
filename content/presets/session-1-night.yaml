@@ -1,32 +1,68 @@
-# Session 1, the night: the bar is in After hours, the crew are outside its door, and the GM sends them in one by one
-# in Reflex order. Dax is at his place, Irena is with him for the first arrival, and Unit 14 is in the corner.
-# Positions are DRAFTS, checked on the art.
+# Session 1, the night: the bar is in After hours and Dax is alone at his place at the counter, with Unit 14 in the corner.
+# The crew and Irena wait hidden in the black off the top right of the bar's map. The GM drags them in, still hidden, as
+# they arrive in Reflex order, and shows them. Positions are DRAFTS, checked on the art.
 id: session-1-night
 name: "After hours, arrivals"
 session: "Session 1"
-blurb: "The bar after hours. The crew outside its door."
+blurb: "The bar after hours. The crew hidden, for you to place."
 card: presets/after-hours.png
 party_map: event-horizon
 maps:
   event-horizon: {mood: after, switches: {seals_box: 0}, shown: [mural, slots]}
-  promenade: {mood: calm, switches: {cameras: 1}}
-  deck-6: {mood: day, switches: {cameras: 1}}
-  deck-7: {mood: day, switches: {cameras: 1}}
-  deck-8: {mood: day, switches: {cameras: 1}}
-  deck-9: {mood: day, switches: {cameras: 1}}
-  secure: {mood: day, switches: {cameras: 1}}
-  lift: {mood: shut, switches: {cameras: 1}}
+  promenade: {mood: calm, switches: {cameras: 0}, shown: [queue-board, mural, window, founders-ring, satisfaction]}
+  deck-6: {mood: day, switches: {cameras: 0}}
+  deck-7: {mood: day, switches: {cameras: 0}}
+  deck-8: {mood: day, switches: {cameras: 0}}
+  deck-9: {mood: day, switches: {cameras: 0}}
+  secure: {mood: day, switches: {cameras: 0}}
+  lift: {mood: shut, switches: {cameras: 0}}
+  bots: {mood: night}
+  med: {mood: white, shown: [screen]}
 tokens:
-  # outside the bar's door, on the Promenade
-  - {kind: crew, ref: ves, map: promenade, at: [37.0, 2.0, 0]}
-  - {kind: crew, ref: tomo, map: promenade, at: [38.0, 2.6, 0]}
-  - {kind: crew, ref: lale, map: promenade, at: [36.4, 3.2, 0]}
-  - {kind: crew, ref: marlo, map: promenade, at: [39.6, 3.2, 0]}
-  - {kind: crew, ref: tally, map: promenade, at: [37.4, 4.0, 0]}
+  # the crew, hidden, off the map at the bar
+  - {kind: crew, ref: ves, map: event-horizon, at: [4.87, -12.27, 0], hidden: true}
+  - {kind: crew, ref: tomo, map: event-horizon, at: [5.87, -13.27, 0], hidden: true}
+  - {kind: crew, ref: lale, map: event-horizon, at: [6.87, -10.27, 0], hidden: true}
+  - {kind: crew, ref: marlo, map: event-horizon, at: [7.87, -11.27, 0], hidden: true}
+  - {kind: crew, ref: tally, map: event-horizon, at: [7.87, -13.27, 0], hidden: true}
+  # the street at the end of the day: the open day's, about a third thinner, with the queue gone
+  - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}
+  - {kind: npc, ref: cleaner-7, map: promenade, at: [13.2, 1.2, 0]}
+  - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [20.4, 1.5, 0.3]}
+  - {kind: npc, ref: resident-coral, map: promenade, at: [17.2, 5.4, 0]}
+  - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}  # by the service door down to the Bot bays
+  - {kind: npc, ref: guard-rookie, map: promenade, at: [23.9, 2.4, 0]}
+  - {kind: npc, ref: guard, map: promenade, at: [25.9, 2.9, 0]}
+  - {kind: npc, ref: robot-cook, map: promenade, at: [27.9, 0.9, 0]}
+  - {kind: npc, ref: resident-noodles, map: promenade, at: [27.5, 2.2, 0.3]}
+  - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}
+  - {kind: npc, ref: gumshoe, map: promenade, at: [33.5, 8.6, 0]}
+  - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.7, 11.0, 0]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [43.3, 2.7, 0]}
+  - {kind: npc, ref: robot-miner, map: promenade, at: [41.3, 7.5, 0.3]}
+  # Static and her crew wait hidden in the black beyond the market's wall, as on the open day
+  - {kind: npc, ref: static, map: promenade, at: [22.5, -8.5, 0], hidden: true}
+  - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
+  - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
+  - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
   # in the bar
   - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
-  - {kind: npc, ref: scientist, map: event-horizon, at: [11.3, 3.9, 0]}
+  - {kind: npc, ref: scientist, map: event-horizon, at: [8.87, -8.27, 0], hidden: true}  # for the first arrival to overhear, if wanted
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}
+  # the Med Bay, quiet by now: the nurse at her counter and the day's patients, all resting
+  - {kind: npc, ref: nurse, map: med, at: [7.6, 2.9, 0]}
+  - {kind: npc, ref: happy-resident, map: med, at: [1.4, 1.1, 0.6]}
+  - {kind: npc, ref: passenger-old, map: med, at: [1.4, 2.9, 0.6]}
+  - {kind: npc, ref: frail-passenger, map: med, at: [1.4, 4.7, 0.6]}
+  # the Bot bays at night, fuller than by day: Units 11 and 13 have come home to their own pads, 19 and 23 are on 2 and 5,
+  # and a service droid is at the dispatch terminal. Pad 3 is empty because Unit 3 is out in the alley.
+  - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
+  - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
+  - {kind: npc, ref: cleaner-11, map: bots, at: [13.55, 12.45, 0]}
+  - {kind: npc, ref: cleaner-13, map: bots, at: [15.25, 12.5, 0]}
+  - {kind: npc, ref: service-droid, map: bots, at: [11.4, 9.6, 0]}
+  - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}  # hidden, on the pad numbered 7
 inventory:
   lale: [fob-watch, letter-lale, {item: credits, count: 120}]
   marlo: [stun-rings, letter-marlo, {item: credits, count: 60}]

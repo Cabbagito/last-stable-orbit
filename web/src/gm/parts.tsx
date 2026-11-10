@@ -19,6 +19,16 @@ export function Eye({ off, size = 16 }: { off: boolean; size?: number }) {
   )
 }
 
+/** The little camera on an NPC's row: the TV follows them. */
+export function CameraIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" aria-hidden="true">
+      <rect x="1.5" y="4.5" width="9" height="7" fill="none" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M10.5 7.2l4-2.2v6l-4-2.2" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 export function Cross() {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">

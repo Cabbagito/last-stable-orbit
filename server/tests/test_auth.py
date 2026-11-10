@@ -75,3 +75,21 @@ def test_assets_need_login_and_visibility(client, seat):
     assert client.get("/assets/..%2Fcontent/npcs.yaml", headers=ves).status_code == 404
     gm = seat("gm")
     assert client.get("/assets/portraits/hired-gun.gif", headers=gm).status_code == 200
+
+
+def test_changed_art_reaches_a_browser_on_its_next_load(client, seat):
+    gm = seat("gm")
+    art = "/assets/maps/promenade/base-calm.png"
+    first = client.get(art, headers=gm)
+    assert first.status_code == 200 and first.headers["cache-control"] == "no-cache"
+    tag = first.headers["etag"]
+    # the browser asks whether its copy is still current: unchanged art costs no download
+    same = client.get(art, headers={**gm, "If-None-Match": tag})
+    assert same.status_code == 304 and same.content == b""
+    # a copy that's out of date gets the whole new file
+    stale = client.get(art, headers={**gm, "If-None-Match": '"an-old-version"'})
+    assert stale.status_code == 200 and stale.content == first.content
+    # knowing the tag doesn't get round who may see the file
+    assert client.get(art, headers={"If-None-Match": tag}).status_code == 401
+    gun = client.get("/assets/portraits/hired-gun.gif", headers=gm).headers["etag"]
+    assert client.get("/assets/portraits/hired-gun.gif", headers={**seat("ves"), "If-None-Match": gun}).status_code == 404

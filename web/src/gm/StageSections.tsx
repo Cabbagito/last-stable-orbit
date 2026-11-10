@@ -239,7 +239,7 @@ export function TvSection({ view }: { view: View }) {
     camera === 'crew'
       ? 'Keeps every crew member on the map in frame.'
       : camera === 'follow'
-        ? `Follows ${followed?.short ?? 'one of the crew'}.`
+        ? `Follows ${followed?.short ?? (follow && view.tokens[follow]?.name) ?? 'one of the crew'}.`
         : 'Shows the whole crew, cuts to whoever rolls, then comes back.'
   return (
     <section className="gx-tv" aria-label="The TV">

@@ -420,6 +420,8 @@ def viewer_map(state: GameState, viewer: Viewer) -> str:
     """Split party: a player looks at the map their own token stands on. The TV, when it follows one of the crew,
     looks at theirs."""
     who = viewer.char if viewer.role == "player" else state.stage.follow if viewer.is_stage and state.stage.camera == "follow" else None
+    if who and viewer.is_stage and (followed := state.tokens.get(who)) and not followed.hidden:  # one of the crew or an NPC
+        return followed.map
     if who:
         for t in state.tokens.values():
             if t.kind == "crew" and t.ref == who and not t.hidden:
@@ -429,7 +431,9 @@ def viewer_map(state: GameState, viewer: Viewer) -> str:
 
 def _stage_view(state: GameState, content: Content, viewer: Viewer, online: frozenset[str], join: dict | None) -> dict:
     st = state.stage
-    out: dict = {"camera": st.camera, "follow": st.follow, "film": None}
+    followed = state.tokens.get(st.follow) if st.follow else None
+    secret = bool(followed and followed.hidden and not viewer.is_gm)  # never who, if the camera is on someone hidden
+    out: dict = {"camera": st.camera, "follow": None if secret else st.follow, "film": None}
     if viewer.is_gm or viewer.is_stage:
         out |= {"zoom": st.zoom, "pan": list(st.pan)}
     if join and (viewer.is_gm or viewer.is_stage):  # the wifi password: never on a player's feed

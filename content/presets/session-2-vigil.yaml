@@ -1,0 +1,159 @@
+# Session 2, the Vigil: the silence at the vault door, eleven minutes with almost everyone on the Secure floor and the crew
+# among them. The decks below are the Heist playground's Silence layer, nearly empty, which is when the crew can peel off.
+id: session-2-vigil
+name: "The Vigil"
+session: "Session 2"
+blurb: "The silence at the vault door, with everyone there."
+card: maps/secure/base-day.png
+party_map: secure
+maps:
+  event-horizon: {mood: open, shown: [mural, slots]}
+  promenade: {mood: calm, switches: {cameras: 0}, shown: [queue-board, mural, window, founders-ring, satisfaction]}
+  deck-6: {mood: day, switches: {cameras: 0}}
+  deck-7: {mood: day, switches: {cameras: 0}}
+  deck-8: {mood: day, switches: {cameras: 0}}
+  deck-9: {mood: day, switches: {cameras: 0}}
+  secure: {mood: day, switches: {cameras: 0}, shown: [vault-door, flowers]}
+  lift: {mood: shut, switches: {cameras: 0}}
+  bots: {mood: day}
+  med: {mood: white, shown: [screen]}
+tokens:
+  # the crowd paying its respects: the whole floor in front of the vault and down the runner, with two guards at the door.
+  # Lale is at the front beside her patient, and Ves and Tomo are together on the founder's ring.
+  - {kind: npc, ref: guard, map: secure, at: [11.93, 4.38, 0]}
+  - {kind: npc, ref: guard-riot, map: secure, at: [17.94, 4.38, 0]}
+  - {kind: npc, ref: passenger, map: secure, at: [10.04, 5.53, 0]}
+  - {kind: npc, ref: resident-coral, map: secure, at: [11.44, 5.38, 0]}
+  - {kind: npc, ref: passenger-young, map: secure, at: [13.07, 5.3, 0]}
+  - {kind: crew, ref: lale, map: secure, at: [14.45, 5.4, 0]}
+  - {kind: npc, ref: frail-passenger, map: secure, at: [15.9, 5.4, 0]}
+  - {kind: npc, ref: passenger-flowers, map: secure, at: [17.35, 5.27, 0]}
+  - {kind: npc, ref: clerk, map: secure, at: [18.85, 5.47, 0]}
+  - {kind: npc, ref: scientist-physicist, map: secure, at: [10.12, 7.21, 0]}
+  - {kind: npc, ref: happy-resident, map: secure, at: [11.5, 7.15, 0]}
+  - {kind: npc, ref: passenger-candles, map: secure, at: [13.03, 7.12, 0]}
+  - {kind: npc, ref: reviewer-a, map: secure, at: [14.44, 7.2, 0]}
+  - {kind: npc, ref: happy-resident, map: secure, at: [16.02, 7.09, 0]}
+  - {kind: npc, ref: passenger, map: secure, at: [17.4, 6.98, 0]}
+  - {kind: npc, ref: scientist-junior, map: secure, at: [18.86, 7.14, 0]}
+  - {kind: npc, ref: reviewer-a, map: secure, at: [10.24, 8.89, 0]}
+  - {kind: crew, ref: marlo, map: secure, at: [11.55, 8.8, 0]}
+  - {kind: npc, ref: passenger-tourist, map: secure, at: [12.94, 8.77, 0]}
+  - {kind: npc, ref: receptionist, map: secure, at: [14.5, 8.67, 0]}
+  - {kind: npc, ref: kitchen-hand, map: secure, at: [15.89, 8.71, 0]}
+  - {kind: npc, ref: passenger-candles, map: secure, at: [17.24, 8.68, 0]}
+  - {kind: npc, ref: robot-reader, map: secure, at: [18.88, 8.7, 0]}
+  - {kind: npc, ref: passenger-traveller, map: secure, at: [10.03, 10.47, 0]}
+  - {kind: npc, ref: resident-beanie, map: secure, at: [11.65, 10.38, 0]}
+  - {kind: npc, ref: passenger-flowers, map: secure, at: [12.99, 10.51, 0]}
+  - {kind: npc, ref: resident-shopkeeper, map: secure, at: [14.56, 10.59, 0]}
+  - {kind: npc, ref: resident-courier, map: secure, at: [16.0, 10.44, 0]}
+  - {kind: crew, ref: tally, map: secure, at: [17.35, 10.5, 0]}
+  - {kind: npc, ref: reviewer-b, map: secure, at: [18.78, 10.46, 0]}
+  - {kind: npc, ref: passenger-candles, map: secure, at: [10.21, 12.33, 0]}
+  - {kind: npc, ref: passenger, map: secure, at: [11.45, 12.11, 0]}
+  - {kind: crew, ref: ves, map: secure, at: [13.0, 12.2, 0]}
+  - {kind: crew, ref: tomo, map: secure, at: [14.45, 12.2, 0]}
+  - {kind: npc, ref: happy-resident, map: secure, at: [15.82, 12.13, 0]}
+  - {kind: npc, ref: passenger-tourist, map: secure, at: [17.35, 12.22, 0]}
+  - {kind: npc, ref: passenger, map: secure, at: [18.73, 12.06, 0]}
+  - {kind: npc, ref: passenger-traveller, map: secure, at: [14.43, 13.86, 0]}
+  - {kind: npc, ref: passenger-candles, map: secure, at: [15.92, 14.03, 0]}
+  - {kind: npc, ref: passenger-flowers, map: secure, at: [14.5, 15.6, 0]}
+  - {kind: npc, ref: resident-nightshift, map: secure, at: [15.93, 15.65, 0]}
+  - {kind: npc, ref: passenger, map: secure, at: [14.33, 17.41, 0]}
+  - {kind: npc, ref: resident-student, map: secure, at: [15.98, 17.4, 0]}
+  - {kind: npc, ref: passenger, map: secure, at: [14.53, 18.97, 0]}
+  - {kind: npc, ref: passenger-flowers, map: secure, at: [15.87, 18.89, 0]}
+  # more guards round the edge of the room, and on the door from deck 8
+  - {kind: npc, ref: guard-sergeant, map: secure, at: [8.9, 6.0, 0]}
+  - {kind: npc, ref: guard, map: secure, at: [8.9, 8.2, 0]}
+  - {kind: npc, ref: guard-rookie, map: secure, at: [9.0, 13.4, 0]}
+  - {kind: npc, ref: guard-riot, map: secure, at: [20.4, 9.5, 0]}
+  - {kind: npc, ref: guard, map: secure, at: [20.4, 11.6, 0]}
+  - {kind: npc, ref: guard-sergeant, map: secure, at: [17.1, 18.5, 0]}
+  - {kind: npc, ref: guard, map: secure, at: [13.6, 21.0, 0]}
+  - {kind: npc, ref: guard-riot, map: secure, at: [16.4, 21.0, 0]}
+  # deck 6: only the desk, the closet, one burned-out reviewer and the kitchen
+  - {kind: npc, ref: guard-sergeant, map: deck-6, at: [11.43, 3.37, 0]}
+  - {kind: npc, ref: ahti, map: deck-6, at: [14.64, 1.48, 0], hidden: true}  # hidden in his closet: whoever opens the door is hired
+  - {kind: npc, ref: reviewer-b, map: deck-6, at: [11.94, 8.28, 0]}
+  - {kind: npc, ref: chef, map: deck-6, at: [17.33, 11.25, 0]}
+  # the two off-duty guards, hidden in the showers until they walk out at shift change
+  - {kind: npc, ref: guard-towel, map: deck-6, at: [1.6, 9.8, 0], hidden: true}
+  - {kind: npc, ref: guard-turban, map: deck-6, at: [1.6, 11.6, 0], hidden: true}
+  # deck 7: Irena in her room, the operator at the monitors
+  - {kind: npc, ref: scientist, map: deck-7, at: [1.95, 4.78, 0]}
+  - {kind: npc, ref: camera-operator, map: deck-7, at: [13.35, 3.57, 0]}
+  # deck 8: one guard on the stairs up to 9, the head of security in his office
+  - {kind: npc, ref: guard-rookie, map: deck-8, at: [16.3, 4.36, 0]}
+  - {kind: npc, ref: head-of-security, map: deck-8, at: [12.62, 11.38, 0]}
+  # deck 9 is shut: the board sits around the signet in the founder's office
+  - {kind: npc, ref: board-chair, map: deck-9, at: [5.23, 2.96, 0]}
+  - {kind: npc, ref: board-young, map: deck-9, at: [3.36, 4.17, 0]}
+  - {kind: npc, ref: board-old, map: deck-9, at: [6.57, 5.58, 0]}
+  # guards all over deck 9 while the board meets: the office door, the gallery, the stairs and the green
+  - {kind: npc, ref: guard-sergeant, map: deck-9, at: [11.0, 5.0, 0]}
+  - {kind: npc, ref: guard, map: deck-9, at: [11.0, 7.2, 0]}
+  - {kind: npc, ref: guard-riot, map: deck-9, at: [13.7, 3.5, 0]}
+  - {kind: npc, ref: guard-rookie, map: deck-9, at: [17.0, 4.6, 0]}
+  - {kind: npc, ref: guard, map: deck-9, at: [8.9, 12.0, 0]}
+  - {kind: npc, ref: guard-riot, map: deck-9, at: [11.5, 10.0, 0]}
+  # still aboard the Patience
+  - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
+  # the Promenade: nearly everyone has gone up for the Vigil
+  - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}
+  - {kind: npc, ref: cleaner-7, map: promenade, at: [13.2, 1.2, 0]}
+  - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}
+  - {kind: npc, ref: cleaner-13, map: promenade, at: [15.6, 8.6, 0]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [20.4, 1.5, 0.3]}
+  - {kind: npc, ref: guard, map: promenade, at: [25.9, 2.9, 0]}
+  - {kind: npc, ref: robot-cook, map: promenade, at: [27.9, 0.9, 0]}
+  - {kind: npc, ref: resident-noodles, map: promenade, at: [27.5, 2.2, 0.3]}
+  - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}
+  - {kind: npc, ref: gumshoe, map: promenade, at: [33.5, 8.6, 0]}
+  - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.7, 11.0, 0]}
+  - {kind: npc, ref: cleaner-11, map: promenade, at: [31.5, 13.0, 0]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [43.3, 2.7, 0]}
+  - {kind: npc, ref: robot-miner, map: promenade, at: [41.3, 7.5, 0.3]}
+  - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}  # by the service door down to the Bot bays
+  # Static and her crew wait hidden in the black beyond the market's wall
+  - {kind: npc, ref: static, map: promenade, at: [22.5, -8.5, 0], hidden: true}
+  - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
+  - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
+  - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
+  # the bar on the day of the Vigil: Dax at his place, Rudi at his machine, Unit 14 about. Static's spare crew in the black
+  - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
+  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [6.3, 5.4, 0]}
+  - {kind: npc, ref: slot-regular, map: event-horizon, at: [-0.86, 10.35, 0]}
+  - {kind: npc, ref: static, map: event-horizon, at: [4.87, -12.27, 0], hidden: true}
+  - {kind: npc, ref: static-crest, map: event-horizon, at: [5.87, -13.27, 0], hidden: true}
+  - {kind: npc, ref: static-neon, map: event-horizon, at: [6.87, -10.27, 0], hidden: true}
+  - {kind: npc, ref: static-door, map: event-horizon, at: [7.87, -11.27, 0], hidden: true}
+  # the Med Bay. The brawlers can go on beds 3 to 5, once they've been made happy
+  - {kind: npc, ref: nurse, map: med, at: [3.35, 1.9, 0]}
+  - {kind: npc, ref: happy-resident, map: med, at: [1.4, 1.1, 0.6]}
+  - {kind: npc, ref: passenger-old, map: med, at: [1.4, 2.9, 0.6]}
+  # the Bot bays on day 2: three techs at the repair frame, two guards
+  - {kind: npc, ref: tech-welder, map: bots, at: [12.57, 3.97, 0]}
+  - {kind: npc, ref: tech-lamp, map: bots, at: [13.37, 6.97, 0]}
+  - {kind: npc, ref: tech-chief, map: bots, at: [16.77, 6.77, 0]}
+  - {kind: npc, ref: guard, map: bots, at: [10.97, 4.57, 0]}
+  - {kind: npc, ref: guard-riot, map: bots, at: [18.57, 2.37, 0]}
+  - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
+  - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
+  - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}  # hidden, on the pad numbered 7
+inventory:  # the starting kit; a scene load leaves what the crew actually carries alone
+  lale: [fob-watch, letter-lale, {item: credits, count: 140}]
+  marlo: [stun-rings, letter-marlo, {item: credits, count: 140}]
+  tally: [tally-notebook, letter-tally, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, letter-ves, {item: credits, count: 140}]
+  tomo: [sourdough-jar, letter-tomo, {item: credits, count: 140}]
+
+codex: [lale, marlo, tally, ves, tomo,
+        rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health,
+        patience, promenade, event-horizon,
+        ergo, isco, hole, queue,
+        dax, fixer, concierge, dock-clerk, steward, ilija, letter, mural, table, slots, music-credit]
+
+station: [patience, promenade, event-horizon, deck-6, deck-7, deck-8, secure]

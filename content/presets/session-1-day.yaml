@@ -1,5 +1,5 @@
-# Session 1, the open day: the crew are in the Dock 7 queue with the whole ship (the same passengers as on the Patience), and everyone else is where "arrival on
-# the Patience" has them, with the Gumshoe in the Night Market with his sketches. Positions are DRAFTS, checked on the art.
+# Session 1, the open day: the crew are in the Dock 7 queue with the whole ship (the same passengers as on the Patience),
+# and the Promenade is as "arrival on the Patience" has it. Keep the two presets' Promenade blocks the same.
 id: session-1-day
 name: "The open day"
 session: "Session 1"
@@ -8,50 +8,109 @@ card: presets/open-day.png
 party_map: promenade
 maps:
   event-horizon: {mood: open, shown: [mural, slots]}
-  promenade: {mood: calm, switches: {cameras: 1}}
-  deck-6: {mood: day, switches: {cameras: 1}}
-  deck-7: {mood: day, switches: {cameras: 1}}
-  deck-8: {mood: day, switches: {cameras: 1}}
-  deck-9: {mood: day, switches: {cameras: 1}}
-  secure: {mood: day, switches: {cameras: 1}}
-  lift: {mood: shut, switches: {cameras: 1}}
+  promenade: {mood: calm, switches: {cameras: 0}, shown: [queue-board, mural, window, founders-ring, satisfaction]}
+  deck-6: {mood: day, switches: {cameras: 0}}
+  deck-7: {mood: day, switches: {cameras: 0}}
+  deck-8: {mood: day, switches: {cameras: 0}}
+  deck-9: {mood: day, switches: {cameras: 0}}
+  secure: {mood: day, switches: {cameras: 0}}
+  lift: {mood: shut, switches: {cameras: 0}}
+  bots: {mood: day}
+  med: {mood: white, shown: [screen]}
 tokens:
-  # in the Dock 7 queue, in the three lanes between the rails: the crew in the middle, the ship's passengers either side
-  - {kind: npc, ref: frail-passenger, map: promenade, at: [3.7, 3.1, 0]}
-  - {kind: npc, ref: passenger-old, map: promenade, at: [4.8, 3.1, 0]}
-  - {kind: npc, ref: passenger-flowers, map: promenade, at: [5.9, 3.1, 0]}
-  - {kind: npc, ref: passenger-candles, map: promenade, at: [7.0, 3.1, 0]}
-  - {kind: npc, ref: passenger-young, map: promenade, at: [8.1, 3.1, 0]}
-  - {kind: npc, ref: passenger, map: promenade, at: [9.2, 3.1, 0]}
-  - {kind: crew, ref: lale, map: promenade, at: [8.6, 4.8, 0]}
-  - {kind: crew, ref: marlo, map: promenade, at: [7.4, 4.8, 0]}
-  - {kind: crew, ref: tally, map: promenade, at: [6.2, 4.8, 0]}
-  - {kind: crew, ref: ves, map: promenade, at: [5.0, 4.8, 0]}
-  - {kind: crew, ref: tomo, map: promenade, at: [3.9, 4.8, 0]}
-  - {kind: npc, ref: passenger, map: promenade, at: [3.7, 6.5, 0]}
-  - {kind: npc, ref: passenger-tourist, map: promenade, at: [4.8, 6.5, 0]}
-  - {kind: npc, ref: passenger-candles, map: promenade, at: [5.9, 6.5, 0]}
-  - {kind: npc, ref: passenger-flowers, map: promenade, at: [7.0, 6.5, 0]}
-  - {kind: npc, ref: passenger-traveller, map: promenade, at: [8.1, 6.5, 0]}
-  - {kind: npc, ref: passenger, map: promenade, at: [9.2, 6.5, 0]}
+  # the Dock 7 queue, the whole ship, front to back: from the clerk's desk along the lane by the wall, then back and forth
+  # down the rails to the front lane, whose open end faces the gangway. The crew are spread through it, with Marlo among
+  # his audience, Lale beside her patient, and Ves and Tomo together.
+  - {kind: npc, ref: passenger-old, map: promenade, at: [3.35, 1.45, 0]}
+  - {kind: npc, ref: passenger-candles, map: promenade, at: [4.8, 1.35, 0]}
+  - {kind: crew, ref: marlo, map: promenade, at: [6.25, 1.45, 0]}
+  - {kind: npc, ref: passenger-flowers, map: promenade, at: [7.7, 1.35, 0]}
+  - {kind: npc, ref: passenger-young, map: promenade, at: [7.7, 3.15, 0]}
+  - {kind: npc, ref: passenger, map: promenade, at: [6.25, 3.05, 0]}
+  - {kind: npc, ref: passenger-tourist, map: promenade, at: [4.8, 3.15, 0]}
+  - {kind: crew, ref: tally, map: promenade, at: [3.35, 4.85, 0]}
+  - {kind: npc, ref: passenger-traveller, map: promenade, at: [4.8, 4.75, 0]}
+  - {kind: crew, ref: lale, map: promenade, at: [6.25, 4.85, 0]}
+  - {kind: npc, ref: frail-passenger, map: promenade, at: [7.7, 4.75, 0]}
+  - {kind: npc, ref: passenger-candles, map: promenade, at: [9.15, 4.85, 0]}
+  - {kind: npc, ref: passenger, map: promenade, at: [9.15, 6.45, 0]}
+  - {kind: crew, ref: ves, map: promenade, at: [7.7, 6.55, 0]}
+  - {kind: crew, ref: tomo, map: promenade, at: [6.25, 6.45, 0]}
+  - {kind: npc, ref: passenger-flowers, map: promenade, at: [4.8, 6.55, 0]}
+  - {kind: npc, ref: passenger, map: promenade, at: [3.35, 6.45, 0]}
   # still aboard the Patience
   - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
-  # the Promenade, calm
+  # the Promenade, calm, on the eve of the Vigil. Positions are DRAFTS, checked on the art.
+  # Dock 7
   - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}
+  # the plaza: the mural being cleaned, the window, the ring, the survey droid doing its rounds, the lift and its guards
+  - {kind: npc, ref: cleaner-7, map: promenade, at: [13.2, 1.2, 0]}
   - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}
-  - {kind: npc, ref: service-droid, map: promenade, at: [12.6, 8.2, 0]}
-  - {kind: npc, ref: happy-resident, map: promenade, at: [20.4, 2.3, 0]}
+  - {kind: npc, ref: cleaner-13, map: promenade, at: [15.6, 8.6, 0]}
+  - {kind: npc, ref: service-droid, map: promenade, at: [16.0, 2.0, 0]}
+  - {kind: npc, ref: robot-reader, map: promenade, at: [17.4, 1.5, 0.3]}
+  - {kind: npc, ref: resident-student, map: promenade, at: [18.9, 2.7, 0]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [20.4, 1.5, 0.3]}
+  - {kind: npc, ref: resident-coral, map: promenade, at: [17.2, 5.4, 0]}
+  - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}  # by the service door down to the Bot bays
+  - {kind: npc, ref: guard-rookie, map: promenade, at: [23.9, 2.4, 0]}
   - {kind: npc, ref: guard, map: promenade, at: [25.9, 2.9, 0]}
-  - {kind: npc, ref: vendor, map: promenade, at: [28.4, 7.2, 0]}
-  - {kind: npc, ref: gumshoe, map: promenade, at: [33.2, 5.6, 0]}
-  - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.0, 9.3, 0]}
-  - {kind: npc, ref: nurse, map: promenade, at: [44.8, 1.9, 0]}
+  - {kind: npc, ref: resident-courier, map: promenade, at: [25.6, 8.4, 0]}
+  # the Night Market: the stall cook runs the noodles, the vendor runs the chrome clinic, the knock-off cart, the vending
+  # machine. The Gumshoe works the alley's mouth
+  - {kind: npc, ref: robot-cook, map: promenade, at: [27.9, 0.9, 0]}
+  - {kind: npc, ref: resident-noodles, map: promenade, at: [27.5, 2.2, 0.3]}
+  - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}
+  - {kind: npc, ref: resident-shopkeeper, map: promenade, at: [28.5, 7.1, 0]}
+  - {kind: npc, ref: gumshoe, map: promenade, at: [33.5, 8.6, 0]}
+  - {kind: npc, ref: resident-nightshift, map: promenade, at: [35.3, 2.2, 0]}
+  # the side alley, "closed for cleaning": one cleaner in the mouth, one on the charging dock
+  - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.7, 11.0, 0]}
+  - {kind: npc, ref: cleaner-11, map: promenade, at: [31.5, 13.0, 0]}
+  # Static Kovac and her crew wait hidden in the black beyond the market's wall, taking up no floor (their cards name
+  # her, so they stay hidden until Peter starts Marlo's thread). He drags them into place, still hidden, and then shows them.
+  - {kind: npc, ref: static, map: promenade, at: [22.5, -8.5, 0], hidden: true}
+  - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
+  - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
+  - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
+  # the far end: the scrubber fixer at the service door, the same happy face twice by the Med Bay, the old miner's bench
+  - {kind: npc, ref: resident-beanie, map: promenade, at: [41.8, 1.5, 0]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [43.3, 2.7, 0]}
+  - {kind: npc, ref: robot-miner, map: promenade, at: [41.3, 7.5, 0.3]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [43.6, 7.8, 0.3]}
   # the bar, open for the day
-  - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
+  - {kind: npc, ref: dax, map: event-horizon, at: [15.7, 1.05, 0]}
+  - {kind: npc, ref: scientist, map: event-horizon, at: [16.08, 3.9, 0]}  # Irena, with Dax at the right end of the bar
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [6.3, 5.4, 0]}
   - {kind: npc, ref: slot-regular, map: event-horizon, at: [-0.86, 10.35, 0]}
-  - {kind: npc, ref: happy-resident, map: event-horizon, at: [12.1, 7.3, 0]}
-  - {kind: npc, ref: service-droid, map: event-horizon, at: [9.6, 7.9, 0]}
+  # the day-1 bar fight's three, a group, on neighbouring stools
+  - {kind: npc, ref: brawler-crane, map: event-horizon, at: [9.98, 3.9, 0]}
+  - {kind: npc, ref: brawler-grin, map: event-horizon, at: [11.2, 3.9, 0]}
+  - {kind: npc, ref: brawler-hauler, map: event-horizon, at: [12.42, 3.9, 0]}
+  # the tables
+  - {kind: npc, ref: happy-resident, map: event-horizon, at: [5.9, 10.6, 0]}
+  - {kind: npc, ref: camera-operator, map: event-horizon, at: [11.8, 8.9, 0]}
+  # the near booth, filled: the company's canteen and front desk, off shift. The other two booths are open.
+  - {kind: npc, ref: chef, map: event-horizon, at: [17.2, 12.1, 0.3]}
+  - {kind: npc, ref: kitchen-hand, map: event-horizon, at: [15.6, 12.1, 0.3]}
+  - {kind: npc, ref: receptionist, map: event-horizon, at: [16.4, 10.0, 0.3]}
+  # Static and her crew wait hidden in the black off the top right of the map, taking up no floor. Peter drags them
+  # to where he wants them, still hidden, and then shows them.
+  - {kind: npc, ref: static, map: event-horizon, at: [4.87, -12.27, 0], hidden: true}
+  - {kind: npc, ref: static-crest, map: event-horizon, at: [5.87, -13.27, 0], hidden: true}
+  - {kind: npc, ref: static-neon, map: event-horizon, at: [6.87, -10.27, 0], hidden: true}
+  - {kind: npc, ref: static-door, map: event-horizon, at: [7.87, -11.27, 0], hidden: true}
+  # the Med Bay: the nurse between two beds, her patient on one and someone not convinced on the other, and one who
+  # already feels wonderful. Beds 4 and 5 are free. Both passengers are also in the queue, where the crew first see them:
+  # take them out of it once the crew are through. Lale can compare the frail one's ordinary pulse with the sedated one's.
+  - {kind: npc, ref: nurse, map: med, at: [3.35, 3.8, 0]}
+  - {kind: npc, ref: happy-resident, map: med, at: [1.4, 1.1, 0.6]}
+  - {kind: npc, ref: passenger-old, map: med, at: [1.4, 2.9, 0.6]}
+  - {kind: npc, ref: frail-passenger, map: med, at: [1.4, 4.7, 0.6]}
+  # the Bot bays: the two cleaners not out on the street, charging. Pads 3, 7, 11 and 13 are empty because those units are out.
+  - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
+  - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
+  - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}  # hidden, on the pad numbered 7
 inventory:  # DRAFT starting kit from the bible, for Peter to edit. Lale never carries a weapon.
   lale: [fob-watch, letter-lale, {item: credits, count: 140}]
   marlo: [stun-rings, letter-marlo, {item: credits, count: 140}]

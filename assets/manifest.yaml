@@ -485,6 +485,13 @@ assets:
     bytes: 45158
     width: 96
     height: 96
+  - path: portraits/bolt-7.gif
+    store: PORTRAITS
+    asset_id: "5543c4b7ccc32f23e0638c85180ddd83"
+    sha256: "bef7166c85bd858d17e69b0506154d6f4c9823dccde5088b63839688d7c5c882"
+    bytes: 75643
+    width: 96
+    height: 96
   - path: portraits/robot-cook.gif
     store: PORTRAITS
     asset_id: "c9a07a140fd54167d8e07e15d8cdb235"
@@ -1218,29 +1225,29 @@ assets:
   - path: maps/promenade/base-calm.png
     store: MAPS
     asset_id: "ce23081f90adf7185bd95a41f54fe3f8"
-    sha256: "94771dd1711d876fb94faa31917ac0e158314d262a90e8cb659f34a0e8ae0dc0"
-    bytes: 200957
+    sha256: "dd150cf24121eb763e71c7656b6fa223c906f431942435f9ecc79becded37fba"
+    bytes: 176498
     width: 1800
     height: 1080
   - path: maps/promenade/glow-calm.png
     store: MAPS
     asset_id: "acb361f744fd41f72a136ccf0f77fb5c"
-    sha256: "5a818e68e54a94376ebcf3b2f353f9e3c6ceea39c17f3846b6a30e093b7a319f"
-    bytes: 142963
+    sha256: "cae791f3b761f69b8e62e2fa775a78692e28671b8e06a55a20633fdd0fde12aa"
+    bytes: 118219
     width: 1800
     height: 1080
   - path: maps/promenade/base-hunted.png
     store: MAPS
     asset_id: "d62c5c6f8446d388be75ae2020339e00"
-    sha256: "ec6349d6a366be8d220199f53feebc26b227d735bc3cb75de8623cb52c94f4da"
-    bytes: 175094
+    sha256: "40bd749b4fdf45f9a65fb121acabf6d39cb346c4af1a4c5a971240e64364640b"
+    bytes: 152213
     width: 1800
     height: 1080
   - path: maps/promenade/glow-hunted.png
     store: MAPS
     asset_id: "d4dcf1ded073240be5bafdda61a8a512"
-    sha256: "4280a58899070538c1b646adcef9470a6398572dd83a4c730953bc8b7c0f7ccb"
-    bytes: 74797
+    sha256: "584e27a9c9e3527c8554fb83201fdfa7ec144da608acdaf138bc905dd8a5d977"
+    bytes: 60740
     width: 1800
     height: 1080
   - path: maps/promenade/hole.gif

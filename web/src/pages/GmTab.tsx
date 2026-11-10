@@ -373,14 +373,13 @@ function MapRow({ view, m, under, open, toggle }: { view: View; m: MapView; unde
  */
 function SessionSection({ view }: { view: View }) {
   const [picked, setPicked] = useState<string | null>(null)
-  const [loaded, setLoaded] = useState('')
   const presets = view.presets ?? []
-  const chosen = presets.find((p) => p.id === picked)
-  const load = async () => {
-    if (!chosen) return
-    const ack = await gmRun('gm.world.load_preset', { preset: chosen.id, scene: true })
+  const load = async (id: string) => {
+    const ack = await gmRun('gm.world.load_preset', { preset: id, scene: true })
     setPicked(null)
-    if (ack.ok) setLoaded(`Loaded ${chosen.name}.`)
+    if (!ack.ok) return
+    useGame.setState({ gmMap: null }) // the Scene goes to wherever the party now is
+    location.hash = 'scene'
   }
   return (
     <section className="gx-session" aria-label="Session">
@@ -391,48 +390,29 @@ function SessionSection({ view }: { view: View }) {
           </div>
           <div className="gx-cards">
             {presets.filter((p) => p.session === session).map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                className={'gx-card' + (picked === p.id ? ' on' : '')}
-                aria-pressed={picked === p.id}
-                onClick={() => {
-                  setPicked(picked === p.id ? null : p.id)
-                  setLoaded('')
-                }}
-              >
-                {p.card && <img src={p.card} alt="" />}
-                <span className="gx-cardt">
-                  <span className="gx-cardn">{p.name}</span>
-                  <span className="gx-cardb">{p.blurb}</span>
-                </span>
-              </button>
+              <div key={p.id} className={'gx-card' + (picked === p.id ? ' on' : '')}>
+                <button type="button" className="gx-cardpick" aria-pressed={picked === p.id} onClick={() => setPicked(picked === p.id ? null : p.id)}>
+                  {p.card && <img src={p.card} alt="" />}
+                  <span className="gx-cardt">
+                    <span className="gx-cardn">{p.name}</span>
+                    <span className="gx-cardb">{p.blurb}</span>
+                  </span>
+                </button>
+                {picked === p.id && (
+                  <div className="gx-cardgo" role="alertdialog" aria-label={`Load ${p.name}?`}>
+                    <button type="button" className="r12-go" title="Moves everyone, places the NPCs, sets every map's mood, and ends any fight. HP, Entropy, pockets and the Codex stay as they are." onClick={() => void load(p.id)}>
+                      Load it
+                    </button>
+                    <button type="button" className="r10-btn" onClick={() => setPicked(null)}>
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
       ))}
-      {chosen && (
-        <div className="gx-load" role="alertdialog" aria-label={`Load ${chosen.name}?`}>
-          <div className="gx-loadn">
-            <span className="r5-sec">Start from</span>
-            <span className="r12-cname">{chosen.name}</span>
-          </div>
-          <div className="r10-hint gx-loadm">Moves everyone, places the NPCs, sets every map's mood, and ends any fight. HP, Entropy, pockets and the Codex stay as they are.</div>
-          <div className="r12-cact">
-            <button type="button" className="r12-go" onClick={() => void load()}>
-              Load it
-            </button>
-            <button type="button" className="r10-btn" onClick={() => setPicked(null)}>
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-      {loaded && (
-        <div className="r10-done" aria-live="polite">
-          {loaded}
-        </div>
-      )}
     </section>
   )
 }

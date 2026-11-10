@@ -119,6 +119,8 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     if ev_type == "world.loaded":
         fresh = GameState.model_validate({**data["state"], "seq": seq})
         fresh.stage = s.stage  # a preset sets the world, not the table: the camera and films carry over
+        if fresh.stage.follow and fresh.stage.follow not in fresh.tokens:  # an NPC that isn't in this scene
+            fresh.stage.camera, fresh.stage.follow = "crew", None
         fresh.overviews = s.overviews  # and what's open on someone's screen stays open
         fresh.slots = {k: SlotBank(out=True) for k, b in s.slots.items() if b.out}  # a flood is for good; everyone's up
         if data.get("scene"):  # only the scene: who stands where and each map's mood. What the crew has and knows stays
@@ -137,6 +139,8 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         t = s.tokens.pop(data["token"], None)
         if t and t.kind == "crew":
             _leave_slots(s, t.ref)
+        if s.stage.follow == data["token"] and (not t or t.kind == "npc"):
+            s.stage.camera, s.stage.follow = "crew", None
         _drop_fighter(s, data["token"])
     elif ev_type == "token.sent":  # the GM sent the crew to another map
         t = s.tokens[data["token"]]

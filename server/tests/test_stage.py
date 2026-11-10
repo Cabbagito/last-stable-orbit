@@ -238,6 +238,35 @@ def test_the_choice_of_no_tv_is_gone(engine, content):
     assert e.value.code == "invalid"
 
 
+async def test_the_tv_can_follow_an_npc_and_goes_where_it_is(engine, content):
+    await ok(engine, GM, "gm.world.load_preset", {"preset": "session-1-day", "scene": True})
+    await ok(engine, GM, "gm.stage.camera", {"camera": "follow", "follow": "dax"})  # on the bar's map, the party on the Promenade
+    v = project(engine.state, content, STAGE)
+    assert (v["stage"]["camera"], v["stage"]["follow"]) == ("follow", "dax") and list(v["maps"]) == ["event-horizon"] and "dax" in v["tokens"]
+
+
+async def test_a_hidden_npc_cannot_be_followed_and_never_leaks(engine, content):
+    await ok(engine, GM, "gm.world.load_preset", {"preset": "session-1-day", "scene": True})
+    with pytest.raises(CommandError):  # Static's crew start hidden
+        handle(GM, engine.state, content, "gm.stage.camera", {"camera": "follow", "follow": "static"})
+    await ok(engine, GM, "gm.stage.camera", {"camera": "follow", "follow": "dax"})
+    await ok(engine, GM, "gm.token.hide", {"token": "dax", "hidden": True})  # hidden after the camera went to it
+    for viewer in (TALLY, STAGE):
+        v = project(engine.state, content, viewer)
+        assert v["stage"]["follow"] is None and "dax" not in v["tokens"]
+    assert list(project(engine.state, content, STAGE)["maps"]) == [engine.state.party_map]
+
+
+async def test_the_camera_comes_back_when_its_npc_goes(engine, content):
+    await ok(engine, GM, "gm.world.load_preset", {"preset": "session-1-day", "scene": True})
+    await ok(engine, GM, "gm.stage.camera", {"camera": "follow", "follow": "dax"})
+    await ok(engine, GM, "gm.token.remove", {"token": "dax"})
+    assert (engine.state.stage.camera, engine.state.stage.follow) == ("crew", None)
+    await ok(engine, GM, "gm.stage.camera", {"camera": "follow", "follow": "concierge"})
+    await ok(engine, GM, "gm.world.load_preset", {"preset": "session-1", "scene": True})  # a scene without the Concierge
+    assert (engine.state.stage.camera, engine.state.stage.follow) == ("crew", None)
+
+
 async def test_a_preset_keeps_the_table_setting(engine, content):
     await ok(engine, GM, "gm.stage.camera", {"camera": "follow", "follow": "ves"})
     await ok(engine, GM, "gm.world.load_preset", {"preset": "session-1-night"})
@@ -249,7 +278,7 @@ def test_the_camera_follows_a_crew_member(engine, content):
     ev = handle(GM, engine.state, content, "gm.stage.camera", {"camera": "follow"})
     assert ev == [("stage.camera_set", {"camera": "follow", "follow": next(iter(content.characters))})]
     with pytest.raises(CommandError):
-        handle(GM, engine.state, content, "gm.stage.camera", {"camera": "follow", "follow": "dax"})
+        handle(GM, engine.state, content, "gm.stage.camera", {"camera": "follow", "follow": "nobody"})
     with pytest.raises(CommandError):
         handle(GM, engine.state, content, "gm.stage.camera", {"camera": "drone"})
 
@@ -485,7 +514,7 @@ async def test_reset_is_only_for_while_the_players_are_held(engine, content):
 
 def test_the_session_cards_are_the_gms_alone(engine, content):
     cards = project(engine.state, content, GM)["presets"]
-    assert [c["session"] for c in cards] == ["Session 1"] * 4 and all(c["card"].startswith("/assets/presets/") and c["blurb"] for c in cards)
+    assert [c["session"] for c in cards] == ["Session 1"] * 4 + ["Session 2"] and all(c["card"].startswith("/assets/") and c["blurb"] for c in cards)
     for viewer in (TALLY, STAGE):
         view = json.dumps(project(engine.state, content, viewer))
         for p in content.presets.values():

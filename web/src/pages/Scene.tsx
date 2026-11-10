@@ -51,7 +51,7 @@ export function Scene() {
             <MapView key={map.id} map={map} tokens={tokens} canMove={canMove} />
             <div className="app-placewrap">
               {isGm && <AwayBar map={map} />}
-              {isGm && <TvCameraBar view={view} />}
+              {isGm && <TvCameraBar view={view} map={map} />}
               {isGm && <MoodBar map={map} />}
               {isGm ? (
                 <button type="button" className="gx-placebtn" aria-haspopup="dialog" title="Go somewhere else (M)" onClick={() => useGame.getState().setMapPicker({ token: null })}>

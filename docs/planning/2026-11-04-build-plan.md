@@ -27,6 +27,7 @@
 | The opening | **Built** 2026-11-09 from `lso_opening.zip` and checked on a throwaway copy with three seats (the GM, Tally and the TV), from the login to the film's end; see "The opening" below. Deployed to 8070 the same day; parker still needs `git pull && make up`. The sound is for Peter to judge by ear |
 | The soundboard | **Built** 2026-11-10 from `lso_soundboard.zip` and checked in the sandbox with the GM and the TV connected. `content/soundboard.yaml` lists 24 clips under four buttons on the GM's top bar (Fight, Droid, Heist, Bits), left of Live. `gm.sound.play` puts the press in the state, and only the TV gets the files and plays them, overlapping, already decoded. Greyed out with no TV connected. Parker needs `git pull && make up`. |
 | M9: Finale screen | Not started |
+| Who's where, sessions 1 and 2 | **Done, as drafts for Peter.** Session 1's presets are placed map by map. Session 2 is one preset, The Vigil, that opens with the Secure floor packed. Hidden spares wait in the black off the map art, and cameras start off in every preset. Dock 7's rails are redrawn as one four-lane queue (`scripts/redraw_dock_rails.py`). BOLT-7 is an NPC with his cyan portrait. The GM's Load it sits on the card and goes to the party's Scene. The TV camera bar is Crew, Rolls, the crew's faces and In this map, with no zoom or pan, and it can follow an NPC. Art now revalidates, so a changed file shows on the next load |
 
 **The GM's Session and On screen pages** (2026-11-09, from the canvas https://claude.ai/artifact/6pNMrKUZbm3k9d1wy24Rm5):
 - **On screen** now has everything but the session picker: the opening as Cutscenes' first row, the TV's status beside its heading, and the link and wifi as one switch. With no TV, the setup line sits inside the preview.
@@ -494,7 +495,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
   - **Peter's answers:** the defaults, all five. Session 1's maps first, for Peter to check. No multi-agent workflow was asked for, so none ran.
   - **The live Maps canvas** was newer in two boards: the small-map key, and the Terminal room, which now has three moods (empty, ISCO, Seal in). Both are copied into `design/reference/maps/`. Promenade, Patience and their keys were unchanged.
   - **Built, shared by every map:**
-    - **Camera cones,** from each board's `cone()`: a map's `cameras` lists each cone per mood, clipped at the walls. They show for everyone (the TV too) while the map's Cameras switch is on. The presets turn it on.
+    - **Camera cones,** from each board's `cone()`: a map's `cameras` lists each cone per mood, clipped at the walls. They show for everyone (the TV too) while the map's Cameras switch is on. Every preset starts with it off.
     - **Decals:** small art set into a map, placed by the board's CSS matrix. The first is the black hole moving in the Promenade's window (the board's 360 px GIF; it isn't a second mural).
     - **The glow's flicker** follows each board: the bar's 7 s loop, the street's 9 s loop, none on Patience.
     - **GM-only pins:** every Key board point, as a small numbered disc on the GM's map, with its label on hover. "What's where" in the mood bar hides them (remembered on that browser). Players and the TV never get them (leak test).
@@ -514,7 +515,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - **The Executive floors are a tower.** The board's `oy = 150 + (9 − deck) × 450` is height here: each deck is 12.5 Z above the one below (450 / 36), so deck 6's floor is Z 0 and deck 9's is Z 37.5, with origin (360, 1500). A test checks this matches the board's formula on every deck. Positions stay world X, Y, Z.
       - **Deck buttons** on the map (Deck 9 to Deck 6, and All) bring one deck into view. A tower opens on the deck your own token is on.
       - **The deck jump** is on a token's card, for whoever may move it (the GM, or that player): it's an ordinary move that changes only Z, and the camera follows.
-    - **Cameras:** the company's are steel blue, drawn per deck on the Executive floors, with each cone's own walls on the Secure floor and the Lift station. The presets turn them on.
+    - **Cameras:** the company's are steel blue, drawn per deck on the Executive floors, with each cone's own walls on the Secure floor and the Lift station. Every preset starts with them off.
     - **Alert pulses:** the Executive's and Secure floor's Alert glows pulse, as on their boards. No new map flickers otherwise.
     - **The Terminal room:** Many Faces is a decal over the glow, faint in ISCO and full with the Seal in, fading in over 2.4 s. The station feed is on its wall screen, driven by two level switches in the mood bar: "Minutes down here" (0–30; up top is ×3.2) and "Station feed" (the five events, in the bible's order).
     - **The Lift station's blast door** is the mood (Door shut, Door open), as the board draws it, rather than a switch.
@@ -524,7 +525,7 @@ The order is **usable at the table first, then the roll, then the rest**. The bi
     - **Peter's follow-ups (2026-11-04):**
       - **A clear camera button:** each camera map's Cameras switch is now its own button, "Hide camera cones" / "Show camera cones" with an eye, in the mood bar and in the GM tab. It hides every cone for everyone (Peter picked this over switching off one camera at a time, or hiding them on his screen only).
       - **The GM tab's Maps show the state:** the cards fill the width (two or three across) and each has a live miniature: the current mood, its switches (gas, the hatch, the feed), decals, cones while shown, and everyone on it, hidden ones faint. Click it to open that map on the Scene. Under it: who's there (hidden ones marked), its cameras and whether their cones show, its mood and switches, and its things to inspect.
-    - **Not done:** art for the old man, reviewers, managers and executives (the boards used other portraits as stand-ins); presets for sessions 2 to 5; a single crew member sent to another map. The Executive floors' deck buttons sit under a card on a narrow window.
+    - **Not done:** art for the old man, reviewers, managers and executives (the boards used other portraits as stand-ins); presets for sessions 3 to 5; a single crew member sent to another map. The Executive floors' deck buttons sit under a card on a narrow window.
 
 ### M6: Station and Codex tabs · M · the Codex is designed; the Station still needs its design session
 - **Goal:** the two remaining tabs, with no spoilers.
