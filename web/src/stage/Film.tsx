@@ -2,17 +2,31 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { serverClock } from '../net/clock'
 import { useGame } from '../store/game'
 import type { FilmView } from '../types'
-import { LaptopLoop, useLingering } from './LaptopLoop'
+import { LaptopLoop, releaseVideo, useLingering } from './LaptopLoop'
 
 const DRIFT = 0.3 // seconds out of step before a playing film jumps back into step
 const TICK = 100 // ms; a timer, not animation frames, so a background tab keeps time too
 
 type Phase = 'idle' | 'wait' | 'play' | 'over'
 
+const fetched = new Set<string>()
+let ahead: Promise<unknown> = Promise.resolve()
+
+/** Put a film's file in the browser's cache, one at a time. A plain download, so unlike a waiting <video> it holds no decoder. */
+function fetchAhead(src: string) {
+  if (fetched.has(src)) return
+  fetched.add(src)
+  ahead = ahead
+    .then(() => fetch(src))
+    .then((r) => r.arrayBuffer())
+    .catch(() => fetched.delete(src))
+}
+
 /**
  * One film, in step with every other screen that plays it: it starts at the server moment `film.at`. A screen
  * that's late (it fetched the file slowly, or joined mid-film) jumps to where everyone else is. Full screen,
- * with no controls; it fades back to the map at the end. Mounted ahead with `film` null, it just fetches.
+ * with no controls; it fades back to the map at the end. With `film` null it only fetches the file ahead, and there's
+ * no <video> at all until the film plays: a browser can't hold many open at once. The GM's preview doesn't fetch ahead.
  * `hold`: when the video runs out, its last frame stays up until `ends` (a Burn: the server adds the hold to `ends`).
  */
 export function FilmPlayer({ src, film, sound, hard = false, hold = false }: { src: string; film: FilmView | null | undefined; sound: boolean; hard?: boolean; hold?: boolean }) {
@@ -22,15 +36,29 @@ export function FilmPlayer({ src, film, sound, hard = false, hold = false }: { s
   const active = !!film && film.src === src
   const at = film?.at ?? 0
   const ends = film?.ends ?? 0
+  const preview = useGame((s) => s.preview)
+  const open = !!useLingering(active ? src : null) // the <video> exists while the film plays and while it fades away
+
+  useEffect(() => {
+    if (!preview) fetchAhead(src)
+  }, [src, preview])
+
+  useEffect(() => {
+    if (!open) return
+    const el = v.current
+    return () => {
+      if (el) releaseVideo(el)
+    }
+  }, [open])
 
   useEffect(() => {
     const el = v.current
-    if (!el) return
     if (!active) {
-      el.pause()
+      el?.pause()
       setPhase('idle')
       return
     }
+    if (!el) return
     let starting = false
     let ran = false // this run has started (a replay begins with the last run's end still on the element)
     let played = false // this run has started the video playing
@@ -89,7 +117,7 @@ export function FilmPlayer({ src, film, sound, hard = false, hold = false }: { s
   const showing = active && (phase === 'wait' || phase === 'play')
   return (
     <div className={'app-film' + (hard ? ' hard' : '') + (showing ? ' on' : '')} aria-hidden={!showing}>
-      <video ref={v} src={src} preload="auto" playsInline />
+      {open && <video ref={v} src={src} preload="auto" playsInline />}
       {showing && <div className="app-sr" role="status">A film is playing.</div>}
       {showing && blocked && (
         <button
@@ -123,7 +151,7 @@ export function LaptopFilm() {
 }
 
 /**
- * The TV's Burn films, the crew's and Lucan's. It loads all of them ahead (they're small), so a Burn starts at once. Unlike a cutscene, a Burn
+ * The TV's Burn films, the crew's and Lucan's. Their files are fetched ahead (they're small), so a Burn starts at once. Unlike a cutscene, a Burn
  * never takes a laptop over: every laptop stays on the game, and the map and the crew rail show who is burning (BurnMark).
  */
 export function BurnFilms() {

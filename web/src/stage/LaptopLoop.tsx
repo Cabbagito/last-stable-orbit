@@ -16,14 +16,28 @@ export function useLingering<T>(value: T | null | undefined): T | null {
   return value ?? kept
 }
 
+/**
+ * Give a removed <video>'s decoder and buffers back now, not whenever it's garbage collected: a browser only has room
+ * for so many videos. A node that's still in the page is left alone (React's StrictMode runs cleanups on those too).
+ */
+export function releaseVideo(el: HTMLVideoElement) {
+  if (el.isConnected) return
+  el.pause()
+  el.removeAttribute('src')
+  el.load()
+}
+
 /** What a player's laptop shows while the TV has the room: the TV's waiting loop, silent. */
 export function LaptopLoop({ loop, still }: { loop: string; still: string }) {
   const v = useRef<HTMLVideoElement>(null)
   useEffect(() => {
     const el = v.current
-    if (!el || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return // the still, for those who asked for no motion
-    el.muted = true // laptops are silent, and browsers only autoplay a muted video
-    el.play().catch(() => undefined)
+    if (!el) return
+    if (!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { // otherwise the still, for those who asked for no motion
+      el.muted = true // laptops are silent, and browsers only autoplay a muted video
+      el.play().catch(() => undefined)
+    }
+    return () => releaseVideo(el)
   }, [])
   return <video ref={v} className="app-loop" src={loop} poster={still} loop muted playsInline preload="auto" />
 }

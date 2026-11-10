@@ -5,7 +5,7 @@ import { FullscreenButton } from '../shell/Header'
 import { useGame } from '../store/game'
 import type { OpeningView } from '../types'
 import { JoinCard } from './JoinCard'
-import { LaptopLoop, useLingering } from './LaptopLoop'
+import { LaptopLoop, releaseVideo, useLingering } from './LaptopLoop'
 import { OpeningAudio, OpeningScreen, type OpeningTimes } from './opening_player'
 import { useAwake } from './useAwake'
 
@@ -77,11 +77,15 @@ function Pictures({ opening }: { opening: OpeningView }) {
   const film = useRef<HTMLVideoElement>(null)
   const screen = useRef<OpeningScreen | null>(null)
   useEffect(() => {
-    const s = new OpeningScreen({ loopVideo: loop.current!, filmVideo: film.current!, now: serverClock.now })
+    const l = loop.current!
+    const f = film.current!
+    const s = new OpeningScreen({ loopVideo: l, filmVideo: f, now: serverClock.now })
     screen.current = s
     return () => {
       screen.current = null
       s.destroy()
+      releaseVideo(l)
+      releaseVideo(f)
     }
   }, [])
   useEffect(() => {
