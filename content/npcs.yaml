@@ -33,6 +33,23 @@
   note: Asked nicely.
   codex: fixer
   gm_note: "Uploaded man in a chassis. Thinks a rich client hired him; the client is ISCO. After the bar, ISCO tells him the truth and manipulates him; he stays for the money and kills Dax. Final boss at the lift: 10 health, d20, Very hard to hit."
+  # His three Burns: only you see them, and their films play only on the TV. No Entropy is tracked; keep count yourself.
+  burns:
+    - id: legendary-action
+      name: Legendary Action
+      text: Lucan acts now, out of turn.
+      file: films/burns/lucan-legendary-action.mp4
+      length: 7.0
+    - id: nothing-personal
+      name: Nothing personal
+      text: The blade hits everyone in his reach, then a missile hits everyone near a spot he picks. 2 damage each (proposed).
+      file: films/burns/lucan-nothing-personal.mp4
+      length: 9.0
+    - id: unfinished-business
+      name: Unfinished business
+      text: Once, at 0, he goes down, then gets back up for a second phase. His health on return is still open.
+      file: films/burns/lucan-unfinished-business.mp4
+      length: 14.667
 
 - id: cleaner-14
   name: Unit 14

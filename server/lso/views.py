@@ -174,6 +174,8 @@ def _token_view(content: Content, tid: str, t, gm: bool, open_: set[str]) -> dic
         base |= {"name": n.name, "role": n.role, "portrait": url(n.portrait), "color": n.color, "mood": n.mood, "note": n.note, "codex": _link(n.codex, open_), "size": n.size}
         if gm:
             base |= {"gm_note": n.gm_note, "stats": n.stats}  # an NPC's dice are the GM's secret
+            if n.burns:  # and so are its Burns, until one plays
+                base["burns"] = [{"id": b.id, "name": b.name, "text": b.text, "length": b.length} for b in n.burns]
             base |= {"hp": n.health if t.hp is None else t.hp, "health": n.health}  # and so is its health, outside a fight
     if gm:
         base["hidden"] = t.hidden
@@ -466,6 +468,13 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
             out["burn"]["src"] = url(cut.file)
     else:
         out["burn"] = None
+    nb = st.npc_burn
+    if (viewer.is_gm or viewer.is_stage) and nb and nb.npc in content.npcs:  # a player's laptop never hears of it
+        b = next((x for x in content.npcs[nb.npc].burns if x.id == nb.burn), None)
+        if b:
+            out["npc_burn"] = {"npc": nb.npc, "burn": b.id, "name": b.name, "at": nb.at, "ends": nb.ends} | ({"src": url(b.file)} if viewer.is_stage else {})
+    if viewer.is_stage:  # every NPC Burn film, fetched ahead so one starts at once
+        out["npc_burn_films"] = [url(b.file) for n in content.npcs.values() for b in n.burns]
     if viewer.is_stage and st.flood and content.slots:  # only the TV plays it
         art = content.slots.art
         out["flood"] = {"at": st.flood.at, "ends": st.flood.ends, "paid": st.flood.paid, "art": {"lit_a": url(art.lit_a), "lit_b": url(art.lit_b), "crank_up": url(art.crank_up), "coin": url(art.coin)}}

@@ -191,6 +191,9 @@ class Engine:
         bad += [f"station {m!r}" for m in s.station if m not in places]
         if s.stage.burn and s.stage.burn.char not in c.characters:
             bad.append(f"burn {s.stage.burn.char!r}")
+        nb = s.stage.npc_burn
+        if nb and (nb.npc not in c.npcs or nb.burn not in {b.id for b in c.npcs[nb.npc].burns}):
+            bad.append(f"NPC burn {nb.npc!r} {nb.burn!r}")
         if s.stage.follow and s.stage.follow not in c.characters and s.stage.follow not in s.tokens:
             bad.append(f"camera follow {s.stage.follow!r}")
         for m, f in s.fights.items():

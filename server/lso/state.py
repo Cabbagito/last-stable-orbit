@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import RULES, BurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, OpeningState, OverviewState, Preset, PresetItem, RollState, SlotBank, SlotSeat, SoundPlayed, TokenState, Vitals
+from .models import RULES, BurnState, NpcBurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, OpeningState, OverviewState, Preset, PresetItem, RollState, SlotBank, SlotSeat, SoundPlayed, TokenState, Vitals
 
 SOUNDS_KEPT = 8  # soundboard presses kept for the TV: a quick run of them can land in one frame
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
@@ -229,6 +229,10 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         s.stage.burn = BurnState.model_validate(data)
     elif ev_type == "burn.ended":
         s.stage.burn = None
+    elif ev_type == "npc_burn.started":
+        s.stage.npc_burn = NpcBurnState.model_validate(data)
+    elif ev_type == "npc_burn.ended":
+        s.stage.npc_burn = None
     elif ev_type == "stage.setup_set":
         pass  # an old log's TV / no TV / online choice: the TV is always there now
     elif ev_type == "stage.camera_set":

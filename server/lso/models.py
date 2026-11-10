@@ -88,6 +88,17 @@ class Character(Strict):
         return _six_dice(v)
 
 
+class NpcBurn(Strict):
+    """A Burn of an NPC's (Lucan's): a film on the TV, no Entropy (Peter keeps count in his head), nothing on the laptops.
+    Only the GM ever learns it exists, until it plays."""
+
+    id: str
+    name: str
+    text: str
+    file: str
+    length: float = Field(gt=0, le=20)  # seconds
+
+
 class Npc(Strict):
     id: str
     name: str
@@ -102,6 +113,7 @@ class Npc(Strict):
     codex: str | None = None  # its Codex entry, once the Codex exists (M6)
     size: float = 1  # token size: the spider mech is a double-size token
     health: int = Field(ge=1, le=20)  # the enemy card's health. Players see it only as the HP ring, while it's in a fight
+    burns: list[NpcBurn] = []  # GM only, never sent to players
 
     @field_validator("stats")
     @classmethod
@@ -813,6 +825,15 @@ class BurnState(Strict):
     ends: float
 
 
+class NpcBurnState(Strict):
+    """An NPC's Burn film playing now, on the TV only, from `at` to `ends` (server time)."""
+
+    npc: str
+    burn: str
+    at: float
+    ends: float
+
+
 class OpeningState(Strict):
     """The opening is on: the TV loops and players are held on the black hole until it ends. Times are the server's."""
 
@@ -839,6 +860,7 @@ class StageState(Strict):
     film: FilmState | None = None
     opening: OpeningState | None = None
     burn: BurnState | None = None
+    npc_burn: NpcBurnState | None = None  # GM and TV only
     flood: FloodState | None = None
     join: bool = True  # the join card is on the TV, if the server has one, until the GM hides it
     sounds: list[SoundPlayed] = []  # the last few soundboard presses, for the TV

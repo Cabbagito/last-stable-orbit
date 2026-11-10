@@ -1984,3 +1984,21 @@ assets:
   - path: sounds/bits/sad_trombone.mp3
     store: lso_soundboard.zip
     sha256: "5aa90effa0e3abea2d715c82653b8aea34a1385d62adc1586100d4bfb26d8e53"
+  - path: films/burns/lucan-legendary-action.mp4
+    store: cutscenes/burn_*.py (Lucan's Burns, rendered in a claude.ai session)
+    sha256: "fd8a84106b0cdb5308a854bcdab89cf286810b8da3365668126db59238c54f7f"
+    bytes: 895392
+    width: 1920
+    height: 1080
+  - path: films/burns/lucan-nothing-personal.mp4
+    store: cutscenes/burn_*.py (Lucan's Burns, rendered in a claude.ai session)
+    sha256: "4554d3d16d6503f43c3a09f2e822418455fa003908b7effb41d501d48db34e4c"
+    bytes: 1821117
+    width: 1920
+    height: 1080
+  - path: films/burns/lucan-unfinished-business.mp4
+    store: cutscenes/burn_*.py (Lucan's Burns, rendered in a claude.ai session)
+    sha256: "e3af545bb6d773b3c3c53ba4913c4eab3592b473df81770d16c0015f49c6af9e"
+    bytes: 1740873
+    width: 1920
+    height: 1080

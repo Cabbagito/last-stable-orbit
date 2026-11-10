@@ -274,6 +274,7 @@ def asset_paths(c: Content) -> set[str]:
             paths.add(ch.burn.icon)
             paths |= {x.file for x in ch.burn.cuts}
     paths |= {n.portrait for n in c.npcs.values()}
+    paths |= {b.file for n in c.npcs.values() for b in n.burns}
     paths |= {p.card for p in c.presets.values() if p.card}
     paths |= {i.icon for i in c.items.values()}
     for m in c.maps.values():

@@ -376,3 +376,10 @@
 .gx-sbmenu button:hover{color:#fff;background:#14151a}
 .gx-sbmenu button:active{color:#fff;box-shadow:inset 2px 0 0 #ff4fa3}
 @media (max-width:1180px){.app-headright:has(.gx-sb){gap:10px}.gx-sbbtn{padding:0 8px}}
+/* Lucan's Burns on the GM's card: a button to play each one on the TV, with what it does beside it */
+.npcb .r4-lab{color:#ff5a4a}
+.npcb-row{margin-top:8px}
+.npcb-row .r10-btn{width:100%;min-height:30px;font-size:12.5px;text-align:left;border-color:#5a1c18}
+.npcb-row .r10-btn.on{border-color:#ff5a4a;color:#ff8a6a}
+.npcb-row .app-ins-txt{margin-top:4px;font-size:12px;line-height:1.4}
+.npcb .r10-dimtxt{display:block;margin-top:6px}

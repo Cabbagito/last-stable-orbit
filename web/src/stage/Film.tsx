@@ -123,19 +123,21 @@ export function LaptopFilm() {
 }
 
 /**
- * The TV's Burn films. It loads all of them ahead (they're small), so a Burn starts at once. Unlike a cutscene, a Burn
+ * The TV's Burn films, the crew's and Lucan's. It loads all of them ahead (they're small), so a Burn starts at once. Unlike a cutscene, a Burn
  * never takes a laptop over: every laptop stays on the game, and the map and the crew rail show who is burning (BurnMark).
  */
 export function BurnFilms() {
   const crew = useGame((s) => s.view?.crew)
   const burn = useGame((s) => s.view?.stage.burn)
+  const npcBurn = useGame((s) => s.view?.stage.npc_burn)
+  const npcFilms = useGame((s) => s.view?.stage.npc_burn_films)
   const preview = useGame((s) => s.preview)
-  const key = (crew ?? []).flatMap((c) => c.burn?.cuts.flatMap((x) => x.src ?? []) ?? []).join('|')
+  const key = [...(crew ?? []).flatMap((c) => c.burn?.cuts.flatMap((x) => x.src ?? []) ?? []), ...(npcFilms ?? [])].join('|')
   const srcs = useMemo(() => (key ? [...new Set(key.split('|'))] : []), [key])
   return (
     <>
       {srcs.map((src) => (
-        <FilmPlayer key={src} src={src} film={burn?.src === src ? burn : null} sound={!preview} hard hold />
+        <FilmPlayer key={src} src={src} film={burn?.src === src ? burn : npcBurn?.src === src ? npcBurn : null} sound={!preview} hard hold />
       ))}
     </>
   )

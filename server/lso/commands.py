@@ -275,8 +275,31 @@ def film_playing(state: GameState, now: float) -> bool:
 
 
 def burn_playing(state: GameState, now: float) -> bool:
-    b = state.stage.burn
-    return b is not None and now < b.ends
+    """A Burn film is on the TV: a crew member's, or an NPC's."""
+    b, n = state.stage.burn, state.stage.npc_burn
+    return (b is not None and now < b.ends) or (n is not None and now < n.ends)
+
+
+def _burns_over(state: GameState) -> Events:
+    """End whatever Burn just finished and the sweeper hasn't caught up with, before another starts."""
+    out: Events = [("burn.ended", {"char": state.stage.burn.char})] if state.stage.burn else []
+    return out + ([("npc_burn.ended", {"npc": state.stage.npc_burn.npc})] if state.stage.npc_burn else [])
+
+
+def _npc_burn(state: GameState, content: Content, args: dict, now: float) -> Events:
+    """An NPC's Burn (Lucan's): only its film on the TV. It costs nothing the app tracks, and the laptops show nothing."""
+    n = content.npcs.get(_str(args, "npc"))
+    if not n or not n.burns:
+        raise _invalid("that NPC has no Burns")
+    b = next((x for x in n.burns if x.id == args.get("burn")), None)
+    if not b:
+        raise _invalid(f"{n.name} has no Burn {args.get('burn')!r}")
+    if state.stage.opening or film_playing(state, now):
+        raise _invalid("a film is playing: Burn once it ends")
+    if burn_playing(state, now):
+        raise _invalid("a Burn is playing: wait for it to end")
+    at = round(now + BURN_LEAD, 3)
+    return _burns_over(state) + [("npc_burn.started", {"npc": n.id, "burn": b.id, "at": at, "ends": round(at + b.length + BURN_HOLD, 3)})]
 
 
 def _burn(state: GameState, content: Content, char: str, cut_id, now: float) -> Events:
@@ -297,7 +320,7 @@ def _burn(state: GameState, content: Content, char: str, cut_id, now: float) -> 
         raise _invalid("a film is playing: Burn once it ends")
     if burn_playing(state, now):
         raise _invalid("a Burn is playing: wait for it to end")
-    events: Events = [("burn.ended", {"char": state.stage.burn.char})] if state.stage.burn else []
+    events = _burns_over(state)
     at = round(now + BURN_LEAD, 3)
     return events + [
         ("vitals.set", {"char": char, "hp": hp, "entropy": entropy - BURN_COST}),
@@ -711,6 +734,8 @@ def sweep(state: GameState, now: float, online: set[str], content: Content | Non
         events.append(("film.ended", {"cue": state.stage.film.cue}))
     if state.stage.burn and now >= state.stage.burn.ends:
         events.append(("burn.ended", {"char": state.stage.burn.char}))
+    if state.stage.npc_burn and now >= state.stage.npc_burn.ends:
+        events.append(("npc_burn.ended", {"npc": state.stage.npc_burn.npc}))
     for r in state.rolls:
         if not r.open:
             continue
@@ -891,6 +916,9 @@ def handle(
 
     if kind == "gm.burn.use":
         return _burn(state, content, _holder(content, args, "char"), args.get("cut"), now)
+
+    if kind == "gm.npc.burn":
+        return _npc_burn(state, content, args, now)
 
     if kind == "gm.roll.failed":
         # Peter names the number, so only he knows a roll failed. A failed skill roll shows its downside on the TV.

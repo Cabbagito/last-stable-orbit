@@ -1,9 +1,11 @@
 import { useEffect, useState, type CSSProperties } from 'react'
 import { Cross, GiveRow, Pocket, Step, Vitals } from '../gm/parts'
+import { filmOn } from '../gm/StageSections'
 import { Closeup, CodexButton, InspectBlock, Inspector } from '../inspect/Inspector'
 import { useItemTip } from '../inspect/ItemTip'
 import { findObject } from '../inspect/objects'
 import { ring } from '../lib/ring'
+import { serverClock } from '../net/clock'
 import { STAT_LOOK, statIcon } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
 import { gmRoll, gmRun, isReadOnly, send, useGame, type GmRollMode } from '../store/game'
@@ -131,6 +133,7 @@ export function InspectCard() {
         )}
         {t.hidden && <div className="r10-warn">HIDDEN FROM PLAYERS</div>}
         {isGm && !crew && t.stats && <NpcRolls key={t.id} t={t} stats={t.stats} />}
+        {isGm && !crew && t.burns && t.burns.length > 0 && <NpcBurns t={t} burns={t.burns} />}
         {t.note && <div className="app-ins-txt app-ins-gap">{t.note}</div>}
         {isGm && t.gm_note && (
           <div className="r10-gmn">
@@ -275,5 +278,36 @@ function SendTo({ t }: { t: TokenView }) {
     <button type="button" className="r4-btn app-small" onClick={() => setMapPicker({ token: t.id })}>
       Send to…
     </button>
+  )
+}
+
+/**
+ * An NPC's Burns (only Lucan has them), on the GM's card only. Each plays its film on the TV; the laptops show nothing,
+ * and nothing is spent: Peter keeps Lucan's Entropy in his head.
+ */
+function NpcBurns({ t, burns }: { t: TokenView; burns: NonNullable<TokenView['burns']> }) {
+  const stage = useGame((s) => s.view?.stage)
+  if (!stage) return null
+  const now = serverClock.now() / 1000
+  const playing = stage.npc_burn && now < stage.npc_burn.ends ? stage.npc_burn : null
+  const busy = filmOn(stage) || (!!stage.burn && now < stage.burn.ends) || !!playing
+  const line = !stage.tv ? 'No TV, so these wait for it.' : playing ? `${playing.name} is on the TV.` : busy ? 'Something is on the TV.' : ''
+  return (
+    <div className="r10-gmn npcb">
+      <span className="r4-lab">BURNS · ONLY YOU SEE THESE</span>
+      {burns.map((b) => (
+        <div key={b.id} className="npcb-row">
+          <button type="button" className={'r10-btn' + (playing?.burn === b.id ? ' on' : '')} disabled={busy || !stage.tv} onClick={() => void gmRun('gm.npc.burn', { npc: t.ref, burn: b.id })} aria-label={`Play ${b.name} on the TV`}>
+            {b.name}
+          </button>
+          <div className="app-ins-txt">{b.text}</div>
+        </div>
+      ))}
+      {line && (
+        <div className="r10-dimtxt" role="status">
+          {line}
+        </div>
+      )}
+    </div>
   )
 }

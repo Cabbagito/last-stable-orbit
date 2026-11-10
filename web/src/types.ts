@@ -62,6 +62,24 @@ export interface BurnView {
   src?: string // the TV only
 }
 
+/** One of an NPC's Burns (Lucan's). GM only: players never learn it exists until its film plays on the TV. */
+export interface NpcBurnDef {
+  id: string
+  name: string
+  text: string
+  length: number // seconds
+}
+
+/** An NPC's Burn playing now. Only the GM and the TV get it. */
+export interface NpcBurnView {
+  npc: string
+  burn: string
+  name: string
+  at: number
+  ends: number
+  src?: string // the TV only
+}
+
 export type Hum = 'bar' | 'street' | 'none' | 'beat'
 
 export interface MoodDef {
@@ -221,6 +239,7 @@ export interface TokenView {
   stats?: Record<StatKey, number> // GM only, NPCs: the die for each stat
   hp?: number // GM only, NPCs: their health, in or out of a fight
   health?: number // GM only, NPCs
+  burns?: NpcBurnDef[] // GM only, NPCs: Lucan's Burns
 }
 
 export interface Item {
@@ -357,6 +376,8 @@ export interface StageView {
   opening_film?: { name: string; sub: string; still: string; length: number } // GM only
   held?: { loop: string; still: string } // a player only: the opening is on, and this laptop shows only the waiting loop
   burn: BurnView | null
+  npc_burn?: NpcBurnView // the GM and the TV only: an NPC's Burn playing now
+  npc_burn_films?: string[] // the TV only: every NPC Burn film, fetched ahead
   tv?: boolean // GM only: the TV is connected
   cues?: CueView[] // GM only
   films?: string[] // the TV only: every film, fetched ahead
