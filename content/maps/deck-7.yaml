@@ -14,15 +14,6 @@ moods:
   - {id: day, label: Day, base: maps/deck-7/base-day.png}
   - {id: night, label: Night, base: maps/deck-7/base-night.png}
   - {id: alert, label: Alert, base: maps/deck-7/base-alert.png}
-switches:
-  - {id: cameras, label: Cameras, type: bool}
-cameras:  # one, on the pole, watching the power closet door and the corridor. The operator's door is in its blind spot.
-  switch: cameras
-  bounds: [0, 0, 20, 14]
-  steps: 12
-  color: "#7fb4ff"
-  cones:
-    - {at: [11.73, 5.07], deg: -162, spread: 75, reach: 8, bounds: [7, 0, 20, 14]}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: plots
     name: "Her plots"

@@ -15,15 +15,6 @@ moods:
   - {id: day, label: Day, base: maps/secure/base-day.png}
   - {id: night, label: Night, base: maps/secure/base-night.png}
   - {id: alert, label: Alert, base: maps/secure/base-alert.png}
-switches:
-  - {id: cameras, label: Cameras, type: bool}
-cameras:  # one, up in the hall, on the vault door. From the Heist playground's coverage.
-  switch: cameras
-  bounds: [0, 0, 30, 22]
-  steps: 12
-  color: "#7fb4ff"
-  cones:
-    - {at: [20.6, 9.6], deg: -128, spread: 40, reach: 9}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: vault-door
     name: "The vault door"

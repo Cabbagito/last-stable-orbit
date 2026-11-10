@@ -15,7 +15,7 @@ The slots: anyone who can see the machines sees how many seats are taken and whe
 machine goes only to the player sitting at it, never to the GM. The rates go only to whoever can audit them. The TV
 hears of the flood, and of nothing else.
 
-Each map also carries its decals and camera cones (everyone sees those). Only the GM gets its pins, the Key
+Each map also carries its decals (everyone sees those). Only the GM gets its pins, the Key
 board's "what's where".
 
 The TV (the Stage seat) gets what a player gets with no seat: the party map (or, following one of the crew, the
@@ -110,13 +110,6 @@ def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer, o
         "decals": [{**x.model_dump(), "src": url(x.src)} for x in d.decals],
         "hum": d.hum,
         "order": d.order,  # frames go out with sorted keys, so the GM's lists sort by this
-        "cameras": {
-            "switch": d.cameras.switch,
-            "color": d.cameras.color,
-            "cones": [{"mood": c.mood, "pts": d.cameras.polygon(c)} for c in d.cameras.cones],
-        }
-        if d.cameras
-        else None,
         "feed": d.feed.model_dump() if d.feed else None,
         "mood": ms.mood if ms else d.moods[0].id,
         "values": dict(ms.switches) if ms else {},

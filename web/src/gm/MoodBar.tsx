@@ -1,31 +1,9 @@
 import { gmRun, useGame } from '../store/game'
 import type { MapView, SwitchDef } from '../types'
-import { Eye } from './parts'
 
-/** The switches that apply in the map's current mood, apart from the cameras (they get their own button). */
+/** The switches that apply in the map's current mood. */
 export const liveSwitches = (map: MapView) =>
-  map.switches.filter((s) => (!s.moods.length || s.moods.includes(map.mood)) && s.id !== map.cameras?.switch)
-
-/**
- * The camera cones, for everyone: players and the TV see where the cameras look until you hide them. Its label
- * says what pressing it does.
- */
-export function CamerasButton({ map, className }: { map: MapView; className: string }) {
-  const s = map.cameras ? map.switches.find((x) => x.id === map.cameras?.switch) : undefined
-  if (!s) return null
-  const shown = (map.values[s.id] ?? 0) > 0
-  return (
-    <button
-      type="button"
-      className={className + ' app-camsw'}
-      title={shown ? 'Everyone sees where the cameras look. Hide the cones for everyone.' : 'The cones are hidden for everyone. Show them again.'}
-      onClick={() => void pressSwitch(map, s)}
-    >
-      <Eye off={shown} size={12} />
-      {shown ? 'Hide camera cones' : 'Show camera cones'}
-    </button>
-  )
-}
+  map.switches.filter((s) => !s.moods.length || s.moods.includes(map.mood))
 
 /** "Gas 2/3", "Hatch: on". A level switch steps up one each press and wraps to 0. */
 export function switchLabel(s: SwitchDef, v: number) {
@@ -60,7 +38,6 @@ export function MoodBar({ map }: { map: MapView }) {
           </button>
         )
       })}
-      <CamerasButton map={map} className="r10-sw" />
       {!!map.pins?.length && (
         <button type="button" className={'r10-sw' + (pins ? ' on' : '')} aria-pressed={pins} title="The Key board's pins. Only you see them." onClick={() => setPins(!pins)}>
           What's where

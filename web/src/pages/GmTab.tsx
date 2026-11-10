@@ -2,7 +2,7 @@ import { useEffect, useState, type DragEvent } from 'react'
 import { Bench, Seats } from '../gm/Bench'
 import { CodexSection } from '../gm/CodexSection'
 import { EventsSection } from '../gm/EventsSection'
-import { CamerasButton, liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
+import { liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
 import { crewFaces, isFar, moodArt } from '../gm/mapTiles'
 import { Diamond, Eye, GIVE_COUNTED, Pocket, itemAria } from '../gm/parts'
 import { SendCrew } from '../gm/SendCrew'
@@ -339,7 +339,7 @@ function MapRow({ view, m, under, open, toggle }: { view: View; m: MapView; unde
       </div>
       {open && (
         <div className="gx-mopenrow">
-          {(sws.length > 0 || m.cameras) && (
+          {sws.length > 0 && (
             <div className="r10-go" style={{ flexWrap: 'wrap' }}>
               {sws.map((sw) => {
                 const v = m.values[sw.id] ?? 0
@@ -349,7 +349,6 @@ function MapRow({ view, m, under, open, toggle }: { view: View; m: MapView; unde
                   </button>
                 )
               })}
-              <CamerasButton map={m} className="r10-btn" />
             </div>
           )}
           <div className="gx-mthings">

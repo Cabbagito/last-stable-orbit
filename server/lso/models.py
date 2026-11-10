@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import math
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -211,36 +210,6 @@ class Feed(Strict):
     lines: list[str]
 
 
-class Cone(Strict):
-    """One camera's view on the floor: from `at` (world X, Y), facing `deg`, `spread` degrees wide, `reach` long."""
-
-    mood: str | None = None  # the mood it belongs to; none = every mood
-    at: tuple[float, float]
-    deg: float
-    spread: float
-    reach: float
-    bounds: tuple[float, float, float, float] | None = None  # its own walls, else the map's
-
-
-class Cameras(Strict):
-    """The cameras drawn on a map's walls. Their cones show while the bool switch `switch` is on, for everyone."""
-
-    switch: str
-    bounds: tuple[float, float, float, float]  # x0, y0, x1, y1: cones stop at the walls
-    steps: int = 6  # arc segments, as the board draws them
-    color: str = "#c9bcff"  # ISCO's white-violet; the company's cameras are steel blue
-    cones: list[Cone]
-
-    def polygon(self, c: Cone) -> list[list[float]]:
-        """The cone as world X, Y points on the floor, the way the Maps boards draw it."""
-        x0, y0, x1, y1 = c.bounds or self.bounds
-        pts = [[c.at[0], c.at[1]]]
-        for i in range(self.steps + 1):
-            a = math.radians(c.deg - c.spread / 2 + c.spread * i / self.steps)
-            pts.append([round(max(x0, min(x1, c.at[0] + c.reach * math.cos(a))), 3), round(max(y0, min(y1, c.at[1] + c.reach * math.sin(a))), 3)])
-        return pts
-
-
 class Pin(Strict):
     """A labelled point from the map's Key board ("what's where"). Only the GM sees pins."""
 
@@ -262,7 +231,6 @@ class MapDef(Strict):
     switches: list[Switch] = []
     overlays: list[Overlay] = []
     decals: list[Decal] = []
-    cameras: Cameras | None = None
     feed: Feed | None = None
     objects: list[MapObject] = []
     pins: list[Pin] = []
@@ -292,13 +260,6 @@ class MapDef(Strict):
                     raise ValueError(f"the feed needs a level switch {k!r}")
             if sw[self.feed.events].max > len(self.feed.lines):
                 raise ValueError("the feed's events switch goes past its lines")
-        if self.cameras:
-            s = sw.get(self.cameras.switch)
-            if not s or s.type != "bool":
-                raise ValueError(f"cameras need a bool switch {self.cameras.switch!r}")
-            for c in self.cameras.cones:
-                if c.mood is not None and c.mood not in mood_ids:
-                    raise ValueError(f"a camera cone names unknown mood {c.mood}")
         return self
 
     def switch(self, switch_id: str) -> Switch | None:

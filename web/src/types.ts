@@ -135,14 +135,6 @@ export interface FeedDef {
   lines: string[]
 }
 
-/** One deck of a tower map: its floor height, and where its camera button looks. */
-/** The cameras on a map's walls: each cone as world X, Y points on the floor, shown while `switch` is on. */
-export interface CamerasDef {
-  switch: string
-  color: string
-  cones: { mood: string | null; pts: [number, number][] }[]
-}
-
 /** A labelled point from the map's Key board ("what's where"). GM only. */
 export interface PinDef {
   k: string
@@ -163,7 +155,6 @@ export interface MapView {
   switches: SwitchDef[]
   overlays: OverlayDef[]
   decals: DecalDef[]
-  cameras: CamerasDef | null
   feed: FeedDef | null
   mood: string
   values: Record<string, number>

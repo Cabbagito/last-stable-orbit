@@ -15,26 +15,8 @@ hum: street
 moods:
   - {id: calm, label: Calm, base: maps/promenade/base-calm.png, glow: maps/promenade/glow-calm.png}
   - {id: hunted, label: Hunted, base: maps/promenade/base-hunted.png, glow: maps/promenade/glow-hunted.png}
-switches:
-  - {id: cameras, label: Cameras, type: bool}
 decals:  # the black hole moving in the plaza window, placed exactly as the board places it
   - {id: window-hole, src: maps/promenade/hole.gif, box: [403, 224], matrix: [1, 0.5, 0, 1, 1664.4, 584.4], img: [20, -68, 360, 360], filter: brightness(1.2)}
-cameras:  # six, drawn on the walls. Everyone sees their cones while Cameras is on; Hunted widens them.
-  switch: cameras
-  bounds: [0, 0, 47, 10]
-  cones:
-    - {mood: calm, at: [0.3, 1], deg: 38, spread: 52, reach: 10}
-    - {mood: calm, at: [10.9, 0.3], deg: 112, spread: 52, reach: 8.5}
-    - {mood: calm, at: [22.7, 0.3], deg: 112, spread: 52, reach: 9.5}
-    - {mood: calm, at: [34.4, 0.3], deg: 118, spread: 44, reach: 9.5}
-    - {mood: calm, at: [41.6, 0.3], deg: 72, spread: 50, reach: 9.5}
-    - {mood: calm, at: [46.8, 0.3], deg: 132, spread: 44, reach: 9}
-    - {mood: hunted, at: [0.3, 1], deg: 42, spread: 78, reach: 13}
-    - {mood: hunted, at: [10.9, 0.3], deg: 100, spread: 96, reach: 11}
-    - {mood: hunted, at: [22.7, 0.3], deg: 104, spread: 96, reach: 12}
-    - {mood: hunted, at: [34.4, 0.3], deg: 112, spread: 96, reach: 13}
-    - {mood: hunted, at: [41.6, 0.3], deg: 84, spread: 96, reach: 12}
-    - {mood: hunted, at: [46.8, 0.3], deg: 128, spread: 78, reach: 12}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   # at: where the marker sits, in world X, Y, Z. closeup: the centre of the card's close-up, in display px.
   - id: queue-board

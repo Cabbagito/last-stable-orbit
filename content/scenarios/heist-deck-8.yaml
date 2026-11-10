@@ -1,10 +1,10 @@
 # A setup to test from. See fight-at-the-bar.yaml.
 id: heist-deck-8
 name: The heist, deck 8 at Alert
-note: The crew at the entrance, cones showing
+note: The crew at the entrance
 party_map: deck-8
 maps:
-  deck-8: {mood: alert, switches: {cameras: 1}, shown: [guarded-door, checkpoint]}
+  deck-8: {mood: alert, shown: [guarded-door, checkpoint]}
 tokens:
   - {kind: crew, ref: ves, map: deck-8, at: [17.8, 4.0, 0]}
   - {kind: crew, ref: tomo, map: deck-8, at: [16.9, 3.6, 0]}

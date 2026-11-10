@@ -14,15 +14,6 @@ moods:
   - {id: day, label: Day, base: maps/deck-8/base-day.png}
   - {id: night, label: Night, base: maps/deck-8/base-night.png}
   - {id: alert, label: Alert, base: maps/deck-8/base-alert.png}
-switches:
-  - {id: cameras, label: Cameras, type: bool}
-cameras:  # one, on the pole by the stairs, looking back along the way anyone would come. The catering lift's route to the checkpoint stays clear of it, as in the Heist playground.
-  switch: cameras
-  bounds: [0, 0, 20, 14]
-  steps: 12
-  color: "#7fb4ff"
-  cones:
-    - {at: [19.25, 4.75], deg: -142, spread: 58, reach: 8, bounds: [12.6, 0, 20, 14]}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: guarded-door
     name: "The guarded door"

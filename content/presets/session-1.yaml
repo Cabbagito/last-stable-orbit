@@ -11,13 +11,13 @@ default: true
 party_map: event-horizon
 maps:
   event-horizon: {mood: after, shown: [mural, slots]}
-  promenade: {mood: calm, switches: {cameras: 0}}
-  deck-6: {mood: day, switches: {cameras: 0}}
-  deck-7: {mood: day, switches: {cameras: 0}}
-  deck-8: {mood: day, switches: {cameras: 0}}
-  deck-9: {mood: day, switches: {cameras: 0}}
-  secure: {mood: day, switches: {cameras: 0}}
-  lift: {mood: shut, switches: {cameras: 0}}
+  promenade: {mood: calm}
+  deck-6: {mood: day}
+  deck-7: {mood: day}
+  deck-8: {mood: day}
+  deck-9: {mood: day}
+  secure: {mood: day}
+  lift: {mood: shut}
   bots: {mood: night}
 tokens:
   - {kind: npc, ref: fixer, map: event-horizon, at: [4.203, 2.89, 0.24]}

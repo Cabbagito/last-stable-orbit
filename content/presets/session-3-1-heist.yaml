@@ -8,13 +8,13 @@ card: maps/deck-9/base-night.png
 party_map: deck-6
 maps:
   event-horizon: {mood: after, switches: {seals_box: 0}, shown: [mural, slots]}
-  promenade: {mood: calm, switches: {cameras: 0}, shown: [queue-board, mural, window, founders-ring, satisfaction]}
-  deck-6: {mood: night, switches: {cameras: 0}}
-  deck-7: {mood: night, switches: {cameras: 0}}
-  deck-8: {mood: night, switches: {cameras: 0}}
-  deck-9: {mood: night, switches: {cameras: 0}}
-  secure: {mood: night, switches: {cameras: 0}, shown: [vault-door, flowers]}
-  lift: {mood: shut, switches: {cameras: 0}}
+  promenade: {mood: calm, shown: [queue-board, mural, window, founders-ring, satisfaction]}
+  deck-6: {mood: night}
+  deck-7: {mood: night}
+  deck-8: {mood: night}
+  deck-9: {mood: night}
+  secure: {mood: night, shown: [vault-door, flowers]}
+  lift: {mood: shut}
   bots: {mood: heist}
   med: {mood: white, shown: [screen]}
 tokens:

@@ -9,13 +9,13 @@ card: presets/after-hours.png
 party_map: event-horizon
 maps:
   event-horizon: {mood: after, switches: {seals_box: 0}, shown: [mural, slots]}
-  promenade: {mood: calm, switches: {cameras: 0}, shown: [queue-board, mural, window, founders-ring, satisfaction]}
-  deck-6: {mood: day, switches: {cameras: 0}}
-  deck-7: {mood: day, switches: {cameras: 0}}
-  deck-8: {mood: day, switches: {cameras: 0}}
-  deck-9: {mood: day, switches: {cameras: 0}}
-  secure: {mood: day, switches: {cameras: 0}}
-  lift: {mood: shut, switches: {cameras: 0}}
+  promenade: {mood: calm, shown: [queue-board, mural, window, founders-ring, satisfaction]}
+  deck-6: {mood: day}
+  deck-7: {mood: day}
+  deck-8: {mood: day}
+  deck-9: {mood: day}
+  secure: {mood: day}
+  lift: {mood: shut}
   bots: {mood: night}
   med: {mood: white, shown: [screen]}
 tokens:

@@ -15,18 +15,6 @@ hum: none
 moods:  # the blast door: shut for the first fight, open for the fixer
   - {id: shut, label: Door shut, base: maps/lift/base-shut.png, glow: maps/lift/glow-shut.png}
   - {id: open, label: Door open, base: maps/lift/base-open.png, glow: maps/lift/glow-open.png}
-switches:
-  - {id: cameras, label: Cameras, type: bool}
-cameras:  # four cover the platform and the hall; none in the old passage
-  switch: cameras
-  bounds: [0, 0, 30, 15]
-  steps: 12
-  color: "#7fb4ff"
-  cones:
-    - {at: [8, 0.5], deg: 50, spread: 70, reach: 14}
-    - {at: [20, 0.5], deg: 110, spread: 70, reach: 14}
-    - {at: [0.5, 12.5], deg: -25, spread: 50, reach: 13}
-    - {at: [22.35, 15.7], deg: 110, spread: 90, reach: 11, bounds: [8, 15, 30, 26]}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: crawler-cab
     name: The crawler cab

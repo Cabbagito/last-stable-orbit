@@ -676,16 +676,6 @@ body {
   max-width: none;
   user-select: none;
 }
-.app-cones {
-  position: absolute;
-  left: 0;
-  top: 0;
-  pointer-events: none;
-}
-.app-cones polygon {
-  fill-opacity: 0.2;
-  stroke-width: 3;
-}
 /* The Executive's and Secure floor's Alert: red beacons pulsing (their boards' e-beat). */
 .app-hum-beat {
   animation: app-hum-beat 1.7s ease-in-out infinite;
@@ -750,11 +740,6 @@ body {
   align-items: center;
   gap: 6px 8px;
   margin-top: 6px;
-}
-.app-camsw {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
 }
 /* The GM tab's Maps: every map as it is right now, two or three across. */
 

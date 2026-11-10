@@ -1,4 +1,4 @@
-"""M5: more maps. Their camera cones and decals, the GM-only pins, sending the crew to a map, the TV following one
+"""M5: more maps. Their decals, the GM-only pins, sending the crew to a map, the TV following one
 of the crew across maps, and a saved game gaining maps the content didn't have when it was saved."""
 
 import json
@@ -59,14 +59,9 @@ async def test_pins_reach_only_the_gm(engine):
         assert "what's where" not in str(v).lower() and "Gangway to the Patience" not in str(v)
 
 
-async def test_everyone_sees_the_cameras_and_the_moving_window(engine):
+async def test_everyone_sees_the_moving_window(engine):
     await ok(engine, GM, "gm.crew.send", {"map": "promenade"})
     m = project(engine.state, engine.content, VES)["maps"]["promenade"]
-    assert m["cameras"]["switch"] == "cameras"
-    assert len([c for c in m["cameras"]["cones"] if c["mood"] == "calm"]) == 6
-    assert len([c for c in m["cameras"]["cones"] if c["mood"] == "hunted"]) == 6
-    assert all(len(c["pts"]) == 8 for c in m["cameras"]["cones"])
-    assert m["values"].get("cameras") == 0  # every session starts with them off
     assert m["decals"][0]["src"] == "/assets/maps/promenade/hole.gif"
     assert "maps/promenade/hole.gif" in referenced_assets(project(engine.state, engine.content, VES))
     assert m["hum"] == "street"
@@ -130,7 +125,7 @@ async def test_the_arrival_preset(engine):
     s = engine.state
     assert s.party_map == "patience"
     assert all(crew_token(s, c).map == "patience" for c in CREW)
-    assert s.maps["promenade"].switches == {"cameras": 0}
+    assert s.maps["promenade"].switches == {}
     v = project(s, engine.content, VES)
     assert {t["ref"] for t in v["tokens"].values() if t["kind"] == "npc"} == {
         "frail-passenger", "passenger", "passenger-candles", "passenger-flowers", "passenger-old", "passenger-tourist",
@@ -156,7 +151,7 @@ def test_a_saved_game_gains_the_new_maps(content, tmp_path):
     store.commit("system", None, [], old.model_dump(mode="json"), {})
     e = Engine(content, store)
     assert set(e.state.maps) == set(content.maps)
-    assert e.state.maps["promenade"] == MapState(mood="calm", switches={"cameras": 0})
+    assert e.state.maps["promenade"] == MapState(mood="calm")
     assert e.state.maps["patience"] == MapState(mood="docked")
     # and the GM can set a new map's mood straight away
     from lso.commands import handle
@@ -194,7 +189,6 @@ async def test_the_heist_maps_are_separate_with_day_night_alert(engine):
         assert all(x["glow"] is None for x in gm[m]["moods"]), m  # the new art is one flat picture per mood
         assert gm[m]["objects"] and gm[m]["pins"], m
     assert [x["id"] for x in gm["bots"]["moods"]][3:] == ["heist"]  # the Bot bays also have heist night, with the repair frame empty
-    assert {m: bool(gm[m]["cameras"]) for m in HEIST} == {"deck-6": True, "deck-7": True, "deck-8": True, "deck-9": True, "secure": True, "bots": False}
     assert gm["deck-9"]["objects"][0]["id"] == "signet"
 
 

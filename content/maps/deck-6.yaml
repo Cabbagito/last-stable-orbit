@@ -14,15 +14,6 @@ moods:
   - {id: day, label: Day, base: maps/deck-6/base-day.png}
   - {id: night, label: Night, base: maps/deck-6/base-night.png}
   - {id: alert, label: Alert, base: maps/deck-6/base-alert.png}
-switches:
-  - {id: cameras, label: Cameras, type: bool}
-cameras:  # one, on the pole by the stairs, along the reviewers' rows. From the Heist playground's coverage.
-  switch: cameras
-  bounds: [0, 0, 20, 14]
-  steps: 12
-  color: "#7fb4ff"
-  cones:
-    - {at: [19.17, 6.17], deg: 180, spread: 45, reach: 11, bounds: [0, 0, 20, 9.6]}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: throughput
     name: "The throughput board"

@@ -14,15 +14,6 @@ moods:
   - {id: day, label: Day, base: maps/deck-9/base-day.png}
   - {id: night, label: Night, base: maps/deck-9/base-night.png}
   - {id: alert, label: Alert, base: maps/deck-9/base-alert.png}
-switches:
-  - {id: cameras, label: Cameras, type: bool}
-cameras:  # one, on the pole, watching the office door and the gallery. From the Heist playground's coverage.
-  switch: cameras
-  bounds: [0, 0, 20, 14]
-  steps: 12
-  color: "#7fb4ff"
-  cones:
-    - {at: [19.2, 8.5], deg: -156, spread: 32, reach: 10.5, bounds: [9.6, 0, 20, 14]}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: signet
     name: "The signet"

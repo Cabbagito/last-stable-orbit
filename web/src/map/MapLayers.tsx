@@ -1,4 +1,3 @@
-import { proj } from '../lib/proj'
 import type { DecalDef, FeedDef, Hum, MapView } from '../types'
 
 const HUM: Record<Hum, string> = { bar: 'r3-hum', street: 'r3-hum app-hum-street', none: 'app-hum-none', beat: 'app-hum-none app-hum-beat' }
@@ -6,13 +5,11 @@ const HUM: Record<Hum, string> = { bar: 'r3-hum', street: 'r3-hum app-hum-street
 /**
  * A map's art, in its board's order: one base per mood (the current one shown), patches its switches show,
  * decals (the black hole moving in a window), the glow, decals over the glow (the Terminal room's face), gas,
- * the Terminal room's station feed, and the camera cones while the map's Cameras switch is on. Everyone sees
- * the cones: dodging them is part of play.
+ * and the Terminal room's station feed.
  */
 export function MapLayers({ map }: { map: MapView }) {
   const [W, H] = map.display
   const shown = (o: { mood: string; switch: string; value: number }) => (map.mood === o.mood && (map.values[o.switch] ?? 0) === o.value ? 1 : 0)
-  const cams = map.cameras && (map.values[map.cameras.switch] ?? 0) ? map.cameras.cones.filter((c) => c.mood === null || c.mood === map.mood) : []
   return (
     <>
       <div role="img" aria-label={map.description} />
@@ -47,13 +44,6 @@ export function MapLayers({ map }: { map: MapView }) {
           <img key={o.id} className="r3-map app-gas" src={o.src} alt="" draggable={false} style={{ width: W, height: H, opacity: shown(o) }} />
         ))}
       {map.feed && <Feed f={map.feed} values={map.values} />}
-      {cams.length > 0 && map.cameras && (
-        <svg className="app-cones" viewBox={`0 0 ${W} ${H}`} width={W} height={H} aria-hidden="true" style={{ fill: map.cameras.color, stroke: map.cameras.color }}>
-          {cams.map((c, i) => (
-            <polygon key={i} points={c.pts.map(([x, y]) => proj(map.origin, [x, y, 0]).join(',')).join(' ')} />
-          ))}
-        </svg>
-      )}
     </>
   )
 }

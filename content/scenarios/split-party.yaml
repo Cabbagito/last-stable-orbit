@@ -5,7 +5,7 @@ note: Ves alone on the Promenade with a guard
 party_map: event-horizon
 maps:
   event-horizon: {mood: open, shown: [mural, slots]}
-  promenade: {mood: calm, switches: {cameras: 1}}
+  promenade: {mood: calm}
 tokens:
   - {kind: crew, ref: ves, map: promenade, at: [2.2, 4.4, 0]}
   - {kind: crew, ref: tomo, map: event-horizon, at: [9.4, 3.9, 0]}
