@@ -35,6 +35,27 @@
   length: 70.0
   still: films/act-1-still.png
 
+- id: vigil
+  name: The Vigil
+  act: Act 2
+  sub: 50 s, opens session 2
+  ends: Ends on the Secure floor packed for the silence, with the crew in the crowd. Load The Vigil preset with it.
+  file: films/vigil.mp4
+  length: 49.6
+  still: films/vigil-still.png
+  sets:
+    map: secure
+    mood: day
+
+- id: act-2
+  name: End of Act 2
+  act: Act 2
+  sub: 39 s, closes session 2
+  ends: Ends on Lucan's call, then the card, "Sleep tight, my little angels." and "End of Act 2". Session 3 starts from The heist preset.
+  file: films/act-2.mp4
+  length: 38.6
+  still: films/act-2-still.png
+
 - id: vault-opens
   name: The vault opens
   act: Act 3
