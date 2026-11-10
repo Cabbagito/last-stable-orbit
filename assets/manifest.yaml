@@ -1994,26 +1994,26 @@ assets:
     height: 1080
   - path: films/lucan.mp4
     store: LUCAN
-    sha256: "2b1a587bd242139d563bda5af976abf09ac7a18dabebea2077811754e794ac74"
-    bytes: 2330390
+    sha256: "7921fc07934a935687bd5266bc233e630bc54873a72237012a4d7c639ae87026"
+    bytes: 2397385
     width: 1920
     height: 1080
   - path: films/lucan-still.png
     store: LUCAN
-    sha256: "94d5fc7c8e0f98830111da0258976affba1b2d5b4fbd26d7e3bd2ffa5d2e0e52"
-    bytes: 29884
+    sha256: "6f1c8b780fdd762a2561c40bc2a6db41dd30940d34737b095923a0de80dfd0b0"
+    bytes: 30093
     width: 480
     height: 270
   - path: films/act-1.mp4
     store: ACT1
-    sha256: "169a3431356dd1e3a06c071fd9e6211ce3407c954c689db421f5fc9448fb96f3"
-    bytes: 5883976
+    sha256: "e90c82233289ff49028b74066b9f4047bff98fff456c3fbce5aedb8c7fdb74ed"
+    bytes: 5125219
     width: 1920
     height: 1080
   - path: films/act-1-still.png
     store: ACT1
-    sha256: "e404d5d5c0c34b9c3c3aae67368d4833df2eeb39d43904300e6d8e3041b510ba"
-    bytes: 16602
+    sha256: "6d5a4453be69d24fc27595fc1c076d045c2d62e5c352dd1fc52a8d65ee5988ad"
+    bytes: 17833
     width: 480
     height: 270
   - path: films/vigil.mp4
