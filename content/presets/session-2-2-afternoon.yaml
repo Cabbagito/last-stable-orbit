@@ -1,0 +1,186 @@
+# Session 2, the afternoon: the silence is over and the station is back at work. The offices are full, and the Promenade is as
+# busy as the day they arrived. The crew start in the plaza, out of the company's lift.
+id: session-2-afternoon
+name: "The afternoon"
+session: "Session 2"
+blurb: "After the silence. The station back at work."
+card: maps/deck-7/base-day.png
+party_map: promenade
+maps:
+  event-horizon: {mood: open, shown: [mural, slots]}
+  promenade: {mood: calm, switches: {cameras: 0}, shown: [queue-board, mural, window, founders-ring, satisfaction]}
+  deck-6: {mood: day, switches: {cameras: 0}}
+  deck-7: {mood: day, switches: {cameras: 0}}
+  deck-8: {mood: day, switches: {cameras: 0}}
+  deck-9: {mood: day, switches: {cameras: 0}}
+  secure: {mood: day, switches: {cameras: 0}, shown: [vault-door, flowers]}
+  lift: {mood: shut, switches: {cameras: 0}}
+  bots: {mood: day}
+  med: {mood: white, shown: [screen]}
+tokens:
+  # the crew, in the plaza by the company's lift
+  - {kind: crew, ref: lale, map: promenade, at: [24.0, 4.4, 0]}
+  - {kind: crew, ref: marlo, map: promenade, at: [25.6, 4.8, 0]}
+  - {kind: crew, ref: tally, map: promenade, at: [22.6, 4.8, 0]}
+  - {kind: crew, ref: ves, map: promenade, at: [24.6, 6.1, 0]}
+  - {kind: crew, ref: tomo, map: promenade, at: [23.1, 6.1, 0]}
+  # Dock 7
+  - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}
+  # the plaza: the mural being cleaned, the window, the ring, the survey droid doing its rounds, the lift and its guards
+  - {kind: npc, ref: cleaner-7, map: promenade, at: [13.2, 1.2, 0]}
+  - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}
+  - {kind: npc, ref: cleaner-13, map: promenade, at: [15.6, 8.6, 0]}
+  - {kind: npc, ref: service-droid, map: promenade, at: [16.0, 2.0, 0]}
+  - {kind: npc, ref: robot-reader, map: promenade, at: [17.4, 1.5, 0.3]}
+  - {kind: npc, ref: resident-student, map: promenade, at: [18.9, 2.7, 0]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [20.4, 1.5, 0.3]}
+  - {kind: npc, ref: resident-coral, map: promenade, at: [17.2, 5.4, 0]}
+  - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}  # by the service door down to the Bot bays
+  - {kind: npc, ref: guard-rookie, map: promenade, at: [23.9, 2.4, 0]}
+  - {kind: npc, ref: guard, map: promenade, at: [25.9, 2.9, 0]}
+  - {kind: npc, ref: resident-courier, map: promenade, at: [25.6, 8.4, 0]}
+  # the Night Market: the stall cook runs the noodles, the vendor runs the chrome clinic, the knock-off cart, the vending
+  # machine. The Gumshoe works the alley's mouth
+  - {kind: npc, ref: robot-cook, map: promenade, at: [27.9, 0.9, 0]}
+  - {kind: npc, ref: resident-noodles, map: promenade, at: [27.5, 2.2, 0.3]}
+  - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}
+  - {kind: npc, ref: resident-shopkeeper, map: promenade, at: [28.5, 7.1, 0]}
+  - {kind: npc, ref: gumshoe, map: promenade, at: [33.5, 8.6, 0]}
+  - {kind: npc, ref: resident-nightshift, map: promenade, at: [35.3, 2.2, 0]}
+  # the side alley, "closed for cleaning": one cleaner in the mouth, one on the charging dock
+  - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.7, 11.0, 0]}
+  - {kind: npc, ref: cleaner-11, map: promenade, at: [31.5, 13.0, 0]}
+  # Static Kovac and her crew wait hidden in the black beyond the market's wall, taking up no floor (their cards name
+  # her, so they stay hidden until Peter starts Marlo's thread). He drags them into place, still hidden, and then shows them.
+  - {kind: npc, ref: static, map: promenade, at: [22.5, -8.5, 0], hidden: true}
+  - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
+  - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
+  - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
+  # the far end: the scrubber fixer at the service door, the same happy face twice by the Med Bay, the old miner's bench
+  - {kind: npc, ref: resident-beanie, map: promenade, at: [41.8, 1.5, 0]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [43.3, 2.7, 0]}
+  - {kind: npc, ref: robot-miner, map: promenade, at: [41.3, 7.5, 0.3]}
+  - {kind: npc, ref: happy-resident, map: promenade, at: [43.6, 7.8, 0.3]}
+  # the passengers, off the ship and out sightseeing
+  - {kind: npc, ref: passenger-flowers, map: promenade, at: [11.8, 2.6, 0]}
+  - {kind: npc, ref: passenger-candles, map: promenade, at: [18.2, 7.6, 0]}
+  - {kind: npc, ref: passenger-tourist, map: promenade, at: [21.8, 3.2, 0]}
+  - {kind: npc, ref: passenger-young, map: promenade, at: [30.5, 4.5, 0]}
+  - {kind: npc, ref: passenger, map: promenade, at: [28.9, 3.6, 0]}
+  - {kind: npc, ref: passenger-traveller, map: promenade, at: [37.4, 5.0, 0]}
+  # the bar, open: Dax at his place, the three at the bar, a couple of passengers
+  - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
+  - {kind: npc, ref: cleaner-14, map: event-horizon, at: [6.3, 5.4, 0]}
+  - {kind: npc, ref: slot-regular, map: event-horizon, at: [-0.86, 10.35, 0]}
+  - {kind: npc, ref: brawler-crane, map: event-horizon, at: [9.98, 3.9, 0]}
+  - {kind: npc, ref: brawler-grin, map: event-horizon, at: [11.2, 3.9, 0]}
+  - {kind: npc, ref: brawler-hauler, map: event-horizon, at: [12.42, 3.9, 0]}
+  - {kind: npc, ref: happy-resident, map: event-horizon, at: [5.9, 10.6, 0]}
+  - {kind: npc, ref: passenger-candles, map: event-horizon, at: [12.6, 5.1, 0]}
+  - {kind: npc, ref: passenger-flowers, map: event-horizon, at: [10.6, 5.8, 0]}
+  # Static and her crew wait hidden in the black off the bar's map
+  - {kind: npc, ref: static, map: event-horizon, at: [4.87, -12.27, 0], hidden: true}
+  - {kind: npc, ref: static-crest, map: event-horizon, at: [5.87, -13.27, 0], hidden: true}
+  - {kind: npc, ref: static-neon, map: event-horizon, at: [6.87, -10.27, 0], hidden: true}
+  - {kind: npc, ref: static-door, map: event-horizon, at: [7.87, -11.27, 0], hidden: true}
+  # the Med Bay
+  - {kind: npc, ref: nurse, map: med, at: [3.35, 3.8, 0]}
+  - {kind: npc, ref: happy-resident, map: med, at: [1.4, 1.1, 0.6]}
+  - {kind: npc, ref: passenger-old, map: med, at: [1.4, 2.9, 0.6]}
+  - {kind: npc, ref: frail-passenger, map: med, at: [1.4, 4.7, 0.6]}
+  # still aboard the Patience
+  - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
+  # the Bot bays: the techs and guards at the repair frame, two cleaners charging, BOLT-7 hidden. The mech is in the art, with no chip until its fight
+  - {kind: npc, ref: tech-welder, map: bots, at: [12.57, 3.97, 0]}
+  - {kind: npc, ref: tech-lamp, map: bots, at: [13.37, 6.97, 0]}
+  - {kind: npc, ref: tech-chief, map: bots, at: [16.77, 6.77, 0]}
+  - {kind: npc, ref: guard, map: bots, at: [10.97, 4.57, 0]}
+  - {kind: npc, ref: guard-riot, map: bots, at: [18.57, 2.37, 0]}
+  - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
+  - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
+  - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}  # hidden, on the pad numbered 7
+  # deck 6, office hours: a full floor of reviewers
+  - {kind: npc, ref: guard-sergeant, map: deck-6, at: [11.43, 3.37, 0]}
+  - {kind: npc, ref: ahti, map: deck-6, at: [14.64, 1.48, 0], hidden: true}  # hidden in his closet: whoever opens the door is hired
+  - {kind: npc, ref: guard-rookie, map: deck-6, at: [16.95, 3.86, 0]}
+  - {kind: npc, ref: reviewer-a, map: deck-6, at: [8.04, 4.79, 0]}
+  - {kind: npc, ref: reviewer-b, map: deck-6, at: [12.27, 4.88, 0]}
+  - {kind: npc, ref: reviewer-a, map: deck-6, at: [16.45, 4.84, 0]}
+  - {kind: npc, ref: reviewer-b, map: deck-6, at: [8.04, 6.95, 0]}
+  - {kind: npc, ref: reviewer-a, map: deck-6, at: [12.27, 7.04, 0]}
+  - {kind: npc, ref: reviewer-b, map: deck-6, at: [16.45, 7.0, 0]}
+  - {kind: npc, ref: reviewer-a, map: deck-6, at: [7.99, 8.98, 0]}
+  - {kind: npc, ref: reviewer-b, map: deck-6, at: [12.4, 9.07, 0]}
+  - {kind: npc, ref: reviewer-a, map: deck-6, at: [10.15, 4.84, 0]}
+  - {kind: npc, ref: reviewer-b, map: deck-6, at: [7.45, 11.89, 0]}  # gossiping at the water cooler
+  - {kind: npc, ref: reviewer-a, map: deck-6, at: [8.05, 12.68, 0]}
+  # a late lunch in the canteen, the chef and kitchen hand in the kitchen (Tomo can talk to them)
+  - {kind: npc, ref: reviewer-a, map: deck-6, at: [10.6, 10.87, 0]}
+  - {kind: npc, ref: reviewer-b, map: deck-6, at: [13.03, 10.96, 0]}
+  - {kind: npc, ref: scientist-junior, map: deck-6, at: [10.78, 12.49, 0]}
+  - {kind: npc, ref: chef, map: deck-6, at: [17.33, 11.25, 0]}
+  - {kind: npc, ref: kitchen-hand, map: deck-6, at: [17.2, 11.0, 0]}
+  - {kind: npc, ref: guard-towel, map: deck-6, at: [1.6, 9.8, 0], hidden: true}  # hidden in the showers until shift change
+  - {kind: npc, ref: guard-turban, map: deck-6, at: [1.6, 11.6, 0], hidden: true}
+  # deck 7: Irena and the operator, and the glass offices full
+  - {kind: npc, ref: scientist, map: deck-7, at: [1.95, 4.78, 0]}
+  - {kind: npc, ref: camera-operator, map: deck-7, at: [13.35, 3.57, 0]}
+  - {kind: npc, ref: guard, map: deck-7, at: [17.55, 3.99, 0]}
+  - {kind: npc, ref: scientist-junior, map: deck-7, at: [2.59, 9.52, 0]}
+  - {kind: npc, ref: reviewer-a, map: deck-7, at: [0.97, 11.14, 0]}
+  - {kind: npc, ref: scientist-physicist, map: deck-7, at: [7.36, 9.43, 0]}
+  - {kind: npc, ref: clerk, map: deck-7, at: [6.82, 11.77, 0]}
+  - {kind: npc, ref: reviewer-b, map: deck-7, at: [11.86, 8.53, 0.3]}
+  - {kind: npc, ref: reviewer-a, map: deck-7, at: [9.52, 8.35, 0]}
+  - {kind: npc, ref: reviewer-b, map: deck-7, at: [16.27, 10.6, 0.3]}
+  - {kind: npc, ref: clerk, map: deck-7, at: [8.08, 4.03, 0]}
+  - {kind: npc, ref: scientist-junior, map: deck-7, at: [15.28, 6.19, 0]}
+  # deck 8: a meeting in the boardroom, the lounge, both offices, the front desk and people crossing the floor
+  - {kind: npc, ref: guard-sergeant, map: deck-8, at: [10.44, 2.96, 0]}
+  - {kind: npc, ref: guard-rookie, map: deck-8, at: [16.32, 4.34, 0]}
+  - {kind: npc, ref: head-of-security, map: deck-8, at: [12.62, 11.38, 0]}
+  - {kind: npc, ref: receptionist, map: deck-8, at: [7.99, 0.88, 0]}
+  - {kind: npc, ref: reviewer-a, map: deck-8, at: [2.82, 11.45, 0]}
+  - {kind: npc, ref: reviewer-b, map: deck-8, at: [5.07, 11.54, 0]}
+  - {kind: npc, ref: reviewer-a, map: deck-8, at: [7.32, 11.63, 0]}
+  - {kind: npc, ref: scientist-physicist, map: deck-8, at: [2.5, 8.53, 0]}
+  - {kind: npc, ref: reviewer-b, map: deck-8, at: [4.57, 8.62, 0]}
+  - {kind: npc, ref: scientist-junior, map: deck-8, at: [6.91, 8.8, 0]}
+  - {kind: npc, ref: clerk, map: deck-8, at: [1.06, 0.61, 0.3]}
+  - {kind: npc, ref: reviewer-a, map: deck-8, at: [3.85, 0.34, 0.3]}
+  - {kind: npc, ref: reviewer-b, map: deck-8, at: [16.0, 9.43, 0]}
+  - {kind: npc, ref: clerk, map: deck-8, at: [10.87, 4.84, 0]}
+  - {kind: npc, ref: reviewer-a, map: deck-8, at: [14.47, 4.48, 0]}
+  # deck 9: still shut, the board around the signet and one putting, guards everywhere
+  - {kind: npc, ref: board-chair, map: deck-9, at: [5.23, 2.96, 0]}
+  - {kind: npc, ref: board-young, map: deck-9, at: [3.36, 4.17, 0]}
+  - {kind: npc, ref: board-old, map: deck-9, at: [5.5, 12.2, 0]}
+  - {kind: npc, ref: guard-sergeant, map: deck-9, at: [11.0, 5.0, 0]}
+  - {kind: npc, ref: guard, map: deck-9, at: [11.0, 7.2, 0]}
+  - {kind: npc, ref: guard-riot, map: deck-9, at: [13.7, 3.5, 0]}
+  - {kind: npc, ref: guard-rookie, map: deck-9, at: [17.0, 4.6, 0]}
+  - {kind: npc, ref: guard, map: deck-9, at: [8.9, 12.0, 0]}
+  - {kind: npc, ref: guard-riot, map: deck-9, at: [11.5, 10.0, 0]}
+  # the Secure floor: a few still paying their respects, two guards at the door
+  - {kind: npc, ref: guard, map: secure, at: [12.51, 4.35, 0]}
+  - {kind: npc, ref: guard-riot, map: secure, at: [17.32, 4.35, 0]}
+  - {kind: npc, ref: passenger, map: secure, at: [15.32, 18.92, 0]}
+  - {kind: npc, ref: passenger-young, map: secure, at: [14.56, 15.97, 0]}
+  - {kind: npc, ref: passenger-tourist, map: secure, at: [15.35, 12.99, 0]}
+  - {kind: npc, ref: passenger-candles, map: secure, at: [14.5, 10.45, 0]}
+  - {kind: npc, ref: passenger-flowers, map: secure, at: [15.35, 7.96, 0]}
+  - {kind: npc, ref: passenger-traveller, map: secure, at: [14.53, 5.94, 0]}
+inventory:  # the starting kit; a scene load leaves what the crew actually carries alone
+  lale: [fob-watch, letter-lale, {item: credits, count: 140}]
+  marlo: [stun-rings, letter-marlo, {item: credits, count: 140}]
+  tally: [tally-notebook, letter-tally, {item: credits, count: 140}]
+  ves: [sidearm, splice-kit, letter-ves, {item: credits, count: 140}]
+  tomo: [sourdough-jar, letter-tomo, {item: credits, count: 140}]
+
+codex: [lale, marlo, tally, ves, tomo,
+        rule-roll, rule-stats, rule-skills, rule-entropy, rule-burns, rule-fights, rule-health,
+        patience, promenade, event-horizon,
+        ergo, isco, hole, queue,
+        dax, fixer, concierge, dock-clerk, steward, ilija, letter, mural, table, slots, music-credit]
+
+station: [patience, promenade, event-horizon, deck-6, deck-7, deck-8, secure]

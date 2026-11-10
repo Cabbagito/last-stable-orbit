@@ -134,7 +134,7 @@ tokens:
   - {kind: npc, ref: nurse, map: med, at: [3.35, 1.9, 0]}
   - {kind: npc, ref: happy-resident, map: med, at: [1.4, 1.1, 0.6]}
   - {kind: npc, ref: passenger-old, map: med, at: [1.4, 2.9, 0.6]}
-  # the Bot bays on day 2: three techs at the repair frame, two guards
+  # the Bot bays on day 2: three techs at the repair frame and two guards. The mech is in the art, with no chip until its fight
   - {kind: npc, ref: tech-welder, map: bots, at: [12.57, 3.97, 0]}
   - {kind: npc, ref: tech-lamp, map: bots, at: [13.37, 6.97, 0]}
   - {kind: npc, ref: tech-chief, map: bots, at: [16.77, 6.77, 0]}
