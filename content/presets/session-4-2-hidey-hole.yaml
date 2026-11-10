@@ -9,7 +9,7 @@ blurb: "Down the hatch to Irena. Up or down?"
 card: maps/bots/base-heist.png
 party_map: bots
 maps:
-  event-horizon: {mood: stand, switches: {hatch: 1, gas: 0}, shown: [mural, slots]}
+  event-horizon: {mood: stand, switches: {hatch: 1}, shown: [mural, slots]}
   promenade: {mood: hunted, shown: [queue-board, mural, window, founders-ring, satisfaction]}
   deck-6: {mood: alert}
   deck-7: {mood: alert}

@@ -9,7 +9,7 @@ blurb: "Back up the front way for the probe, on alert."
 card: maps/secure/base-alert.png
 party_map: promenade
 maps:
-  event-horizon: {mood: stand, switches: {hatch: 1, gas: 0}, shown: [mural, slots]}
+  event-horizon: {mood: stand, switches: {hatch: 1}, shown: [mural, slots]}
   promenade: {mood: hunted, shown: [queue-board, mural, window, founders-ring, satisfaction]}
   deck-6: {mood: alert}
   deck-7: {mood: alert}

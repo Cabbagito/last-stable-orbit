@@ -10,7 +10,7 @@ blurb: "Out of the old passages, to the top of the cable."
 card: maps/lift/base-open.png
 party_map: lift
 maps:
-  event-horizon: {mood: stand, switches: {hatch: 1, gas: 0}, shown: [mural, slots]}
+  event-horizon: {mood: stand, switches: {hatch: 1}, shown: [mural, slots]}
   promenade: {mood: hunted, shown: [queue-board, mural, window, founders-ring, satisfaction]}
   deck-6: {mood: alert}
   deck-7: {mood: alert}
