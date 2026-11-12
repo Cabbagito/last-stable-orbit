@@ -371,6 +371,27 @@
   shelf: odd
   text: A paperback read so many times the spine has given up. The last page is missing.
 
+- id: vimak-plush
+  name: Vimak plush
+  icon: icons/items/vimak-plush.png
+  kind: gear
+  shelf: odd
+  text: A soft toy of a pale giant with blue spots, a little skull hat and a felt spear. The tag says GOD OF NATURE. It's very huggable.  # DRAFT, an Eve of Ruin nod
+
+- id: flute
+  name: Flute
+  icon: icons/items/flute.png
+  kind: gear
+  shelf: odd
+  text: You know what this is ;)
+
+- id: bobblehead
+  name: Bobblehead
+  icon: icons/items/bobblehead.png
+  kind: gear
+  shelf: odd
+  text: A robed figure on a spring, with one eye and a twenty-sided die for a head. It nods at everything and knows a secret. Something rattles inside.  # DRAFT, an Eve of Ruin nod
+
 - id: card-deck
   name: Deck of cards
   icon: icons/items/card-deck.png
@@ -436,6 +457,13 @@
   kind: gear
   shelf: trash
   text: One sock. Damp. There is no way to find out why.
+
+- id: cheese-rind
+  name: Gold-rimmed cheese rind
+  icon: icons/items/cheese-rind.png
+  kind: gear
+  shelf: trash
+  text: The last of a wedge with a gold rim, bitten. Whoever ate the rest seems to have won.  # DRAFT, an Eve of Ruin nod
 
 # --- the shops (2026-11-12). Peter hands these over when someone buys one; nothing in the app charges credits, and the
 # only effects it applies are chrome's. Icons from the Items canvas. Texts are DRAFT, for Peter to edit.

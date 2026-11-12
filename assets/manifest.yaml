@@ -1184,6 +1184,34 @@ assets:
     bytes: 1085
     width: 48
     height: 48
+  - path: icons/items/vimak-plush.png
+    store: ITEMS
+    asset_id: "5b94c0ae526e1f679e54f9e137a1bb14"
+    sha256: "7ff66ee4a1449834f0d6fc8cea8dd0ba9ed68c7ee190c851235d9e098c19b407"
+    bytes: 1912
+    width: 48
+    height: 48
+  - path: icons/items/cheese-rind.png
+    store: ITEMS
+    asset_id: "8b54768e1bea2d7644415ad2b299ec6a"
+    sha256: "afea31bd526d4c224b6caba99b6a4f6c4fd224d5457f4d54c60ebcad63f3bc94"
+    bytes: 811
+    width: 48
+    height: 48
+  - path: icons/items/flute.png
+    store: ITEMS
+    asset_id: "2e6ba5a48b36df2e6bb515ea11e7071c"
+    sha256: "876dc3110dd23446c04a4d7698d77de23775e304cd7e4de8b3457307805d43ac"
+    bytes: 1381
+    width: 48
+    height: 48
+  - path: icons/items/bobblehead.png
+    store: ITEMS
+    asset_id: "dec45eac7aac9ea175e4dea80f851d32"
+    sha256: "ae4b418135560c89d828de544f6e3f7a4eaa5d9352ddc0e5817682a71098486e"
+    bytes: 1441
+    width: 48
+    height: 48
   - path: icons/items/antidote.png
     store: ITEMS
     asset_id: "2b1a41c9a5d9c26d37d0b590aaaa676b"
