@@ -1,8 +1,8 @@
-# The final act: the crew come out of the old founder-era passages into the Lift station. Two of
-# the fixer's hired guns hold the blast door, the first fight. Lucan waits hidden alone on the glass floor behind it, for
-# the final fight once the door opens (the Door open mood). Lucan's dog waits hidden in the freight hall; where it and
-# the brute fight is still being decided. The mech isn't here: its fight is on the Secure floor, after the probe. The
-# station above still has the old numbers. The cab and the terminal have nobody in them. DRAFTS.
+# The final act: the crew come into the Lift station along the old wood passage. Four of the fixer's hired guns hold the
+# freight hall, two among the crates and two at the blast door, and Lucan waits hidden alone on the glass floor behind it,
+# for the final fight once the door opens (the Door open mood). The mech isn't here: its fight is on the Secure floor,
+# after the probe. Lucan's brute and his dog aren't either: they're hidden off the Promenade, their own fight on the
+# plaza. The station above is the takeover, as on the Act 4 cards. How the crew get down here is still open. DRAFTS.
 id: session-4-lift-station
 name: "The lift station"
 act: "Final act"
@@ -29,76 +29,97 @@ tokens:
   - {kind: crew, ref: tally, map: lift, at: [2.8, 22.4, 0]}
   - {kind: crew, ref: ves, map: lift, at: [3.8, 21.4, 0]}
   - {kind: crew, ref: tomo, map: lift, at: [4.6, 22.2, 0]}
-  # two hired guns hold the blast door. Lucan is hidden on the glass behind it; the mech and the dog hidden in the hall
+  # the freight hall: two hired guns among the crates as the crew come through the arch, and two more holding the blast
+  # door, where the quiet moment in the alcove comes before it opens. Lucan is hidden on the glass behind it, alone
+  - {kind: npc, ref: hired-gun-skull, map: lift, at: [14.5, 19.5, 0]}
+  - {kind: npc, ref: hired-gun-patch, map: lift, at: [16.0, 23.0, 0]}
   - {kind: npc, ref: hired-gun-watch, map: lift, at: [24.0, 18.2, 0]}  # calls the lift
   - {kind: npc, ref: hired-gun-eye, map: lift, at: [27.4, 18.6, 0]}
   - {kind: npc, ref: fixer, map: lift, at: [18.0, 7.0, 0.05], hidden: true}
-  - {kind: npc, ref: lucan-dog, map: lift, at: [22.0, 21.4, 0], hidden: true}
   - {kind: npc, ref: scientist, map: bots, at: [3.1, 0.4, 0]}  # still in the hidey-hole
-  # the Bot bays with the mech gone: only the cleaners on their pads and the droid at dispatch. BOLT-7 is hidden on pad 7
-  - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
-  - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
-  - {kind: npc, ref: cleaner-11, map: bots, at: [13.55, 12.45, 0]}
-  - {kind: npc, ref: cleaner-13, map: bots, at: [15.25, 12.5, 0]}
-  - {kind: npc, ref: service-droid, map: bots, at: [11.4, 9.6, 0]}
-  - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}
-  # the bar: Lucan has gone down to the lift, and left the brute and two hired guns
-  - {kind: npc, ref: lucan-brute, map: event-horizon, at: [15.7, 1.05, 0]}
+  # the bar: Lucan has gone down to the lift, and left two hired guns
   - {kind: npc, ref: hired-gun, map: event-horizon, at: [5.9, 10.6, 0]}
   - {kind: npc, ref: hired-gun-grille, map: event-horizon, at: [11.8, 8.9, 0]}
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}
-  # the Promenade, hunting them: mercenaries on the way to the company lift, the guards with them, and few residents out
-  - {kind: npc, ref: hired-gun-eye, map: promenade, at: [22.4, 2.0, 0]}  # runs the crew for Lucan
-  - {kind: npc, ref: hired-gun-watch, map: promenade, at: [23.9, 2.4, 0]}
-  - {kind: npc, ref: guard, map: promenade, at: [25.9, 2.9, 0]}
-  - {kind: npc, ref: guard-rookie, map: promenade, at: [27.1, 4.4, 0]}
-  - {kind: npc, ref: hired-gun-skull, map: promenade, at: [21.0, 7.0, 0]}  # the plaza
-  - {kind: npc, ref: hired-gun-patch, map: promenade, at: [31.0, 6.0, 0]}  # the market
-  - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}
+  # ---- The takeover, the same as on the Act 4 cards. The fixer's mercenaries hold the station in pairs (the bible's
+  # "bring 2"), and the company's guards are held, hiding or dead. Nobody is labelled: tell the players who is a hostage.
+  # The Promenade: two at the company's lift with one guard on his knees and the other dead; one in the market, holding
+  # the vendor at her stall, and the noodle droid has come out from behind its counter to fight him
+  - {kind: npc, ref: hired-gun-eye, map: promenade, at: [23.9, 2.4, 0]}  # runs the street for Lucan
+  - {kind: npc, ref: hired-gun-watch, map: promenade, at: [25.9, 2.9, 0]}
+  - {kind: npc, ref: guard, map: promenade, at: [24.9, 4.0, 0]}  # a hostage
+  - {kind: npc, ref: dead-guard, map: promenade, at: [22.3, 4.6, 0]}
+  - {kind: npc, ref: hired-gun-patch, map: promenade, at: [30.6, 2.6, 0]}
+  - {kind: npc, ref: robot-cook, map: promenade, at: [29.1, 2.6, 0]}  # fighting him
+  - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}  # a hostage
+  - {kind: npc, ref: dead-passenger, map: promenade, at: [20.4, 7.2, 0]}  # by the founder's ring
+  - {kind: npc, ref: dead-courier, map: promenade, at: [31.0, 7.2, 0]}  # in the market
+  - {kind: npc, ref: dead-tourist, map: promenade, at: [9.6, 7.6, 0]}  # short of the queue
+  # everyone off the Patience is trying to get back aboard, crowding the dock end of the queue. The board still says 11:00
+  - {kind: npc, ref: passenger-old, map: promenade, at: [3.35, 1.45, 0]}
+  - {kind: npc, ref: passenger-candles, map: promenade, at: [4.8, 1.35, 0]}
+  - {kind: npc, ref: passenger-tourist, map: promenade, at: [4.8, 3.15, 0]}
+  - {kind: npc, ref: passenger, map: promenade, at: [6.25, 3.05, 0]}
+  - {kind: npc, ref: passenger-traveller, map: promenade, at: [4.8, 4.75, 0]}
+  - {kind: npc, ref: passenger-flowers, map: promenade, at: [3.35, 6.45, 0]}
+  - {kind: npc, ref: frail-passenger, map: promenade, at: [4.8, 6.55, 0]}
+  - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}  # still asking why they've come
+  - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}  # still smiling
+  - {kind: npc, ref: resident-coral, map: promenade, at: [13.2, 7.6, 0]}  # crouched at the end of the Concierge's desk
+  - {kind: npc, ref: gumshoe, map: promenade, at: [36.6, 7.4, 0]}  # hiding behind the far cart, taking notes
   - {kind: npc, ref: cleaner-7, map: promenade, at: [13.2, 1.2, 0]}
-  - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}
-  - {kind: npc, ref: resident-coral, map: promenade, at: [17.2, 5.4, 0]}
-  - {kind: npc, ref: robot-cook, map: promenade, at: [27.9, 0.9, 0]}
-  - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}
-  - {kind: npc, ref: gumshoe, map: promenade, at: [33.5, 8.6, 0]}
   - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.7, 11.0, 0]}
   - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}
   - {kind: npc, ref: static, map: promenade, at: [22.5, -8.5, 0], hidden: true}
   - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
   - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
   - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
-  # deck 6, where the passenger lift comes in: three mercenaries and two guards. Ahti is hidden in his closet
-  - {kind: npc, ref: hired-gun, map: deck-6, at: [11.48, 3.38, 0]}  # at the desk
-  - {kind: npc, ref: hired-gun-skull, map: deck-6, at: [12.27, 7.04, 0]}
-  - {kind: npc, ref: hired-gun-mask, map: deck-6, at: [17.77, 8.77, 0]}
-  - {kind: npc, ref: guard, map: deck-6, at: [16.45, 4.84, 0]}
-  - {kind: npc, ref: guard-rookie, map: deck-6, at: [7.99, 8.98, 0]}
+  # Lucan's brute and his dog, hidden in the black above the bar's door. They're their own fight, on the plaza: once the
+  # street's mercenaries are dealt with, give it a quiet moment, then bring the two of them out after the crew
+  - {kind: npc, ref: lucan-brute, map: promenade, at: [36.0, -7.0, 0], hidden: true}
+  - {kind: npc, ref: lucan-dog, map: promenade, at: [37.4, -7.6, 0], hidden: true}
+  # the Bot bays: two mercenaries have just taken the mech, and its two techs and two guards are on their knees in the
+  # empty frame. The cleaners are on their pads, and BOLT-7 is hidden on pad 7
+  - {kind: npc, ref: hired-gun-skull, map: bots, at: [10.97, 4.57, 0]}
+  - {kind: npc, ref: hired-gun-mask, map: bots, at: [18.0, 5.2, 0]}
+  - {kind: npc, ref: tech-welder, map: bots, at: [13.2, 4.0, 0]}
+  - {kind: npc, ref: tech-chief, map: bots, at: [14.6, 4.0, 0]}
+  - {kind: npc, ref: guard, map: bots, at: [13.2, 5.6, 0]}
+  - {kind: npc, ref: guard-riot, map: bots, at: [14.6, 5.6, 0]}
+  - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
+  - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
+  - {kind: npc, ref: cleaner-11, map: bots, at: [13.55, 12.45, 0]}
+  - {kind: npc, ref: cleaner-13, map: bots, at: [15.25, 12.5, 0]}
+  - {kind: npc, ref: service-droid, map: bots, at: [11.4, 9.6, 0]}
+  - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}
+  # deck 6: two mercenaries, at the desk and in the rows, with the two off-duty guards out of the showers on the floor
+  # between them, in towels. A rookie is hiding in Ahti's closet with Ahti, both hidden until someone opens the door
+  - {kind: npc, ref: hired-gun, map: deck-6, at: [11.48, 3.38, 0]}
+  - {kind: npc, ref: hired-gun-grille, map: deck-6, at: [12.27, 7.04, 0]}
+  - {kind: npc, ref: guard-towel, map: deck-6, at: [10.4, 5.2, 0]}
+  - {kind: npc, ref: guard-turban, map: deck-6, at: [11.6, 5.4, 0]}
   - {kind: npc, ref: ahti, map: deck-6, at: [14.67, 1.47, 0], hidden: true}
-  # deck 7: three mercenaries, one guard, the operator at the monitors
+  - {kind: npc, ref: guard-rookie, map: deck-6, at: [15.6, 1.5, 0], hidden: true}
+  # deck 7: two mercenaries outside the security office, the operator held at the monitors. The manager who was
+  # working late is hidden behind the sofa in the third glass office
   - {kind: npc, ref: camera-operator, map: deck-7, at: [13.37, 3.57, 0]}
   - {kind: npc, ref: hired-gun-patch, map: deck-7, at: [12.5, 6.5, 0]}
-  - {kind: npc, ref: hired-gun, map: deck-7, at: [8.08, 4.03, 0]}
-  - {kind: npc, ref: hired-gun-grille, map: deck-7, at: [9.35, 10.85, 0]}
-  - {kind: npc, ref: guard, map: deck-7, at: [15.28, 6.19, 0]}
-  # deck 8: three mercenaries, two guards at the checkpoint and the lounge, and the head of security in her office
-  - {kind: npc, ref: guard-riot, map: deck-8, at: [10.45, 2.95, 0]}  # the checkpoint
-  - {kind: npc, ref: hired-gun, map: deck-8, at: [16.3, 4.35, 0]}  # the stairs
+  - {kind: npc, ref: hired-gun-eye, map: deck-7, at: [15.28, 6.19, 0]}
+  - {kind: npc, ref: scientist-junior, map: deck-7, at: [13.4, 11.4, 0], hidden: true}
+  # deck 8: two mercenaries at the checkpoint with the head of security, who knows the probe's code, held between
+  # them. A sergeant has shut himself in the soundproofed boardroom, hidden
+  - {kind: npc, ref: hired-gun-watch, map: deck-8, at: [10.45, 2.95, 0]}
   - {kind: npc, ref: hired-gun-mask, map: deck-8, at: [12.5, 6.2, 0]}
-  - {kind: npc, ref: hired-gun-patch, map: deck-8, at: [6.91, 8.8, 0]}
-  - {kind: npc, ref: guard, map: deck-8, at: [4.57, 8.62, 0]}
-  - {kind: npc, ref: head-of-security, map: deck-8, at: [12.62, 11.38, 0]}
-  # deck 9, off the way up: two mercenaries and a guard
-  - {kind: npc, ref: hired-gun-grille, map: deck-9, at: [17.0, 4.6, 0]}
-  - {kind: npc, ref: hired-gun-skull, map: deck-9, at: [11.0, 6.0, 0]}
-  - {kind: npc, ref: guard, map: deck-9, at: [5.23, 2.96, 0]}
-  # the Secure floor, where the probe is: five mercenaries and two guards
-  - {kind: npc, ref: hired-gun-eye, map: secure, at: [11.93, 4.38, 0]}  # at the vault door
-  - {kind: npc, ref: hired-gun-mask, map: secure, at: [17.94, 4.38, 0]}
-  - {kind: npc, ref: hired-gun, map: secure, at: [8.0, 3.0, 0]}  # in the lockup, by the probe
-  - {kind: npc, ref: hired-gun-watch, map: secure, at: [28.0, 8.0, 0]}  # at the freight controls
-  - {kind: npc, ref: hired-gun-skull, map: secure, at: [16.4, 21.0, 0]}  # the door from deck 8
-  - {kind: npc, ref: guard-riot, map: secure, at: [12.6, 11.3, 0]}  # by the ring
-  - {kind: npc, ref: guard-rookie, map: secure, at: [13.6, 21.0, 0]}
+  - {kind: npc, ref: head-of-security, map: deck-8, at: [11.3, 4.6, 0]}
+  - {kind: npc, ref: guard-sergeant, map: deck-8, at: [1.6, 11.2, 0], hidden: true}  # behind the sideboard
+  # deck 9: one mercenary, hidden, going through the founder's office
+  - {kind: npc, ref: hired-gun-skull, map: deck-9, at: [5.2, 5.6, 0], hidden: true}
+  # the Secure floor: two mercenaries, at the vault door and by the probe's lockup, and a guard dead by the ring.
+  # The mech waits hidden, alone, on the empty cradle by the freight lift: it comes up once the crew have the probe
+  - {kind: npc, ref: hired-gun, map: secure, at: [11.93, 4.38, 0]}
+  - {kind: npc, ref: hired-gun-grille, map: secure, at: [8.0, 7.6, 0]}
+  - {kind: npc, ref: dead-guard, map: secure, at: [13.4, 12.4, 0]}
+  - {kind: npc, ref: spider-mech, map: secure, at: [26.9, 3.3, 0], hidden: true}
   - {kind: npc, ref: nurse, map: med, at: [7.6, 2.9, 0]}
   - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
 inventory:  # the starting kit; a scene load leaves what the crew actually carries alone

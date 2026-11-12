@@ -1,6 +1,6 @@
 # Act 4 opens where Act 3 ends: the bar in Last stand, house lights dead, the Seal's box open in the founder's table,
 # and the crew sat round it with Dax behind them and his shotgun. Unit 14 is in its corner, the cleaner that sees it. The
-# fixer's hired guns, Lucan, his brute and his dog wait hidden in the black past the street door, for when they storm in
+# fixer's hired guns and Lucan wait hidden in the black past the street door, for when they storm in
 # (the Hatch switch is the way out). Outside, the mercenaries already hold the station: the takeover, the same as on
 # The hidey-hole, with Irena hidden behind the boiler in the Bot bays. DRAFTS.
 id: session-4-shotgun
@@ -29,15 +29,13 @@ tokens:
   - {kind: crew, ref: tomo, map: event-horizon, at: [4.203, 2.89, 0.24]}
   - {kind: npc, ref: dax, map: event-horizon, at: [6.3, 5.4, 0]}  # at the rope, behind them, racking it
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}  # it saw
-  # hidden in the black below the street door: the hired guns who storm in, then Lucan, his brute and his dog
+  # hidden in the black below the street door: the hired guns who storm in, then Lucan
   - {kind: npc, ref: hired-gun, map: event-horizon, at: [10.37, 19.57, 0], hidden: true}
   - {kind: npc, ref: hired-gun-mask, map: event-horizon, at: [11.2, 18.73, 0], hidden: true}
   - {kind: npc, ref: hired-gun-skull, map: event-horizon, at: [12.03, 17.9, 0], hidden: true}
   - {kind: npc, ref: hired-gun-patch, map: event-horizon, at: [12.87, 17.07, 0], hidden: true}
   - {kind: npc, ref: hired-gun-grille, map: event-horizon, at: [13.7, 16.23, 0], hidden: true}
   - {kind: npc, ref: fixer, map: event-horizon, at: [12.85, 21.22, 0], hidden: true}
-  - {kind: npc, ref: lucan-brute, map: event-horizon, at: [13.68, 20.38, 0], hidden: true}
-  - {kind: npc, ref: lucan-dog, map: event-horizon, at: [14.52, 19.55, 0], hidden: true}
   # ---- The takeover, the same on both Act 4 cards. The fixer's mercenaries hold the station in pairs (the bible's
   # "bring 2"), and the company's guards are held, hiding or dead. Nobody is labelled: tell the players who is a hostage.
   # The Promenade: two at the company's lift with one guard on his knees and the other dead; one in the market, holding
@@ -71,6 +69,10 @@ tokens:
   - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
   - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
   - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
+  # Lucan's brute and his dog, hidden in the black above the bar's door. They're their own fight, on the plaza: once the
+  # street's mercenaries are dealt with, give it a quiet moment, then bring the two of them out after the crew
+  - {kind: npc, ref: lucan-brute, map: promenade, at: [36.0, -7.0, 0], hidden: true}
+  - {kind: npc, ref: lucan-dog, map: promenade, at: [37.4, -7.6, 0], hidden: true}
   - {kind: npc, ref: scientist, map: bots, at: [3.1, 0.4, 0], hidden: true}  # Irena, waiting by the cot for Dax's signal
   # the Bot bays: two mercenaries have just taken the mech, and its two techs and two guards are on their knees in the
   # empty frame. The cleaners are on their pads, and BOLT-7 is hidden on pad 7
@@ -109,7 +111,7 @@ tokens:
   # deck 9: one mercenary, hidden, going through the founder's office
   - {kind: npc, ref: hired-gun-skull, map: deck-9, at: [5.2, 5.6, 0], hidden: true}
   # the Secure floor: two mercenaries, at the vault door and by the probe's lockup, and a guard dead by the ring.
-  # The mech waits hidden on the empty cradle by the freight lift, for when it comes up
+  # The mech waits hidden, alone, on the empty cradle by the freight lift: it comes up once the crew have the probe
   - {kind: npc, ref: hired-gun, map: secure, at: [11.93, 4.38, 0]}
   - {kind: npc, ref: hired-gun-grille, map: secure, at: [8.0, 7.6, 0]}
   - {kind: npc, ref: dead-guard, map: secure, at: [13.4, 12.4, 0]}

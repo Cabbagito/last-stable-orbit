@@ -27,9 +27,8 @@ tokens:
   - {kind: crew, ref: ves, map: bots, at: [1.9, 0.3, 0]}
   - {kind: crew, ref: tomo, map: bots, at: [1.2, 1.2, 0]}
   - {kind: npc, ref: scientist, map: bots, at: [3.1, 0.4, 0]}
-  # the bar after the fight: Lucan at Dax's place, the brute at the stockroom door, two hired guns. The dog is with the mech
+  # the bar after the fight: Lucan at Dax's place with two hired guns. His brute and his dog are out after the crew
   - {kind: npc, ref: fixer, map: event-horizon, at: [11.6, 1.05, 0]}
-  - {kind: npc, ref: lucan-brute, map: event-horizon, at: [15.7, 1.05, 0]}
   - {kind: npc, ref: hired-gun, map: event-horizon, at: [5.9, 10.6, 0]}
   - {kind: npc, ref: hired-gun-grille, map: event-horizon, at: [11.8, 8.9, 0]}
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}
@@ -66,6 +65,10 @@ tokens:
   - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
   - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
   - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
+  # Lucan's brute and his dog, hidden in the black above the bar's door. They're their own fight, on the plaza: once the
+  # street's mercenaries are dealt with, give it a quiet moment, then bring the two of them out after the crew
+  - {kind: npc, ref: lucan-brute, map: promenade, at: [36.0, -7.0, 0], hidden: true}
+  - {kind: npc, ref: lucan-dog, map: promenade, at: [37.4, -7.6, 0], hidden: true}
   # the Bot bays: two mercenaries have just taken the mech, and its two techs and two guards are on their knees in the
   # empty frame. The cleaners are on their pads, and BOLT-7 is hidden on pad 7
   - {kind: npc, ref: hired-gun-skull, map: bots, at: [10.97, 4.57, 0]}
@@ -103,12 +106,11 @@ tokens:
   # deck 9: one mercenary, hidden, going through the founder's office
   - {kind: npc, ref: hired-gun-skull, map: deck-9, at: [5.2, 5.6, 0], hidden: true}
   # the Secure floor: two mercenaries, at the vault door and by the probe's lockup, and a guard dead by the ring.
-  # The mech and Lucan's dog wait hidden on the empty cradle by the freight lift, for when it comes up
+  # The mech waits hidden, alone, on the empty cradle by the freight lift: it comes up once the crew have the probe
   - {kind: npc, ref: hired-gun, map: secure, at: [11.93, 4.38, 0]}
   - {kind: npc, ref: hired-gun-grille, map: secure, at: [8.0, 7.6, 0]}
   - {kind: npc, ref: dead-guard, map: secure, at: [13.4, 12.4, 0]}
   - {kind: npc, ref: spider-mech, map: secure, at: [26.9, 3.3, 0], hidden: true}
-  - {kind: npc, ref: lucan-dog, map: secure, at: [25.2, 5.8, 0], hidden: true}
   - {kind: npc, ref: nurse, map: med, at: [7.6, 2.9, 0]}
   - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
 inventory:  # the starting kit; a scene load leaves what the crew actually carries alone

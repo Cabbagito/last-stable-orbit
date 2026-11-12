@@ -304,7 +304,7 @@ def test_act_4_is_the_takeover_on_both_cards(content):
     assert shotgun.maps["event-horizon"].mood == "stand" and shotgun.maps["promenade"].mood == hole.maps["promenade"].mood == "takeover"
 
     def others(p):
-        return sorted((t.map, t.ref, tuple(t.at), t.hidden) for t in p.tokens if t.kind == "npc" and t.map != "event-horizon" and t.ref not in ("scientist", "lucan-dog"))
+        return sorted((t.map, t.ref, tuple(t.at), t.hidden) for t in p.tokens if t.kind == "npc" and t.map != "event-horizon" and t.ref != "scientist")
 
     assert others(shotgun) == others(hole)
     for m in ("promenade", "bots", "deck-6", "deck-7", "deck-8", "deck-9", "secure"):
@@ -312,6 +312,10 @@ def test_act_4_is_the_takeover_on_both_cards(content):
         assert 1 <= len(mercs) <= 3, m
     assert any(t.ref.startswith("dead-") for t in hole.tokens)
     assert "spider-mech" not in [t.ref for t in hole.tokens if not t.hidden]
+    # the mech fights alone, after the probe; Lucan's brute and his dog are a fight of their own, parked off the Promenade
+    for p in (shotgun, hole, content.presets["session-4-lift-station"]):
+        where = {t.ref: (t.map, t.hidden) for t in p.tokens if t.ref in ("spider-mech", "lucan-brute", "lucan-dog")}
+        assert where == {"spider-mech": ("secure", True), "lucan-brute": ("promenade", True), "lucan-dog": ("promenade", True)}, p.id
 
 
 def test_from_act_4_on_every_deck_they_hold_is_in_takeover(content):
