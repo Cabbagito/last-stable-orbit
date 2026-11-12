@@ -188,7 +188,7 @@ async def test_the_heist_maps_are_separate_with_day_night_alert(engine):
         assert [x["id"] for x in gm[m]["moods"]][:3] == ["day", "night", "alert"], m
         assert all(x["glow"] is None for x in gm[m]["moods"]), m  # the new art is one flat picture per mood
         assert gm[m]["objects"] and gm[m]["pins"], m
-    assert [x["id"] for x in gm["bots"]["moods"]][3:] == ["heist"]  # the Bot bays also have heist night, with the repair frame empty
+        assert len(gm[m]["moods"]) == 3, m
     assert gm["deck-9"]["objects"][0]["id"] == "signet"
 
 
@@ -269,6 +269,33 @@ def test_a_saved_game_moves_onto_the_heist_maps(tmp_path, content):
     assert e.state.party_map == "deck-6"
     assert "deck-6" in e.state.station and "executive" not in e.state.station
     project(e.state, content, GM)  # and it still goes out
+
+
+def test_the_mech_is_in_the_bot_bays_on_heist_night_and_gone_by_session_4(content):
+    """The Bot bays' art has the mech in its frame by Day and Night and the frame empty by Alert. Heist night is Night,
+    and every session 4 preset is Alert."""
+    assert content.presets["session-3-heist"].maps["bots"].mood == "night"
+    four = [p for p in content.presets.values() if p.session == "Session 4"]
+    assert len(four) == 4 and all(p.maps["bots"].mood == "alert" for p in four)
+
+
+def test_the_heist_starts_on_the_promenade(content):
+    """Getting up to deck 6 is part of the night: the crew start in the street, with the party's map there too."""
+    p = content.presets["session-3-heist"]
+    assert p.party_map == "promenade"
+    assert {t.map for t in p.tokens if t.kind == "crew"} == {"promenade"}
+
+
+def test_a_game_saved_in_the_bot_bays_old_heist_night_mood_moves_to_alert(tmp_path, content):
+    """Heist night, the frame empty, was its own mood: a save left in it is in Alert now, which is that same empty frame."""
+    store = Store(tmp_path / "w.db")
+    Engine(content, store)
+    old = GameState.model_validate(store.load_snapshot()[1])
+    old.maps["bots"].mood = "heist"
+    store.commit("system", None, [], old.model_dump(mode="json"), {})
+    e = Engine(content, store)
+    assert e.state.maps["bots"].mood == "alert"
+    project(e.state, content, GM)
 
 
 async def test_the_terminal_rooms_face_and_feed(engine):

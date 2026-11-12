@@ -11,11 +11,10 @@ display: [2220, 1400]
 origin: [460, 150]
 order: 10
 hum: none
-moods:
+moods:  # the mech is under its tarp in the frame by Day and by Night, which is day 2 and heist night. By Alert, session 4, it's gone
   - {id: day, label: Day, base: maps/bots/base-day.png}
   - {id: night, label: Night, base: maps/bots/base-night.png}
-  - {id: alert, label: Alert, base: maps/bots/base-alert.png}
-  - {id: heist, label: Heist night, base: maps/bots/base-heist.png}  # Night, with the repair frame empty (scripts/empty_bot_frame.py)
+  - {id: alert, label: Alert, base: maps/bots/base-alert.png}  # the repair frame empty (scripts/empty_bot_frame.py)
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: cradles
     name: "The cradles"

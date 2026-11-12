@@ -1,20 +1,29 @@
 #!/usr/bin/env python3
-"""Make the Bot bays' heist-night art: the Night image with the mech and its tarp gone from the repair frame.
+"""Make the Bot bays' Alert art: the red-lit deck with the mech and its tarp gone from the repair frame.
 
-The floor under it is cloned from the same floor elsewhere (tiles repeat every world unit), and the frame's two hidden
-hazard stripes are carried on along their own length. Run it from the repo root:
+Day and Night keep the mech under its tarp, which is how the crew find it on day 2 and on heist night. Alert is
+session 4, when the mercenaries have taken it. The work is done on the Night image, where the floor is easy to tell
+from the tarp: the floor under it is cloned from the same floor elsewhere (tiles repeat every world unit), and the
+frame's two hidden hazard stripes are carried on along their own length. Each new pixel is then given Alert's light,
+taken from the nearest pixel of the same Night colour in the Alert art as it was imported. Run it from the repo root:
 
     uv run --no-project --with pillow python scripts/empty_bot_frame.py
 
-It writes assets/maps/bots/base-heist.png.
+It rewrites assets/maps/bots/base-alert.png and updates its sha256 and size in assets/manifest.yaml.
 """
 
+import hashlib
+import io
+import re
+import subprocess
 from collections import Counter
+from pathlib import Path
 
 from PIL import Image, ImageDraw
 
+IMPORTED = "fb091fc"  # the last commit with the Alert art as it came from the Heist maps canvas, the mech in the frame
 SRC = "assets/maps/bots/base-night.png"
-OUT = "assets/maps/bots/base-heist.png"
+ALERT = "assets/maps/bots/base-alert.png"
 OX, OY = 460, 150
 
 # The frame on the floor, in world units, read off the art.
@@ -37,6 +46,11 @@ def over_tarp(x: int, y: int) -> tuple[bool, bool]:
     post = 665 <= cx <= 735 and cy >= 490
     band = (0.5 * cx + 130 <= cy <= 0.5 * cx + 196 and cx <= 745) or (-0.445 * cx + 425 <= cy <= -0.445 * cx + 492)
     return post, band
+
+
+def imported(path: str) -> Image.Image:
+    data = subprocess.run(["git", "show", f"{IMPORTED}:{path}"], check=True, capture_output=True).stdout
+    return Image.open(io.BytesIO(data)).convert("RGB")
 
 
 def main() -> None:
@@ -100,7 +114,35 @@ def main() -> None:
                 r, g, b = px[x + 30, y + 145]
                 if r > 150 and b < 90 or r + g + b < 60:
                     done[x, y] = (r, g, b)
-    out.save(OUT, optimize=True)
+    relit = relight(px, done, hole, (x0, y0, x1, y1))
+    relit.save(ALERT, optimize=True)
+    data = Path(ALERT).read_bytes()
+    manifest = Path("assets/manifest.yaml")
+    rel = ALERT.removeprefix("assets/")
+    pattern = re.compile(rf'(  - path: {re.escape(rel)}.*\n(?:    (?!sha256).*\n)*?    sha256: ")[0-9a-f]+("\n    bytes: )\d+')
+    text, n = pattern.subn(lambda m: f"{m.group(1)}{hashlib.sha256(data).hexdigest()}{m.group(2)}{len(data)}", manifest.read_text())
+    assert n == 1, rel
+    manifest.write_text(text)
+
+
+def relight(night, empty, hole: set[tuple[int, int]], box: tuple[int, int, int, int]) -> Image.Image:
+    """The Alert art with the hole filled: each new pixel takes Alert's colour at the nearest pixel around the hole
+    whose Night colour is the one the hole now has there, so the red light falls on the bare floor as it does beside it."""
+    alert = imported(ALERT)
+    lit = alert.load()
+    x0, y0, x1, y1 = box
+    around: dict[tuple[int, int, int], list[tuple[int, int]]] = {}
+    for x in range(x0 - 70, x1 + 70):
+        for y in range(y0 - 70, y1 + 70):
+            if (x, y) not in hole and night[x, y] != (0, 0, 0):
+                around.setdefault(night[x, y], []).append((x, y))
+    for x, y in hole:
+        c = empty[x, y]
+        if c not in around:  # a colour only the tarp hid: the closest one that does show
+            c = min(around, key=lambda k: sum((a - b) ** 2 for a, b in zip(k, c)))
+        qx, qy = min(around[c], key=lambda q: (q[0] - x) ** 2 + (q[1] - y) ** 2)
+        lit[x, y] = lit[qx, qy]
+    return alert
 
 
 PERIOD_X = (44, 22)  # one light and dark stripe along each edge, in art pixels

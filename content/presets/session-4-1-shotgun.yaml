@@ -17,7 +17,7 @@ maps:
   deck-9: {mood: alert}
   secure: {mood: alert, shown: [vault-door, flowers]}
   lift: {mood: shut}
-  bots: {mood: heist}
+  bots: {mood: alert}
   med: {mood: white, shown: [screen]}
 tokens:
   # the crew round the founder's table, the box open in front of them

@@ -20,7 +20,7 @@ maps:
   lift: {mood: shut}
   cab: {mood: top}
   terminal: {mood: empty}
-  bots: {mood: heist}
+  bots: {mood: alert}
   med: {mood: white, shown: [screen]}
 tokens:
   # the crew in the old wood passage, where they come in

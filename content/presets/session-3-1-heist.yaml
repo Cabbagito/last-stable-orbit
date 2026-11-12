@@ -1,11 +1,12 @@
-# Session 3, the heist: night, and the crew start on deck 6. Who's where is the Heist playground's Night layer. The Bot bays
-# use the Heist night mood, whose art has the repair frame empty: the mech has gone, and there is no chip for it until its fight.
+# Session 3, the heist: night, and the crew start on the Promenade, outside the bar's door, with the street between them
+# and the company's lift. Who's where upstairs is the Heist playground's Night layer, with more guards. The Bot bays are at
+# Night: the mech is still in the repair frame under its tarp, in the art only, with no chip for it until its fight.
 id: session-3-heist
 name: "The heist"
 session: "Session 3"
-blurb: "Night. The crew on deck 6, the decks dark."
+blurb: "Night. The crew outside the bar, the lift across the street, the decks dark."
 card: maps/deck-9/base-night.png
-party_map: deck-6
+party_map: promenade
 maps:
   event-horizon: {mood: after, switches: {seals_box: 0}, shown: [mural, slots]}
   promenade: {mood: calm, shown: [queue-board, mural, window, founders-ring, satisfaction]}
@@ -15,15 +16,15 @@ maps:
   deck-9: {mood: night}
   secure: {mood: night, shown: [vault-door, flowers]}
   lift: {mood: shut}
-  bots: {mood: heist}
+  bots: {mood: night}
   med: {mood: white, shown: [screen]}
 tokens:
-  # the crew, out of the lift on deck 6
-  - {kind: crew, ref: lale, map: deck-6, at: [8.6, 1.2, 0]}
-  - {kind: crew, ref: marlo, map: deck-6, at: [7.0, 1.2, 0]}
-  - {kind: crew, ref: tally, map: deck-6, at: [5.4, 1.2, 0]}
-  - {kind: crew, ref: ves, map: deck-6, at: [7.8, 2.7, 0]}
-  - {kind: crew, ref: tomo, map: deck-6, at: [6.2, 2.7, 0]}
+  # the crew, outside the bar's door: the Night Market and the plaza lie between them and the company's lift
+  - {kind: crew, ref: lale, map: promenade, at: [38.4, 2.4, 0]}
+  - {kind: crew, ref: marlo, map: promenade, at: [40.0, 2.8, 0]}
+  - {kind: crew, ref: tally, map: promenade, at: [37.0, 2.8, 0]}
+  - {kind: crew, ref: ves, map: promenade, at: [39.0, 4.1, 0]}
+  - {kind: crew, ref: tomo, map: promenade, at: [37.5, 4.1, 0]}
   # deck 6: a guard at the desk and one patrolling the rows. Ahti is hidden in his closet, the towel guards in the showers
   - {kind: npc, ref: guard, map: deck-6, at: [11.48, 3.38, 0]}
   - {kind: npc, ref: guard-rookie, map: deck-6, at: [17.77, 8.77, 0]}  # the patrol
@@ -50,7 +51,7 @@ tokens:
   - {kind: npc, ref: guard-rookie, map: secure, at: [13.6, 21.0, 0]}  # the door from deck 8
   - {kind: npc, ref: guard-riot, map: secure, at: [12.6, 11.3, 0]}  # by the ring
   - {kind: npc, ref: ahti, map: secure, at: [28.17, 20.57, 0], hidden: true}  # a hidden copy, in the Vigil stores
-  # the Bot bays: the frame stands empty, with two techs and two guards still around it. BOLT-7 is hidden on pad 7
+  # the Bot bays: the mech under its tarp in the frame, with two techs and two guards around it. BOLT-7 is hidden on pad 7
   - {kind: npc, ref: guard, map: bots, at: [10.97, 4.57, 0]}
   - {kind: npc, ref: guard-riot, map: bots, at: [18.57, 2.37, 0]}
   - {kind: npc, ref: tech-welder, map: bots, at: [12.57, 3.97, 0]}

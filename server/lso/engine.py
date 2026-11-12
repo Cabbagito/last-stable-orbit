@@ -27,6 +27,10 @@ RENAMED_NPCS = {
     "pilgrim-young": "passenger-young",
 }
 
+# Mood ids that changed, (map, old) to new. The Bot bays' Heist night, the repair frame empty, became its Alert
+# (2026-11-12): the mech is still there on heist night, and gone once the decks are on alert.
+RENAMED_MOODS = {("bots", "heist"): "alert"}
+
 
 class Engine:
     def __init__(self, content: Content, store: Store, rng=None, clock=time.time, sandbox: bool = False):
@@ -54,6 +58,7 @@ class Engine:
             self._heist_maps()  # first: the checks below would stop at a map that's gone on purpose
             self._story_update()  # likewise, for an item, an NPC and Codex pages that are gone on purpose
             self._renamed_npcs()  # and NPCs that only changed id
+            self._renamed_moods()
             self._check_refs()
             self._add_new_maps()
             self._update_rules()
@@ -154,6 +159,17 @@ class Engine:
         if events:
             self._commit("system", None, events, {})
             log.info("renamed %d NPC tokens", len(events))
+
+    def _renamed_moods(self) -> None:
+        """A map left in a mood whose id changed takes the new id. Safe to run on every boot."""
+        events = [
+            ("map.mood_set", {"map": m_id, "mood": RENAMED_MOODS[m_id, ms.mood]})
+            for m_id, ms in self.state.maps.items()
+            if (m_id, ms.mood) in RENAMED_MOODS
+        ]
+        if events:
+            self._commit("system", None, events, {})
+            log.info("renamed the mood of %s", ", ".join(e[1]["map"] for e in events))
 
     def _add_new_maps(self) -> None:
         """A game saved before a map existed has no state for it: give it the default preset's (or its first mood)."""

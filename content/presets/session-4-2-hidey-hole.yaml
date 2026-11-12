@@ -1,12 +1,12 @@
 # Session 4, after the bar: the crew drop through Dax's hatch to the hidey-hole behind the Bot bays' boiler, and Irena is
-# there waiting. The mech is gone from the bays (Heist night art, the frame empty), and so are its techs and guards. Up in
+# there waiting. The mech is gone from the bays (the Alert art, the frame empty), and so are its techs and guards. Up in
 # the bar it's Last stand with the hatch open: Lucan, his brute and his hired guns, and no Dax. The decks are on
 # alert and the fixer's mercenaries hold the way up, the same as for the probe run. DRAFTS.
 id: session-4-hidey-hole
 name: "The hidey-hole"
 session: "Session 4"
 blurb: "Down the hatch to Irena. Up or down?"
-card: maps/bots/base-heist.png
+card: maps/bots/base-alert.png
 party_map: bots
 maps:
   event-horizon: {mood: stand, switches: {hatch: 1}, shown: [mural, slots]}
@@ -17,7 +17,7 @@ maps:
   deck-9: {mood: alert}
   secure: {mood: alert, shown: [vault-door, flowers]}
   lift: {mood: shut}
-  bots: {mood: heist}
+  bots: {mood: alert}
   med: {mood: white, shown: [screen]}
 tokens:
   # the crew at the foot of the ladder, and Irena beside the cot

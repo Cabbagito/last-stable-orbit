@@ -1860,18 +1860,11 @@ assets:
     bytes: 124361
     width: 1110
     height: 700
-  - path: maps/bots/base-alert.png
-    store: HEIST
-    asset_id: "6f6a518b00ca22120da944f4c6035fe5"
-    sha256: "ccbc76fdbcd2bf6718c8eb4924787e0b0e737a42ca1561765ee5c6cd7210fd43"
-    bytes: 129262
-    width: 1110
-    height: 700
-  - path: maps/bots/base-heist.png  # generated from base-night.png by scripts/empty_bot_frame.py
+  - path: maps/bots/base-alert.png  # the frame emptied by scripts/empty_bot_frame.py; as imported it was asset 6f6a518b00ca22120da944f4c6035fe5
     store: HEIST
     asset_id: ""
-    sha256: "4ea5ba401ea1cc79428ad50d1550b423e746e86804debb4c65ac8cde854ba29b"
-    bytes: 101721
+    sha256: "5f8e91f81af0cde4a30f5589e4e1c143ab9be97ae04ca732faeee475eaeddbb6"
+    bytes: 108650
     width: 1110
     height: 700
   - path: presets/shotgun.png  # cropped from maps/event-horizon/base-stand.png, the founder's table: (290, 180) to (770, 450)
