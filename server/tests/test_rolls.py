@@ -123,7 +123,7 @@ def test_insults_come_from_the_stat_or_any(content):
     assert rules.pick_insult("tech", content.insults, Dice()) == content.insults["tech"][0]
     pool = content.insults["body"] * 2 + content.insults["any"]
     assert rules.pick_insult("body", {"body": ["A"], "any": ["B"]}, Dice()) == "A"
-    assert len(pool) == 12
+    assert len(pool) == 13
     assert rules.pick_insult("cool", {}, Dice()) == "DUMBASS."
     assert rules.pick_insult(None, {"body": ["A"], "any": ["B"]}, Dice()) == "B"  # just a die: only the "any" lines
 

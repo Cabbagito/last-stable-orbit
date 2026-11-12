@@ -220,11 +220,11 @@
 # canvas (https://claude.ai/artifact/TwKnStbVEabCxiFdKqgKLv). Texts are DRAFT, for Peter to edit.
 # Useful: one-use unlocks and consumables. A person can use one health or Entropy item a session, and it takes a turn.
 - id: ration-bar
-  name: Ration bar
+  name: Kralj Orah walnut bar
   icon: icons/items/ration-bar.png
   kind: gear
   shelf: useful
-  text: A foil-wrapped ration bar, one corner already bitten. Eat it for +1 health.
+  text: A foil-wrapped Kralj Orah walnut bar, one corner already bitten. The king on the wrapper wears a walnut for a crown. Eat it for +1 health.  # DRAFT
 
 - id: painkiller-patch
   name: Painkiller patch
