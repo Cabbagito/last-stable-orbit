@@ -33,7 +33,7 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     text: A bench, a basin and a few supplies, under a founder's ring. It's quiet in here.
 # The Key board's "what's where". Only the GM sees these.
 pins:
-  - {k: "1", label: Way in from the old founder-era passages, at: [0.1, 21.7, 3.0]}
+  - {k: "1", label: "Way in: the plaza's lift, which ISCO sends down once the crew hold the Seal. The art still shows the old doorway", at: [0.1, 21.7, 3.0]}
   - {k: "2", label: "Blast door: 2 hired guns hold it, the first fight", at: [25.5, 15, 4.5]}
   - {k: "3", label: "Glass floor over the hole: the fixer waits on it, the final fight", at: [18, 7, 0.05]}
   - {k: "4", label: "Crawler cab on the left wall behind him, door open and lit", at: [3.6, 7.5, 3.3]}
@@ -43,5 +43,6 @@ pins:
   - {k: D, label: "Cover round the edges, off the glass: barriers, tanks, a console", at: [22.9, 0.6, 2.1]}
   - {k: E, label: "Seats, a panel and wall rails on the cab", at: [1.0, 5.4, 3.9]}
   - {k: F, label: LIFT STATION on the wall, at: [23, 0, 4.1]}
-# Where the crew land when you send them here: in the old wood passage, in crew order.
+# Where the crew land when you send them here: in the old wood passage, in crew order. The way in is now the plaza's lift,
+# which ISCO opens (Peter, 2026-11-12); this end of it hasn't been redrawn.
 arrive: [[1.6, 21.6, 0], [2.6, 20.8, 0], [2.8, 22.4, 0], [3.8, 21.4, 0], [4.6, 22.2, 0]]

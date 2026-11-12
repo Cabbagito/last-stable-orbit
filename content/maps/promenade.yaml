@@ -44,6 +44,11 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     at: [19, 6, 0]
     closeup: [1500, 1130]
     text: A ring of old gold set into the plaza floor, worn smooth by feet. People walk around the black disc in its middle, never across it.
+  - id: company-lift
+    name: The company's lift
+    at: [24.4, 0.2, 1.6]
+    closeup: [2170, 950]
+    text: "A blue lift behind a guard post. The panel has one lit arrow, pointing up. Under it is a second arrow that has never been lit."  # DRAFT
   - id: alley
     name: The side alley
     at: [32.2, 12.8, 0]
@@ -67,8 +72,8 @@ pins:
   - {k: "9", label: The bar's door and lanterns, at: [38, 0.2, 1.3]}
   - {k: "10", label: "Med Bay, with 99.97% over the door", at: [45.1, 0.2, 1.6]}
   - {k: A, label: Window on the black hole, at: [19.1, 0, 2.2]}
-  - {k: B, label: Company lift to the executive decks, at: [24.4, 0.2, 1.6]}
-  - {k: C, label: "Guard post, where ISCO's reach stops", at: [26.4, 1.5, 1.4]}
+  - {k: B, label: "Company lift: up to the executive decks. Down to the lift station is ISCO's, dead all campaign. It opens by itself once the crew hold the Seal", at: [24.4, 0.2, 1.6]}
+  - {k: C, label: "Guard post, where ISCO's reach stops: up is the company's, down is ISCO's", at: [26.4, 1.5, 1.4]}
   - {k: D, label: Clean alley with a charging dock, at: [32.2, 12.8, 0]}
   - {k: E, label: Service door down to Maintenance, at: [42.5, 0.1, 1.2]}
   - {k: F, label: The bar's small sign outside, at: [38, 0, 3.75]}
