@@ -71,17 +71,23 @@ entries:
   label: Crew · the doctor
   sub: Mid-40s, no implants at all.
   art: {src: portraits/lale.gif, kind: bust, pos: 50% 10%}
-  lead: She runs a clinic for people without slots, the ones nobody books time for. A patient dying in the queue is why she
-    said yes to this job.
+  lead: She used to put chrome into people, and she was good at it. Now she runs a clinic for people without slots, the ones
+    nobody books time for. A patient dying in the queue is why she said yes to this job.  # DRAFT
   blocks:
+  - id: history
+    h: History
+    text: Years as a chrome surgeon, well paid, with a waiting list of her own. She doesn't say why she stopped. She has
+      no implants herself, and she can tell whose work yours is from across a room.  # DRAFT
   - id: work
     h: How she works
     text: Two fingers on a wrist and an eye on her fob watch. She can tell when someone is lying, scared or hurt, and she
-      can't walk past anyone who is.
+      can't walk past anyone who is. She carries no weapon. She knows where every implant fails, and she only needs to
+      reach it.  # DRAFT
   facts:
   - [Age, Mid-40s]
   - [Lifeform, 'Human, no implants']
   - [Job, The doctor]
+  - [Before, Chrome surgeon]
   see: [rule-health, med]
 - id: marlo
   sec: chars

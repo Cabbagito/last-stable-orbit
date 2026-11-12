@@ -1401,11 +1401,11 @@ assets:
     bytes: 1470
     width: 48
     height: 48
-  - path: icons/list/lale-bedside.png
-    store: ICONS
-    asset_id: "eeed9f1b41904974f8946a2ed0f1be1d"
-    sha256: "d4922be22b02460eb52ec6d1e28b0c755dcbb7bbfb8ff260c827f09d151381b1"
-    bytes: 1243
+  - path: icons/list/lale-installed.png
+    store: ICONS  # drawn in a claude.ai session by ui/skill_icon_lale_installed.py, not yet on the Icons canvas
+    asset_id: ""
+    sha256: "cb0e979e0aa77303b5ffc739c789e40cb05832d1168e76405729a1fb3784c039"
+    bytes: 1545
     width: 48
     height: 48
   - path: icons/list/marlo-man.png

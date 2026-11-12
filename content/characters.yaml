@@ -17,7 +17,7 @@
   list:
     - {kind: skill, name: "Has seen worse", text: "Medicine, wounds and delicate work under pressure.", downside: "It's worse than it looked, so she stays with them and misses the next beat.", icon: icons/list/lale-seen-worse.png}
     - {kind: skill, name: "Your pulse says otherwise", text: "Two fingers on a wrist and an eye on her fob watch: is this person lying, scared or hurt?", downside: "They notice what she's doing, pull away and stop trusting her.", icon: icons/list/lale-pulse.png}
-    - {kind: skill, name: "Bedside manner", text: "Calming people, and getting them to open up or do as they're told.", downside: "Now they're her patient. They won't leave her alone, and they talk about her.", icon: icons/list/lale-bedside.png}
+    - {kind: skill, name: "Who installed this?", text: "Reading chrome, and finding the spot where it fails. With a hand on it, she can shut it off.", downside: "It misfires instead of shutting off, and she's the one standing next to it.", icon: icons/list/lale-installed.png}  # DRAFT text. In a fight it's a Tech check on someone with chrome she can reach
   burn:
     name: On your feet
     when: On her turn
