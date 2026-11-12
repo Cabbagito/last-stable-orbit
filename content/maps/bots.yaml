@@ -11,10 +11,12 @@ display: [2220, 1400]
 origin: [460, 150]
 order: 10
 hum: none
-moods:  # the mech is under its tarp in the frame by Day and by Night, which is day 2 and heist night. By Alert, session 4, it's gone
+moods:  # the mech is under its tarp in the frame by Day and by Night, which is day 2 and heist night. By Alert and Takeover it's gone
   - {id: day, label: Day, base: maps/bots/base-day.png}
   - {id: night, label: Night, base: maps/bots/base-night.png}
   - {id: alert, label: Alert, base: maps/bots/base-alert.png}  # the repair frame empty (scripts/empty_bot_frame.py)
+  # Act 4, the mercenaries holding the station: Alert, shot up (scripts/takeover_floors.py). Nothing has moved
+  - {id: takeover, label: Takeover, base: maps/bots/base-takeover.png}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: cradles
     name: "The cradles"

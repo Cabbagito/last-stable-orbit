@@ -180,15 +180,14 @@ async def test_no_map_leaks_its_pins(engine):
             assert [p["label"] for p in gm["pins"] if len(p["label"]) > 20 and p["label"] in sent] == []
 
 
-async def test_the_heist_maps_are_separate_with_day_night_alert(engine):
-    """Decks 6 to 9, the Secure floor and the Bot bays: one map each, the three moods, and things marked on them."""
+async def test_the_heist_maps_are_separate_with_day_night_alert_and_takeover(engine):
+    """Decks 6 to 9, the Secure floor and the Bot bays: one map each, the four moods, and things marked on them."""
     gm = project(engine.state, engine.content, GM)["maps"]
     assert "executive" not in gm
     for m in HEIST:
-        assert [x["id"] for x in gm[m]["moods"]][:3] == ["day", "night", "alert"], m
+        assert [x["id"] for x in gm[m]["moods"]] == ["day", "night", "alert", "takeover"], m
         assert all(x["glow"] is None for x in gm[m]["moods"]), m  # the new art is one flat picture per mood
         assert gm[m]["objects"] and gm[m]["pins"], m
-        assert len(gm[m]["moods"]) == 3, m
     assert gm["deck-9"]["objects"][0]["id"] == "signet"
 
 
@@ -272,11 +271,11 @@ def test_a_saved_game_moves_onto_the_heist_maps(tmp_path, content):
 
 
 def test_the_mech_is_in_the_bot_bays_on_heist_night_and_gone_by_session_4(content):
-    """The Bot bays' art has the mech in its frame by Day and Night and the frame empty by Alert. Heist night is Night,
-    and every preset from Act 4 on is Alert."""
+    """The Bot bays' art has the mech in its frame by Day and Night and the frame empty by Alert and by Takeover, which
+    is painted over Alert. Heist night is Night, and every preset from Act 4 on is Takeover."""
     assert content.presets["session-3-heist"].maps["bots"].mood == "night"
     four = [p for p in content.presets.values() if p.act in ("Act 4", "Final act")]
-    assert len(four) == 3 and all(p.maps["bots"].mood == "alert" for p in four)
+    assert len(four) == 3 and all(p.maps["bots"].mood == "takeover" for p in four)
 
 
 def test_the_heist_starts_on_the_promenade(content):
@@ -313,6 +312,18 @@ def test_act_4_is_the_takeover_on_both_cards(content):
         assert 1 <= len(mercs) <= 3, m
     assert any(t.ref.startswith("dead-") for t in hole.tokens)
     assert "spider-mech" not in [t.ref for t in hole.tokens if not t.hidden]
+
+
+def test_from_act_4_on_every_deck_they_hold_is_in_takeover(content):
+    """The Promenade, decks 6 to 9, the Secure floor and the Bot bays each have a Takeover mood, the deck shot up, and
+    every card from Act 4 on loads them in it."""
+    held = ("promenade", "deck-6", "deck-7", "deck-8", "deck-9", "secure", "bots")
+    for m in held:
+        mood = next(x for x in content.maps[m].moods if x.id == "takeover")
+        assert mood.label == "Takeover" and mood.base == f"maps/{m}/base-takeover.png", m
+    for p in content.presets.values():
+        if p.act in ("Act 4", "Final act"):
+            assert {p.maps[m].mood for m in held} == {"takeover"}, p.id
 
 
 async def test_the_crew_land_at_the_door_they_came_through(engine, content):

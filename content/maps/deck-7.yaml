@@ -14,6 +14,8 @@ moods:
   - {id: day, label: Day, base: maps/deck-7/base-day.png}
   - {id: night, label: Night, base: maps/deck-7/base-night.png}
   - {id: alert, label: Alert, base: maps/deck-7/base-alert.png}
+  # Act 4, the mercenaries holding the station: Alert, shot up (scripts/takeover_floors.py). Nothing has moved
+  - {id: takeover, label: Takeover, base: maps/deck-7/base-takeover.png}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: plots
     name: "Her plots"

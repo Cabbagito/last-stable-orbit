@@ -1763,6 +1763,13 @@ assets:
     bytes: 135806
     width: 1110
     height: 700
+  - path: maps/deck-9/base-takeover.png
+    store: TAKEOVER
+    asset_id: "47fb3d7717aa8e045fd2e07aad91bc40"
+    sha256: "bb88e7a4e7566dbe2ad04ff7ac08b15200b49e7c42e8499d09383581e3a54f98"
+    bytes: 125310
+    width: 1110
+    height: 700
   - path: maps/deck-8/base-day.png
     store: HEIST
     asset_id: "b71ce184f278b1d99f96acc68f64111c"
@@ -1782,6 +1789,13 @@ assets:
     asset_id: "b30d45c5e433b53f05c92f91a4dec148"
     sha256: "7b99edd9ea93d4a85fe7086c76f3ec75b6f4e4e46fe01b6faae7388a703fe062"
     bytes: 105044
+    width: 1110
+    height: 700
+  - path: maps/deck-8/base-takeover.png
+    store: TAKEOVER
+    asset_id: "85f8b0a18c099fd7dd088dbd5e463fbe"
+    sha256: "d283e5b7802eb743c6788490e4780ca888cbb53ccc5319cf5ee82bd867ea00f8"
+    bytes: 99188
     width: 1110
     height: 700
   - path: maps/deck-7/base-day.png
@@ -1805,6 +1819,13 @@ assets:
     bytes: 142514
     width: 1110
     height: 700
+  - path: maps/deck-7/base-takeover.png
+    store: TAKEOVER
+    asset_id: "fa0557e4756d6490e36114e338c1db10"
+    sha256: "2693419660fab816a368fa6adfee74745eb238fc2ad0484d346b75920edec10c"
+    bytes: 133297
+    width: 1110
+    height: 700
   - path: maps/deck-6/base-day.png
     store: HEIST
     asset_id: "6cc730cae3d21395328b86b75db8857d"
@@ -1824,6 +1845,13 @@ assets:
     asset_id: "a68fbe7d0ab51aaca1a62a914e320b70"
     sha256: "a2dcd3a44db17f0700f43016b0819ce95986d230c02c1c6f5ae7e54f9082e852"
     bytes: 134290
+    width: 1110
+    height: 700
+  - path: maps/deck-6/base-takeover.png
+    store: TAKEOVER
+    asset_id: "75a1a3a6d8de6e9ab4664c5b452e0d65"
+    sha256: "f01f42cdf550d664bbe7a218125bd3c4113e010a1638b2a3bd18995783aa5cca"
+    bytes: 128625
     width: 1110
     height: 700
   - path: maps/secure/base-day.png
@@ -1847,6 +1875,13 @@ assets:
     bytes: 224326
     width: 1660
     height: 1010
+  - path: maps/secure/base-takeover.png
+    store: TAKEOVER
+    asset_id: "8846e8db23f2ce161dbca404a13c28f7"
+    sha256: "27ef8e13691d47930bb5142e40b5b9d1e7725d9e694aea35750f7af346c630dc"
+    bytes: 205530
+    width: 1660
+    height: 1010
   - path: maps/bots/base-day.png
     store: HEIST
     asset_id: "c1730b7aed72ca78be0e37deac0a09d0"
@@ -1866,6 +1901,13 @@ assets:
     asset_id: ""
     sha256: "5f8e91f81af0cde4a30f5589e4e1c143ab9be97ae04ca732faeee475eaeddbb6"
     bytes: 108650
+    width: 1110
+    height: 700
+  - path: maps/bots/base-takeover.png
+    store: TAKEOVER
+    asset_id: "85d1acf043641f4535cb477befc0104a"
+    sha256: "132b136840f983cc0dcc330fa617ba0287397a7593c1a076ce6151d10863efea"
+    bytes: 115097
     width: 1110
     height: 700
   - path: presets/shotgun.png  # cropped from maps/event-horizon/base-stand.png, the founder's table: (290, 180) to (770, 450)
