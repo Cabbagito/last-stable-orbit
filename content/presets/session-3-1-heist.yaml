@@ -1,5 +1,5 @@
 # Session 3, the heist: night, and the crew start on the Promenade, outside the bar's door, with the street between them
-# and the company's lift. Who's where upstairs is the Heist playground's Night layer, with more guards. The Bot bays are at
+# and the company's lift, which has its usual two guards. Who's where upstairs is the Heist playground's Night layer, with more guards. The Bot bays are at
 # Night: the mech is still in the repair frame under its tarp, in the art only, with no chip for it until its fight.
 id: session-3-heist
 name: "The heist"
@@ -73,11 +73,6 @@ tokens:
   - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}  # by the service door down to the Bot bays
   - {kind: npc, ref: guard-rookie, map: promenade, at: [23.9, 2.4, 0]}
   - {kind: npc, ref: guard, map: promenade, at: [25.9, 2.9, 0]}
-  # more on the way to the company's lift: getting up there is part of the heist
-  - {kind: npc, ref: guard-sergeant, map: promenade, at: [22.4, 2.0, 0]}
-  - {kind: npc, ref: guard-riot, map: promenade, at: [27.1, 4.4, 0]}
-  - {kind: npc, ref: guard, map: promenade, at: [21.0, 7.0, 0]}  # patrolling the plaza
-  - {kind: npc, ref: guard-rookie, map: promenade, at: [31.0, 6.0, 0]}  # patrolling the market
   - {kind: npc, ref: robot-cook, map: promenade, at: [27.9, 0.9, 0]}
   - {kind: npc, ref: resident-noodles, map: promenade, at: [27.5, 2.2, 0.3]}
   - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}
