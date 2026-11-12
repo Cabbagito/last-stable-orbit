@@ -1205,6 +1205,125 @@ assets:
     bytes: 1490
     width: 48
     height: 48
+  - path: icons/items/noodle-bowl.png
+    store: ITEMS
+    asset_id: "f338ee60c789ecb13299bd17b7f5f98a"
+    sha256: "4cecfec1b31ec4b7171b910632af2b5a697390a2651d1d2493a14bae5b62a784"
+    bytes: 2095
+    width: 48
+    height: 48
+  - path: icons/items/dax-drink.png
+    store: ITEMS
+    asset_id: "8c879d01d167ff2a163ede6266fa373c"
+    sha256: "fcee55e2c40bedcbb198e7196b123b511b1af6d05c3f740740dd956164f5147e"
+    bytes: 1050
+    width: 48
+    height: 48
+  - path: icons/items/vending-snack.png
+    store: ITEMS
+    asset_id: "98bb71c89ef171aeb96f49143f2b844c"
+    sha256: "3d72d8668a29b442373fd4b8c8d8f9f164eba1afbfcd2ad75792c7aaa4d0d119"
+    bytes: 1173
+    width: 48
+    height: 48
+  - path: icons/items/jump-boots.png
+    store: ITEMS
+    asset_id: "a73c3249214da2c2e79463b7f17aeff5"
+    sha256: "f393178e362b2162a02ea04fee21602fd5a74dc6a7502164ce7b2fb4654bd5f2"
+    bytes: 1205
+    width: 48
+    height: 48
+  - path: icons/items/grapple-hand.png
+    store: ITEMS
+    asset_id: "c62bae3feb09be0fa981000b53b67a62"
+    sha256: "181d634402efd07969f98fe33cd200b06ebc36e622454796db2f3f77cc9aa4c7"
+    bytes: 1401
+    width: 48
+    height: 48
+  - path: icons/items/static-palm.png
+    store: ITEMS
+    asset_id: "1695601a43f30051f1592d37e721b8ec"
+    sha256: "0929e63b5d3c2539c19a50f5e6930c2278863dd91992e0db57f07e509f96c3fe"
+    bytes: 1417
+    width: 48
+    height: 48
+  - path: icons/items/throat-speaker.png
+    store: ITEMS
+    asset_id: "84f4a1eb43f7df308ba1dc75a26398bc"
+    sha256: "33e7e0f16e73ec0b15e440b581af273a50f848ff04e8f35489dfb9bddcd8439d"
+    bytes: 1085
+    width: 48
+    height: 48
+  - path: icons/items/magnet-plate.png
+    store: ITEMS
+    asset_id: "bca97034185822f872069614e260654f"
+    sha256: "b21a776a69a6431704d390c2827c37e0354d3887991eaa253d91b84e2e5dbd9d"
+    bytes: 1874
+    width: 48
+    height: 48
+  - path: icons/items/chrome-health.png
+    store: ITEMS
+    asset_id: "131846705c03013a6c156c13228c4daa"
+    sha256: "380f67319d2ba5302cf73285b74cfa5e11fe7cb71cdada8b586ab6cf700bf353"
+    bytes: 1207
+    width: 48
+    height: 48
+  - path: icons/items/chrome-entropy.png
+    store: ITEMS
+    asset_id: "b35686f38c81c207153b460c2b11a274"
+    sha256: "77fb3d45394c544d2688d4930451e309e0b21f4479b870b6b18f2e09f7990dde"
+    bytes: 1463
+    width: 48
+    height: 48
+  - path: icons/items/bootleg-jump-boots.png
+    store: ITEMS
+    asset_id: "40ed7b4e6b6428bcc6a65ac5165f775b"
+    sha256: "a5cb27bd2f9d26e7df26732330f6f04f9b8604d1fdfbafe730ccbbb4d1be27bc"
+    bytes: 1411
+    width: 48
+    height: 48
+  - path: icons/items/bootleg-grapple-hand.png
+    store: ITEMS
+    asset_id: "3b99d6df0c056ae41ac16214d809beb3"
+    sha256: "852eca0bbe611d11a71f23538e3471a6b55d7d224506b3d6b00c5052873a4680"
+    bytes: 1477
+    width: 48
+    height: 48
+  - path: icons/items/bootleg-static-palm.png
+    store: ITEMS
+    asset_id: "80aed7adb0ed7cb27878cbaba819dba0"
+    sha256: "57bca2d815295b38530e5b224e922af43b9b6b27811565aa5f333a6c017ee97a"
+    bytes: 1369
+    width: 48
+    height: 48
+  - path: icons/items/bootleg-throat-speaker.png
+    store: ITEMS
+    asset_id: "d7a8ec5311df6f379a6d6bddbaea522e"
+    sha256: "09d1d381672c0de90ae1e6f6d6e94a1df65add513746a3f4673204e88dd9b981"
+    bytes: 1330
+    width: 48
+    height: 48
+  - path: icons/items/bootleg-magnets.png
+    store: ITEMS
+    asset_id: "25d408da947b1a32b4dfe5dc52984db7"
+    sha256: "91f534c5030dbef894270d9b83b7b53ac04de209b927e0773d99211484fce4f5"
+    bytes: 1590
+    width: 48
+    height: 48
+  - path: icons/items/bootleg-chrome-health.png
+    store: ITEMS
+    asset_id: "97bea3ba608780527f1953c0f327875b"
+    sha256: "fb1bd9f99e630bc871d99ec03a5cffe0e13a24e1a89878c81601e32f37d856da"
+    bytes: 1475
+    width: 48
+    height: 48
+  - path: icons/items/bootleg-chrome-entropy.png
+    store: ITEMS
+    asset_id: "bbeb03d7452415d22b666d67baaab0a8"
+    sha256: "9119289897108784e58782cba1d17112fd055f5a5c6cc7b7711395a1b5394a04"
+    bytes: 2039
+    width: 48
+    height: 48
   - path: icons/list/ves-vents.png
     store: UI
     asset_id: "5987e17ffcf3c2dc9df8431c49057b5a"

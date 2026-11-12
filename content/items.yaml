@@ -380,3 +380,111 @@
   icon: icons/items/damp-sock.png
   kind: gear
   text: One sock. Damp. There is no way to find out why.
+
+# --- the shops (2026-11-12). Peter hands these over when someone buys one; nothing in the app charges credits or applies
+# an effect. Icons from the Items canvas. Texts are DRAFT, for Peter to edit.
+# Food and drink: a person can use one health or Entropy item a session, and it takes a turn.
+- id: noodle-bowl
+  name: Noodle bowl
+  icon: icons/items/noodle-bowl.png
+  kind: gear
+  text: A bowl from the Night Market's noodle stall, with half an egg and too much spring onion. Eat it for +1 health.
+
+- id: dax-drink
+  name: A drink at Dax's
+  icon: icons/items/dax-drink.png
+  kind: gear
+  text: Something amber over ice, poured by Dax without asking what you wanted. Drink it for +1 Entropy.
+
+- id: vending-snack
+  name: Vending snack
+  icon: icons/items/vending-snack.png
+  kind: gear
+  text: A bag of something crunchy with a smiling face on it. It was free. All you had to do was answer a few questions. Eat it for +1 health.
+
+# Chrome from the clinic: 400 credits, one piece of chrome per person. Each of the first five works as a fourth skill;
+# what a failed roll costs is Peter's call. The last two raise a maximum, which Peter does by hand.
+- id: jump-boots
+  name: Jump boots
+  icon: icons/items/jump-boots.png
+  kind: gear
+  text: Clinic chrome from the knee down, with pistons in the soles. Add it to a roll when you jump, climb or land.
+
+- id: grapple-hand
+  name: Grappling-hook hand
+  icon: icons/items/grapple-hand.png
+  kind: gear
+  text: A clinic hand with three hooked fingers and a reel of cable in the palm. Add it to a roll when you need to reach, swing to or pull something that's out of arm's length.
+
+- id: static-palm
+  name: Static palm
+  icon: icons/items/static-palm.png
+  kind: gear
+  text: A clinic hand with a coil set into the palm. Add it to a roll when you touch someone, or something with a circuit in it, and want it to stop.
+
+- id: throat-speaker
+  name: Throat speaker
+  icon: icons/items/throat-speaker.png
+  kind: gear
+  text: A clinic speaker on a collar, and it comes off. Add it to a roll when your voice has to be louder, be someone else's, or come from where you aren't.
+
+- id: magnet-plate
+  name: Magnet plate
+  icon: icons/items/magnet-plate.png
+  kind: gear
+  text: A clinic plate along the forearm that snaps the nearest loose metal onto it. Add it to a roll when you block, disarm someone or hold on to something metal.
+
+- id: chrome-health
+  name: Reinforced core
+  icon: icons/items/chrome-health.png
+  kind: gear
+  text: A clinic canister fitted under the ribs. It raises your maximum health.
+
+- id: chrome-entropy
+  name: Entropy cell
+  icon: icons/items/chrome-entropy.png
+  kind: gear
+  text: A clinic cell with something gold humming inside it. It raises your maximum Entropy.
+
+# Chrome from the knock-off cart: 200 credits, and Peter's God roll at install decides what it gives.
+- id: bootleg-jump-boots
+  name: Spring boots
+  icon: icons/items/bootleg-jump-boots.png
+  kind: gear
+  text: A rain boot bolted to two bedsprings and a plank, with tape where the bolts gave up. The cart calls them jump boots. Add them to a roll when you jump, climb or land.
+
+- id: bootleg-grapple-hand
+  name: Hook glove
+  icon: icons/items/bootleg-grapple-hand.png
+  kind: gear
+  text: A work glove with three coat-hanger hooks taped across the knuckles and a coil of rope. The cart calls it a grappling-hook hand. Add it to a roll when you need to reach, swing to or pull something that's out of arm's length.
+
+- id: bootleg-static-palm
+  name: Battery glove
+  icon: icons/items/bootleg-static-palm.png
+  kind: gear
+  text: A pink rubber glove with a battery taped to the palm and two wires up the fingers. The cart calls it a static palm. Add it to a roll when you touch someone, or something with a circuit in it, and want it to stop.
+
+- id: bootleg-throat-speaker
+  name: Tin-can speaker
+  icon: icons/items/bootleg-throat-speaker.png
+  kind: gear
+  text: A tin can on a belt, lid peeled back. The cart calls it a throat speaker. Add it to a roll when your voice has to be louder, be someone else's, or come from where you aren't.
+
+- id: bootleg-magnets
+  name: Body magnet
+  icon: icons/items/bootleg-magnets.png
+  kind: gear
+  text: A magnet with no shielding, so it's all of you and it's always on. Add it to a roll when you block, disarm someone or hold on to something metal. Cutlery follows you around.
+
+- id: bootleg-chrome-health
+  name: Jam-jar core
+  icon: icons/items/bootleg-chrome-health.png
+  kind: gear
+  text: A jam jar of something green, a tube, and a health cross drawn on the tape in marker. It raises your maximum health, probably.
+
+- id: bootleg-chrome-entropy
+  name: Lucky cube
+  icon: icons/items/bootleg-chrome-entropy.png
+  kind: gear
+  text: A gold-painted die in a cage of sticks, held shut with a rubber band. It raises your maximum Entropy, probably.
