@@ -235,6 +235,7 @@ class MapDef(Strict):
     objects: list[MapObject] = []
     pins: list[Pin] = []
     arrive: list[Vec3] = []  # where the crew land when the GM sends them here, in crew order
+    arrive_from: dict[str, list[Vec3]] = {}  # the same, when they come from that map: the door between the two
 
     @model_validator(mode="after")
     def _refs(self) -> "MapDef":
@@ -654,7 +655,7 @@ class Preset(Strict):
 
     id: str
     name: str
-    session: str = ""  # the heading it's under on the GM's Session page
+    act: str = ""  # the heading it's under on the GM's Acts page
     blurb: str = ""  # one line under its picture there
     card: str | None = None  # its picture there
     default: bool = False

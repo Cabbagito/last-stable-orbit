@@ -2,7 +2,7 @@
 # and the Promenade is as "arrival on the Patience" has it. Keep the two presets' Promenade blocks the same.
 id: session-1-day
 name: "The open day"
-session: "Session 1"
+act: "Act 1"
 blurb: "The crew in the Dock 7 queue, with the whole ship."
 card: presets/open-day.png
 party_map: promenade

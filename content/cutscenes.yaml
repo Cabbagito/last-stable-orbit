@@ -71,13 +71,13 @@
   name: "The bar: the shotgun"
   act: Act 3
   sub: 36 s, ends act 3
-  ends: Ends on the bar after hours, with Dax at the gap in the rail. The crew stay where they are.
+  ends: Ends on the bar in Last stand, the house lights dead, with Dax at the gap in the rail. The crew stay where they are.
   file: films/shotgun.mp4
   length: 35.83
   still: films/shotgun-still.png
   sets:
     map: event-horizon
-    mood: after
+    mood: stand  # where Act 4's first card, The shotgun, picks up
     tokens:
       - {ref: dax, at: [11.6, 1.05, 0]}
 

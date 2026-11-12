@@ -28,8 +28,9 @@ RENAMED_NPCS = {
 }
 
 # Mood ids that changed, (map, old) to new. The Bot bays' Heist night, the repair frame empty, became its Alert
-# (2026-11-12): the mech is still there on heist night, and gone once the decks are on alert.
-RENAMED_MOODS = {("bots", "heist"): "alert"}
+# (2026-11-12): the mech is still there on heist night, and gone once the decks are on alert. The Promenade's Hunted
+# became Takeover the same day: Act 4 is the mercenaries holding the street, not a street shut and scrubbed.
+RENAMED_MOODS = {("bots", "heist"): "alert", ("promenade", "hunted"): "takeover"}
 
 
 class Engine:

@@ -14,7 +14,9 @@ order: 2
 hum: street
 moods:
   - {id: calm, label: Calm, base: maps/promenade/base-calm.png, glow: maps/promenade/glow-calm.png}
-  - {id: hunted, label: Hunted, base: maps/promenade/base-hunted.png, glow: maps/promenade/glow-hunted.png}
+  # Takeover is Act 4, the mercenaries holding the street. Its art is still the old Hunted picture (stalls shuttered, the
+  # floor scrubbed) until the wrecked street is drawn: the new art goes in at these two paths.
+  - {id: takeover, label: Takeover, base: maps/promenade/base-takeover.png, glow: maps/promenade/glow-takeover.png}
 decals:  # the black hole moving in the plaza window, placed exactly as the board places it
   - {id: window-hole, src: maps/promenade/hole.gif, box: [403, 224], matrix: [1, 0.5, 0, 1, 1664.4, 584.4], img: [20, -68, 360, 360], filter: brightness(1.2)}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
@@ -76,3 +78,10 @@ pins:
   - {k: K, label: Vending machine beside the bar, at: [35.5, 0.5, 2.2]}
 # Where the crew land when you send them here: off the Patience, in front of the Dock 7 gangway, in crew order.
 arrive: [[1.6, 4.6, 0], [2.4, 4.0, 0], [0.8, 5.4, 0], [2.2, 5.6, 0], [1.4, 6.2, 0]]
+# Coming from another map, they land at the door they came through instead: the bar's door, the service door up from
+# the Bot bays, the company's lift down from deck 6, and the Med Bay's door.
+arrive_from:
+  event-horizon: [[38.4, 2.4, 0], [40.0, 2.8, 0], [37.0, 2.8, 0], [39.0, 4.1, 0], [37.5, 4.1, 0]]
+  bots: [[42.4, 1.6, 0], [43.4, 2.4, 0], [41.4, 2.4, 0], [42.9, 3.6, 0], [41.7, 3.6, 0]]
+  deck-6: [[24.4, 2.6, 0], [25.6, 3.4, 0], [23.2, 3.4, 0], [25.0, 4.7, 0], [23.6, 4.7, 0]]
+  med: [[45.0, 1.8, 0], [45.8, 2.8, 0], [44.2, 2.8, 0], [45.4, 4.0, 0], [44.4, 4.0, 0]]

@@ -168,7 +168,7 @@ async def test_a_cue_starts_the_film_and_sets_the_bar_behind_it(engine, content,
     await ok(engine, GM, "gm.film.play", {"cue": "shotgun"})
     f = engine.state.stage.film
     assert f.cue == "shotgun" and f.at == clock.t + FILM_LEAD and f.ends == pytest.approx(f.at + 35.83)
-    assert engine.state.maps[EH].mood == "after"  # the bar after hours, behind the film
+    assert engine.state.maps[EH].mood == "stand"  # the bar in Last stand, behind the film
     dax = engine.state.tokens["dax"]
     assert (dax.map, dax.at, dax.hidden) == (EH, (11.6, 1.05, 0.0), False)  # at the gap in the rail
     assert engine.state.party_map == EH
@@ -518,9 +518,9 @@ async def test_reset_is_only_for_while_the_players_are_held(engine, content):
     assert e.value.code == "invalid"
 
 
-def test_the_session_cards_are_the_gms_alone(engine, content):
+def test_the_act_cards_are_the_gms_alone(engine, content):
     cards = project(engine.state, content, GM)["presets"]
-    assert [c["session"] for c in cards] == ["Session 1"] * 4 + ["Session 2"] * 2 + ["Session 3"] + ["Session 4"] * 4 and all(c["card"].startswith("/assets/") and c["blurb"] for c in cards)
+    assert [c["act"] for c in cards] == ["Act 1"] * 4 + ["Act 2"] * 2 + ["Act 3"] + ["Act 4"] * 2 + ["Final act"] and all(c["card"].startswith("/assets/") and c["blurb"] for c in cards)
     for viewer in (TALLY, STAGE):
         view = json.dumps(project(engine.state, content, viewer))
         for p in content.presets.values():

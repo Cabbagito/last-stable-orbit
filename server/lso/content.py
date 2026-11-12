@@ -202,6 +202,11 @@ def check_refs(c: Content) -> None:
     for m in c.maps.values():
         if m.arrive and len(m.arrive) < len(c.characters):
             problems.append(f"map {m.id}: arrive has {len(m.arrive)} spots for {len(c.characters)} crew")
+        for frm, spots in m.arrive_from.items():
+            if frm not in c.maps:
+                problems.append(f"map {m.id}: arrive_from names an unknown map {frm!r}")
+            if len(spots) < len(c.characters):
+                problems.append(f"map {m.id}: arrive_from {frm} has {len(spots)} spots for {len(c.characters)} crew")
     for cue in c.cutscenes.values():
         if not cue.sets:
             continue

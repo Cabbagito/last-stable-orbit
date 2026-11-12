@@ -336,11 +336,11 @@ export interface JoinView {
   password?: string
 }
 
-/** A start of a session, on the GM's Session page. */
+/** Where an act can start, on the GM's Acts page. */
 export interface PresetCard {
   id: string
   name: string
-  session: string
+  act: string
   blurb: string
   card: string | null
 }

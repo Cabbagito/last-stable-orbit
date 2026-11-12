@@ -1219,14 +1219,14 @@ assets:
     bytes: 118219
     width: 1800
     height: 1080
-  - path: maps/promenade/base-hunted.png
+  - path: maps/promenade/base-takeover.png
     store: MAPS
     asset_id: "d62c5c6f8446d388be75ae2020339e00"
     sha256: "40bd749b4fdf45f9a65fb121acabf6d39cb346c4af1a4c5a971240e64364640b"
     bytes: 152213
     width: 1800
     height: 1080
-  - path: maps/promenade/glow-hunted.png
+  - path: maps/promenade/glow-takeover.png
     store: MAPS
     asset_id: "d4dcf1ded073240be5bafdda61a8a512"
     sha256: "584e27a9c9e3527c8554fb83201fdfa7ec144da608acdaf138bc905dd8a5d977"
@@ -2052,3 +2052,38 @@ assets:
     bytes: 16856
     width: 480
     height: 270
+  - path: portraits/dead-passenger.gif  # generated from portraits/passenger.gif by scripts/dead_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "8751bdc37667147b9ba87f11431535c88ef682103d2ce508f96727d29824b483"
+    bytes: 2342
+    width: 96
+    height: 96
+  - path: portraits/dead-tourist.gif  # generated from portraits/passenger-tourist.gif by scripts/dead_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "401107e539ef00afaed76282fbe79426d3db3210234eaf46678984dc96040bb3"
+    bytes: 2370
+    width: 96
+    height: 96
+  - path: portraits/dead-traveller.gif  # generated from portraits/passenger-traveller.gif by scripts/dead_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "62a07a5b6fc6340fc8ca6f70402909d8416f1a6dcda56ee03155a45430b15898"
+    bytes: 2306
+    width: 96
+    height: 96
+  - path: portraits/dead-guard.gif  # generated from portraits/guard.gif by scripts/dead_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "9bbc17cdc0b462fd954f46ad43ac52240336e0b24cae27a4bf99a3b0455e3dc3"
+    bytes: 2450
+    width: 96
+    height: 96
+  - path: portraits/dead-courier.gif  # generated from portraits/resident-courier.gif by scripts/dead_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "e15cb0634b6d3bfd4acae431fe1abfc880defc2277b6dbe7286c5857efa5f252"
+    bytes: 2753
+    width: 96
+    height: 96

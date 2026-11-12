@@ -14,14 +14,14 @@ import { RingPortrait } from '../shell/RingPortrait'
 import { gmRun, useGame } from '../store/game'
 import type { CrewMember, InvEntry, Item, MapView, View } from '../types'
 
-type Section = 'pockets' | 'show' | 'maps' | 'codex' | 'session' | 'bench' | 'seats'
+type Section = 'pockets' | 'show' | 'maps' | 'codex' | 'acts' | 'bench' | 'seats'
 
 const SECTIONS: [Section, string][] = [
   ['pockets', 'Pockets'],
   ['show', 'On screen'],
   ['maps', 'Maps'],
   ['codex', 'Codex'],
-  ['session', 'Session'],
+  ['acts', 'Acts'],
 ]
 const SANDBOX: [Section, string][] = [
   ['bench', 'Bench'],
@@ -74,7 +74,7 @@ export function GmTab() {
         {section === 'show' && <OnScreen view={view} />}
         {section === 'maps' && <MapsSection view={view} />}
         {section === 'codex' && <CodexSection view={view} />}
-        {section === 'session' && <SessionSection view={view} />}
+        {section === 'acts' && <ActsSection view={view} />}
         {section === 'bench' && view.bench && <Bench view={view} bench={view.bench} />}
         {section === 'seats' && view.bench && <Seats view={view} />}
       </div>
@@ -370,7 +370,7 @@ function MapRow({ view, m, under, open, toggle }: { view: View; m: MapView; unde
  * Where to start the night: one picture for each. Loading one only moves things: everyone's position, the NPCs and each
  * map's mood. HP, Entropy, pockets and the Codex stay as they are.
  */
-function SessionSection({ view }: { view: View }) {
+function ActsSection({ view }: { view: View }) {
   const [picked, setPicked] = useState<string | null>(null)
   const presets = view.presets ?? []
   const load = async (id: string) => {
@@ -381,14 +381,14 @@ function SessionSection({ view }: { view: View }) {
     location.hash = 'scene'
   }
   return (
-    <section className="gx-session" aria-label="Session">
-      {[...new Set(presets.map((p) => p.session))].map((session) => (
-        <div key={session} role="group" aria-label={session}>
+    <section className="gx-session" aria-label="Acts">
+      {[...new Set(presets.map((p) => p.act))].map((act) => (
+        <div key={act} role="group" aria-label={act}>
           <div className="gx-sh">
-            <span className="r5-sec">{session}</span>
+            <span className="r5-sec">{act}</span>
           </div>
           <div className="gx-cards">
-            {presets.filter((p) => p.session === session).map((p) => (
+            {presets.filter((p) => p.act === act).map((p) => (
               <div key={p.id} className={'gx-card' + (picked === p.id ? ' on' : '')}>
                 <button type="button" className="gx-cardpick" aria-pressed={picked === p.id} onClick={() => setPicked(picked === p.id ? null : p.id)}>
                   {p.card && <img src={p.card} alt="" />}

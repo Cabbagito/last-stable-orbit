@@ -983,3 +983,65 @@
   health: 2  # DRAFT
   mood: Reading  # DRAFT
   note: Reads paper books, slowly, on purpose. Knits its own scarves.  # DRAFT
+
+# The dead of Act 4, the mercenaries' takeover: faces from the people above, stilled, with an X over each eye
+# (scripts/dead_portraits.py). Placed like anyone else, so the players see at a glance who isn't getting up. DRAFTS.
+- id: dead-passenger
+  name: Dead passenger
+  role: A passenger off the Patience
+  group: The dead
+  portrait: portraits/dead-passenger.gif
+  color: "#5d5868"
+  stats: {body: 4, reflex: 4, tech: 4, intel: 4, cool: 4, empathy: 4}
+  health: 1
+  mood: Dead
+  note: Came for the Vigil.  # DRAFT
+  gm_note: "A body, for the takeover in Act 4. Lale's Has seen worse says how long ago, and with what."
+
+- id: dead-tourist
+  name: Dead tourist
+  role: A passenger off the Patience
+  group: The dead
+  portrait: portraits/dead-tourist.gif
+  color: "#5d5868"
+  stats: {body: 4, reflex: 4, tech: 4, intel: 4, cool: 4, empathy: 4}
+  health: 1
+  mood: Dead
+  note: Still holding a brochure.  # DRAFT
+  gm_note: "A body, for the takeover in Act 4. Lale's Has seen worse says how long ago, and with what."
+
+- id: dead-traveller
+  name: Dead traveller
+  role: A passenger off the Patience
+  group: The dead
+  portrait: portraits/dead-traveller.gif
+  color: "#5d5868"
+  stats: {body: 4, reflex: 4, tech: 4, intel: 4, cool: 4, empathy: 4}
+  health: 1
+  mood: Dead
+  note: Didn't make it back to the ship.  # DRAFT
+  gm_note: "A body, for the takeover in Act 4. Lale's Has seen worse says how long ago, and with what."
+
+- id: dead-guard
+  name: Dead guard
+  role: Guard, the company
+  group: The dead
+  portrait: portraits/dead-guard.gif
+  color: "#5d5868"
+  stats: {body: 4, reflex: 4, tech: 4, intel: 4, cool: 4, empathy: 4}
+  health: 1
+  mood: Dead
+  note: Nobody dies for this job, they said.  # DRAFT
+  gm_note: "A body, for the takeover in Act 4. Lale's Has seen worse says how long ago, and with what."
+
+- id: dead-courier
+  name: Dead courier
+  role: Resident
+  group: The dead
+  portrait: portraits/dead-courier.gif
+  color: "#5d5868"
+  stats: {body: 4, reflex: 4, tech: 4, intel: 4, cool: 4, empathy: 4}
+  health: 1
+  mood: Dead
+  note: The headphones are still playing.  # DRAFT
+  gm_note: "A body, for the takeover in Act 4. Lale's Has seen worse says how long ago, and with what."

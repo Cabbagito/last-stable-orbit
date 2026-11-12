@@ -1,16 +1,17 @@
-# Session 4 opens where Session 3 ends: the bar after hours, the Seal's box open in the founder's table, and the crew sat
-# round it with Dax behind them and his shotgun. Unit 14 is in its corner, the cleaner that sees it. The fixer's hired
-# guns, Lucan, his brute and his dog wait hidden in the black past the street door, for when they storm in (switch the bar
-# to Last stand for the fight, and the Hatch for the way out). Upstairs is the heist's night, now on alert. DRAFTS.
+# Act 4 opens where Act 3 ends: the bar in Last stand, house lights dead, the Seal's box open in the founder's table,
+# and the crew sat round it with Dax behind them and his shotgun. Unit 14 is in its corner, the cleaner that sees it. The
+# fixer's hired guns, Lucan, his brute and his dog wait hidden in the black past the street door, for when they storm in
+# (the Hatch switch is the way out). Outside, the mercenaries already hold the station: the takeover, the same as on
+# The hidey-hole, with Irena hidden behind the boiler in the Bot bays. DRAFTS.
 id: session-4-shotgun
 name: "The shotgun"
-session: "Session 4"
+act: "Act 4"
 blurb: "The Seal in their hands, and Dax's shotgun behind them."
 card: presets/shotgun.png  # its own crop: every bar mood is already in the players' view
 party_map: event-horizon
 maps:
-  event-horizon: {mood: after, switches: {seals_box: 1}, shown: [mural, slots]}
-  promenade: {mood: calm, shown: [queue-board, mural, window, founders-ring, satisfaction]}
+  event-horizon: {mood: stand, switches: {hatch: 0}, shown: [mural, slots]}
+  promenade: {mood: takeover, shown: [queue-board, mural, window, founders-ring, satisfaction]}
   deck-6: {mood: alert}
   deck-7: {mood: alert}
   deck-8: {mood: alert}
@@ -37,57 +38,82 @@ tokens:
   - {kind: npc, ref: fixer, map: event-horizon, at: [12.85, 21.22, 0], hidden: true}
   - {kind: npc, ref: lucan-brute, map: event-horizon, at: [13.68, 20.38, 0], hidden: true}
   - {kind: npc, ref: lucan-dog, map: event-horizon, at: [14.52, 19.55, 0], hidden: true}
-  # deck 6, minutes after the heist: the desk guard and the patrol, awake now. Ahti is hidden in his closet
-  - {kind: npc, ref: guard, map: deck-6, at: [11.48, 3.38, 0]}
-  - {kind: npc, ref: guard-rookie, map: deck-6, at: [17.77, 8.77, 0]}
-  - {kind: npc, ref: ahti, map: deck-6, at: [14.67, 1.47, 0], hidden: true}
-  # deck 7: the operator at the monitors, the guard and the head of security, who has come out of Irena's room
-  - {kind: npc, ref: camera-operator, map: deck-7, at: [13.37, 3.57, 0]}
-  - {kind: npc, ref: guard, map: deck-7, at: [12.5, 6.5, 0]}
-  - {kind: npc, ref: head-of-security, map: deck-7, at: [8.08, 4.03, 0]}
-  # deck 8: the checkpoint, the stairs and the open floor
-  - {kind: npc, ref: guard-riot, map: deck-8, at: [10.45, 2.95, 0]}
-  - {kind: npc, ref: guard-sergeant, map: deck-8, at: [16.3, 4.35, 0]}
-  - {kind: npc, ref: guard-rookie, map: deck-8, at: [12.5, 6.2, 0]}
-  # deck 9: the stairs and the office door
-  - {kind: npc, ref: guard-riot, map: deck-9, at: [17.0, 4.6, 0]}
-  - {kind: npc, ref: guard, map: deck-9, at: [11.0, 6.0, 0]}
-  # the Secure floor: the vault found open, the sergeant up and at the ring
-  - {kind: npc, ref: guard, map: secure, at: [11.93, 4.38, 0]}
-  - {kind: npc, ref: guard-riot, map: secure, at: [17.94, 4.38, 0]}
-  - {kind: npc, ref: guard-rookie, map: secure, at: [13.6, 21.0, 0]}
-  - {kind: npc, ref: guard-sergeant, map: secure, at: [12.6, 11.3, 0]}
-  # the Bot bays: the frame empty, the techs and guards still around it. BOLT-7 is hidden on pad 7
-  - {kind: npc, ref: guard, map: bots, at: [10.97, 4.57, 0]}
-  - {kind: npc, ref: guard-riot, map: bots, at: [18.57, 2.37, 0]}
-  - {kind: npc, ref: tech-welder, map: bots, at: [12.57, 3.97, 0]}
-  - {kind: npc, ref: tech-chief, map: bots, at: [16.77, 6.77, 0]}
+  # ---- The takeover, the same on both Act 4 cards. The fixer's mercenaries hold the station in pairs (the bible's
+  # "bring 2"), and the company's guards are held, hiding or dead. Nobody is labelled: tell the players who is a hostage.
+  # The Promenade: two at the company's lift with one guard on his knees and the other dead; one in the market, holding
+  # the vendor at her stall, and the noodle droid has come out from behind its counter to fight him
+  - {kind: npc, ref: hired-gun-eye, map: promenade, at: [23.9, 2.4, 0]}  # runs the street for Lucan
+  - {kind: npc, ref: hired-gun-watch, map: promenade, at: [25.9, 2.9, 0]}
+  - {kind: npc, ref: guard, map: promenade, at: [24.9, 4.0, 0]}  # a hostage
+  - {kind: npc, ref: dead-guard, map: promenade, at: [22.3, 4.6, 0]}
+  - {kind: npc, ref: hired-gun-patch, map: promenade, at: [30.6, 2.6, 0]}
+  - {kind: npc, ref: robot-cook, map: promenade, at: [29.1, 2.6, 0]}  # fighting him
+  - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}  # a hostage
+  - {kind: npc, ref: dead-passenger, map: promenade, at: [20.4, 7.2, 0]}  # by the founder's ring
+  - {kind: npc, ref: dead-courier, map: promenade, at: [31.0, 7.2, 0]}  # in the market
+  - {kind: npc, ref: dead-tourist, map: promenade, at: [9.6, 7.6, 0]}  # short of the queue
+  # everyone off the Patience is trying to get back aboard, crowding the dock end of the queue. The board still says 11:00
+  - {kind: npc, ref: passenger-old, map: promenade, at: [3.35, 1.45, 0]}
+  - {kind: npc, ref: passenger-candles, map: promenade, at: [4.8, 1.35, 0]}
+  - {kind: npc, ref: passenger-tourist, map: promenade, at: [4.8, 3.15, 0]}
+  - {kind: npc, ref: passenger, map: promenade, at: [6.25, 3.05, 0]}
+  - {kind: npc, ref: passenger-traveller, map: promenade, at: [4.8, 4.75, 0]}
+  - {kind: npc, ref: passenger-flowers, map: promenade, at: [3.35, 6.45, 0]}
+  - {kind: npc, ref: frail-passenger, map: promenade, at: [4.8, 6.55, 0]}
+  - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}  # still asking why they've come
+  - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}  # still smiling
+  - {kind: npc, ref: resident-coral, map: promenade, at: [13.2, 7.6, 0]}  # crouched at the end of the Concierge's desk
+  - {kind: npc, ref: gumshoe, map: promenade, at: [36.6, 7.4, 0]}  # hiding behind the far cart, taking notes
+  - {kind: npc, ref: cleaner-7, map: promenade, at: [13.2, 1.2, 0]}
+  - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.7, 11.0, 0]}
+  - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}
+  - {kind: npc, ref: static, map: promenade, at: [22.5, -8.5, 0], hidden: true}
+  - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
+  - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
+  - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
+  - {kind: npc, ref: scientist, map: bots, at: [3.1, 0.4, 0], hidden: true}  # Irena, waiting by the cot for Dax's signal
+  # the Bot bays: two mercenaries have just taken the mech, and its two techs and two guards are on their knees in the
+  # empty frame. The cleaners are on their pads, and BOLT-7 is hidden on pad 7
+  - {kind: npc, ref: hired-gun-skull, map: bots, at: [10.97, 4.57, 0]}
+  - {kind: npc, ref: hired-gun-mask, map: bots, at: [18.0, 5.2, 0]}
+  - {kind: npc, ref: tech-welder, map: bots, at: [13.2, 4.0, 0]}
+  - {kind: npc, ref: tech-chief, map: bots, at: [14.6, 4.0, 0]}
+  - {kind: npc, ref: guard, map: bots, at: [13.2, 5.6, 0]}
+  - {kind: npc, ref: guard-riot, map: bots, at: [14.6, 5.6, 0]}
   - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
   - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
   - {kind: npc, ref: cleaner-11, map: bots, at: [13.55, 12.45, 0]}
   - {kind: npc, ref: cleaner-13, map: bots, at: [15.25, 12.5, 0]}
   - {kind: npc, ref: service-droid, map: bots, at: [11.4, 9.6, 0]}
   - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}
-  # Irena, back in the hidey-hole, hidden until the crew comes down
-  - {kind: npc, ref: scientist, map: bots, at: [3.1, 0.4, 0], hidden: true}
-  # the Promenade late at night, as on heist night
-  - {kind: npc, ref: dock-clerk, map: promenade, at: [0.75, 2.0, 0]}
-  - {kind: npc, ref: cleaner-7, map: promenade, at: [13.2, 1.2, 0]}
-  - {kind: npc, ref: concierge, map: promenade, at: [14, 5.8, 0]}
-  - {kind: npc, ref: resident-coral, map: promenade, at: [17.2, 5.4, 0]}
-  - {kind: npc, ref: survey-droid, map: promenade, at: [43.6, 1.2, 0], hidden: true}
-  - {kind: npc, ref: guard-rookie, map: promenade, at: [23.9, 2.4, 0]}
-  - {kind: npc, ref: guard, map: promenade, at: [25.9, 2.9, 0]}
-  - {kind: npc, ref: guard-sergeant, map: promenade, at: [22.4, 2.0, 0]}
-  - {kind: npc, ref: guard-riot, map: promenade, at: [27.1, 4.4, 0]}
-  - {kind: npc, ref: robot-cook, map: promenade, at: [27.9, 0.9, 0]}
-  - {kind: npc, ref: vendor, map: promenade, at: [33.1, 1.2, 0]}
-  - {kind: npc, ref: gumshoe, map: promenade, at: [33.5, 8.6, 0]}
-  - {kind: npc, ref: cleaner-bot, map: promenade, at: [31.7, 11.0, 0]}
-  - {kind: npc, ref: static, map: promenade, at: [22.5, -8.5, 0], hidden: true}
-  - {kind: npc, ref: static-door, map: promenade, at: [23.5, -9.5, 0], hidden: true}
-  - {kind: npc, ref: static-neon, map: promenade, at: [24.5, -6.5, 0], hidden: true}
-  - {kind: npc, ref: static-crest, map: promenade, at: [25.5, -7.5, 0], hidden: true}
+  # deck 6: two mercenaries, at the desk and in the rows, with the two off-duty guards out of the showers on the floor
+  # between them, in towels. A rookie is hiding in Ahti's closet with Ahti, both hidden until someone opens the door
+  - {kind: npc, ref: hired-gun, map: deck-6, at: [11.48, 3.38, 0]}
+  - {kind: npc, ref: hired-gun-grille, map: deck-6, at: [12.27, 7.04, 0]}
+  - {kind: npc, ref: guard-towel, map: deck-6, at: [10.4, 5.2, 0]}
+  - {kind: npc, ref: guard-turban, map: deck-6, at: [11.6, 5.4, 0]}
+  - {kind: npc, ref: ahti, map: deck-6, at: [14.67, 1.47, 0], hidden: true}
+  - {kind: npc, ref: guard-rookie, map: deck-6, at: [15.6, 1.5, 0], hidden: true}
+  # deck 7: two mercenaries outside the security office, the operator held at the monitors. The manager who was
+  # working late is hidden behind the sofa in the third glass office
+  - {kind: npc, ref: camera-operator, map: deck-7, at: [13.37, 3.57, 0]}
+  - {kind: npc, ref: hired-gun-patch, map: deck-7, at: [12.5, 6.5, 0]}
+  - {kind: npc, ref: hired-gun-eye, map: deck-7, at: [15.28, 6.19, 0]}
+  - {kind: npc, ref: scientist-junior, map: deck-7, at: [13.4, 11.4, 0], hidden: true}
+  # deck 8: two mercenaries at the checkpoint with the head of security, who knows the probe's code, held between
+  # them. A sergeant has shut himself in the soundproofed boardroom, hidden
+  - {kind: npc, ref: hired-gun-watch, map: deck-8, at: [10.45, 2.95, 0]}
+  - {kind: npc, ref: hired-gun-mask, map: deck-8, at: [12.5, 6.2, 0]}
+  - {kind: npc, ref: head-of-security, map: deck-8, at: [11.3, 4.6, 0]}
+  - {kind: npc, ref: guard-sergeant, map: deck-8, at: [1.6, 11.2, 0], hidden: true}  # behind the sideboard
+  # deck 9: one mercenary, going through the founder's office
+  - {kind: npc, ref: hired-gun-skull, map: deck-9, at: [5.2, 5.6, 0]}
+  # the Secure floor: two mercenaries, at the vault door and by the probe's lockup, and a guard dead by the ring.
+  # The mech waits hidden on the empty cradle by the freight lift, for when it comes up
+  - {kind: npc, ref: hired-gun, map: secure, at: [11.93, 4.38, 0]}
+  - {kind: npc, ref: hired-gun-grille, map: secure, at: [8.0, 7.6, 0]}
+  - {kind: npc, ref: dead-guard, map: secure, at: [13.4, 12.4, 0]}
+  - {kind: npc, ref: spider-mech, map: secure, at: [26.9, 3.3, 0], hidden: true}
   - {kind: npc, ref: nurse, map: med, at: [7.6, 2.9, 0]}
   - {kind: npc, ref: steward, map: patience, at: [11.0, 4.1, 0]}
 inventory:  # the starting kit; a scene load leaves what the crew actually carries alone

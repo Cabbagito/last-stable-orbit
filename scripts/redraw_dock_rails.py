@@ -22,6 +22,7 @@ from PIL import Image, ImageDraw, ImageFilter
 IMPORTED = "1c382ba"  # the last commit with the art as it came from the Maps canvas
 ART = "assets/maps/promenade"
 MOODS = {"calm": (184, 171, 254), "hunted": (185, 168, 255)}  # each with its old rope's exact colour
+NOW = {"calm": "calm", "hunted": "takeover"}  # what each imported mood's files are called now
 
 # World X of the five posts along each rope, and world Y of the four ropes. Art origin (360, 190), as in proj.ts.
 XS = (3.0, 4.65, 6.3, 7.95, 9.6)
@@ -219,8 +220,8 @@ def main() -> None:
         erase_old(base, posts, rope)
         erase_gone(base, posts[GONE])
         draw_new(base, posts)
-        save(base, f"maps/promenade/base-{mood}.png")
-        save(redo_glow(imported(f"{ART}/glow-{mood}.png"), posts), f"maps/promenade/glow-{mood}.png")
+        save(base, f"maps/promenade/base-{NOW[mood]}.png")
+        save(redo_glow(imported(f"{ART}/glow-{mood}.png"), posts), f"maps/promenade/glow-{NOW[mood]}.png")
     for (c, r), p in sorted(posts.items()):
         print(c, r, p)
 

@@ -1,17 +1,17 @@
-# Session 4 or 5, the final sequence: the crew come out of the old founder-era passages into the Lift station. Two of
+# The final act: the crew come out of the old founder-era passages into the Lift station. Two of
 # the fixer's hired guns hold the blast door, the first fight. Lucan waits hidden alone on the glass floor behind it, for
 # the final fight once the door opens (the Door open mood). The spider mech and Lucan's dog wait hidden together in the
 # freight hall, for when the crew skipped the probe run and Peter wants them here instead. The station above is hunting
 # them, the same as for the probe run. The cab and the terminal have nobody in them. DRAFTS.
 id: session-4-lift-station
 name: "The lift station"
-session: "Session 4"
+act: "Final act"
 blurb: "Out of the old passages, to the top of the cable."
 card: maps/lift/base-open.png
 party_map: lift
 maps:
   event-horizon: {mood: stand, switches: {hatch: 1}, shown: [mural, slots]}
-  promenade: {mood: hunted, shown: [queue-board, mural, window, founders-ring, satisfaction]}
+  promenade: {mood: takeover, shown: [queue-board, mural, window, founders-ring, satisfaction]}
   deck-6: {mood: alert}
   deck-7: {mood: alert}
   deck-8: {mood: alert}

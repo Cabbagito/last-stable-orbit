@@ -106,7 +106,7 @@ async def test_a_crew_member_missing_from_the_map_is_placed(engine):
     engine.state.tokens.pop(tid)  # as if a preset had left Ves out
     await ok(engine, GM, "gm.crew.send", {"map": "promenade"})
     t = crew_token(engine.state, "ves")
-    assert t.map == "promenade" and tuple(t.at) == tuple(engine.content.maps["promenade"].arrive[3])
+    assert t.map == "promenade" and tuple(t.at) == tuple(engine.content.maps["promenade"].arrive_from["event-horizon"][3])  # out of the bar's door
 
 
 async def test_the_tv_follows_one_of_the_crew_to_their_map(engine):
@@ -156,7 +156,7 @@ def test_a_saved_game_gains_the_new_maps(content, tmp_path):
     # and the GM can set a new map's mood straight away
     from lso.commands import handle
 
-    assert handle(GM, e.state, content, "gm.map.mood", {"map": "promenade", "mood": "hunted"}) == [("map.mood_set", {"map": "promenade", "mood": "hunted"})]
+    assert handle(GM, e.state, content, "gm.map.mood", {"map": "promenade", "mood": "takeover"}) == [("map.mood_set", {"map": "promenade", "mood": "takeover"})]
 
 
 HEIST = ["deck-6", "deck-7", "deck-8", "deck-9", "secure", "bots"]
@@ -273,10 +273,10 @@ def test_a_saved_game_moves_onto_the_heist_maps(tmp_path, content):
 
 def test_the_mech_is_in_the_bot_bays_on_heist_night_and_gone_by_session_4(content):
     """The Bot bays' art has the mech in its frame by Day and Night and the frame empty by Alert. Heist night is Night,
-    and every session 4 preset is Alert."""
+    and every preset from Act 4 on is Alert."""
     assert content.presets["session-3-heist"].maps["bots"].mood == "night"
-    four = [p for p in content.presets.values() if p.session == "Session 4"]
-    assert len(four) == 4 and all(p.maps["bots"].mood == "alert" for p in four)
+    four = [p for p in content.presets.values() if p.act in ("Act 4", "Final act")]
+    assert len(four) == 3 and all(p.maps["bots"].mood == "alert" for p in four)
 
 
 def test_the_heist_starts_on_the_promenade(content):
@@ -296,6 +296,43 @@ def test_a_game_saved_in_the_bot_bays_old_heist_night_mood_moves_to_alert(tmp_pa
     e = Engine(content, store)
     assert e.state.maps["bots"].mood == "alert"
     project(e.state, content, GM)
+
+
+def test_act_4_is_the_takeover_on_both_cards(content):
+    """The shotgun and The hidey-hole differ only in the bar and where the crew and Irena are: everywhere else the
+    mercenaries hold the station in ones and twos, the Promenade is in Takeover, and no guard is left on duty."""
+    shotgun, hole = content.presets["session-4-shotgun"], content.presets["session-4-hidey-hole"]
+    assert shotgun.maps["event-horizon"].mood == "stand" and shotgun.maps["promenade"].mood == hole.maps["promenade"].mood == "takeover"
+
+    def others(p):
+        return sorted((t.map, t.ref, tuple(t.at), t.hidden) for t in p.tokens if t.kind == "npc" and t.map != "event-horizon" and t.ref not in ("scientist", "lucan-dog"))
+
+    assert others(shotgun) == others(hole)
+    for m in ("promenade", "bots", "deck-6", "deck-7", "deck-8", "deck-9", "secure"):
+        mercs = [t for t in hole.tokens if t.map == m and t.ref.startswith("hired-gun")]
+        assert 1 <= len(mercs) <= 3, m
+    assert any(t.ref.startswith("dead-") for t in hole.tokens)
+    assert "spider-mech" not in [t.ref for t in hole.tokens if not t.hidden]
+
+
+async def test_the_crew_land_at_the_door_they_came_through(engine, content):
+    """Sent to the Promenade from the Bot bays they come out of the service door, not off the Patience at Dock 7."""
+    prom = content.maps["promenade"]
+    await ok(engine, GM, "gm.crew.send", {"map": "bots"})
+    await ok(engine, GM, "gm.crew.send", {"map": "promenade"})
+    assert tuple(crew_token(engine.state, "lale").at) == tuple(prom.arrive_from["bots"][0])
+    await ok(engine, GM, "gm.crew.send", {"map": "patience"})
+    await ok(engine, GM, "gm.crew.send", {"map": "promenade"})
+    assert tuple(crew_token(engine.state, "lale").at) == tuple(prom.arrive[0])
+
+
+def test_a_game_saved_with_the_promenade_hunted_moves_to_takeover(tmp_path, content):
+    store = Store(tmp_path / "w.db")
+    Engine(content, store)
+    old = GameState.model_validate(store.load_snapshot()[1])
+    old.maps["promenade"].mood = "hunted"
+    store.commit("system", None, [], old.model_dump(mode="json"), {})
+    assert Engine(content, store).state.maps["promenade"].mood == "takeover"
 
 
 async def test_the_terminal_rooms_face_and_feed(engine):

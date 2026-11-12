@@ -3,7 +3,7 @@
 # they arrive in Reflex order, and shows them. Positions are DRAFTS, checked on the art.
 id: session-1-night
 name: "After hours, arrivals"
-session: "Session 1"
+act: "Act 1"
 blurb: "The bar after hours. The crew hidden, for you to place."
 card: presets/after-hours.png
 party_map: event-horizon

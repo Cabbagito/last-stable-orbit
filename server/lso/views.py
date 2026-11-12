@@ -617,7 +617,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         view["map_groups"] = [{"title": g.title, "maps": [{"id": e.map, "under": e.under} for e in g.entries()]} for g in content.map_groups]
         if bench is not None:
             view["bench"] = bench  # the sandbox's, and only ever the GM's
-        view["presets"] = [{"id": p.id, "name": p.name, "session": p.session, "blurb": p.blurb, "card": url(p.card)} for p in content.presets.values()]
+        view["presets"] = [{"id": p.id, "name": p.name, "act": p.act, "blurb": p.blurb, "card": url(p.card)} for p in content.presets.values()]
         view["items"] = [_item_view(it, open_) for it in content.items.values()]  # the catalogue, for giving
         view["overviews"] = {  # the Events section: what can be sent, and whose screen has one open now
             "games": [{"id": o.id, "name": o.name} for o in content.overviews.values()],

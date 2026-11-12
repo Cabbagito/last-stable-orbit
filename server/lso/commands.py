@@ -574,7 +574,8 @@ def _slots_close(state: GameState, game, key: str, bank: SlotBank, now: float) -
 
 
 def _send_crew(state: GameState, content: Content, map_id: str) -> Events:
-    """The whole crew to a map's entrance (its `arrive` spots, in crew order), and it becomes the party's map.
+    """The whole crew to a map's entrance (its `arrive` spots, in crew order), and it becomes the party's map. Where
+    the map has a door to the one the party is leaving (`arrive_from`), they land there instead.
     A hidden crew token stays hidden. One that isn't on any map yet is placed."""
     m = content.maps.get(map_id)
     if not m:
@@ -582,8 +583,9 @@ def _send_crew(state: GameState, content: Content, map_id: str) -> Events:
     if not m.arrive:
         raise _invalid(f"{m.name} has nowhere for the crew to arrive")
     events: Events = []
+    spots = m.arrive_from.get(state.party_map or "") or m.arrive
     for i, char in enumerate(content.characters):
-        at = list(m.arrive[i])
+        at = list(spots[i])
         tid = next((tid for tid, t in state.tokens.items() if t.kind == "crew" and t.ref == char), None)
         if tid is None:
             tok = TokenState(kind="crew", ref=char, map=map_id, at=tuple(at))

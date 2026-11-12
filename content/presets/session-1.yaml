@@ -4,7 +4,7 @@
 # Unit 14 stays in the corner. Other NPCs wait in the GM roster, unplaced.
 id: session-1
 name: "The pitch at the bar"
-session: "Session 1"
+act: "Act 1"
 blurb: "The crew and Lucan at the founder's table."
 card: presets/pitch.png
 default: true

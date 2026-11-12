@@ -2,7 +2,7 @@
 # among them. The decks below are the Heist playground's Silence layer, nearly empty, which is when the crew can peel off.
 id: session-2-vigil
 name: "The Vigil"
-session: "Session 2"
+act: "Act 2"
 blurb: "The silence at the vault door, with everyone there."
 card: maps/secure/base-day.png
 party_map: secure

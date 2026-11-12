@@ -24,7 +24,7 @@ Open http://localhost:8070 and click a character, or choose "I'm the GM" and typ
 | `make test` | server tests (uv) and web tests (in Docker) |
 | `make reset-world` | wipe the saved game; it reloads the default preset |
 
-The GM can also load a preset from the GM column (Session 1 at the bar, or the bar after hours), which resets positions, moods, vitals and inventories without wiping anything.
+The GM can also load a preset from the GM tab's Acts page (Act 1 at the bar, or the bar after hours), which resets positions, moods, vitals and inventories without wiping anything.
 
 ## Testing on a copy
 
