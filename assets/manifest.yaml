@@ -18,6 +18,7 @@ stores:
   LUCAN: https://claude.ai/artifact/T2xXLmwT2NUCEaLPjLEnv5  # rendered in a claude.ai session by cutscenes/lucan_film.py
   ACT1: https://claude.ai/artifact/JtqLYHVrERiB9xAjAhPpvV  # rendered in a claude.ai session by cutscenes/act1_film.py
   ACT2: https://claude.ai/artifact/9ksVobCNWc7bZ8op3XB2sX  # the storyboards; rendered in a claude.ai session by cutscenes/vigil_film.py and act2end_film.py
+  TAKEOVER: https://claude.ai/artifact/Gmv7MPt5H32nqnzCGusGoo  # painted by scripts/promenade_takeover.py, and put up there for Peter to approve
   KEEPER: https://claude.ai/artifact/G3omhDn8wAePmtBzufSGHv  # the storyboard; rendered in a claude.ai session by cutscenes/keeper_film.py
 assets:
   - path: maps/event-horizon/base-open.png
@@ -1220,17 +1221,17 @@ assets:
     width: 1800
     height: 1080
   - path: maps/promenade/base-takeover.png
-    store: MAPS
-    asset_id: "d62c5c6f8446d388be75ae2020339e00"
-    sha256: "40bd749b4fdf45f9a65fb121acabf6d39cb346c4af1a4c5a971240e64364640b"
-    bytes: 152213
+    store: TAKEOVER
+    asset_id: "fdc4ca41e567c813317f5ccc65b6be87"
+    sha256: "ca05b1474d43354b8c6e2552ef25357dff72cbb9a32ad763a34c41ab1bf0f1a9"
+    bytes: 260851
     width: 1800
     height: 1080
   - path: maps/promenade/glow-takeover.png
-    store: MAPS
-    asset_id: "d4dcf1ded073240be5bafdda61a8a512"
-    sha256: "584e27a9c9e3527c8554fb83201fdfa7ec144da608acdaf138bc905dd8a5d977"
-    bytes: 60740
+    store: TAKEOVER
+    asset_id: "9b604e9829a2a4990ac8131621a7d608"
+    sha256: "eabdb50c7ee230f3d028a48c83164d1e486d2aed306fdff16b565bcb845ad5bf"
+    bytes: 127706
     width: 1800
     height: 1080
   - path: maps/promenade/hole.gif

@@ -1,8 +1,8 @@
 # The final act: the crew come out of the old founder-era passages into the Lift station. Two of
 # the fixer's hired guns hold the blast door, the first fight. Lucan waits hidden alone on the glass floor behind it, for
-# the final fight once the door opens (the Door open mood). The spider mech and Lucan's dog wait hidden together in the
-# freight hall, for when the crew skipped the probe run and Peter wants them here instead. The station above is hunting
-# them, the same as for the probe run. The cab and the terminal have nobody in them. DRAFTS.
+# the final fight once the door opens (the Door open mood). Lucan's dog waits hidden in the freight hall; where it and
+# the brute fight is still being decided. The mech isn't here: its fight is on the Secure floor, after the probe. The
+# station above still has the old numbers. The cab and the terminal have nobody in them. DRAFTS.
 id: session-4-lift-station
 name: "The lift station"
 act: "Final act"
@@ -33,7 +33,6 @@ tokens:
   - {kind: npc, ref: hired-gun-watch, map: lift, at: [24.0, 18.2, 0]}  # calls the lift
   - {kind: npc, ref: hired-gun-eye, map: lift, at: [27.4, 18.6, 0]}
   - {kind: npc, ref: fixer, map: lift, at: [18.0, 7.0, 0.05], hidden: true}
-  - {kind: npc, ref: spider-mech, map: lift, at: [19.6, 20.6, 0], hidden: true}
   - {kind: npc, ref: lucan-dog, map: lift, at: [22.0, 21.4, 0], hidden: true}
   - {kind: npc, ref: scientist, map: bots, at: [3.1, 0.4, 0]}  # still in the hidey-hole
   # the Bot bays with the mech gone: only the cleaners on their pads and the droid at dispatch. BOLT-7 is hidden on pad 7

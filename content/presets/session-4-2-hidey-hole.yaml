@@ -100,8 +100,8 @@ tokens:
   - {kind: npc, ref: hired-gun-mask, map: deck-8, at: [12.5, 6.2, 0]}
   - {kind: npc, ref: head-of-security, map: deck-8, at: [11.3, 4.6, 0]}
   - {kind: npc, ref: guard-sergeant, map: deck-8, at: [1.6, 11.2, 0], hidden: true}  # behind the sideboard
-  # deck 9: one mercenary, going through the founder's office
-  - {kind: npc, ref: hired-gun-skull, map: deck-9, at: [5.2, 5.6, 0]}
+  # deck 9: one mercenary, hidden, going through the founder's office
+  - {kind: npc, ref: hired-gun-skull, map: deck-9, at: [5.2, 5.6, 0], hidden: true}
   # the Secure floor: two mercenaries, at the vault door and by the probe's lockup, and a guard dead by the ring.
   # The mech and Lucan's dog wait hidden on the empty cradle by the freight lift, for when it comes up
   - {kind: npc, ref: hired-gun, map: secure, at: [11.93, 4.38, 0]}
