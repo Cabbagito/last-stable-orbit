@@ -146,7 +146,7 @@
 
 - id: brochure
   name: The brochure
-  icon: icons/items/note.png
+  icon: icons/items/brochure.png
   kind: note
   text: |-
     The founder of Ergo, a saint, and the schedule for tomorrow's Vigil.
@@ -188,3 +188,195 @@
   icon: icons/items/credits.png
   kind: gear
   text: A pouch with too many coins in it. They can be spent.
+
+# --- findables: a pool the GM hands out on the spot when someone searches somewhere (2026-11-12). Icons from the Items
+# canvas (https://claude.ai/artifact/TwKnStbVEabCxiFdKqgKLv). Texts are DRAFT, for Peter to edit.
+# Useful: one-use unlocks and consumables. A person can use one health or Entropy item a session, and it takes a turn.
+- id: ration-bar
+  name: Ration bar
+  icon: icons/items/ration-bar.png
+  kind: gear
+  text: A foil-wrapped ration bar, one corner already bitten. Eat it for +1 health.
+
+- id: painkiller-patch
+  name: Painkiller patch
+  icon: icons/items/painkiller-patch.png
+  kind: gear
+  text: A Med Bay patch, still on its backing. Stick it on for +1 health.
+
+- id: hip-flask
+  name: Hip flask
+  icon: icons/items/hip-flask.png
+  kind: gear
+  text: A steel flask in a leather sleeve, about a third full of something strong. Drink it for +1 Entropy.
+
+- id: staff-lanyard
+  name: Staff lanyard
+  icon: icons/items/staff-lanyard.png
+  kind: key
+  text: Somebody's staff badge on a teal strap. The photo isn't you. It gets you past one person who isn't looking closely.
+
+- id: service-keycard
+  name: Service keycard
+  icon: icons/items/service-keycard.png
+  kind: key
+  text: A maintenance keycard with hazard stripes. It opens one service door, and then it goes dead.
+
+- id: code-note
+  name: Sticky note
+  icon: icons/items/code-note.png
+  kind: note
+  text: |-
+    A sticky note, peeled off the underside of something.
+    "4719"
+    It opens one keypad. You don't know which one yet.
+
+- id: earpiece-pair
+  name: Earpiece pair
+  icon: icons/items/earpiece-pair.png
+  kind: gear
+  text: Two matched earpieces. Two people wearing one each can whisper to each other from anywhere on the same deck.
+
+- id: multitool
+  name: Multitool
+  icon: icons/items/multitool.png
+  kind: tool
+  text: A folding knife, a driver and a hook that nobody knows the use of. It lets you try a Tech roll when you have no proper tools.
+
+- id: loyalty-card
+  name: Noodle loyalty card
+  icon: icons/items/loyalty-card.png
+  kind: gear
+  text: Nine stamps out of ten. The next bowl at the noodle stall is free.
+
+# Valuables: worth nothing until someone at the Night Market buys them.
+- id: vigil-coin
+  name: Vigil coin
+  icon: icons/items/vigil-coin.png
+  kind: gear
+  text: A commemorative coin with the founder's ring on it, struck for the Vigil. It isn't money, but a stall at the Night Market would give about 30 credits for it.
+
+- id: chrome-part
+  name: Sealed chrome part
+  icon: icons/items/chrome-part.png
+  kind: gear
+  text: A servo joint, factory sealed, clinic sticker intact. The Night Market would give about 80 credits for it.
+
+- id: exec-watch
+  name: Executive's watch
+  icon: icons/items/exec-watch.png
+  kind: gear
+  text: A heavy gold watch with a blue face. Somebody upstairs is going to miss it. The Night Market would give about 150 credits for it.
+
+# Small clues: world colour, never plot-critical.
+- id: shift-rota
+  name: Shift rota
+  icon: icons/items/shift-rota.png
+  kind: note
+  text: A clipboard with tonight's shifts on it. It tells you who is supposed to be where, and when they swap.
+
+- id: complaint-letter
+  name: Unsent complaint
+  icon: icons/items/complaint-letter.png
+  kind: note
+  text: |-
+    A furious letter to station management, two pages, underlined in red. Never posted.
+    You could ask the author about it. They feel wonderful now.
+
+- id: survey-stack
+  name: Stack of surveys
+  icon: icons/items/survey-stack.png
+  kind: note
+  text: |-
+    Satisfaction reports, a few dozen of them. Every answer is a ten.
+    Every one is in the same handwriting.
+
+# Random things: flavour.
+- id: candle-stub
+  name: Vigil candle stub
+  icon: icons/items/candle-stub.png
+  kind: gear
+  text: A burnt-down Vigil candle with a violet ribbon. It would give you about eleven more minutes.
+
+- id: queue-ticket
+  name: Queue ticket
+  icon: icons/items/queue-ticket.png
+  kind: note
+  text: |-
+    A Dock 7 queue ticket.
+    Estimated wait: 11:00.
+
+- id: kid-drawing
+  name: Child's drawing
+  icon: icons/items/kid-drawing.png
+  kind: note
+  text: The black hole in crayon, with two people holding hands in front of it. Everyone is smiling. The hole is too.
+
+- id: snow-globe
+  name: Snow globe of Ergo
+  icon: icons/items/snow-globe.png
+  kind: gear
+  text: A souvenir snow globe with the station inside. Shake it and it snows on Ergo, which it never does.
+
+- id: paperback
+  name: Dog-eared paperback
+  icon: icons/items/paperback.png
+  kind: gear
+  text: A paperback read so many times the spine has given up. The last page is missing.
+
+- id: card-deck
+  name: Deck of cards
+  icon: icons/items/card-deck.png
+  kind: gear
+  text: A worn deck of cards. Fifty-one of them.
+
+- id: lunch
+  name: Someone's lunch
+  icon: icons/items/lunch.png
+  kind: gear
+  text: A paper bag with a name on it that isn't yours, and an apple. Somebody is going to be upset at about noon.
+
+# Trash: the default result of a search.
+- id: used-noodles
+  name: Used noodles
+  icon: icons/items/used-noodles.png
+  kind: gear
+  text: A noodle cup, mostly finished, a while ago. The chopsticks are still in it. So is something else.
+
+- id: slots-ticket
+  name: Losing slots ticket
+  icon: icons/items/slots-ticket.png
+  kind: note
+  text: |-
+    A crumpled ticket from The Event Horizon's machines. Two black holes and a near miss.
+    "SO CLOSE!"
+
+- id: dead-battery
+  name: Dead battery
+  icon: icons/items/dead-battery.png
+  kind: gear
+  text: A dead battery, leaking something green at one end. Do not lick it.
+
+- id: chrome-finger
+  name: Broken chrome finger
+  icon: icons/items/chrome-finger.png
+  kind: gear
+  text: A knock-off chrome finger, snapped off at the base. The nail is painted pink. It still twitches if you squeeze it.
+
+- id: chewed-stylus
+  name: Chewed survey stylus
+  icon: icons/items/chewed-stylus.png
+  kind: gear
+  text: A stylus from a satisfaction droid, chewed nearly flat at one end. Someone was not having a ten out of ten day.
+
+- id: pocket-lint
+  name: Pocket lint
+  icon: icons/items/pocket-lint.png
+  kind: gear
+  text: Lint, a crumb, and a hair that isn't yours.
+
+- id: damp-sock
+  name: Damp sock
+  icon: icons/items/damp-sock.png
+  kind: gear
+  text: One sock. Damp. There is no way to find out why.

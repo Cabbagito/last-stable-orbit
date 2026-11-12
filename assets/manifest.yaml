@@ -19,6 +19,7 @@ stores:
   ACT1: https://claude.ai/artifact/JtqLYHVrERiB9xAjAhPpvV  # rendered in a claude.ai session by cutscenes/act1_film.py
   ACT2: https://claude.ai/artifact/9ksVobCNWc7bZ8op3XB2sX  # the storyboards; rendered in a claude.ai session by cutscenes/vigil_film.py and act2end_film.py
   TAKEOVER: https://claude.ai/artifact/Gmv7MPt5H32nqnzCGusGoo  # painted by scripts/promenade_takeover.py, and put up there for Peter to approve
+  ITEMS: https://claude.ai/artifact/TwKnStbVEabCxiFdKqgKLv  # every item on one board; the findables are rendered in a claude.ai session by ui/find_icons_*.py
   KEEPER: https://claude.ai/artifact/G3omhDn8wAePmtBzufSGHv  # the storyboard; rendered in a claude.ai session by cutscenes/keeper_film.py
 assets:
   - path: maps/event-horizon/base-open.png
@@ -971,6 +972,216 @@ assets:
     asset_id: "2702d4d8d535dfb3d159e6f6b283506a"
     sha256: "c7b64583ed73cd53ff981f12caf36909fa783131cc0c24197f85d422cb36e1b1"
     bytes: 800
+    width: 48
+    height: 48
+  - path: icons/items/ration-bar.png
+    store: ITEMS
+    asset_id: "7a30702739e879eab7b5520bef133b7e"
+    sha256: "ea24170d9e5d144117551c201c15013ba48f3de73025c58d18bf29ba3fb133c0"
+    bytes: 1008
+    width: 48
+    height: 48
+  - path: icons/items/painkiller-patch.png
+    store: ITEMS
+    asset_id: "892f3163c3f0e010965bdcdad2f47f5d"
+    sha256: "56c1599d6de7cee90fc55a89bc13fb5971dc8690458068afb6c0dd93713c55a5"
+    bytes: 868
+    width: 48
+    height: 48
+  - path: icons/items/hip-flask.png
+    store: ITEMS
+    asset_id: "fa3c97ad2a901b7f235d8f3985ebc249"
+    sha256: "35c2e51716eb4c3fb60eb1b45150b0964e030f639a56dfe35fecaa2925780f90"
+    bytes: 1005
+    width: 48
+    height: 48
+  - path: icons/items/staff-lanyard.png
+    store: ITEMS
+    asset_id: "77211965f3d16fbcbe0a71986701fcd7"
+    sha256: "f980e2597d497d5aecebae272712a82b44cfc36dd90a2eb810f78996f9d3c0e0"
+    bytes: 1047
+    width: 48
+    height: 48
+  - path: icons/items/service-keycard.png
+    store: ITEMS
+    asset_id: "710938e0ff7d2f2f113e7d437b9f2e17"
+    sha256: "97c3de62e1f313dd9e6bdedede0643cc8b0332579b2f4f3c5bb90c3b9e2d4a8b"
+    bytes: 801
+    width: 48
+    height: 48
+  - path: icons/items/code-note.png
+    store: ITEMS
+    asset_id: "1aa7e8f819210370b60f0b602186adbf"
+    sha256: "79a8e9ddd7ff0c12e26e437bc862f0c7ae520ee2f821d4d393d645d6a6f57490"
+    bytes: 550
+    width: 48
+    height: 48
+  - path: icons/items/earpiece-pair.png
+    store: ITEMS
+    asset_id: "fc2c9e004981cb29875385746b56ef5e"
+    sha256: "820a30923ae63cb8e0d2b400f189ddb0b02550893b43827c2ed64c12d40caa56"
+    bytes: 1157
+    width: 48
+    height: 48
+  - path: icons/items/multitool.png
+    store: ITEMS
+    asset_id: "2df72d6f132551c7a17072a21ca96c1a"
+    sha256: "556b014364e4b88b1cb880ab29101b4173a9ebfb6ea971f4e780048c91be025a"
+    bytes: 956
+    width: 48
+    height: 48
+  - path: icons/items/loyalty-card.png
+    store: ITEMS
+    asset_id: "d67eeef012a2cb0adb32870a1ce25f96"
+    sha256: "4d10854cdc91cf5dfd7d6a3baf599749ed32cce964e99fac4ab02122adc7128b"
+    bytes: 622
+    width: 48
+    height: 48
+  - path: icons/items/vigil-coin.png
+    store: ITEMS
+    asset_id: "03bed935e1b972125e4b2d209457beb1"
+    sha256: "803b5c24c16da95e5f70567a8bb4ea6c924677e33303f5f9eec14c5e46dc820a"
+    bytes: 1559
+    width: 48
+    height: 48
+  - path: icons/items/chrome-part.png
+    store: ITEMS
+    asset_id: "052d30190428dd2276b84a59a63a08b1"
+    sha256: "8e3423a2a955a4eaf41b79b3f2c26717ea81814f2a82b97826b541aa6e61487a"
+    bytes: 1435
+    width: 48
+    height: 48
+  - path: icons/items/exec-watch.png
+    store: ITEMS
+    asset_id: "24f930f4198ce9d62e4d058eb3f6f2e8"
+    sha256: "99ba7516c40b5f3ff7ed83a10fa2a62f73cc2e9c1ddf5fa20d1958c373c819e8"
+    bytes: 1283
+    width: 48
+    height: 48
+  - path: icons/items/shift-rota.png
+    store: ITEMS
+    asset_id: "6f2efa76c791b50b46c53fa05f60d80c"
+    sha256: "0e986cb55572ae3d6b8bd2eaad52981bc75471d580fd1b546012411076aa2036"
+    bytes: 983
+    width: 48
+    height: 48
+  - path: icons/items/complaint-letter.png
+    store: ITEMS
+    asset_id: "04b0755b057c0b7e1bd3bac671ad14b9"
+    sha256: "2dd79214ea75968a2ecbc8205018d41e399f5f9c0cca8f1a3f683a752e92e51e"
+    bytes: 833
+    width: 48
+    height: 48
+  - path: icons/items/survey-stack.png
+    store: ITEMS
+    asset_id: "20828ff363cd6fe3d69a27e8d8fc9fed"
+    sha256: "0bb8f03f5dee216bc4f1093754b4b34c4f9e97d751f7f5781395f8ff2c20ccb7"
+    bytes: 743
+    width: 48
+    height: 48
+  - path: icons/items/candle-stub.png
+    store: ITEMS
+    asset_id: "fc9211c165623fdce3e32ed2c899e65c"
+    sha256: "f91d4e6a22643a23d716c4e7a7549fd2f2b058cfb5983357b0436584f79a2807"
+    bytes: 1055
+    width: 48
+    height: 48
+  - path: icons/items/queue-ticket.png
+    store: ITEMS
+    asset_id: "22d2a85e986847ff5882635f399d1270"
+    sha256: "d0c654317341c8f1df09c199c6a280f2916aa8025584bb0d344d00cfdc43b438"
+    bytes: 807
+    width: 48
+    height: 48
+  - path: icons/items/kid-drawing.png
+    store: ITEMS
+    asset_id: "4282a4e36bc3a45648a53368f5f6df9e"
+    sha256: "3d1e15d508d0010640f65ee65ed36b711a6bf0324085a3a87c8a8d9cb71472dc"
+    bytes: 886
+    width: 48
+    height: 48
+  - path: icons/items/snow-globe.png
+    store: ITEMS
+    asset_id: "91664a468770ceacdeb6f084bc89befc"
+    sha256: "124c53a138959d230efa44d145723107261b117fb630dd76185d674541673647"
+    bytes: 1273
+    width: 48
+    height: 48
+  - path: icons/items/brochure.png
+    store: ITEMS
+    asset_id: "3103fcccc01eba842679b6a8bd031def"
+    sha256: "c3b441c3afe1fbc3b06ffbd86aed1d20f678c74f4beb3f90a404f5b245b92267"
+    bytes: 752
+    width: 48
+    height: 48
+  - path: icons/items/paperback.png
+    store: ITEMS
+    asset_id: "d646a0d19f479905dedabb3f29f6325c"
+    sha256: "ab285ca00f06458bb4777c826b8588ee32c61ee7da8ca19f6e3f296feceb900e"
+    bytes: 889
+    width: 48
+    height: 48
+  - path: icons/items/card-deck.png
+    store: ITEMS
+    asset_id: "d20dd9cd6726d2315fb060551bf56b71"
+    sha256: "652bc4d0c45f9a7c2e461994073e1430c815ea75f8d545abd8ade398bdbf3187"
+    bytes: 881
+    width: 48
+    height: 48
+  - path: icons/items/lunch.png
+    store: ITEMS
+    asset_id: "fb7fe21be56bb7d54fcd648a280f509b"
+    sha256: "479d4322d97aae2f67c83f97e12c9371cef6970503130891500b9b3b125073a9"
+    bytes: 874
+    width: 48
+    height: 48
+  - path: icons/items/used-noodles.png
+    store: ITEMS
+    asset_id: "479387ce5682a9014465e32de93f7e13"
+    sha256: "7939d15612e7e72f047cb6f1fbd18426179ca9a65e321766bd92c5e52991ff28"
+    bytes: 1597
+    width: 48
+    height: 48
+  - path: icons/items/slots-ticket.png
+    store: ITEMS
+    asset_id: "392ced31fb944c02468c4e0b852d3c70"
+    sha256: "95823d116b495c3c4efb469f19c5560fc2299848df0a59ecd3a9bd657fcc823f"
+    bytes: 930
+    width: 48
+    height: 48
+  - path: icons/items/dead-battery.png
+    store: ITEMS
+    asset_id: "d4e050ddfb937e74327b386f74315b0b"
+    sha256: "de475194be7c0d6e0ea3550ad63b49f282a326cf502751df9ed5140132fefb51"
+    bytes: 1094
+    width: 48
+    height: 48
+  - path: icons/items/chrome-finger.png
+    store: ITEMS
+    asset_id: "c289b15c84c7ac5e490c2e08bc1b9f9f"
+    sha256: "e7273a7e9021c1910ed28afe7ce5650271dc1682b7b0bb5a9c5214d0316e6cb9"
+    bytes: 1277
+    width: 48
+    height: 48
+  - path: icons/items/chewed-stylus.png
+    store: ITEMS
+    asset_id: "2e0cb949b92c55811973c08b133be1b8"
+    sha256: "e886c20487359679b861adf6c01cb8f4d96cb0520afba91c38251cb04b981218"
+    bytes: 895
+    width: 48
+    height: 48
+  - path: icons/items/pocket-lint.png
+    store: ITEMS
+    asset_id: "d0bf0445646b823ec353fc504046e679"
+    sha256: "9b2934d2efb9da4d7cb3c6cdf6fd8bf9f02115b8227b833e8c36a74a08fc831b"
+    bytes: 1772
+    width: 48
+    height: 48
+  - path: icons/items/damp-sock.png
+    store: ITEMS
+    asset_id: "618616d15510fb8f05a83af728053362"
+    sha256: "26f9533628e1b4417416f940c1961dd0285947845aff5b381cff7a7adf503b28"
+    bytes: 1085
     width: 48
     height: 48
   - path: icons/list/ves-vents.png
