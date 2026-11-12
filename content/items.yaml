@@ -136,11 +136,11 @@
     Summary: Ilija, years ago, laughing. The station's new mind keeps rearranging his calendar "to make him happy", and he keeps putting dinner back in.
     "Some things you don't optimise. You just show up."
 
-# Session 1's other items, from the bible's table. What each one does is the bible's; the wording is DRAFT, and they
-# borrow existing icons. "[Peter to fill in]" marks what the bible doesn't say yet.
+# Session 1's other items, from the bible's table. What each one does is the bible's; the wording is DRAFT. The notes
+# share one icon. "[Peter to fill in]" marks what the bible doesn't say yet.
 - id: burner-key
   name: Burner key
-  icon: icons/items/access-chit.png
+  icon: icons/items/burner-key.png
   kind: key
   text: A one-use hacking device. It gets through one hack with no roll.
 
@@ -163,7 +163,7 @@
 
 - id: antidote
   name: Antidote
-  icon: icons/items/splice-kit.png
+  icon: icons/items/antidote.png
   kind: gear
   text: One antidote, 3 doses. Wakes someone who's been sedated. Anyone can give a dose.
 
@@ -185,7 +185,7 @@
 
 - id: coin-pouch
   name: Coin pouch
-  icon: icons/items/credits.png
+  icon: icons/items/coin-pouch.png
   kind: gear
   text: A pouch with too many coins in it. They can be spent.
 

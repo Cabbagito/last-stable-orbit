@@ -1184,6 +1184,27 @@ assets:
     bytes: 1085
     width: 48
     height: 48
+  - path: icons/items/antidote.png
+    store: ITEMS
+    asset_id: "2b1a41c9a5d9c26d37d0b590aaaa676b"
+    sha256: "bfab446c081fe600d80f4ceec7896f3831a3ba7c75395a40c711989ba33a6d4b"
+    bytes: 1090
+    width: 48
+    height: 48
+  - path: icons/items/burner-key.png
+    store: ITEMS
+    asset_id: "920f8da8535f6993aeec4a77c61e4d5b"
+    sha256: "cb1449cdc5542c53400eb94bec62ebc18ec29ff5c15ffb6169e7bc667ea90b69"
+    bytes: 1201
+    width: 48
+    height: 48
+  - path: icons/items/coin-pouch.png
+    store: ITEMS
+    asset_id: "428150e40376b3342bdeb36b92fa6b95"
+    sha256: "5f708177b9fe970caf3b9e0f3356f1658346e3e3fc56c8c3463b82b42e4e78a0"
+    bytes: 1490
+    width: 48
+    height: 48
   - path: icons/list/ves-vents.png
     store: UI
     asset_id: "5987e17ffcf3c2dc9df8431c49057b5a"
