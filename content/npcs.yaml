@@ -76,6 +76,18 @@
   note: "\"I used to win money on this.\""
   gm_note: "The alley's killer, sedated and back at his machine, alone. He and a friend, Jonah Pell, secretly won small sums by standing up together; when the friend decided to stop and leave, he followed him into the alley. Ask him directly and he cheerfully admits it: \"Oh yes, that was me. I feel wonderful now.\""
 
+- id: djuro  # an Eve of Ruin nod (Djura, the card shark), added 2026-11-12. Everything here is DRAFT
+  name: Djuro
+  role: Resident
+  group: Locals
+  portrait: portraits/djuro.gif  # a first version, painted over the shopkeeper's render (scripts/djuro_portrait.py)
+  color: "#f6cc44"
+  stats: {body: 6, reflex: 8, tech: 4, intel: 8, cool: 12, empathy: 8}
+  health: 2
+  mood: Limber
+  note: An old man with a bucket.
+  gm_note: "Not on any map: add him when you want the bit. He walks into the bar with his bucket, goes to the slots, stretches for a second and pulls each one, and the coins flood out into the bucket. Dax: \"Same time next week, Djuro?\" Djuro: \"Oh, you know it, Dax!\" He never says how. If the crew already flooded the machines, he stops at the out-of-service signs with the empty bucket, and Dax says \"Sorry, Djuro.\""
+
 - id: happy-resident
   name: Happy resident
   role: Resident

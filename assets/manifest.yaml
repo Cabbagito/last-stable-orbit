@@ -2523,3 +2523,10 @@ assets:
     bytes: 12735
     width: 1800
     height: 1080
+  - path: portraits/djuro.gif  # generated from portraits/resident-shopkeeper.gif by scripts/djuro_portrait.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "5f838b3a724b21dc9297ecfe8ce126b1a80ec788acf0a5db6f89734b23420736"
+    bytes: 125789
+    width: 96
+    height: 96
