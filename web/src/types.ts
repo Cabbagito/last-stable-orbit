@@ -16,6 +16,7 @@ export interface ListEntry {
   downside: string | null
   icon: string | null
   text: string // the tooltip: what it is or does
+  item?: string // chrome only: which piece it is, so the GM can take it out
 }
 
 export interface CrewMember {
@@ -28,6 +29,7 @@ export interface CrewMember {
   stats: Record<StatKey, number>
   list: ListEntry[]
   health: number // the most health they can have
+  entropy_max: number // and the most Entropy: 6, until chrome or the GM raises it
   hp: number
   entropy: number
   burn: BurnDef | null
@@ -241,6 +243,17 @@ export interface Item {
   text: string // the tooltip; only its holder and the GM get it
   counted: boolean // credits: one entry holding an amount
   codex: string | null
+  // GM only: how the pickers sort it
+  shelf?: string | null // its group; chrome has none
+  chrome?: 'clinic' | 'cart' | null // chrome, and the shop that sells it
+  raises?: 'health' | 'entropy' | null // chrome that's held, and adds 1 to that maximum
+}
+
+/** One group in the GM's item pickers. `draw`: it has a Draw button. */
+export interface Shelf {
+  id: string
+  name: string
+  draw: boolean
 }
 
 export interface InvEntry {
@@ -422,6 +435,7 @@ export interface View {
   roster?: RosterNpc[] // GM only
   presets?: PresetCard[] // GM only
   items?: Item[] // GM only: the catalogue, for giving
+  shelves?: Shelf[] // GM only: the groups it's sorted into
   overview: OverviewView | null // the overview open on this player's screen; never anyone else's
   slots: SlotView | null // the slot machine this player is sitting at
   overviews?: { games: { id: string; name: string }[]; open: Record<string, { kind: string; id: string }> } // GM only

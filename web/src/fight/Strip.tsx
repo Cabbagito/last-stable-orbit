@@ -77,7 +77,7 @@ export function FightStrip({ fight }: { fight: FightView }) {
 
   const head = (x: Fighter) => {
     const c = x.kind === 'crew' ? view.crew.find((m) => m.id === x.ref) : undefined
-    const r = c ? ring(c.hp, c.entropy, 40, 4, c.health) : hpRing(x.hp, x.health, x.color, 40, 4)
+    const r = c ? ring(c.hp, c.entropy, 40, 4, c.health, c.entropy_max) : hpRing(x.hp, x.health, x.color, 40, 4)
     return (
       <ChipFx id={x.kind === 'crew' ? `c:${x.ref}` : `t:${x.token}`} down={isDown(x)} style={{ position: 'absolute', left: 0, top: 0, width: 40, height: 40 }}>
         <RingPortrait src={x.portrait} ring={r} size={40} />

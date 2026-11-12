@@ -8,7 +8,9 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 STATS = ("body", "reflex", "tech", "intel", "cool", "empathy")
 DIE_SIDES = (4, 6, 8, 10, 12, 20)
-ENTROPY_MAX = 6
+ENTROPY_MAX = 6  # the most Entropy a character starts able to hold; chrome and the GM can raise it
+HEALTH_CAP = 20  # the most a maximum can be raised to: the ring draws one segment a point
+ENTROPY_CAP = 12
 BURN_COST = 2  # Entropy a Burn spends
 RULES = 6  # the rules version a saved game is on: 1 gave each character their own health, 2 the Codex, 3 the Station,
 # 4 the heist maps (the Executive tower became four separate decks; the Secure floor and the Bot bays were redrawn),
@@ -133,6 +135,17 @@ class Item(Strict):
     text: str = ""  # the tooltip: what it is, what it says. Only its holder and the GM ever see it.
     counted: bool = False  # credits: one entry holding an amount, instead of one entry per piece
     codex: str | None = None
+    shelf: str | None = None  # its group in the GM's item pickers (shelves.yaml); chrome has none
+    chrome: Literal["clinic", "cart"] | None = None  # chrome, and the shop that sells it: handed over from the chrome menu
+    raises: Literal["health", "entropy"] | None = None  # chrome that's held, and adds 1 to that maximum while it is
+
+
+class Shelf(Strict):
+    """One group in the GM's item pickers. `draw` gives it a Draw button: one of its items, picked at random."""
+
+    id: str
+    name: str
+    draw: bool = False
 
 
 Hum = Literal["bar", "street", "none", "beat"]  # how a glow flickers: the bar's 7 s, the street's 9 s, none, or Alert's pulse
@@ -635,6 +648,13 @@ class Vitals(Strict):
     entropy: int = 2
 
 
+class MaxAdjust(Strict):
+    """What the GM added to (or took off) a character's maximums by hand, on top of their sheet and their chrome."""
+
+    health: int = 0
+    entropy: int = 0
+
+
 class MapGroupEntry(Strict):
     map: str
     under: int = Field(default=0, ge=0, le=2)  # how far it's tucked under the map above it (the vault, under the Secure floor)
@@ -867,6 +887,8 @@ class GameState(Strict):
     tokens: dict[str, TokenState] = {}
     vitals: dict[str, Vitals] = {}
     inventory: dict[str, list[InvEntry]] = {}
+    chrome: dict[str, list[str]] = {}  # character -> the chrome on their sheet as a skill: item ids, in the order installed
+    maxes: dict[str, MaxAdjust] = {}  # character -> what the GM changed their maximums by, by hand
     rolls: list[RollState] = Field(default_factory=list)  # open rolls, then the most recent closed ones
     seen: dict[str, list[str]] = {}  # character -> "map/object" keys they have inspected
     stage: StageState = Field(default_factory=StageState)

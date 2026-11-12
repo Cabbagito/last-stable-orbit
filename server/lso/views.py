@@ -44,7 +44,7 @@ loop and its still, and their laptop shows that and nothing else until the film 
 
 from __future__ import annotations
 
-from . import rules
+from . import rules, sheet
 from .auth import Viewer
 from .content import Content
 from .models import GameState, RollState
@@ -125,6 +125,7 @@ def _crew_view(content: Content, state: GameState, viewer: Viewer) -> list[dict]
     out = []
     for c in content.characters.values():
         v = state.vitals.get(c.id)
+        top = sheet.max_health(state, content, c.id)
         out.append(
             {
                 "id": c.id,
@@ -134,14 +135,24 @@ def _crew_view(content: Content, state: GameState, viewer: Viewer) -> list[dict]
                 "portrait": url(c.portrait),
                 "color": c.color,
                 "stats": c.stats,
-                "list": [{**e.model_dump(), "icon": url(e.icon)} for e in c.entries],
-                "health": c.health,
-                "hp": v.hp if v else c.health,
+                "list": [{**e.model_dump(), "icon": url(e.icon)} for e in c.entries] + _chrome_rows(content, state, c.id),
+                "health": top,
+                "entropy_max": sheet.max_entropy(state, content, c.id),
+                "hp": v.hp if v else top,
                 "entropy": v.entropy if v else 2,
                 "burn": _burn_view(c.burn, viewer),
             }
         )
     return out
+
+
+def _chrome_rows(content: Content, state: GameState, char: str) -> list[dict]:
+    """The chrome on a sheet, as rows after the skills. It's as public as they are. `item` is which piece it is."""
+    rows = []
+    for i in sheet.chrome(state, content, char):
+        it = content.items[i]
+        rows.append({"name": it.name, "kind": "chrome", "downside": None, "icon": url(it.icon), "text": it.text, "item": it.id})
+    return rows
 
 
 def _burn_view(b, viewer: Viewer) -> dict | None:
@@ -175,16 +186,19 @@ def _token_view(content: Content, tid: str, t, gm: bool, open_: set[str]) -> dic
     return base
 
 
-def _item_view(it, open_: set[str]) -> dict:
-    return {"id": it.id, "name": it.name, "icon": url(it.icon), "kind": it.kind, "text": it.text, "counted": it.counted, "codex": _link(it.codex, open_)}
+def _item_view(it, open_: set[str], gm: bool = False) -> dict:
+    out = {"id": it.id, "name": it.name, "icon": url(it.icon), "kind": it.kind, "text": it.text, "counted": it.counted, "codex": _link(it.codex, open_)}
+    if gm:  # how the GM's pickers sort it: its group, or the shop its chrome comes from. A holder gets none of it
+        out |= {"shelf": it.shelf, "chrome": it.chrome, "raises": it.raises}
+    return out
 
 
-def _inventory_view(content: Content, entries, open_: set[str]) -> list[dict]:
+def _inventory_view(content: Content, entries, open_: set[str], gm: bool = False) -> list[dict]:
     out = []
     for e in entries:
         it = content.items.get(e.item)
         if it:
-            out.append({"uid": e.uid, "item": _item_view(it, open_), "count": e.count, "new": e.new})
+            out.append({"uid": e.uid, "item": _item_view(it, open_, gm), "count": e.count, "new": e.new})
     return out
 
 
@@ -524,7 +538,8 @@ def _fights_view(state: GameState, content: Content, viewer: Viewer, here: str) 
             if t.kind == "crew":
                 c = content.characters[t.ref]
                 v = state.vitals.get(c.id)
-                d = {"name": c.short, "portrait": url(c.portrait), "color": c.color, "hp": v.hp if v else c.health, "health": c.health}
+                top = sheet.max_health(state, content, c.id)
+                d = {"name": c.short, "portrait": url(c.portrait), "color": c.color, "hp": v.hp if v else top, "health": top}
             else:
                 n = content.npcs[t.ref]
                 d = {"name": n.name, "portrait": url(n.portrait), "color": n.color, "hp": n.health if t.hp is None else t.hp, "health": n.health}
@@ -600,7 +615,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         "crew": _crew_view(content, state, viewer),
         "maps": {m: _map_view(content, state, m, viewer, open_) for m in map_ids},
         "tokens": tokens,
-        "inventory": {h: _inventory_view(content, state.inventory.get(h, []), open_) for h in holders},
+        "inventory": {h: _inventory_view(content, state.inventory.get(h, []), open_, gm) for h in holders},
         "codex": _codex_view(state, content, viewer, open_),
         "station": _station_view(state, content, viewer),
         "rolls": _rolls_view(state, viewer, set(tokens)),
@@ -618,7 +633,8 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         if bench is not None:
             view["bench"] = bench  # the sandbox's, and only ever the GM's
         view["presets"] = [{"id": p.id, "name": p.name, "act": p.act, "blurb": p.blurb, "card": url(p.card)} for p in content.presets.values()]
-        view["items"] = [_item_view(it, open_) for it in content.items.values()]  # the catalogue, for giving
+        view["items"] = [_item_view(it, open_, gm=True) for it in content.items.values()]  # the catalogue, for giving
+        view["shelves"] = [s.model_dump() for s in content.shelves]  # and the groups it's sorted into
         view["overviews"] = {  # the Events section: what can be sent, and whose screen has one open now
             "games": [{"id": o.id, "name": o.name} for o in content.overviews.values()],
             "open": {c: {"kind": o.kind, "id": o.id} for c, o in state.overviews.items()},

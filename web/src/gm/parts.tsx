@@ -1,12 +1,25 @@
 import type { ReactNode } from 'react'
 import type { TipBind } from '../inspect/ItemTip'
 import { gmRun } from '../store/game'
-import type { CrewMember, InvEntry, Item } from '../types'
+import type { CrewMember, InvEntry, Item, Shelf } from '../types'
 
 // Pieces of Round 12 the GM's Scene, its cards and the GM tab share.
 
-export const ENTROPY_MAX = 6
-export const GIVE_COUNTED = 50 // a counted item (credits) from the Give row: change the amount in the GM tab
+export const HEALTH_CAP = 20 // the most a maximum can be raised to (the server's HEALTH_CAP and ENTROPY_CAP)
+export const ENTROPY_CAP = 12
+export const GIVE_COUNTED = 50 // a counted item (credits) picked off the shelf: change the amount on their row
+
+/** Pockets in the pickers' order: the kit first, trash last, and chrome that's held at the very end. */
+export function byShelf(entries: InvEntry[], shelves: Shelf[]): InvEntry[] {
+  const at = (e: InvEntry) => {
+    const i = shelves.findIndex((s) => s.id === e.item.shelf)
+    return i < 0 ? shelves.length : i
+  }
+  return [...entries].sort((a, b) => at(a) - at(b)) // a stable sort: within a group, the order they were handed over
+}
+
+/** A group's items off the shelf, in the catalogue's order. */
+export const onShelf = (items: Item[], shelf: Shelf) => items.filter((it) => it.shelf === shelf.id)
 
 /** The eye: open for "players see it", struck through for hidden. */
 export function Eye({ off, size = 16 }: { off: boolean; size?: number }) {
@@ -90,7 +103,7 @@ export function Vitals({ c, showLabels = true }: { c: CrewMember; showLabels?: b
   return (
     <>
       <Step who={c.short} label="HP" tone="hp" value={c.hp} max={c.health} showLabel={showLabels} onChange={(v) => set('hp', v)} />
-      <Step who={c.short} label="EN" tone="en" value={c.entropy} max={ENTROPY_MAX} showLabel={showLabels} onChange={(v) => set('entropy', v)} />
+      <Step who={c.short} label="EN" tone="en" value={c.entropy} max={c.entropy_max} showLabel={showLabels} onChange={(v) => set('entropy', v)} />
     </>
   )
 }
@@ -100,39 +113,18 @@ export const itemAria = (e: InvEntry) => e.item.name + (e.item.counted ? `, ${e.
 /**
  * One pocket: the icon, NEW until its holder has looked, the amount on a counted item, and × to take it back.
  * Hover or focus shows the item as its holder sees it (`tip`). `button` makes the icon a button (the GM tab
- * picks items up with it); `badge` off leaves the amount to a field beside it.
+ * picks items up with it); `badge` off leaves the amount to a field beside it. Chrome that raises a maximum has a
+ * cyan edge. `size` is the icon's, in px.
  */
-export function Pocket({ e, holder, tip, button, carry, badge = true }: { e: InvEntry; holder: CrewMember; tip: TipBind; button?: ReactNode; carry?: boolean; badge?: boolean }) {
+export function Pocket({ e, holder, tip, button, carry, badge = true, size = 48 }: { e: InvEntry; holder: CrewMember; tip: TipBind; button?: ReactNode; carry?: boolean; badge?: boolean; size?: number }) {
   return (
-    <span className={'r10-pk' + (e.new ? ' new' : '') + (carry ? ' carry' : '')} {...tip(`pk:${e.uid}`, e.item, e.count)}>
-      {button ?? <img src={e.item.icon} alt={itemAria(e)} className="r3-px" style={{ width: 48, height: 48, display: 'block' }} tabIndex={0} />}
+    <span className={'r10-pk' + (e.new ? ' new' : '') + (carry ? ' carry' : '') + (e.item.raises ? ' chr' : '')} style={{ width: size, height: size }} {...tip(`pk:${e.uid}`, e.item, e.count)}>
+      {button ?? <img src={e.item.icon} alt={itemAria(e)} className="r3-px" style={{ width: size, height: size, display: 'block' }} tabIndex={0} />}
       {badge && e.item.counted && <span className="r9-count">{e.count ?? 0}</span>}
       {e.new && <span className="r9-newtag">NEW</span>}
       <button type="button" className="r10-take" aria-label={`Take ${e.item.name} from ${holder.short}`} title="Take it back" onClick={() => void gmRun('gm.item.take', { holder: holder.id, uid: e.uid })}>
         <Cross />
       </button>
     </span>
-  )
-}
-
-/** Every item in the catalogue, to hand to `to`. Hover or focus shows each one as its holder would see it. */
-export function GiveRow({ to, items, tip }: { to: CrewMember; items: Item[]; tip: TipBind }) {
-  const give = (it: Item) =>
-    void gmRun('gm.item.give', it.counted ? { holder: to.id, item: it.id, count: GIVE_COUNTED } : { holder: to.id, item: it.id })
-  return (
-    <>
-      {items.map((it) => (
-        <button
-          key={it.id}
-          type="button"
-          className="r10-gv"
-          aria-label={`Give ${to.short} ${it.name}` + (it.counted ? `, ${GIVE_COUNTED}` : '')}
-          onClick={() => give(it)}
-          {...tip(`give:${to.id}:${it.id}`, it, null, it.counted ? <span className="app-ins-num">+{GIVE_COUNTED}</span> : undefined)}
-        >
-          <img src={it.icon} alt="" className="r3-px" />
-        </button>
-      ))}
-    </>
   )
 }

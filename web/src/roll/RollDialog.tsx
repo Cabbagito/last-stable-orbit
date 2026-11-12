@@ -42,7 +42,7 @@ function Head({ roll, me, onClose }: { roll?: RollView; me?: CrewMember; onClose
   return (
     <div className="app-rollhead">
       {crew ? (
-        <RingPortrait src={crew.portrait} ring={ring(crew.hp, crew.entropy, 52, 7, crew.health)} size={52} />
+        <RingPortrait src={crew.portrait} ring={ring(crew.hp, crew.entropy, 52, 7, crew.health, crew.entropy_max)} size={52} />
       ) : tok ? (
         <RingPortrait src={tok.portrait} ring={plainRing(tok.color, 52, 4)} size={52} />
       ) : null}

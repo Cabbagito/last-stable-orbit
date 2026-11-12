@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import RULES, BurnState, NpcBurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, OpeningState, OverviewState, Preset, PresetItem, RollState, SlotBank, SlotSeat, SoundPlayed, TokenState, Vitals
+from .models import RULES, BurnState, NpcBurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, MaxAdjust, OpeningState, OverviewState, Preset, PresetItem, RollState, SlotBank, SlotSeat, SoundPlayed, TokenState, Vitals
 
 SOUNDS_KEPT = 8  # soundboard presses kept for the TV: a quick run of them can land in one frame
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
@@ -125,6 +125,7 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         fresh.slots = {k: SlotBank(out=True) for k, b in s.slots.items() if b.out}  # a flood is for good; everyone's up
         if data.get("scene"):  # only the scene: who stands where and each map's mood. What the crew has and knows stays
             fresh.vitals, fresh.inventory, fresh.seen = s.vitals, s.inventory, s.seen
+            fresh.chrome, fresh.maxes = s.chrome, s.maxes
             fresh.codex, fresh.codex_read = s.codex, s.codex_read
             fresh.station = s.station + [m for m in fresh.station if m not in s.station]
             for m_id, ms in fresh.maps.items():
@@ -163,6 +164,14 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "vitals.set":
         v = s.vitals.setdefault(data["char"], Vitals(hp=0))
         v.hp, v.entropy = int(data["hp"]), int(data["entropy"])
+    elif ev_type == "vitals.max_set":  # the GM moved a maximum by hand: kept as the difference from sheet and chrome
+        s.maxes[data["char"]] = MaxAdjust(health=int(data["health"]), entropy=int(data["entropy"]))
+    elif ev_type == "chrome.installed":  # a piece of chrome, on their sheet as a skill
+        on = s.chrome.setdefault(data["char"], [])
+        if data["item"] not in on:
+            on.append(data["item"])
+    elif ev_type == "chrome.removed":
+        s.chrome[data["char"]] = [i for i in s.chrome.get(data["char"], []) if i != data["item"]]
     elif ev_type == "codex.set":  # the GM unlocked (or locked again) entries or blocks, for the whole crew
         keys = list(data["keys"])
         s.codex = [k for k in s.codex if k not in keys] + (keys if data["unlocked"] else [])

@@ -1,0 +1,13 @@
+# The groups the GM's item pickers sort items.yaml into: Give on a crew card, and Hand out on the GM tab's Pockets page.
+# Each item names its group with `shelf:`. Chrome has no shelf: it's handed over from a crew card's chrome menu.
+#   draw: the group has a Draw button, which hands over one of its items, picked at random by the server. These are the
+#         findables: what Peter gives out on the spot when someone searches somewhere.
+
+- {id: kit, name: Kit}
+- {id: letters, name: Letters}
+- {id: clues, name: Clues}
+- {id: useful, name: Useful, draw: true}
+- {id: sell, name: To sell, draw: true}
+- {id: odd, name: Odd finds, draw: true}
+- {id: trash, name: Trash, draw: true}
+- {id: food, name: Food and drink}

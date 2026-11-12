@@ -32,8 +32,8 @@ function arcPath(r: number, a0: number, a1: number): string {
     : `M${P(pt(r, a0))}${seg(a0, a1)}`
 }
 
-/** Crew ring: one HP segment per health point outside, six Entropy segments inside. px = rendered size, band = ring width in px. */
-export function ring(hp: number, entropy: number, px: number, band: number, health = 6): Ring {
+/** Crew ring: one HP segment per health point outside, one per point of Entropy inside. px = rendered size, band = ring width in px. */
+export function ring(hp: number, entropy: number, px: number, band: number, health = 6, entropyMax = 6): Ring {
   const u = 100 / px
   const big = px > 100
   const t1 = big ? 5 : 3
@@ -41,13 +41,14 @@ export function ring(hp: number, entropy: number, px: number, band: number, heal
   const r1 = 50 - (t1 / 2) * u
   const r2 = r1 - (t1 / 2 + (big ? 3 : 2) + t2 / 2) * u
   const arcs: Arc[] = []
-  // one health segment per point (Ves has 4, Tomo 9), as the Burn row board draws it; Entropy always holds 6
+  // one health segment per point (Ves has 4, Tomo 9), as the Burn row board draws it; Entropy holds 6, or more with chrome
   const a = 360 / Math.max(1, health)
   for (let i = 0; i < health; i++) {
     arcs.push({ d: arcPath(r1, i * a + 3.5, (i + 1) * a - 3.5), c: i < hp ? HP_COLOR : UNLIT, w: f2(t1 * u), cap: 'butt', o: 1 })
   }
-  for (let i = 0; i < 6; i++) {
-    arcs.push({ d: arcPath(r2, i * 60 + 3.5, i * 60 + 56.5), c: i < entropy ? ENTROPY_COLOR : UNLIT, w: f2(t2 * u), cap: 'butt', o: 1 })
+  const e = 360 / Math.max(1, entropyMax)
+  for (let i = 0; i < entropyMax; i++) {
+    arcs.push({ d: arcPath(r2, i * e + 3.5, (i + 1) * e - 3.5), c: i < entropy ? ENTROPY_COLOR : UNLIT, w: f2(t2 * u), cap: 'butt', o: 1 })
   }
   const p = (band / px) * 100
   return { arcs, p: f2(p), d: f2(100 - 2 * p) }

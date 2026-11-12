@@ -20,3 +20,15 @@ describe('health slices', () => {
     expect(hpRing(4, 4, '#5ee08c', 64, 9).arcs.map((a) => a.d)).toEqual(ring(4, 0, 64, 9, 4).arcs.slice(0, 4).map((a) => a.d))
   })
 })
+
+describe('Entropy slices', () => {
+  it('are six, until chrome or the GM raises the most they can hold', () => {
+    const six = ring(4, 2, 64, 9, 4).arcs.slice(4)
+    expect(six.map((a) => a.c)).toEqual(['#f2b544', '#f2b544', '#2a2a31', '#2a2a31', '#2a2a31', '#2a2a31'])
+    expect(ring(4, 2, 64, 9, 4, 6).arcs.map((a) => a.d)).toEqual(ring(4, 2, 64, 9, 4).arcs.map((a) => a.d))
+    const seven = ring(4, 7, 64, 9, 4, 7).arcs.slice(4)
+    expect(seven).toHaveLength(7)
+    expect(seven.every((a) => a.c === '#f2b544')).toBe(true)
+    expect(seven[0].d).not.toEqual(six[0].d) // each slice is narrower, so all seven still close the ring
+  })
+})

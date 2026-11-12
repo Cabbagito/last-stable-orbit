@@ -14,6 +14,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 - **Takeover art** (Act 4, the station shot up): the LSO — Takeover canvas (https://claude.ai/artifact/Gmv7MPt5H32nqnzCGusGoo). Peter approves a picture there before it goes into the repo. `scripts/promenade_takeover.py` paints the Promenade's pair over Calm, and `scripts/takeover_floors.py` paints decks 6 to 9, the Secure floor and the Bot bays over their Alert art.
 - **Cutscenes and the TV ("Stage"):** the claude.ai doc LSO — Cutscenes and Stage (https://claude.ai/artifact/8Bh5PsiSBjLaJaHyJfNUz8, read it with the Claude Docs connector), plus one canvas per cutscene (the first is The shotgun, https://claude.ai/artifact/ExqP99kRwpzUP9Funyg7Sv).
 - **Burns:** the Burn animations canvas (https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg): the five films, their icons, and the Burn row on the sheet.
+- **The GM's crew card, the item pickers and chrome:** the canvas LSO — GM crew card and Pockets (https://claude.ai/artifact/ANA6cyA8mHu8jx8LS4soKZ), boards Card C, Give, Install chrome and Pockets A. What was built is in the plan's Progress section.
 - **Slots:** the Slots canvas (https://claude.ai/artifact/EPiC8wXsHQy7o5to3Rd8kj); its numbers are in `content/slots.yaml`.
 - **Art:** imported from the claude.ai artifacts. `assets/manifest.yaml` lists each file's store and asset id. Fetch more with the Artifact tool's read action, using the asset id as the path, one call per asset.
 
@@ -24,7 +25,8 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 - **Rolls:** the full animation shows only on the roller's screen. Everyone else sees a big banner, then the number on the token (Round 17). The GM picks what players see for each NPC roll: Public, Hidden, Someone, Secret or God.
 - **The TV is always there:** cutscenes, Burn films, a failed skill's downside and all the sound play only on the TV, and laptops are silent. The TV / no TV / Online choice is gone. The GM's Play waits until a TV is connected. See the plan's Stage section.
 - **The opening:** the GM's On screen page holds players on the stars-and-station loop, silent, and nothing else, while the TV loops it with the music. Play starts the intro film on the music's next beat, and its end lets everyone in. It's the one film whose sound is a separate file, played by the TV. See `content/opening.yaml` and the plan's Progress section.
-- **The GM controls:** map moods and switches, HP and Entropy, rolls (including hidden ones), NPCs, and every inventory. Clues are handed out as items, such as a note.
+- **The GM controls:** map moods and switches, HP and Entropy and the most of each a character can have, rolls (including hidden ones), NPCs, every inventory, and chrome. Clues are handed out as items, such as a note. The GM doesn't roll or Burn for a player.
+- **Chrome:** a piece is a fourth skill on the sheet, or an item that raises a maximum by 1 while it's held. It's the only item effect the app applies.
 - **Login:** players pick their character; only the GM has a passcode. The GM and the TV are the two icons in the login's top-right corner.
 - **Fights:** the app never knows the number to beat or who attacks whom. The GM names the check out loud and sets HP and Entropy by hand. It does know who's in a fight: the GM picks them, and the app rolls their Reflex for the turn order. Players spend Entropy and Burn whenever they want. See the plan's M8.
 
@@ -33,7 +35,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 - **Every change follows one path:** `commands.py` (permission check) → events → `state.apply`, logged by `store.py`.
 - **Only `views.project()` sends state out.** Anything players must not see is filtered there, and gets a leak test in `server/tests/`.
 - **Positions are world coordinates** (X, Y, Z) per map, never pixels.
-- **Content** (characters, NPCs, items, maps and the objects on them, how the GM's map picker groups them (`map_groups.yaml`), presets, the sandbox's `scenarios/`, the natural-1 insults, the cutscene cues, the soundboard) is YAML in `content/`, not code.
+- **Content** (characters, NPCs, items and the shelves the GM's pickers sort them into (`shelves.yaml`), maps and the objects on them, how the GM's map picker groups them (`map_groups.yaml`), presets, the sandbox's `scenarios/`, the natural-1 insults, the cutscene cues, the soundboard) is YAML in `content/`, not code.
 - **Dice are rolled only on the server** (`rules.py`, from `commands.py`). The roller's screen gets the dice to animate. Everyone else gets each die only once it has landed there. `web/src/roll/rollfx.js` is generated from R6, and `rollfx.test.ts` checks it still draws exactly what R6 draws.
 
 ## Working here

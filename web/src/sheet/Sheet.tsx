@@ -33,8 +33,8 @@ export function Sheet({ me, items }: { me: CrewMember; items: InvEntry[] }) {
   const onLeave = (key: string) => setHover((h) => (h?.key === key ? null : h))
   return (
     <aside aria-label="Character sheet" className="r4-col">
-      <div role="img" aria-label={`${me.short}. HP ${me.hp} of ${me.health}, Entropy ${me.entropy} of 6`} style={{ alignSelf: 'center' }}>
-        <RingPortrait src={me.portrait} ring={ring(me.hp, me.entropy, 216, 12, me.health)} size={216} />
+      <div role="img" aria-label={`${me.short}. HP ${me.hp} of ${me.health}, Entropy ${me.entropy} of ${me.entropy_max}`} style={{ alignSelf: 'center' }}>
+        <RingPortrait src={me.portrait} ring={ring(me.hp, me.entropy, 216, 12, me.health, me.entropy_max)} size={216} />
       </div>
       <div style={{ flex: 'none' }}>
         <div className="r4-name">{me.name}</div>

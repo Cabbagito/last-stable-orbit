@@ -231,7 +231,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
             const foot = on ? '#ffffff' : mine ? YOU : t.color
             // an NPC in a fight on this map shows its health, in its faction's colour (M8)
             const fighter = crew ? undefined : fighterIn(fight, t.id)
-            const r = crew ? ring(crew.hp, crew.entropy, 64, 9, crew.health) : fighter ? hpRing(fighter.hp, fighter.health, t.color, 64, 5) : plainRing(t.color, 64, 5)
+            const r = crew ? ring(crew.hp, crew.entropy, 64, 9, crew.health, crew.entropy_max) : fighter ? hpRing(fighter.hp, fighter.health, t.color, 64, 5) : plainRing(t.color, 64, 5)
             const down = crew ? crew.hp <= 0 : !!fighter && fighter.hp <= 0
             const burn = burning && t.kind === 'crew' && t.ref === burning.char ? burning : null
             const call = burn ? undefined : callouts[t.id] // a Burn's mark takes the roll callout's place

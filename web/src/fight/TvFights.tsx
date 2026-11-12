@@ -59,7 +59,7 @@ function TvFightRow({ fight, view }: { fight: FightView; view: View }) {
       <div className="app-tvfslots" style={{ width: fighters.length * STEP }}>
         {fighters.map((x) => {
           const c = x.kind === 'crew' ? view.crew.find((m) => m.id === x.ref) : undefined
-          const r = c ? ring(c.hp, c.entropy, 52, 6, c.health) : hpRing(x.hp, x.health, x.color, 52, 5)
+          const r = c ? ring(c.hp, c.entropy, 52, 6, c.health, c.entropy_max) : hpRing(x.hp, x.health, x.color, 52, 5)
           const k = order.indexOf(x.token)
           const now = !settling && x.token === fight.now
           return (

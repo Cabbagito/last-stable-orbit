@@ -32,12 +32,12 @@ export function CrewRail() {
             <button
               type="button"
               className="app-railbtn"
-              aria-label={`${c.short}, HP ${c.hp} of ${c.health}, Entropy ${c.entropy} of 6` + (call ? `, ${calloutSpeech(call.r)}` : '') + (burn ? `, ${burnSpeech(burn)}` : '')}
+              aria-label={`${c.short}, HP ${c.hp} of ${c.health}, Entropy ${c.entropy} of ${c.entropy_max}` + (call ? `, ${calloutSpeech(call.r)}` : '') + (burn ? `, ${burnSpeech(burn)}` : '')}
               onClick={() => tok && select(selected === tok ? null : tok)}
             >
               <span className="app-railring">
                 <ChipFx id={`c:${c.id}`} down={c.hp <= 0} style={{ position: 'relative', display: 'block', width: 64, height: 64 }}>
-                  <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 64, 9, c.health)} size={64} />
+                  <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 64, 9, c.health, c.entropy_max)} size={64} />
                 </ChipFx>
                 {call && isSpinning(call.r) && <Orbit stat={call.r.stat} />}
                 {burn && <Flare m={burn} />}

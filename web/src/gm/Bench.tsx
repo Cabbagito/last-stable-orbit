@@ -2,7 +2,6 @@ import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { STAT_LOOK } from '../roll/stats'
 import { gmRoll, gmRun, send, useGame, type GmRollMode } from '../store/game'
 import { STATS, type BenchDice, type BenchMoment, type BenchView, type StatKey, type View } from '../types'
-import { ENTROPY_MAX } from './parts'
 
 // The sandbox's tools (`make sandbox`). The server sends `bench` only there, so on the real table none of this shows.
 
@@ -196,7 +195,7 @@ export function Bench({ view, bench }: { view: View; bench: BenchView }) {
           buttons={[
             ['Hit', () => vit('hp', c.hp - 1)],
             ['Heal', () => vit('hp', c.hp + 1)],
-            ['Entropy up', () => vit('entropy', Math.min(ENTROPY_MAX, c.entropy + 1))],
+            ['Entropy up', () => vit('entropy', Math.min(c.entropy_max, c.entropy + 1))],
             ['Entropy down', () => vit('entropy', c.entropy - 1)],
             ['Item in', () => note && void gmRun('gm.item.give', { holder: c.id, item: note.id })],
             ['Credits up', () => credits && void gmRun('gm.item.count', { holder: c.id, uid: credits.uid, count: (credits.count ?? 0) + 50 })],

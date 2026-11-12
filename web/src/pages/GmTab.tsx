@@ -4,7 +4,8 @@ import { CodexSection } from '../gm/CodexSection'
 import { EventsSection } from '../gm/EventsSection'
 import { liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
 import { crewFaces, isFar, moodArt } from '../gm/mapTiles'
-import { Diamond, Eye, GIVE_COUNTED, Pocket, itemAria } from '../gm/parts'
+import { Diamond, ENTROPY_CAP, Eye, GIVE_COUNTED, HEALTH_CAP, Pocket, Step, byShelf, itemAria, onShelf } from '../gm/parts'
+import { ChromeMenu } from '../gm/Pickers'
 import { SendCrew } from '../gm/SendCrew'
 import { CutscenesSection, TvSection } from '../gm/StageSections'
 import { ViewAs } from '../gm/ViewAs'
@@ -83,28 +84,35 @@ export function GmTab() {
   )
 }
 
-/** What you're holding: something from a pocket, or something off the shelf. */
-type Carry = { holder: string; uid: string } | { item: string } | null
+/** What you're holding: something from a pocket, something off the shelf, or one yet to be drawn from a group. */
+type Carry = { holder: string; uid: string } | { item: string } | { draw: string } | null
 const DRAG_TYPE = 'application/x-lso-item'
 
 /**
- * Everyone's pockets, with one shelf of everything there is to hand out above them. Pick something up, then click who
- * gets it, or drag it onto them.
+ * Everyone's pockets, with one shelf of everything there is to hand out above them, in its groups (the "GM crew card
+ * and Pockets" canvas, Pockets A). Pick something up, then click who gets it, or drag it onto them. Draw carries one
+ * of its group, picked by the server when it's handed over. Each row also has the most health and Entropy they can
+ * have, and their chrome.
  */
 function PocketsSection({ view, onView }: { view: View; onView: (id: string) => void }) {
   const [carry, setCarry] = useState<Carry>(null)
   const [over, setOver] = useState<string | null>(null)
+  const [chromeFor, setChromeFor] = useState<string | null>(null)
   const { bind: tip, tip: itemTip } = useItemTip()
   const items = view.items ?? []
+  const shelves = view.shelves ?? []
   const carriedItem = carry && 'item' in carry ? items.find((i) => i.id === carry.item) : undefined
   const carriedEntry = carry && 'uid' in carry ? (view.inventory[carry.holder] ?? []).find((e) => e.uid === carry.uid) : undefined
-  const carriedName = carriedItem?.name ?? carriedEntry?.item.name
+  const drawn = carry && 'draw' in carry ? shelves.find((s) => s.id === carry.draw) : undefined
+  const carriedName = carriedItem?.name ?? carriedEntry?.item.name ?? drawn?.name
   useEffect(() => {
     if (carry && !carriedName) setCarry(null) // it was taken or moved elsewhere
   }, [carry, carriedName])
 
   const hand = (to: string, what: Carry = carry) => {
-    if (what && 'item' in what) {
+    if (what && 'draw' in what) {
+      void gmRun('gm.item.draw', { holder: to, shelf: what.draw })
+    } else if (what && 'item' in what) {
       const it = items.find((i) => i.id === what.item)
       if (it) void gmRun('gm.item.give', it.counted ? { holder: to, item: it.id, count: GIVE_COUNTED } : { holder: to, item: it.id })
     } else if (what && what.holder !== to) {
@@ -112,7 +120,11 @@ function PocketsSection({ view, onView }: { view: View; onView: (id: string) => 
     }
     setCarry(null)
   }
-  const line = carriedName ? `Carrying ${carriedName}. Hand it to someone below.` : 'Pick something up, then click who gets it, or drag it onto them. The × takes it back.'
+  const line = drawn
+    ? `Carrying one from ${drawn.name}, picked when you hand it over.`
+    : carriedName
+      ? `Carrying ${carriedName}. Hand it to someone below.`
+      : 'Pick something up, then click who gets it, or drag it onto them. Draw picks one of its group for you. The × takes it back.'
   const dragProps = (c: CrewMember) => ({
     onDragOver: (e: DragEvent) => {
       if (!e.dataTransfer.types.includes(DRAG_TYPE)) return
@@ -130,33 +142,76 @@ function PocketsSection({ view, onView }: { view: View; onView: (id: string) => 
       }
     },
   })
+  const setMax = (c: CrewMember, field: 'health' | 'entropy', v: number) => void gmRun('gm.vitals.max', { char: c.id, [field]: v })
+  const chromeOn = view.crew.find((c) => c.id === chromeFor)
 
   return (
     <section aria-label="Pockets">
       <div className="gx-shelf">
-        <span className="r5-sec">Hand out</span>
-        <div className="r10-give">
-          {items.map((it) => (
-            <ShelfItem key={it.id} it={it} on={!!carry && 'item' in carry && carry.item === it.id} tip={tip} toggle={() => setCarry(carry && 'item' in carry && carry.item === it.id ? null : { item: it.id })} />
-          ))}
+        <div className="gx-shelfh">
+          <span className="r5-sec">Hand out</span>
+          <span className="r10-hint" aria-live="polite">
+            {line}
+          </span>
         </div>
-        <span className="r10-hint" aria-live="polite">
-          {line}
-        </span>
+        <div className="gx-groups">
+          {shelves.map((sh) => {
+            const its = onShelf(items, sh)
+            if (!its.length) return null
+            const drawing = !!carry && 'draw' in carry && carry.draw === sh.id
+            return (
+              <div key={sh.id} className="gx-group" role="group" aria-label={sh.name}>
+                <div className="gx-grouph">
+                  <span className="r5-sec">{sh.name}</span>
+                  {sh.draw && (
+                    <button type="button" className={'gx-mini' + (drawing ? ' on' : '')} aria-pressed={drawing} aria-label={`Draw one from ${sh.name}`} title="Carry one of these, picked at random when you hand it over" onClick={() => setCarry(drawing ? null : { draw: sh.id })}>
+                      Draw
+                    </button>
+                  )}
+                </div>
+                <div className="r10-give">
+                  {its.map((it) => (
+                    <ShelfItem key={it.id} it={it} on={!!carry && 'item' in carry && carry.item === it.id} tip={tip} toggle={() => setCarry(carry && 'item' in carry && carry.item === it.id ? null : { item: it.id })} />
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
       <div className="gx-ptable">
+        <div className="gx-prow gx-phead" aria-hidden="true">
+          <span className="r5-sec">Crew</span>
+          <span className="r5-sec">Max health</span>
+          <span className="r5-sec">Max Entropy</span>
+          <span className="r5-sec">Chrome</span>
+          <span className="r5-sec">On hand</span>
+          <span />
+        </div>
         {view.crew.map((c) => {
-          const pockets = view.inventory[c.id] ?? []
+          const pockets = byShelf(view.inventory[c.id] ?? [], shelves)
           const target = !!carry && !('holder' in carry && carry.holder === c.id)
           return (
             <div key={c.id} className={'gx-prow' + (target ? ' target' : '') + (over === c.id ? ' over' : '')} {...dragProps(c)}>
               <div className="r10-who2">
-                <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 56, 8, c.health)} size={56} />
+                <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 56, 8, c.health, c.entropy_max)} size={56} />
                 <span style={{ minWidth: 0 }}>
                   <span className="r10-cname">{c.name}</span>
                   <br />
                   <span className="r5-role">{c.role}</span>
                 </span>
+              </div>
+              <Step who={`${c.short}'s most`} label="HP" tone="hp" value={c.health} max={HEALTH_CAP} showLabel={false} onChange={(v) => setMax(c, 'health', v)} />
+              <Step who={`${c.short}'s most`} label="EN" tone="en" value={c.entropy_max} max={ENTROPY_CAP} showLabel={false} onChange={(v) => setMax(c, 'entropy', v)} />
+              <div className="gx-chrome">
+                {c.list
+                  .filter((k) => k.item)
+                  .map((k) => (
+                    <img key={k.item} src={k.icon ?? ''} alt={k.name} title={k.name} className="r3-px" />
+                  ))}
+                <button type="button" className={'r10-sq cc-sm' + (chromeFor === c.id ? ' on' : '')} aria-label={`Install chrome on ${c.short}`} title="Install chrome" aria-expanded={chromeFor === c.id} onClick={() => setChromeFor(chromeFor === c.id ? null : c.id)}>
+                  +
+                </button>
               </div>
               <div className="r10-pkrow" role="group" aria-label={`${c.short}'s pockets`}>
                 {pockets.map((e) => (
@@ -179,6 +234,7 @@ function PocketsSection({ view, onView }: { view: View; onView: (id: string) => 
         })}
       </div>
       {itemTip}
+      {chromeOn && <ChromeMenu to={chromeOn} view={view} keep=".gx-chrome" style={{ left: '50%', top: 120, transform: 'translateX(-50%)', width: 'min(680px, calc(100vw - 48px))' }} onClose={() => setChromeFor(null)} />}
     </section>
   )
 }

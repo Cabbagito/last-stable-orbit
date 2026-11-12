@@ -2,6 +2,11 @@
 #   kind:    gear | weapon | tool | cash | key | note | audio
 #   text:    the tooltip. Only the holder and the GM ever see it. A clue's text says what it is and what it shows.
 #   counted: one entry holding an amount (credits), changed by the GM.
+#   shelf:   its group in the GM's item pickers (shelves.yaml). Everything has one, except chrome.
+#   chrome:  clinic | cart. It's handed over from a crew card's chrome menu, not from a shelf. A piece of chrome goes
+#            on the sheet as a fourth skill, and isn't held, unless it has `raises`.
+#   raises:  health | entropy. This piece of chrome is held like any item, and while someone holds it the most they
+#            can have of that is 1 higher.
 # DRAFT texts from the campaign bible, for Peter to edit.
 
 # --- the starting kit
@@ -10,6 +15,7 @@
   icon: icons/items/sidearm.png
   codex: sidearm
   kind: weapon
+  shelf: kit
   text: A compact stun pistol, legal on Ergo with a permit. It puts people down without killing them. Loud when it matters.
 
 - id: stun-rings
@@ -17,6 +23,7 @@
   icon: icons/items/stun-rings.png
   codex: stun-rings
   kind: weapon
+  shelf: kit
   text: Heavy signet rings that discharge on contact. They let you use Reflex to hit people, and they put people down without killing them. You have to be within reach.
 
 - id: fob-watch
@@ -24,6 +31,7 @@
   icon: icons/items/fob-watch.png
   codex: fob-watch
   kind: gear
+  shelf: kit
   text: A wind-up fob watch, inherited, that keeps its own time whatever the station clocks say. There's a small ring engraved on the back. You've never known what it means.
 
 - id: sourdough-jar
@@ -31,6 +39,7 @@
   icon: icons/items/sourdough-jar.png
   codex: sourdough-jar
   kind: gear
+  shelf: kit
   text: A jar of sourdough starter, the same culture kept alive through every move. It gets you into kitchens and back rooms, and in with anyone homesick for real bread.
 
 - id: splice-kit
@@ -38,6 +47,7 @@
   icon: icons/items/splice-kit.png
   codex: splice-kit
   kind: tool
+  shelf: kit
   text: Wire, clips and a shim set in a soft roll. Talks a door panel into thinking it's already open.
 
 - id: credits
@@ -45,6 +55,7 @@
   icon: icons/items/credits.png
   codex: credits
   kind: cash
+  shelf: kit
   counted: true
   text: Station credits. Good anywhere on Ergo.
 
@@ -55,6 +66,7 @@
   icon: icons/items/note.png
   codex: letter
   kind: note
+  shelf: letters
   text: |-
     A folded note, sealed with a drop of red wax.
     "The Event Horizon, after closing. You're on the list."
@@ -65,6 +77,7 @@
   icon: icons/items/note.png
   codex: letter
   kind: note
+  shelf: letters
   text: |-
     A folded note, sealed with a drop of red wax.
     "The Event Horizon, after closing. You're on the list."
@@ -75,6 +88,7 @@
   icon: icons/items/note.png
   codex: letter
   kind: note
+  shelf: letters
   text: |-
     A folded note, sealed with a drop of red wax.
     "The Event Horizon, after closing. You're on the list."
@@ -85,6 +99,7 @@
   icon: icons/items/note.png
   codex: letter
   kind: note
+  shelf: letters
   text: |-
     A folded note, sealed with a drop of red wax.
     "The Event Horizon, after closing. You're on the list."
@@ -95,6 +110,7 @@
   icon: icons/items/note.png
   codex: letter
   kind: note
+  shelf: letters
   text: |-
     A folded note, sealed with a drop of red wax.
     "The Event Horizon, after closing. You're on the list."
@@ -105,6 +121,7 @@
   icon: icons/items/tally-notebook.png
   codex: tally-notebook
   kind: note
+  shelf: kit
   text: |-
     Field notes on human behaviour, in very neat handwriting.
     Latest entry: "Ergo residents smile more than any population on record. Nobody here complains. Unclear why. Investigate."
@@ -115,6 +132,7 @@
   icon: icons/items/access-chit.png
   codex: access-chit
   kind: key
+  shelf: clues
   text: A keyed chit with the founder's ring stamped on it. It opens a door you haven't found yet.
 
 - id: maintenance-log
@@ -122,6 +140,7 @@
   icon: icons/items/note.png
   codex: maintenance-log
   kind: note
+  shelf: clues
   text: |-  # DRAFT wording
     CLEANER UNIT 14 · log, from cradle 14.
     Its hours within two metres of each person, most first.
@@ -132,6 +151,7 @@
   icon: icons/items/note.png  # placeholder until an audio-log icon is drawn
   codex: founder-log-1
   kind: audio
+  shelf: clues
   text: |-
     Summary: Ilija, years ago, laughing. The station's new mind keeps rearranging his calendar "to make him happy", and he keeps putting dinner back in.
     "Some things you don't optimise. You just show up."
@@ -142,12 +162,14 @@
   name: Burner key
   icon: icons/items/burner-key.png
   kind: key
+  shelf: useful
   text: A one-use hacking device. It gets through one hack with no roll.
 
 - id: brochure
   name: The brochure
   icon: icons/items/brochure.png
   kind: note
+  shelf: clues
   text: |-
     The founder of Ergo, a saint, and the schedule for tomorrow's Vigil.
     "No one on Ergo waits more than 11 minutes."
@@ -157,6 +179,7 @@
   name: The Gumshoe's card
   icon: icons/items/note.png
   kind: note
+  shelf: clues
   text: |-
     A card with a name and a date on the back.
     The victim: [Peter to fill in]. The date: [Peter to fill in].
@@ -165,12 +188,14 @@
   name: Antidote
   icon: icons/items/antidote.png
   kind: gear
+  shelf: useful
   text: One antidote, 3 doses. Wakes someone who's been sedated. Anyone can give a dose.
 
 - id: admissions-record
   name: Admissions record
   icon: icons/items/note.png
   kind: note
+  shelf: clues
   text: |-
     The Med Bay's admissions for the night of the scrubbed alley.
     Who came in that night: [Peter to fill in].
@@ -179,6 +204,7 @@
   name: Cleaning log
   icon: icons/items/note.png
   kind: note
+  shelf: clues
   text: |-
     CLEANER DISPATCH · jobs, all logged.
     The alley was scrubbed. There's no report to go with it.
@@ -187,6 +213,7 @@
   name: Coin pouch
   icon: icons/items/coin-pouch.png
   kind: gear
+  shelf: useful
   text: A pouch with too many coins in it. They can be spent.
 
 # --- findables: a pool the GM hands out on the spot when someone searches somewhere (2026-11-12). Icons from the Items
@@ -196,36 +223,42 @@
   name: Ration bar
   icon: icons/items/ration-bar.png
   kind: gear
+  shelf: useful
   text: A foil-wrapped ration bar, one corner already bitten. Eat it for +1 health.
 
 - id: painkiller-patch
   name: Painkiller patch
   icon: icons/items/painkiller-patch.png
   kind: gear
+  shelf: useful
   text: A Med Bay patch, still on its backing. Stick it on for +1 health.
 
 - id: hip-flask
   name: Hip flask
   icon: icons/items/hip-flask.png
   kind: gear
+  shelf: useful
   text: A steel flask in a leather sleeve, about a third full of something strong. Drink it for +1 Entropy.
 
 - id: staff-lanyard
   name: Staff lanyard
   icon: icons/items/staff-lanyard.png
   kind: key
+  shelf: useful
   text: Somebody's staff badge on a teal strap. The photo isn't you. It gets you past one person who isn't looking closely.
 
 - id: service-keycard
   name: Service keycard
   icon: icons/items/service-keycard.png
   kind: key
+  shelf: useful
   text: A maintenance keycard with hazard stripes. It opens one service door, and then it goes dead.
 
 - id: code-note
   name: Sticky note
   icon: icons/items/code-note.png
   kind: note
+  shelf: useful
   text: |-
     A sticky note, peeled off the underside of something.
     "4719"
@@ -235,18 +268,21 @@
   name: Earpiece pair
   icon: icons/items/earpiece-pair.png
   kind: gear
+  shelf: useful
   text: Two matched earpieces. Two people wearing one each can whisper to each other from anywhere on the same deck.
 
 - id: multitool
   name: Multitool
   icon: icons/items/multitool.png
   kind: tool
+  shelf: useful
   text: A folding knife, a driver and a hook that nobody knows the use of. It lets you try a Tech roll when you have no proper tools.
 
 - id: loyalty-card
   name: Noodle loyalty card
   icon: icons/items/loyalty-card.png
   kind: gear
+  shelf: useful
   text: Nine stamps out of ten. The next bowl at the noodle stall is free.
 
 # Valuables: worth nothing until someone at the Night Market buys them.
@@ -254,18 +290,21 @@
   name: Vigil coin
   icon: icons/items/vigil-coin.png
   kind: gear
+  shelf: sell
   text: A commemorative coin with the founder's ring on it, struck for the Vigil. It isn't money, but a stall at the Night Market would give about 30 credits for it.
 
 - id: chrome-part
   name: Sealed chrome part
   icon: icons/items/chrome-part.png
   kind: gear
+  shelf: sell
   text: A servo joint, factory sealed, clinic sticker intact. The Night Market would give about 80 credits for it.
 
 - id: exec-watch
   name: Executive's watch
   icon: icons/items/exec-watch.png
   kind: gear
+  shelf: sell
   text: A heavy gold watch with a blue face. Somebody upstairs is going to miss it. The Night Market would give about 150 credits for it.
 
 # Small clues: world colour, never plot-critical.
@@ -273,12 +312,14 @@
   name: Shift rota
   icon: icons/items/shift-rota.png
   kind: note
+  shelf: clues
   text: A clipboard with tonight's shifts on it. It tells you who is supposed to be where, and when they swap.
 
 - id: complaint-letter
   name: Unsent complaint
   icon: icons/items/complaint-letter.png
   kind: note
+  shelf: clues
   text: |-
     A furious letter to station management, two pages, underlined in red. Never posted.
     You could ask the author about it. They feel wonderful now.
@@ -287,6 +328,7 @@
   name: Stack of surveys
   icon: icons/items/survey-stack.png
   kind: note
+  shelf: clues
   text: |-
     Satisfaction reports, a few dozen of them. Every answer is a ten.
     Every one is in the same handwriting.
@@ -296,12 +338,14 @@
   name: Vigil candle stub
   icon: icons/items/candle-stub.png
   kind: gear
+  shelf: odd
   text: A burnt-down Vigil candle with a violet ribbon. It would give you about eleven more minutes.
 
 - id: queue-ticket
   name: Queue ticket
   icon: icons/items/queue-ticket.png
   kind: note
+  shelf: odd
   text: |-
     A Dock 7 queue ticket.
     Estimated wait: 11:00.
@@ -310,30 +354,35 @@
   name: Child's drawing
   icon: icons/items/kid-drawing.png
   kind: note
+  shelf: odd
   text: The black hole in crayon, with two people holding hands in front of it. Everyone is smiling. The hole is too.
 
 - id: snow-globe
   name: Snow globe of Ergo
   icon: icons/items/snow-globe.png
   kind: gear
+  shelf: odd
   text: A souvenir snow globe with the station inside. Shake it and it snows on Ergo, which it never does.
 
 - id: paperback
   name: Dog-eared paperback
   icon: icons/items/paperback.png
   kind: gear
+  shelf: odd
   text: A paperback read so many times the spine has given up. The last page is missing.
 
 - id: card-deck
   name: Deck of cards
   icon: icons/items/card-deck.png
   kind: gear
+  shelf: odd
   text: A worn deck of cards. Fifty-one of them.
 
 - id: lunch
   name: Someone's lunch
   icon: icons/items/lunch.png
   kind: gear
+  shelf: odd
   text: A paper bag with a name on it that isn't yours, and an apple. Somebody is going to be upset at about noon.
 
 # Trash: the default result of a search.
@@ -341,12 +390,14 @@
   name: Used noodles
   icon: icons/items/used-noodles.png
   kind: gear
+  shelf: trash
   text: A noodle cup, mostly finished, a while ago. The chopsticks are still in it. So is something else.
 
 - id: slots-ticket
   name: Losing slots ticket
   icon: icons/items/slots-ticket.png
   kind: note
+  shelf: trash
   text: |-
     A crumpled ticket from The Event Horizon's machines. Two black holes and a near miss.
     "SO CLOSE!"
@@ -355,136 +406,163 @@
   name: Dead battery
   icon: icons/items/dead-battery.png
   kind: gear
+  shelf: trash
   text: A dead battery, leaking something green at one end. Do not lick it.
 
 - id: chrome-finger
   name: Broken chrome finger
   icon: icons/items/chrome-finger.png
   kind: gear
+  shelf: trash
   text: A knock-off chrome finger, snapped off at the base. The nail is painted pink. It still twitches if you squeeze it.
 
 - id: chewed-stylus
   name: Chewed survey stylus
   icon: icons/items/chewed-stylus.png
   kind: gear
+  shelf: trash
   text: A stylus from a satisfaction droid, chewed nearly flat at one end. Someone was not having a ten out of ten day.
 
 - id: pocket-lint
   name: Pocket lint
   icon: icons/items/pocket-lint.png
   kind: gear
+  shelf: trash
   text: Lint, a crumb, and a hair that isn't yours.
 
 - id: damp-sock
   name: Damp sock
   icon: icons/items/damp-sock.png
   kind: gear
+  shelf: trash
   text: One sock. Damp. There is no way to find out why.
 
-# --- the shops (2026-11-12). Peter hands these over when someone buys one; nothing in the app charges credits or applies
-# an effect. Icons from the Items canvas. Texts are DRAFT, for Peter to edit.
+# --- the shops (2026-11-12). Peter hands these over when someone buys one; nothing in the app charges credits, and the
+# only effects it applies are chrome's. Icons from the Items canvas. Texts are DRAFT, for Peter to edit.
 # Food and drink: a person can use one health or Entropy item a session, and it takes a turn.
 - id: noodle-bowl
   name: Noodle bowl
   icon: icons/items/noodle-bowl.png
   kind: gear
+  shelf: food
   text: A bowl from the Night Market's noodle stall, with half an egg and too much spring onion. Eat it for +1 health.
 
 - id: dax-drink
   name: A drink at Dax's
   icon: icons/items/dax-drink.png
   kind: gear
+  shelf: food
   text: Something amber over ice, poured by Dax without asking what you wanted. Drink it for +1 Entropy.
 
 - id: vending-snack
   name: Vending snack
   icon: icons/items/vending-snack.png
   kind: gear
+  shelf: food
   text: A bag of something crunchy with a smiling face on it. It was free. All you had to do was answer a few questions. Eat it for +1 health.
 
-# Chrome from the clinic: 400 credits, one piece of chrome per person. Each of the first five works as a fourth skill;
-# what a failed roll costs is Peter's call. The last two raise a maximum, which Peter does by hand.
+# Chrome from the clinic: 400 credits. Each of the first five works as a fourth skill; what a failed roll costs is
+# Peter's call. The last two are held, and raise a maximum by 1. Installing one costs some health and can fail: Peter
+# rolls for that first and takes the health off by hand.
 - id: jump-boots
   name: Jump boots
   icon: icons/items/jump-boots.png
   kind: gear
+  chrome: clinic
   text: Clinic chrome from the knee down, with pistons in the soles. Add it to a roll when you jump, climb or land.
 
 - id: grapple-hand
   name: Grappling-hook hand
   icon: icons/items/grapple-hand.png
   kind: gear
+  chrome: clinic
   text: A clinic hand with three hooked fingers and a reel of cable in the palm. Add it to a roll when you need to reach, swing to or pull something that's out of arm's length.
 
 - id: static-palm
   name: Static palm
   icon: icons/items/static-palm.png
   kind: gear
+  chrome: clinic
   text: A clinic hand with a coil set into the palm. Add it to a roll when you touch someone, or something with a circuit in it, and want it to stop.
 
 - id: throat-speaker
   name: Throat speaker
   icon: icons/items/throat-speaker.png
   kind: gear
+  chrome: clinic
   text: A clinic speaker on a collar, and it comes off. Add it to a roll when your voice has to be louder, be someone else's, or come from where you aren't.
 
 - id: magnet-plate
   name: Magnet plate
   icon: icons/items/magnet-plate.png
   kind: gear
+  chrome: clinic
   text: A clinic plate along the forearm that snaps the nearest loose metal onto it. Add it to a roll when you block, disarm someone or hold on to something metal.
 
 - id: chrome-health
   name: Reinforced core
   icon: icons/items/chrome-health.png
   kind: gear
+  chrome: clinic
+  raises: health
   text: A clinic canister fitted under the ribs. It raises your maximum health.
 
 - id: chrome-entropy
   name: Entropy cell
   icon: icons/items/chrome-entropy.png
   kind: gear
+  chrome: clinic
+  raises: entropy
   text: A clinic cell with something gold humming inside it. It raises your maximum Entropy.
 
-# Chrome from the knock-off cart: 200 credits, and Peter's God roll at install decides what it gives.
+# Chrome from the knock-off cart: 200 credits. The app treats each like the clinic's.
 - id: bootleg-jump-boots
   name: Spring boots
   icon: icons/items/bootleg-jump-boots.png
   kind: gear
+  chrome: cart
   text: A rain boot bolted to two bedsprings and a plank, with tape where the bolts gave up. The cart calls them jump boots. Add them to a roll when you jump, climb or land.
 
 - id: bootleg-grapple-hand
   name: Hook glove
   icon: icons/items/bootleg-grapple-hand.png
   kind: gear
+  chrome: cart
   text: A work glove with three coat-hanger hooks taped across the knuckles and a coil of rope. The cart calls it a grappling-hook hand. Add it to a roll when you need to reach, swing to or pull something that's out of arm's length.
 
 - id: bootleg-static-palm
   name: Battery glove
   icon: icons/items/bootleg-static-palm.png
   kind: gear
+  chrome: cart
   text: A pink rubber glove with a battery taped to the palm and two wires up the fingers. The cart calls it a static palm. Add it to a roll when you touch someone, or something with a circuit in it, and want it to stop.
 
 - id: bootleg-throat-speaker
   name: Tin-can speaker
   icon: icons/items/bootleg-throat-speaker.png
   kind: gear
+  chrome: cart
   text: A tin can on a belt, lid peeled back. The cart calls it a throat speaker. Add it to a roll when your voice has to be louder, be someone else's, or come from where you aren't.
 
 - id: bootleg-magnets
   name: Body magnet
   icon: icons/items/bootleg-magnets.png
   kind: gear
+  chrome: cart
   text: A magnet with no shielding, so it's all of you and it's always on. Add it to a roll when you block, disarm someone or hold on to something metal. Cutlery follows you around.
 
 - id: bootleg-chrome-health
   name: Jam-jar core
   icon: icons/items/bootleg-chrome-health.png
   kind: gear
+  chrome: cart
+  raises: health
   text: A jam jar of something green, a tube, and a health cross drawn on the tape in marker. It raises your maximum health, probably.
 
 - id: bootleg-chrome-entropy
   name: Lucky cube
   icon: icons/items/bootleg-chrome-entropy.png
   kind: gear
+  chrome: cart
+  raises: entropy
   text: A gold-painted die in a cage of sticks, held shut with a rubber band. It raises your maximum Entropy, probably.

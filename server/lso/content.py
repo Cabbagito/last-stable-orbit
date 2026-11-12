@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, Opening, Overview, Preset, PresetItem, Scenario, SlotsGame, Sound, SoundCategory, Station
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, Opening, Overview, Preset, PresetItem, Scenario, Shelf, SlotsGame, Sound, SoundCategory, Station
 
 log = logging.getLogger("lso.content")
 
@@ -23,6 +23,7 @@ class Content:
     characters: dict[str, Character] = field(default_factory=dict)
     npcs: dict[str, Npc] = field(default_factory=dict)
     items: dict[str, Item] = field(default_factory=dict)
+    shelves: list[Shelf] = field(default_factory=list)  # the groups the GM's item pickers sort the items into
     maps: dict[str, MapDef] = field(default_factory=dict)
     presets: dict[str, Preset] = field(default_factory=dict)
     scenarios: dict[str, Scenario] = field(default_factory=dict)  # the sandbox's setups to test from
@@ -79,6 +80,7 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
     c.characters = _by_id(Character, _read(content_dir / "characters.yaml"), "characters.yaml")
     c.npcs = _by_id(Npc, _read(content_dir / "npcs.yaml"), "npcs.yaml")
     c.items = _by_id(Item, _read(content_dir / "items.yaml"), "items.yaml")
+    c.shelves = list(_by_id(Shelf, _read(content_dir / "shelves.yaml"), "shelves.yaml").values())
     maps = [_parse(MapDef, _read(p), f"maps/{p.name}") for p in sorted((content_dir / "maps").glob("*.yaml"))]
     for m in sorted(maps, key=lambda m: m.order):
         if m.id in c.maps:
@@ -223,6 +225,19 @@ def check_refs(c: Content) -> None:
                 problems.append(f"{where}: bad switch {st.map}.{sw}={val}")
         problems += [f"{where}: token ref {t.ref!r} is not an NPC" for t in st.tokens if t.ref not in c.npcs]
         problems += [f"{where}: token id {t.id!r} is a crew member's" for t in st.tokens if t.id in c.characters]
+    shelves = {s.id for s in c.shelves}
+    for it in c.items.values():
+        if (it.shelf is None) == (it.chrome is None):
+            problems.append(f"item {it.id}: needs a shelf, or chrome, and not both")
+        if it.shelf is not None and it.shelf not in shelves:
+            problems.append(f"item {it.id}: unknown shelf {it.shelf!r}")
+        if it.raises and not it.chrome:
+            problems.append(f"item {it.id}: only chrome raises a maximum")
+        if it.chrome and it.counted:
+            problems.append(f"item {it.id}: chrome can't be counted")
+    for s in c.shelves:
+        if s.draw and not any(it.shelf == s.id and not it.counted for it in c.items.values()):
+            problems.append(f"shelves.yaml: {s.id} has Draw, and nothing to draw")
     listed = [e.map for g in c.map_groups for e in g.entries()]
     problems += [f"map_groups.yaml: unknown map {m!r}" for m in listed if m not in c.maps]
     problems += [f"map_groups.yaml: {m} is listed twice" for m in set(listed) if listed.count(m) > 1]

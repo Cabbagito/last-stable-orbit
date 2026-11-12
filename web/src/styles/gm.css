@@ -254,12 +254,12 @@
 .gx-sub a.on{color:#fff;box-shadow:inset 0 -2px 0 #ff4fa3}
 .gx-body{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2f3238 #000}
 .gx-h2{font-family:'Michroma',sans-serif;font-size:15px;color:#fff;letter-spacing:.02em}
-.gx-shelf{display:flex;align-items:center;gap:14px;padding-bottom:14px;flex-wrap:wrap}
+.gx-shelf{display:flex;flex-direction:column;gap:10px;padding-bottom:14px}
 .gx-shelf .r10-give{margin:0}
 .gx-gv.on{border-color:#fff}
 .gx-gv[draggable='true']{cursor:grab}
 .gx-ptable{display:flex;flex-direction:column}
-.gx-prow{display:grid;grid-template-columns:260px minmax(0,1fr) auto;gap:16px;align-items:center;min-height:84px;border-top:1px solid #1e2024}
+.gx-prow{display:grid;grid-template-columns:230px 96px 96px 84px minmax(0,1fr) auto;gap:16px;align-items:center;min-height:84px;border-top:1px solid #1e2024}
 .gx-prow:last-child{border-bottom:1px solid #1e2024}
 .gx-prow.target{background:#0b0b0d}
 .gx-prow.over{background:#180c13;box-shadow:inset 2px 0 0 #ff4fa3}
@@ -383,3 +383,63 @@
 .npcb-row .r10-btn.on{border-color:#ff5a4a;color:#ff8a6a}
 .npcb-row .app-ins-txt{margin-top:4px;font-size:12px;line-height:1.4}
 .npcb .r10-dimtxt{display:block;margin-top:6px}
+
+/* ---------------------------------------------------------------- the "GM crew card and Pockets" canvas */
+/* card C: the GM's card for one of the crew */
+.app-ins.cc{width:340px;padding:12px;max-height:calc(100vh - 80px);overflow-y:auto;scrollbar-width:none}
+.cc .app-ins-top{align-items:center;margin-bottom:0}
+.cc .app-ins-meta{padding-top:0}
+.cc-acts{display:flex;gap:6px;margin-top:10px}
+.cc-eye{display:flex;align-items:center;gap:6px}
+.cc-hidden{margin:10px 0 0}
+.cc-blk{margin-top:10px;padding-top:9px;border-top:1px solid #1e2024}
+.cc-vit{display:flex;gap:14px;align-items:center}
+.cc-max{background:none;border:0;border-bottom:1px dotted #5e626a;padding:0 1px;cursor:pointer;font-family:'VT323',monospace;font-size:19px;line-height:1;color:#8a8e96}
+.cc-max:hover,.cc-max.on{color:#fff;border-color:#f2b544}
+.cc-most{display:flex;align-items:center;gap:5px;margin-top:8px;padding:3px 6px;box-shadow:0 0 0 1px #f2b544}
+.cc-most .r4-lab{flex:1;color:#f2b544}
+.r10-sq.cc-sm{width:22px;height:22px;font-size:13px;color:#b4b8c0}
+.r10-sq.cc-sm.on{border-color:#ff4fa3;color:#ff7dbb}
+.r12-rgrid.cc-stats{margin-top:0}
+.cc-stat{background:#000;min-height:42px;display:flex;align-items:center;gap:6px;padding:4px 6px}
+.cc-stat img{width:30px;height:30px;flex:none}
+.cc-blkh{display:flex;align-items:center;justify-content:space-between;min-height:22px;margin-bottom:6px}
+.cc-row{display:flex;align-items:center;gap:10px;min-height:42px;color:#eceef1;line-height:1.15;border-top:1px solid #1e2024;font-size:13.5px;outline:none}
+.cc-row.first{border-top:0}
+.cc-row:hover,.cc-row:focus-visible{background:#0b0b0d}
+.cc-row > img,.cc-noicon{width:34px;height:34px;flex:none}
+.cc-grow{flex:1;min-width:0}
+.cc-tag{font-family:'Michroma',sans-serif;font-size:6.5px;letter-spacing:.14em;line-height:1;padding:3px 5px;flex:none}
+.cc-tag.chrome{color:#46d6f0;box-shadow:0 0 0 1px #1d5560}
+.cc-tag.burn{color:#ff8a6a;box-shadow:0 0 0 1px #5a1c18}
+.r10-pkrow.cc-pk{gap:6px;min-height:36px}
+.cc-add{width:36px;height:36px;display:grid;place-items:center;padding:0;background:none;border:1px dashed #3a3d44;color:#b4b8c0;font-size:18px;line-height:1;cursor:pointer;flex:none}
+.cc-add:hover,.cc-add.on{border-color:#fff;color:#fff}
+.r10-pk.chr{box-shadow:0 0 0 1px #1d5560}
+.r10-pk.chr.new{box-shadow:0 0 0 1px #ff4fa3}
+/* its two menus: Give and Install chrome */
+.pk-pop{overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2f3238 #000}
+.pk-cols{column-width:150px;column-gap:20px}
+.pk-shelf{break-inside:avoid;padding-bottom:12px}
+.pk-sh{display:flex;align-items:center;justify-content:space-between;min-height:28px;gap:8px}
+.pk-sh2{margin-top:10px}
+.pk-amber{color:#f2b544}
+.pk-it{display:flex;gap:8px;align-items:center;min-height:28px;background:none;border:0;border-top:1px solid #1e2024;width:100%;cursor:pointer;text-align:left;color:#eceef1;padding:0;font-size:13px}
+.pk-it:hover:not(:disabled){background:#0b0b0d}
+.pk-it:disabled{cursor:default;color:#8a8e96}
+.pk-it img{width:22px;height:22px;flex:none}
+.pk-itn{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pk-note{color:#8a8e96;font-size:12px;padding-right:4px;white-space:nowrap;flex:none}
+.pk-amt{display:flex;align-items:center;gap:8px}
+.pk-amt img{width:30px;height:30px}
+.pk-shops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+.pk-chrome .pk-it{min-height:40px;gap:10px}
+.pk-chrome .pk-it img{width:32px;height:32px}
+/* Pockets A: the shelf in its groups, and each row's maximums and chrome */
+.gx-shelfh{display:flex;align-items:center;gap:14px}
+.gx-groups{display:flex;flex-wrap:wrap;gap:8px 28px}
+.gx-group{min-width:120px}
+.gx-grouph{display:flex;align-items:center;gap:10px;min-height:28px}
+.gx-prow.gx-phead{min-height:24px;border-top:0}
+.gx-chrome{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.gx-chrome img{width:34px;height:34px;box-shadow:0 0 0 1px #1d5560}

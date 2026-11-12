@@ -12,7 +12,7 @@ import { RingPortrait } from '../shell/RingPortrait'
 import { Flare, burnSpeech, useBurnMark } from '../stage/BurnMark'
 import { gmRoll, gmRun, useGame } from '../store/game'
 import type { CrewMember, MapView, RosterNpc, TokenView, View } from '../types'
-import { CameraIcon, Cross, Diamond, ENTROPY_MAX, Eye, MiniStep } from './parts'
+import { CameraIcon, Cross, Diamond, Eye, MiniStep } from './parts'
 import { filmOn } from './StageSections'
 
 const DICE = [4, 6, 8, 10, 12, 20]
@@ -88,7 +88,7 @@ function CrewRow({ c, view, now, call, burn }: { c: CrewMember; view: View; now:
     <div className={'gx-row crew' + (isNow ? ' now' : '')}>
       <button type="button" className="gx-ring" aria-label={`Open ${c.short}'s card${speech}`} onClick={() => tok && select(tok.id)}>
         <ChipFx id={`c:${c.id}`} down={c.hp <= 0} style={{ position: 'relative', display: 'block', width: 40, height: 40 }}>
-          <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 40, 7, c.health)} size={40} />
+          <RingPortrait src={c.portrait} ring={ring(c.hp, c.entropy, 40, 7, c.health, c.entropy_max)} size={40} />
         </ChipFx>
         {call && !burn && isSpinning(call) && <Orbit stat={call.stat} />}
         {burn && <Flare m={burn} />}
@@ -110,7 +110,7 @@ function CrewRow({ c, view, now, call, burn }: { c: CrewMember; view: View; now:
         )}
       </div>
       <MiniStep who={c.short} label="HP" tone="hp" value={c.hp} max={c.health} onChange={(v) => set('hp', v)} />
-      <MiniStep who={c.short} label="Entropy" tone="en" value={c.entropy} max={ENTROPY_MAX} onChange={(v) => set('entropy', v)} />
+      <MiniStep who={c.short} label="Entropy" tone="en" value={c.entropy} max={c.entropy_max} onChange={(v) => set('entropy', v)} />
     </div>
   )
 }

@@ -8,10 +8,10 @@ from __future__ import annotations
 import math
 import random
 
-from . import rules
+from . import rules, sheet
 from .auth import Viewer
 from .content import Content
-from .models import BURN_COST, CAMERA_PAN_MAX, CAMERA_ZOOM_MAX, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_MAX, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
+from .models import BURN_COST, CAMERA_PAN_MAX, CAMERA_ZOOM_MAX, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_CAP, HEALTH_CAP, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
 from .state import state_from_preset
 from .views import viewer_map
 
@@ -125,13 +125,14 @@ def _roll_intent(viewer: Viewer, state: GameState, content: Content, kind: str, 
         char = content.characters[viewer.char]
         stat = _stat(args)
         entry = args.get("entry")
-        if entry is not None and (not isinstance(entry, int) or isinstance(entry, bool) or not 0 <= entry < len(char.entries)):
+        rows = sheet.entries(state, content, char.id)
+        if entry is not None and (not isinstance(entry, int) or isinstance(entry, bool) or not 0 <= entry < len(rows)):
             raise _invalid("entry must be the index of one of your skills or chrome")
         sides, bonus = rules.effective_die(char.stats[stat], entry is not None)
         return _new_roll(
             state, content, rng, now,
             by=viewer.seat, char=char.id, handle=char.id, stat=stat,
-            entry=char.entries[entry].name if entry is not None else None, sides=sides, bonus=bonus,
+            entry=rows[entry].name if entry is not None else None, sides=sides, bonus=bonus,
         )
 
     if kind == "roll.reveal":
@@ -217,9 +218,31 @@ def _count(args: dict, lowest: int) -> int:
     return n
 
 
-def _gm_item(state: GameState, content: Content, kind: str, args: dict) -> Events:
+def _fit(state: GameState, content: Content, char: str, without: str | None = None, health: int | None = None, entropy: int | None = None) -> Events:
+    """A maximum is about to come down: what they have comes down with it. `without` is the chrome that's leaving
+    them; `health` and `entropy` are the new maximums, when the GM set them by hand."""
+    v = state.vitals.get(char)
+    if not v:
+        return []
+    top_hp = sheet.max_health(state, content, char, without) if health is None else health
+    top_en = sheet.max_entropy(state, content, char, without) if entropy is None else entropy
+    if v.hp <= top_hp and v.entropy <= top_en:
+        return []
+    return [("vitals.set", {"char": char, "hp": min(v.hp, top_hp), "entropy": min(v.entropy, top_en)})]
+
+
+def _gm_item(state: GameState, content: Content, kind: str, args: dict, rng) -> Events:
     """Only the GM moves items. Counted items (credits) merge into what the holder already has."""
     holder = _holder(content, args)
+
+    if kind == "gm.item.draw":  # one thing from a group of findables, picked here: someone searched somewhere
+        shelf = next((s for s in content.shelves if s.id == _str(args, "shelf")), None)
+        if not shelf or not shelf.draw:
+            raise _invalid("that isn't a group to draw from")
+        pool = [it for it in content.items.values() if it.shelf == shelf.id and not it.counted]
+        it = pool[rng.randrange(len(pool))]
+        entry = InvEntry(uid=f"i{state.seq + 1}", item=it.id, new=True)
+        return [("item.given", {"holder": holder, "entry": entry.model_dump()})]
 
     if kind == "gm.item.give":
         item_id = _str(args, "item")
@@ -241,7 +264,7 @@ def _gm_item(state: GameState, content: Content, kind: str, args: dict) -> Event
     e = _held(state, holder, _str(args, "uid"))
 
     if kind == "gm.item.take":
-        return [("item.taken", {"holder": holder, "uid": e.uid})]
+        return [("item.taken", {"holder": holder, "uid": e.uid})] + _fit(state, content, holder, without=e.uid)
 
     if kind == "gm.item.move":
         to = _holder(content, args, "to")
@@ -255,7 +278,7 @@ def _gm_item(state: GameState, content: Content, kind: str, args: dict) -> Event
                 ("item.taken", {"holder": holder, "uid": e.uid}),
                 ("item.counted", {"holder": to, "uid": have.uid, "count": total, "new": True}),
             ]
-        return [("item.moved", {"holder": holder, "uid": e.uid, "to": to})]
+        return [("item.moved", {"holder": holder, "uid": e.uid, "to": to})] + _fit(state, content, holder, without=e.uid)
 
     if kind == "gm.item.count":
         it = content.items.get(e.item)
@@ -266,6 +289,26 @@ def _gm_item(state: GameState, content: Content, kind: str, args: dict) -> Event
             return []
         return [("item.counted", {"holder": holder, "uid": e.uid, "count": n, "new": n > (e.count or 0)})]
 
+    raise _invalid(f"unknown intent {kind!r}")
+
+
+def _gm_chrome(state: GameState, content: Content, kind: str, args: dict) -> Events:
+    """Chrome, from a crew card's chrome menu. A piece that raises a maximum is handed over as an item, and the
+    maximum follows whoever holds it. Any other piece goes on the sheet as a skill."""
+    char = _holder(content, args, "char")
+    it = content.items.get(_str(args, "item"))
+    if not it or not it.chrome:
+        raise _invalid("that isn't chrome")
+    on = sheet.chrome(state, content, char)
+    if kind == "gm.chrome.install":
+        if it.raises:
+            entry = InvEntry(uid=f"i{state.seq + 1}", item=it.id, new=True)
+            return [("item.given", {"holder": char, "entry": entry.model_dump()})]
+        return [] if it.id in on else [("chrome.installed", {"char": char, "item": it.id})]
+    if kind == "gm.chrome.remove":
+        if it.raises:
+            raise _invalid("that one is held: take it from their pockets")
+        return [("chrome.removed", {"char": char, "item": it.id})] if it.id in on else []
     raise _invalid(f"unknown intent {kind!r}")
 
 
@@ -888,12 +931,28 @@ def handle(
         if char not in content.characters:
             raise _invalid("unknown character")
         cur = state.vitals.get(char)
-        top = content.characters[char].health
+        top = sheet.max_health(state, content, char)
         hp = args.get("hp", cur.hp if cur else top)
         en = args.get("entropy", cur.entropy if cur else 2)
         if not isinstance(hp, int) or not isinstance(en, int) or isinstance(hp, bool) or isinstance(en, bool):
             raise _invalid("hp and entropy must be whole numbers")
-        return [("vitals.set", {"char": char, "hp": max(0, min(top, hp)), "entropy": max(0, min(ENTROPY_MAX, en))})]
+        return [("vitals.set", {"char": char, "hp": max(0, min(top, hp)), "entropy": max(0, min(sheet.max_entropy(state, content, char), en))})]
+
+    if kind == "gm.vitals.max":
+        # the most health or Entropy they can have, set by hand. It's kept as the difference from their sheet and
+        # their chrome, so chrome handed over later still adds to it
+        char = _holder(content, args, "char")
+        old = state.maxes.get(char)
+        adj = {"health": old.health if old else 0, "entropy": old.entropy if old else 0}
+        tops = {"health": sheet.max_health(state, content, char), "entropy": sheet.max_entropy(state, content, char)}
+        for key, cap in (("health", HEALTH_CAP), ("entropy", ENTROPY_CAP)):
+            if key in args:
+                want = max(1, min(cap, _int(args, key)))
+                adj[key] += want - tops[key]
+                tops[key] = want
+        if old and adj == {"health": old.health, "entropy": old.entropy} or not old and adj == {"health": 0, "entropy": 0}:
+            return []
+        return [("vitals.max_set", {"char": char, **adj})] + _fit(state, content, char, health=tops["health"], entropy=tops["entropy"])
 
     if kind == "gm.codex.unlock":
         # for the whole crew: an entry, or one locked block of it
@@ -971,8 +1030,11 @@ def handle(
         bank = state.slots.get(key)
         return [] if bool(bank and bank.out) == out else [("slots.service", {"key": key, "out": out})]
 
+    if kind.startswith("gm.chrome."):
+        return _gm_chrome(state, content, kind, args)
+
     if kind.startswith("gm.item."):
-        return _gm_item(state, content, kind, args)
+        return _gm_item(state, content, kind, args, rng)
 
     if kind == "gm.world.load_preset":
         preset = content.presets.get(_str(args, "preset"))
