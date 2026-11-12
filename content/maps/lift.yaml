@@ -4,7 +4,8 @@ id: lift
 name: The Lift station
 subtitle: The top of the cable
 description: >-
-  The Lift station seen from above at an angle: an old wood passage and a small alcove with a founder's ring, a
+  The Lift station seen from above at an angle: a lift's blue doors letting out onto an old wood landing and a small
+  alcove with a founder's ring, a
   freight hall with crates, barriers and a loader, a blast door, and a dark platform whose floor is a huge glass
   panel with the black hole directly below it, lighting the room from underneath. Against the left wall, the
   crawler cab stands with its door open and its lights on.
@@ -33,16 +34,16 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     text: A bench, a basin and a few supplies, under a founder's ring. It's quiet in here.
 # The Key board's "what's where". Only the GM sees these.
 pins:
-  - {k: "1", label: "Way in: the plaza's lift, which ISCO sends down once the crew hold the Seal. The art still shows the old doorway", at: [0.1, 21.7, 3.0]}
+  - {k: "1", label: "Way in: the plaza's lift, which ISCO sends down once the crew hold the Seal", at: [0.1, 21.7, 3.0]}
   - {k: "2", label: "Blast door: 2 hired guns hold it, the first fight", at: [25.5, 15, 4.5]}
   - {k: "3", label: "Glass floor over the hole: the fixer waits on it, the final fight", at: [18, 7, 0.05]}
   - {k: "4", label: "Crawler cab on the left wall behind him, door open and lit", at: [3.6, 7.5, 3.3]}
   - {k: A, label: "Freight hall: crates, barriers, loader, floor lanes", at: [12.2, 23.2, 2.2]}
   - {k: B, label: "Alcove for the quiet moment: bench, basin, supplies, founder's ring", at: [3.9, 17.5, 0.3]}
-  - {k: C, label: Old wood passage and arch into the hall, at: [5.2, 21.8, 0.3]}
+  - {k: C, label: Old wood landing and arch into the hall, at: [5.2, 21.8, 0.3]}
   - {k: D, label: "Cover round the edges, off the glass: barriers, tanks, a console", at: [22.9, 0.6, 2.1]}
   - {k: E, label: "Seats, a panel and wall rails on the cab", at: [1.0, 5.4, 3.9]}
   - {k: F, label: LIFT STATION on the wall, at: [23, 0, 4.1]}
-# Where the crew land when you send them here: in the old wood passage, in crew order. The way in is now the plaza's lift,
-# which ISCO opens (Peter, 2026-11-12); this end of it hasn't been redrawn.
+# Where the crew land when you send them here: out of the lift, on the old wood landing, in crew order. The lift is the
+# plaza's, which ISCO opens (Peter, 2026-11-12; its doors are drawn by scripts/isco_lift.py).
 arrive: [[1.6, 21.6, 0], [2.6, 20.8, 0], [2.8, 22.4, 0], [3.8, 21.4, 0], [4.6, 22.2, 0]]
