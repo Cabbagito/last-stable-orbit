@@ -14,7 +14,7 @@ make up        # builds and starts the app on http://localhost:8070
 make passcode  # shows the GM passcode
 ```
 
-Open http://localhost:8070 and click a character, or choose "I'm the GM" and type the passcode. To try two seats on one machine, use http://localhost:8070 for one and http://127.0.0.1:8070 for the other (they keep separate logins), or a private window. Laptops on your network can use `http://<your-mac's-ip>:8070`. "Change character" in the header goes back to the picker.
+Open http://localhost:8070 and click a character (on a touch screen the first tap shows their sheet and the second boards), or click the key in the top-right corner and type the GM passcode. The screen icon beside the key makes that screen the TV. To try two seats on one machine, use http://localhost:8070 for one and http://127.0.0.1:8070 for the other (they keep separate logins), or a private window. Laptops on your network can use `http://<your-mac's-ip>:8070`. "Change character" in the header goes back to the picker.
 
 | Command | What it does |
 |---|---|

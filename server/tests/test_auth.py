@@ -41,6 +41,16 @@ def test_seats_list_the_crew_and_who_is_on_board(client, seat):
         assert [c["id"] for c in data["crew"] if c["online"]] == ["ves"]
 
 
+def test_seats_carry_the_sheet_the_login_shows(client):
+    """The login's dossier: stats, health, skills and Burn. No downsides, no films, nothing from the saved game."""
+    lale = next(c for c in client.get("/api/seats").json()["crew"] if c["id"] == "lale")
+    assert lale["health"] == 5 and lale["stats"]["empathy"] == 20 and list(lale["stats"]) == ["body", "reflex", "tech", "intel", "cool", "empathy"]
+    assert len(lale["list"]) == 3 and lale["list"][0]["name"] == "Has seen worse"
+    assert all(set(k) == {"name", "text", "icon"} and k["icon"].startswith("/assets/") for k in lale["list"])
+    assert set(lale["burn"]) == {"name", "when", "text", "icon", "color"} and lale["burn"]["name"] == "On your feet"
+    assert not {"hp", "entropy", "items"} & set(lale)
+
+
 def test_epoch_bump_logs_everyone_out(settings):
     a = Auth(settings, ["lale"])
     token = a.issue(a.player("lale"))
@@ -63,8 +73,11 @@ def test_settings_validation():
 
 
 def test_assets_need_login_and_visibility(client, seat):
-    # before login, only the crew portraits (for the picker) are served
+    # before login, only what the login screen draws is served: the crew's portraits and the icons on their sheets
     assert client.get("/assets/portraits/ves.gif").status_code == 200
+    for icon in ("icons/stats/reflex.png", "icons/vitals/hp.png", "icons/list/ves-vents.png", "icons/burns/ves.png"):
+        assert client.get(f"/assets/{icon}").status_code == 200, icon
+    assert client.get("/assets/icons/vitals/entropy.png").status_code == 401
     assert client.get("/assets/portraits/dax.gif").status_code == 401
     assert client.get("/assets/maps/event-horizon/base-open.png").status_code == 401
     ves = seat("ves")

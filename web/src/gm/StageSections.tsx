@@ -256,7 +256,7 @@ export function TvSection({ view }: { view: View }) {
         ) : (
           <div className="gx-tvempty">
             <b>No TV yet</b>
-            <span className="r10-hint">On the TV, open the app and pick "This screen is the TV".</span>
+            <span className="r10-hint">On the TV, open the app and click the screen icon in the top-right corner.</span>
           </div>
         )}
       </div>

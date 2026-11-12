@@ -11,6 +11,7 @@ import './styles/fight.css'
 import './styles/rolls.css'
 import './styles/overview.css'
 import './styles/slots.css'
+import './styles/login.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

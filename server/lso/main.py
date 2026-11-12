@@ -23,6 +23,7 @@ from .engine import Engine
 from .hub import Hub
 from .join import join_card
 from .store import Store
+from .models import STATS
 from .views import url
 
 log = logging.getLogger("lso")
@@ -76,7 +77,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         engine = Engine(content, store, sandbox=settings.sandbox)
         app.state.auth = Auth(settings, content.characters)
         # the character picker shows the crew before anyone is logged in
-        app.state.login_assets = {c.portrait for c in content.characters.values()}
+        # what the login draws before anyone has a seat: each character's portrait, skill and Burn icons, and the sheet's
+        crew = content.characters.values()
+        app.state.login_assets = (
+            {c.portrait for c in crew}
+            | {e.icon for c in crew for e in c.entries if e.icon}
+            | {c.burn.icon for c in crew if c.burn}
+            | {f"icons/stats/{s}.png" for s in STATS}
+            | {"icons/vitals/hp.png"}
+        )
         app.state.engine = engine
         app.state.hub = Hub(engine, join_card(settings))
         log.info("ready: %d maps, %d tokens, seq %d", len(content.maps), len(engine.state.tokens), engine.state.seq)
@@ -99,6 +108,23 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def healthz():
         return {"ok": True}
 
+    def seat_card(c) -> dict:
+        """What the login shows of a character before anyone has picked them: the sheet every player sees anyway
+        (stats, health, skills, Burn), without the skills' downsides and without anything from the saved game."""
+        b = c.burn
+        return {
+            "id": c.id,
+            "name": c.name,
+            "short": c.short,
+            "role": c.role,
+            "portrait": url(c.portrait),
+            "color": c.color,
+            "health": c.health,
+            "stats": c.stats,
+            "list": [{"name": e.name, "text": e.text, "icon": url(e.icon)} for e in c.entries],
+            "burn": {"name": b.name, "when": b.when, "text": b.text, "icon": url(b.icon), "color": b.color} if b else None,
+        }
+
     @app.get("/api/seats")
     async def seats(request: Request):
         """The character picker: who can be chosen, and who is already on board."""
@@ -106,7 +132,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         online = request.app.state.hub.online()
         return {
             "crew": [
-                {"id": c.id, "name": c.name, "short": c.short, "role": c.role, "portrait": url(c.portrait), "color": c.color, "online": c.id in online}
+                seat_card(c) | {"online": c.id in online}
                 for c in engine.content.characters.values()
             ],
             "gm_online": "gm" in online,

@@ -6,6 +6,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 
 - **Story, world and rules:** the live Campaign Bible (https://claude.ai/artifact/M1yC81nP1if8VLKYnviCHp). Read it with the Docs tools, and never copy it back into the repo.
 - **UI:** `design/reference/ui/R6.dc.html`, the latest round ("Meridian, ruled", modified from round 4's Meridian). Always build from the latest round.
+- **Login:** the LSO — Login canvas (https://claude.ai/artifact/4g3KqSFUoZfMkfWbDmqM1e), board B, "The wall". Board A was the other direction and isn't built.
 - **Roll banners, God and the GM's roll modes:** the UI canvas, page "Round 17" (`R17Stage` holds them all).
 - **Codex and Station:** the UI canvas (https://claude.ai/artifact/6qy97FyBbNdFJafigwiKff), pages "Codex, pinned" and "Station". The decisions are in the plan's M6.
 - **Maps:** `design/reference/maps/*.dc.html` (Main = The Event Horizon). Every board shares one isometric formula; see `web/src/lib/proj.ts`.
@@ -24,7 +25,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 - **The TV is always there:** cutscenes, Burn films, a failed skill's downside and all the sound play only on the TV, and laptops are silent. The TV / no TV / Online choice is gone. The GM's Play waits until a TV is connected. See the plan's Stage section.
 - **The opening:** the GM's On screen page holds players on the stars-and-station loop, silent, and nothing else, while the TV loops it with the music. Play starts the intro film on the music's next beat, and its end lets everyone in. It's the one film whose sound is a separate file, played by the TV. See `content/opening.yaml` and the plan's Progress section.
 - **The GM controls:** map moods and switches, HP and Entropy, rolls (including hidden ones), NPCs, and every inventory. Clues are handed out as items, such as a note.
-- **Login:** players pick their character; only the GM has a passcode.
+- **Login:** players pick their character; only the GM has a passcode. The GM and the TV are the two icons in the login's top-right corner.
 - **Fights:** the app never knows the number to beat or who attacks whom. The GM names the check out loud and sets HP and Entropy by hand. It does know who's in a fight: the GM picks them, and the app rolls their Reflex for the turn order. Players spend Entropy and Burn whenever they want. See the plan's M8.
 
 ## Architecture rules
