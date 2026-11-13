@@ -274,7 +274,7 @@ def test_the_mech_is_in_the_bot_bays_on_heist_night_and_gone_by_session_4(conten
     """The Bot bays' art has the mech in its frame by Day and Night and the frame empty by Alert and by Takeover, which
     is painted over Alert. Heist night is Night, and every preset from Act 4 on is Takeover."""
     assert content.presets["session-3-heist"].maps["bots"].mood == "night"
-    four = [p for p in content.presets.values() if p.act in ("Act 4", "Final act")]
+    four = [p for p in content.presets.values() if p.act in ("Act 4: Hostile Takeover", "Final act: Terminal")]
     assert len(four) == 3 and all(p.maps["bots"].mood == "takeover" for p in four)
 
 
@@ -324,9 +324,9 @@ def test_from_act_4_on_every_deck_they_hold_is_in_takeover(content):
     held = ("promenade", "deck-6", "deck-7", "deck-8", "deck-9", "secure", "bots")
     for m in held:
         mood = next(x for x in content.maps[m].moods if x.id == "takeover")
-        assert mood.label == "Takeover" and mood.base == f"maps/{m}/base-takeover.png", m
+        assert mood.label == "Occupied" and mood.base == f"maps/{m}/base-takeover.png", m
     for p in content.presets.values():
-        if p.act in ("Act 4", "Final act"):
+        if p.act in ("Act 4: Hostile Takeover", "Final act: Terminal"):
             assert {p.maps[m].mood for m in held} == {"takeover"}, p.id
 
 

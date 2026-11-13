@@ -16,7 +16,7 @@ moods:
   - {id: night, label: Night, base: maps/secure/base-night.png}
   - {id: alert, label: Alert, base: maps/secure/base-alert.png}
   # Act 4, the mercenaries holding the station: Alert, shot up (scripts/takeover_floors.py). Nothing has moved
-  - {id: takeover, label: Takeover, base: maps/secure/base-takeover.png}
+  - {id: takeover, label: Occupied, base: maps/secure/base-takeover.png}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: vault-door
     name: "The vault door"

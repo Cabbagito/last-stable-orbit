@@ -13,8 +13,8 @@
 # The opening (the waiting loop and the intro film) is not a cue: it has its own step on the GM's Session page. See opening.yaml.
 
 - id: lucan
-  name: Lucan walks in
-  act: Act 1
+  name: Enter the Fixer
+  act: "Act 1: The Pitch"
   sub: 40 s, session 1, before the pitch
   ends: Ends on Lucan seated under the mural, in the founder's set place, with the rope down and Dax gone. Send the crew to their chairs at the founder's table.
   file: films/lucan.mp4
@@ -27,8 +27,8 @@
       - {ref: fixer, at: [1.397, 4.51, 0.24]}
 
 - id: act-1
-  name: End of Act 1
-  act: Act 1
+  name: Loose Ends
+  act: "Act 1: The Pitch"
   sub: 70 s, closes session 1
   ends: Ends on Dax looking at the rope, then the card, "Whatever brought you here, we hope you find what you came for." and "End of Act 1".
   file: films/act-1.mp4
@@ -36,8 +36,8 @@
   still: films/act-1-still.png
 
 - id: vigil
-  name: The Vigil
-  act: Act 2
+  name: Welcome to the Vigil
+  act: "Act 2: The Vigil"
   sub: 37 s, opens session 2
   ends: Ends on the Secure floor packed for the silence, with the crew in the crowd. Load The Vigil preset with it.
   file: films/vigil.mp4
@@ -48,8 +48,8 @@
     mood: day
 
 - id: act-2
-  name: End of Act 2
-  act: Act 2
+  name: Lights Out
+  act: "Act 2: The Vigil"
   sub: 29 s, closes session 2
   ends: Ends on Lucan's call, then the card, "Never let anyone wait again." and "End of Act 2". Session 3 starts from The heist preset.
   file: films/act-2.mp4
@@ -57,8 +57,8 @@
   still: films/act-2-still.png
 
 - id: vault-opens
-  name: The vault opens
-  act: Act 3
+  name: Last Words
+  act: "Act 3: The Job"
   sub: 33 s, in the heist
   ends: Ends on his desk and the recorder. Goes to the founder's vault. Send in whoever walked through the door.
   file: films/vault-opens.mp4
@@ -68,8 +68,8 @@
     map: vault
 
 - id: shotgun
-  name: "The bar: the shotgun"
-  act: Act 3
+  name: Last Call
+  act: "Act 3: The Job"
   sub: 36 s, ends act 3
   ends: Ends on the bar in Last stand, the house lights dead, with Dax at the gap in the rail. The crew stay where they are.
   file: films/shotgun.mp4
@@ -83,7 +83,7 @@
 
 - id: keepers-end
   name: The Keeper's End
-  act: Final act
+  act: "Final act: Terminal"
   sub: 41 s, session 4, once the crew are out of the bar
   ends: Ends on black, after Dax under the mural. Lucan and his dog found him alone, so it plays the same whether he fought beside the crew or not. Nothing changes on the maps.
   file: films/keepers-end.mp4
@@ -91,8 +91,8 @@
   still: films/keepers-end-still.png
 
 - id: ride-down
-  name: The ride down
-  act: Final act
+  name: The Long Way Down
+  act: "Final act: Terminal"
   sub: 32 s, the last of the cable
   ends: Ends on the Terminal room, empty and dark. Send the crew there from the cab.
   file: films/ride-down.mp4
@@ -104,7 +104,7 @@
 
 - id: thank-you
   name: Thank you for bringing that
-  act: Final act
+  act: "Final act: Terminal"
   sub: 37 s, the Seal goes in
   ends: Ends on the Terminal room with the Seal in and the face over it. The crew stay where they are.
   file: films/thank-you.mp4

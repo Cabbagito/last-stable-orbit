@@ -3,7 +3,7 @@
 # Promenade, then to the bar, from the GM column. Positions are drafts (the Maps boards' own).
 id: session-1-arrival
 name: "Arrival on the Patience"
-act: "Act 1"
+act: "Act 1: The Pitch"
 blurb: "Day one. The crew aboard as it docks."
 card: presets/arrival.png
 party_map: patience

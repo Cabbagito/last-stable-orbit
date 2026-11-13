@@ -16,7 +16,7 @@ moods:
   - {id: calm, label: Calm, base: maps/promenade/base-calm.png, glow: maps/promenade/glow-calm.png}
   # Takeover is Act 4, the mercenaries holding the street: shot up a few minutes ago, on emergency light, the stalls still
   # open and lit. scripts/promenade_takeover.py paints it over Calm, so nothing on the street has moved.
-  - {id: takeover, label: Takeover, base: maps/promenade/base-takeover.png, glow: maps/promenade/glow-takeover.png}
+  - {id: takeover, label: Occupied, base: maps/promenade/base-takeover.png, glow: maps/promenade/glow-takeover.png}
 switches:  # ISCO's lift: the company's lift on the plaza opens by itself, on white-violet light, once the crew hold the Seal
   - {id: isco_lift, label: "ISCO's lift", type: bool}
 overlays:  # patches, drawn over the base (scripts/isco_lift.py)

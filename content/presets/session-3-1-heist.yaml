@@ -3,7 +3,7 @@
 # Night: the mech is still in the repair frame under its tarp, in the art only, with no chip for it until its fight.
 id: session-3-heist
 name: "The heist"
-act: "Act 3"
+act: "Act 3: The Job"
 blurb: "Night. The crew outside the bar, the lift across the street, the decks dark."
 card: maps/deck-9/base-night.png
 party_map: promenade

@@ -185,7 +185,7 @@ async def test_a_film_cant_be_stopped_or_doubled(engine, content, clock):
     assert await engine.sweep(set())
     assert engine.state.stage.film is None
     cue = {c["id"]: c for c in project(engine.state, content, GM)["stage"]["cues"]}["shotgun"]
-    assert cue["act"] == "Act 3" and cue["ready"] and cue["still"] == STILL
+    assert cue["act"] == "Act 3: The Job" and cue["ready"] and cue["still"] == STILL
 
 
 async def test_a_film_that_just_ended_can_play_again_before_the_sweep(engine, content, clock):
@@ -214,7 +214,7 @@ async def test_only_the_tv_plays_the_film(engine, content):
     await ok(engine, GM, "gm.film.play", {"cue": "shotgun"})
     tv, gm, tally = (project(engine.state, content, v)["stage"]["film"] for v in (STAGE, GM, TALLY))
     assert tv["src"] == FILM
-    assert "src" not in gm and gm["name"] == "The bar: the shotgun"
+    assert "src" not in gm and gm["name"] == "Last Call"
     assert tally == {"at": tv["at"], "ends": tv["ends"], "loop": LOOP, "still": LOOP_STILL}  # the waiting loop until it ends; not this film's file or name
     assert "shotgun" not in json.dumps(project(engine.state, content, TALLY))
 
@@ -520,7 +520,7 @@ async def test_reset_is_only_for_while_the_players_are_held(engine, content):
 
 def test_the_act_cards_are_the_gms_alone(engine, content):
     cards = project(engine.state, content, GM)["presets"]
-    assert [c["act"] for c in cards] == ["Act 1"] * 4 + ["Act 2"] * 2 + ["Act 3"] + ["Act 4"] * 2 + ["Final act"] and all(c["card"].startswith("/assets/") and c["blurb"] for c in cards)
+    assert [c["act"] for c in cards] == ["Act 1: The Pitch"] * 4 + ["Act 2: The Vigil"] * 2 + ["Act 3: The Job"] + ["Act 4: Hostile Takeover"] * 2 + ["Final act: Terminal"] and all(c["card"].startswith("/assets/") and c["blurb"] for c in cards)
     for viewer in (TALLY, STAGE):
         view = json.dumps(project(engine.state, content, viewer))
         for p in content.presets.values():

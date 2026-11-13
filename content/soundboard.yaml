@@ -22,10 +22,10 @@
     - { id: droid_question, name: Question, file: sounds/droid/droid_question.mp3 }
     - { id: droid_grumble, name: Grumble, file: sounds/droid/droid_grumble.mp3 }
     - { id: droid_alarm, name: Alarm, file: sounds/droid/droid_alarm.mp3 }
-    - { id: main_approach, name: Main approach, file: sounds/droid/main_approach.mp3 }
-    - { id: main_destroyed, name: Main destroyed, file: sounds/droid/main_destroyed.mp3 }
-    - { id: spotless_approach, name: Spotless approach, file: sounds/droid/spotless_approach.mp3 }
-    - { id: spotless_destroyed, name: Spotless destroyed, file: sounds/droid/spotless_destroyed.mp3 }
+    - { id: main_approach, name: CSAT-1 approach, file: sounds/droid/main_approach.mp3 }
+    - { id: main_destroyed, name: CSAT-1 destroyed, file: sounds/droid/main_destroyed.mp3 }
+    - { id: spotless_approach, name: CSAT-2+ approach, file: sounds/droid/spotless_approach.mp3 }
+    - { id: spotless_destroyed, name: CSAT-2+ destroyed, file: sounds/droid/spotless_destroyed.mp3 }
 
 - id: heist
   name: Heist

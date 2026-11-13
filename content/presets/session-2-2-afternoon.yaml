@@ -2,7 +2,7 @@
 # busy as the day they arrived. The crew start in the plaza, out of the company's lift.
 id: session-2-afternoon
 name: "The afternoon"
-act: "Act 2"
+act: "Act 2: The Vigil"
 blurb: "After the silence. The station back at work."
 card: maps/deck-7/base-day.png
 party_map: promenade

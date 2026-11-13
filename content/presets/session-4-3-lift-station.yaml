@@ -6,7 +6,7 @@
 # plaza. The station above is the takeover, as on the Act 4 cards. DRAFTS.
 id: session-4-lift-station
 name: "The lift station"
-act: "Final act"
+act: "Final act: Terminal"
 blurb: "Out of the old passages, to the top of the cable."
 card: maps/lift/base-open.png
 party_map: lift

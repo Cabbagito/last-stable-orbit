@@ -49,7 +49,7 @@ async def test_it_opens_only_on_the_screens_it_was_sent_to(engine):
     await ok(engine, GM, "gm.overview.send", {"overview": "satisfaction", "chars": ["marlo", "tally"]})
     for who in (MARLO, TALLY):
         o = view(engine, who)["overview"]
-        assert o["kind"] == "satisfaction" and o["name"] == "Satisfaction Report"
+        assert o["kind"] == "satisfaction" and o["name"] == "Satisfaction Report, CSAT-1"
         assert o["device"] == DROID and o["survey"]["limit"] == 7
     assert view(engine, MARLO)["overview"]["id"] == view(engine, TALLY)["overview"]["id"]  # one sending
 
@@ -68,8 +68,8 @@ async def test_the_gm_sees_what_can_be_sent_and_whose_screen_has_one_open(engine
     assert v["overview"] is None
     assert v["overviews"] == {
         "games": [
-            {"id": "satisfaction", "name": "Satisfaction Report"},
-            {"id": "satisfaction-new", "name": "Satisfaction Report, new droid"},
+            {"id": "satisfaction", "name": "Satisfaction Report, CSAT-1"},
+            {"id": "satisfaction-new", "name": "Satisfaction Report, CSAT-2 to 5"},
             {"id": "golf", "name": "Mini-golf"},
         ],
         "open": {},

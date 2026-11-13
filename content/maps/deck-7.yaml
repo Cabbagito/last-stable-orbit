@@ -1,7 +1,7 @@
 # Deck 7, from the Heist maps canvas (board "Deck 7: managers"). Art is 1110x700, drawn at 2x.
 # The shared isometric formula, with origin (460, 150). The floor is X 0 to 20, Y 0 to 14.
 id: deck-7
-name: "Deck 7: managers"
+name: "Deck 7: Middle Management"
 subtitle: The Executive floors
 description: >-
   Deck 7 seen from above at an angle: three glass-walled offices in a row, a scientist's room with a wall of plots,
@@ -15,7 +15,7 @@ moods:
   - {id: night, label: Night, base: maps/deck-7/base-night.png}
   - {id: alert, label: Alert, base: maps/deck-7/base-alert.png}
   # Act 4, the mercenaries holding the station: Alert, shot up (scripts/takeover_floors.py). Nothing has moved
-  - {id: takeover, label: Takeover, base: maps/deck-7/base-takeover.png}
+  - {id: takeover, label: Occupied, base: maps/deck-7/base-takeover.png}
 objects:  # things players can inspect, once the GM reveals them. DRAFT texts, for Peter to edit.
   - id: plots
     name: "Her plots"

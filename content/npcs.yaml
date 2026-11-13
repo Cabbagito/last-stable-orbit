@@ -195,8 +195,8 @@
   gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
 
 - id: lucan-brute
-  name: Lucan's brute
-  role: Muscle
+  name: Leverage
+  role: Lucan's brute
   group: Muscle
   portrait: portraits/lucan-brute.gif
   color: "#ff5a4a"
@@ -207,8 +207,8 @@
   gm_note: "A machine of Lucan's, not an upload. Placeholder dice and health."
 
 - id: lucan-dog
-  name: Lucan's dog
-  role: Muscle
+  name: Diligence
+  role: Lucan's dog
   group: Muscle
   portrait: portraits/lucan-dog.gif
   color: "#ff5a4a"
@@ -894,9 +894,10 @@
   mood: Going home  # DRAFT
   note: Cable maintenance. Tired and content.  # DRAFT
 
-# The Satisfaction Report droid (added 2026-11-09). Send its survey from the GM tab's overviews.
+# The Satisfaction Report droids (added 2026-11-09; named CSAT and 3 to 5 added 2026-11-14). Send the survey from
+# the GM tab's overviews. CSAT-1 is the burnt one; CSAT-2 to 5 are the spotless spares, one after another.
 - id: survey-droid
-  name: Survey droid
+  name: CSAT-1
   role: Satisfaction Report, ISCO
   group: ISCO
   portrait: portraits/survey-droid.gif
@@ -905,10 +906,10 @@
   health: 2  # DRAFT
   mood: Would love your feedback
   note: Cigar burns on its face, and still smiling.
-  gm_note: "Turns up whenever someone bad-mouths the station, even mid-heist. Send the Satisfaction Report overview. The burns are the Gumshoe's."
+  gm_note: "Turns up whenever someone bad-mouths the station, even mid-heist. Send \"Satisfaction Report, CSAT-1\". The burns are the Gumshoe's."
 
 - id: survey-droid-new
-  name: Survey droid, new
+  name: CSAT-2
   role: Satisfaction Report, ISCO
   group: ISCO
   portrait: portraits/survey-droid-new.gif
@@ -917,7 +918,43 @@
   health: 2  # DRAFT
   mood: Would love your feedback
   note: Spotless. Same smile.
-  gm_note: "Rolls up five seconds after the crew wrecks the first one. Send \"Satisfaction Report, new droid\"."
+  gm_note: "Rolls up five seconds after the crew wrecks CSAT-1. Send \"Satisfaction Report, CSAT-2 to 5\"."
+
+- id: survey-droid-3
+  name: CSAT-3
+  role: Satisfaction Report, ISCO
+  group: ISCO
+  portrait: portraits/survey-droid-new.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 6, tech: 12, intel: 8, cool: 20, empathy: 10}  # DRAFT
+  health: 2  # DRAFT
+  mood: Would love your feedback
+  note: Spotless. Same smile. A little quicker than the last one.  # DRAFT
+  gm_note: "Rolls up five seconds after the crew wrecks CSAT-2. Send \"Satisfaction Report, CSAT-2 to 5\"."
+
+- id: survey-droid-4
+  name: CSAT-4
+  role: Satisfaction Report, ISCO
+  group: ISCO
+  portrait: portraits/survey-droid-new.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 6, tech: 12, intel: 8, cool: 20, empathy: 10}  # DRAFT
+  health: 2  # DRAFT
+  mood: Would love your feedback
+  note: Spotless. Same smile. It already knows your name.  # DRAFT
+  gm_note: "Rolls up five seconds after the crew wrecks CSAT-3. Send \"Satisfaction Report, CSAT-2 to 5\"."
+
+- id: survey-droid-5
+  name: CSAT-5
+  role: Satisfaction Report, ISCO
+  group: ISCO
+  portrait: portraits/survey-droid-new.gif
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 6, tech: 12, intel: 8, cool: 20, empathy: 10}  # DRAFT
+  health: 2  # DRAFT
+  mood: Would love your feedback
+  note: Spotless. Same smile. It has heard all about you.  # DRAFT
+  gm_note: "Rolls up five seconds after the crew wrecks CSAT-4. Send \"Satisfaction Report, CSAT-2 to 5\"."
 
 - id: resident-student
   name: Student

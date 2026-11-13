@@ -5,7 +5,7 @@
 # The hidey-hole, with Irena hidden behind the boiler in the Bot bays. DRAFTS.
 id: session-4-shotgun
 name: "The shotgun"
-act: "Act 4"
+act: "Act 4: Hostile Takeover"
 blurb: "The Seal in their hands, and Dax's shotgun behind them."
 card: presets/shotgun.png  # its own crop: every bar mood is already in the players' view
 party_map: event-horizon

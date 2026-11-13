@@ -10,7 +10,7 @@
 - id: lale
   name: Dr. Lale Osei
   short: Lale
-  role: The Doctor
+  role: The Ripperdoc
   portrait: portraits/lale.gif
   health: 5
   stats: {body: 6, reflex: 6, tech: 8, intel: 12, cool: 8, empathy: 20}

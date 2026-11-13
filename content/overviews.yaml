@@ -6,7 +6,7 @@
 # The screen's box is in the 900 x 900 the device art is drawn at (3x its pixels).
 
 - id: satisfaction
-  name: Satisfaction Report
+  name: Satisfaction Report, CSAT-1
   device: overviews/service-droid.png
   screen: [186, 108, 528, 510]
   mask: overviews/droid-screen-mask.png
@@ -90,10 +90,10 @@
       button: BYE
       toast: Not now. It will come back.
 
-# The same report on the spotless replacement droid that rolls up five seconds after the crew wrecks the first:
-# the same questions, no cigar burns.
+# The same report on the spotless replacements (CSAT-2, then 3, 4 and 5) that roll up five seconds after the crew
+# wrecks the one before: the same questions, no cigar burns.
 - id: satisfaction-new
-  name: Satisfaction Report, new droid
+  name: Satisfaction Report, CSAT-2 to 5
   device: overviews/service-droid.png
   screen: [186, 108, 528, 510]
   mask: overviews/droid-screen-mask.png
