@@ -90,7 +90,7 @@ tokens:
   # the tables
   - {kind: npc, ref: happy-resident, map: event-horizon, at: [5.9, 10.6, 0]}
   - {kind: npc, ref: camera-operator, map: event-horizon, at: [11.8, 8.9, 0]}
-  # the near booth, filled: the company's canteen and front desk, off shift. The other two booths are open.
+  # the near booth, filled: the Company's canteen and front desk, off shift. The other two booths are open.
   - {kind: npc, ref: chef, map: event-horizon, at: [17.2, 12.1, 0.3]}
   - {kind: npc, ref: kitchen-hand, map: event-horizon, at: [15.6, 12.1, 0.3]}
   - {kind: npc, ref: receptionist, map: event-horizon, at: [16.4, 10.0, 0.3]}

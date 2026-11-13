@@ -55,7 +55,7 @@
   health: 7
   stats: {body: 10, reflex: 10, tech: 20, intel: 12, cool: 4, empathy: 4}
   list:
-    - {kind: skill, name: "Talks to machines like dogs", text: "Coaxing machines and plugging into them, through a port for anything.", downside: "It goes and tells its owner: ISCO below the executive decks, the company above.", icon: icons/list/tally-dogs.png}
+    - {kind: skill, name: "Talks to machines like dogs", text: "Coaxing machines and plugging into them, through a port for anything.", downside: "It goes and tells its owner: ISCO below the executive decks, the Company above.", icon: icons/list/tally-dogs.png}
     - {kind: skill, name: "Has read the manual, all of them", text: "How anything is built, and tool fingers to take it apart.", downside: "Tally explains out loud, at length, and everyone nearby hears.", icon: icons/list/tally-manual.png}
     - {kind: skill, name: "Statistically, no", text: "Spotting a lie, a bad bet or a rigged game.", downside: "Tally announces the conclusion aloud, to the person it's about, and it's wrong.", icon: icons/list/tally-statistically.png}
   burn:

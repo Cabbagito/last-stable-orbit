@@ -1,7 +1,7 @@
 # The founder's vault, from the Maps canvas (board "SmallVault", key in "SmallKey").
 # Art is 740x520, drawn at 2x. The shared isometric formula, with origin (340, 150).
 id: vault
-name: The founder's vault
+name: The Crypt
 subtitle: Behind the vault door on the Secure floor
 description: >-
   The founder's vault seen from above at an angle: a small old wood room, with bronze doors open at the front,

@@ -286,20 +286,20 @@
 
 - id: guard
   name: Security guard
-  role: Guard, the company
-  group: The company
+  role: Guard, the Company
+  group: The Company
   portrait: portraits/guard.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
   health: 1  # the bible's enemy card
   mood: Bored
-  note: Stands where the company's lift starts.
-  gm_note: "The company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, Body and Reflex d10; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Hard ends one without a fight. They radio: if a fight runs long, more come."
+  note: Stands where the Company's lift starts.
+  gm_note: "The Company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, Body and Reflex d10; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Hard ends one without a fight. They radio: if a fight runs long, more come."
 
 - id: guard-rookie
   name: Rookie guard
-  role: Guard, the company
-  group: The company
+  role: Guard, the Company
+  group: The Company
   portrait: portraits/guard-rookie.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
@@ -310,8 +310,8 @@
 
 - id: guard-sergeant
   name: Guard sergeant
-  role: Guard, the company
-  group: The company
+  role: Guard, the Company
+  group: The Company
   portrait: portraits/guard-sergeant.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
@@ -322,8 +322,8 @@
 
 - id: guard-riot
   name: Riot guard
-  role: Guard, the company
-  group: The company
+  role: Guard, the Company
+  group: The Company
   portrait: portraits/guard-riot.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
@@ -334,8 +334,8 @@
 
 - id: guard-towel
   name: Off-duty guard
-  role: Guard, the company, off duty
-  group: The company
+  role: Guard, the Company, off duty
+  group: The Company
   portrait: portraits/guard-towel.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
@@ -346,8 +346,8 @@
 
 - id: guard-turban
   name: Off-duty guard, turban
-  role: Guard, the company, off duty
-  group: The company
+  role: Guard, the Company, off duty
+  group: The Company
   portrait: portraits/guard-turban.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
@@ -358,8 +358,8 @@
 
 - id: reviewer-a
   name: Reviewer
-  role: Reviewer, the company
-  group: The company
+  role: Reviewer, the Company
+  group: The Company
   portrait: portraits/reviewer-a.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 4, tech: 10, intel: 10, cool: 8, empathy: 6}  # DRAFT
@@ -369,8 +369,8 @@
 
 - id: reviewer-b
   name: Reviewer
-  role: Reviewer, the company
-  group: The company
+  role: Reviewer, the Company
+  group: The Company
   portrait: portraits/reviewer-b.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 4, tech: 10, intel: 10, cool: 8, empathy: 6}  # DRAFT
@@ -380,8 +380,8 @@
 
 - id: camera-operator
   name: Camera operator
-  role: The company
-  group: The company
+  role: The Company
+  group: The Company
   portrait: portraits/camera-operator.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 6, tech: 10, intel: 6, cool: 12, empathy: 4}  # DRAFT
@@ -392,8 +392,8 @@
 
 - id: tech-welder
   name: Welder
-  role: Tech, the company
-  group: The company
+  role: Tech, the Company
+  group: The Company
   portrait: portraits/tech-welder.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 6, tech: 12, intel: 6, cool: 8, empathy: 4}  # DRAFT
@@ -404,8 +404,8 @@
 
 - id: tech-lamp
   name: Diagnostics tech
-  role: Tech, the company
-  group: The company
+  role: Tech, the Company
+  group: The Company
   portrait: portraits/tech-lamp.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 6, tech: 12, intel: 10, cool: 8, empathy: 6}  # DRAFT
@@ -416,20 +416,20 @@
 
 - id: tech-chief
   name: Chief tech
-  role: Tech, the company
-  group: The company
+  role: Tech, the Company
+  group: The Company
   portrait: portraits/tech-chief.gif
   color: "#7fb4ff"
   stats: {body: 6, reflex: 4, tech: 20, intel: 12, cool: 12, empathy: 6}  # DRAFT
   health: 1  # DRAFT
   mood: Unhurried  # DRAFT
-  note: Thirty years on the company's machines, and a loupe screwed into one eye.  # DRAFT
+  note: Thirty years on the Company's machines, and a loupe screwed into one eye.  # DRAFT
   gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
 
 - id: board-chair
   name: Chair of the board
-  role: The board, the company
-  group: The company
+  role: The board, the Company
+  group: The Company
   portrait: portraits/board-chair.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 4, tech: 6, intel: 12, cool: 20, empathy: 8}  # DRAFT
@@ -439,8 +439,8 @@
 
 - id: board-young
   name: Board member
-  role: The board, the company
-  group: The company
+  role: The board, the Company
+  group: The Company
   portrait: portraits/board-young.gif
   color: "#7fb4ff"
   stats: {body: 6, reflex: 6, tech: 8, intel: 10, cool: 12, empathy: 4}  # DRAFT
@@ -450,8 +450,8 @@
 
 - id: board-old
   name: Board member
-  role: The board, the company
-  group: The company
+  role: The board, the Company
+  group: The Company
   portrait: portraits/board-old.gif
   color: "#7fb4ff"
   stats: {body: 6, reflex: 4, tech: 4, intel: 8, cool: 12, empathy: 10}  # DRAFT
@@ -461,8 +461,8 @@
 
 - id: scientist-junior
   name: Junior analyst
-  role: Scientist, the company
-  group: The company
+  role: Scientist, the Company
+  group: The Company
   portrait: portraits/scientist-junior.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 6, tech: 12, intel: 12, cool: 6, empathy: 8}  # DRAFT
@@ -472,8 +472,8 @@
 
 - id: scientist-physicist
   name: Physicist
-  role: Scientist, the company
-  group: The company
+  role: Scientist, the Company
+  group: The Company
   portrait: portraits/scientist-physicist.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 4, tech: 12, intel: 20, cool: 8, empathy: 6}  # DRAFT
@@ -483,8 +483,8 @@
 
 - id: receptionist
   name: Receptionist
-  role: The company
-  group: The company
+  role: The Company
+  group: The Company
   portrait: portraits/receptionist.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 6, tech: 8, intel: 8, cool: 12, empathy: 12}  # DRAFT
@@ -494,8 +494,8 @@
 
 - id: clerk
   name: Clerk
-  role: The company
-  group: The company
+  role: The Company
+  group: The Company
   portrait: portraits/clerk.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 4, tech: 8, intel: 8, cool: 10, empathy: 4}  # DRAFT
@@ -505,8 +505,8 @@
 
 - id: chef
   name: Chef
-  role: Canteen, the company
-  group: The company
+  role: Canteen, the Company
+  group: The Company
   portrait: portraits/chef.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 8, tech: 6, intel: 6, cool: 10, empathy: 10}  # DRAFT
@@ -516,8 +516,8 @@
 
 - id: kitchen-hand
   name: Kitchen hand
-  role: Canteen, the company
-  group: The company
+  role: Canteen, the Company
+  group: The Company
   portrait: portraits/kitchen-hand.gif
   color: "#7fb4ff"
   stats: {body: 6, reflex: 8, tech: 4, intel: 6, cool: 8, empathy: 8}  # DRAFT
@@ -601,7 +601,7 @@
 - id: scientist
   name: Dr. Irena Vos
   role: The Analyst
-  group: The company
+  group: The Company
   portrait: portraits/scientist.gif
   codex: scientist
   color: "#f2b544"
@@ -609,12 +609,12 @@
   health: 2  # DRAFT for Peter
   mood: Tired
   note: Talks to her plots more than to people.
-  gm_note: "Decades of ISCO's answers trace back to a handful of events, and the 0.49 plot. She can't prove it; she filed it once and got promoted. She built the probe, and the company confiscated it. Keeps her findings in a hidden folder in her room on deck 7, and she's always there. The probe's code is in her head, and she gives it to the crew in session 4. Dax's lover; they meet in the hidey-hole behind the Bot bays' boiler, and she's waiting there in session 4. Fetching Unit 14's log for her earns her trust. During the heist Peter rolls for her on purpose: if she trusts the crew she lets it slide and asks them to find where the probe is kept."
+  gm_note: "Decades of ISCO's answers trace back to a handful of events, and the 0.49 plot. She can't prove it; she filed it once and got promoted. She built the probe, and the Company confiscated it. Keeps her findings in a hidden folder in her room on deck 7, and she's always there. The probe's code is in her head, and she gives it to the crew in session 4. Dax's lover; they meet in the hidey-hole behind the Bot bays' boiler, and she's waiting there in session 4. Fetching Unit 14's log for her earns her trust. During the heist Peter rolls for her on purpose: if she trusts the crew she lets it slide and asks them to find where the probe is kept."
 
 - id: spider-mech
   name: Spider mech
-  role: Security, the company
-  group: The company
+  role: Security, the Company
+  group: The Company
   portrait: portraits/spider-mech.gif
   color: "#7fb4ff"
   size: 2
@@ -622,7 +622,7 @@
   health: 13  # the bible's enemy card
   mood: Dormant
   note: Six legs, a cluster of red lenses, twin guns under its chin.
-  gm_note: "The company's boss machine; ISCO doesn't run it. Out of the heist: under repair in the Bot bays from day 2, with techs and guards around it, and getting near it weakens it for the probe run (how much is still open). By session 4 it's gone: mercenaries get hold of it and bring it up the freight lift as the boss. Enemy card: 13 health, d12, Hard to hit, fights alone. Heavy guns, so at least 2 damage. At 6 health or less its shell cracks: Normal to hit, and it attacks with a d20. Weak: Tech at Hard, once, blinds its lenses (it loses its next action and is Normal to hit). Strong: too big to grapple, and ISCO can't shut it down for you."
+  gm_note: "The Company's boss machine; ISCO doesn't run it. Out of the heist: under repair in the Bot bays from day 2, with techs and guards around it, and getting near it weakens it for the probe run (how much is still open). By session 4 it's gone: mercenaries get hold of it and bring it up the freight lift as the boss. Enemy card: 13 health, d12, Hard to hit, fights alone. Heavy guns, so at least 2 damage. At 6 health or less its shell cracks: Normal to hit, and it attacks with a d20. Weak: Tech at Hard, once, blinds its lenses (it loses its next action and is Normal to hit). Strong: too big to grapple, and ISCO can't shut it down for you."
 
 # The rest of the bible's "Other faces" (added 2026-11-08). The dice and health are flat placeholders, because the
 # bible gives none: DRAFTS for Peter to set. Each borrows another NPC's portrait until the real art is imported.
@@ -715,8 +715,8 @@
 
 - id: head-of-security
   name: Vera Lind  # DRAFT name, chosen 2026-11-09
-  role: Head of security, the company
-  group: The company
+  role: Head of security, the Company
+  group: The Company
   portrait: portraits/head-of-security.gif
   color: "#7fb4ff"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
@@ -1073,7 +1073,7 @@
 
 - id: dead-guard
   name: Dead guard
-  role: Guard, the company
+  role: Guard, the Company
   group: The dead
   portrait: portraits/dead-guard.gif
   color: "#5d5868"

@@ -43,8 +43,8 @@ tokens:
   - {kind: npc, ref: hired-gun-grille, map: event-horizon, at: [11.8, 8.9, 0]}
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [3.35, 9.55, 0]}
   # ---- The takeover, the same as on the Act 4 cards. The fixer's mercenaries hold the station in pairs (the bible's
-  # "bring 2"), and the company's guards are held, hiding or dead. Nobody is labelled: tell the players who is a hostage.
-  # The Promenade: two at the company's lift with one guard on his knees and the other dead; one in the market, holding
+  # "bring 2"), and the Company's guards are held, hiding or dead. Nobody is labelled: tell the players who is a hostage.
+  # The Promenade: two at the Company's lift with one guard on his knees and the other dead; one in the market, holding
   # the vendor at her stall, and the noodle droid has come out from behind its counter to fight him
   - {kind: npc, ref: hired-gun-eye, map: promenade, at: [23.9, 2.4, 0]}  # runs the street for Lucan
   - {kind: npc, ref: hired-gun-watch, map: promenade, at: [25.9, 2.9, 0]}

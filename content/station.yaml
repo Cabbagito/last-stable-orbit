@@ -97,7 +97,7 @@ places:
     hots: [[856, 158, 100, 56]]
 
   - map: vault
-    name: The founder's vault
+    name: The Crypt
     where: At the end of the Secure floor
     blurb: "His private vault, treated like a saint's shrine, with flowers and candles left at the door."
     lit: station/lit-vault.png

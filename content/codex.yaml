@@ -25,8 +25,8 @@ sections:
   - {src: portraits/tally.gif, l: 0, t: -62, w: 192}
   - {src: portraits/ves.gif, l: 192, t: -62, w: 192}
 - id: items
-  name: Items
-  short: Items
+  name: Stash
+  short: Stash
   tiles:
   - {src: icons/items/sidearm.png, l: 8, t: -72, w: 144}
   - {src: icons/items/note.png, l: 124, t: -72, w: 144}
@@ -43,13 +43,13 @@ sections:
   tiles:
   - {src: maps/event-horizon/base-open.png, l: -640, t: -350, w: 2560}
 - id: lore
-  name: Lore
-  short: Lore
+  name: Universe
+  short: Universe
   tiles:
   - {src: codex/hole.gif, l: -70, t: -360, w: 720}
 - id: rules
-  name: How to play
-  short: Rules
+  name: README
+  short: README
   tiles:
   - {src: icons/dice/body-d20.png, l: 4, t: -26, w: 96}
   - {src: icons/dice/reflex-d20.png, l: 90, t: -70, w: 96}
@@ -396,7 +396,7 @@ entries:
   role: Decks 6 to 9
   label: Place · decks 6 to 9
   art: {src: maps/deck-6/base-day.png, px: 1110, cx: 640, y0: 230, k: 1, km: 1, pos: 60% 50%, z: 1.4}
-  lead: Glass, quiet carpets and human staff. The company sells booking time with ISCO here. By the founder's rule ISCO has
+  lead: Glass, quiet carpets and human staff. The Company sells booking time with ISCO here. By the founder's rule ISCO has
     no systems on these decks, because the people who review it can't be watched by the thing they review.
   see: [isco, secure]
 - id: secure
@@ -405,12 +405,12 @@ entries:
   role: Behind the guarded door on deck 8
   label: Place · deck 8
   art: {src: maps/secure/base-day.png, px: 1660, cx: 1130, y0: 150, k: 1, km: 1, pos: 68% 30%, z: 1.3}
-  lead: 'Behind deck 8''s guarded door: a red runner to the founder''s vault, kept like a saint''s shrine, with flowers and
-    candles left at its door. The company keeps its confiscated gear here too.'  # DRAFT
+  lead: 'Behind deck 8''s guarded door: a red runner to the founder''s vault, the Crypt, kept like a saint''s shrine, with flowers and
+    candles left at its door. The Company keeps its confiscated gear here too.'  # DRAFT
   see: [executive, vault]
 - id: vault
   sec: world
-  name: The founder's vault
+  name: The Crypt
   role: Behind the vault door
   label: Place · the Secure floor
   art: {src: maps/vault/base.png, px: 740, cx: 370, y0: 90, k: 2, km: 1, pos: 50% 40%, z: 1.5}
@@ -496,8 +496,8 @@ entries:
   blocks:
   - id: deck-exec
     h: Executive decks · 6 to 9
-    text: Glass, quiet carpets, human staff. The company sells booking time with ISCO here. The founder's vault is up here
-      too, treated like a saint's shrine. By the founder's rule ISCO has no systems on these decks.
+    text: Glass, quiet carpets, human staff. The Company sells booking time with ISCO here. The founder's vault, the Crypt,
+      is up here too, treated like a saint's shrine. By the founder's rule ISCO has no systems on these decks.
   - id: deck-prom
     h: The Promenade · deck 2
     text: One long street. Dock 7 for arrivals, where the queue is always exactly 11 minutes. The Night Market, with its noodles
@@ -542,7 +542,7 @@ entries:
   blocks:
   - id: owners
     h: Who owns it
-    text: On paper it belongs to all of humanity. In practice a company operates it and sells booking time. Every answer passes
+    text: On paper it belongs to all of humanity. In practice the Company (Ergonomics, in the small print) operates it and sells booking time. Every answer passes
       human review before it leaves the station.
   - id: name
     h: The name

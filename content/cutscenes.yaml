@@ -60,7 +60,7 @@
   name: Last Words
   act: "Act 3: The Job"
   sub: 33 s, in the heist
-  ends: Ends on his desk and the recorder. Goes to the founder's vault. Send in whoever walked through the door.
+  ends: Ends on his desk and the recorder. Goes to the Crypt. Send in whoever walked through the door.
   file: films/vault-opens.mp4
   length: 33.0
   still: films/vault-opens-still.png

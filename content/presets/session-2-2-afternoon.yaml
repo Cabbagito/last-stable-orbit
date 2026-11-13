@@ -1,5 +1,5 @@
 # Session 2, the afternoon: the silence is over and the station is back at work. The offices are full, and the Promenade is as
-# busy as the day they arrived. The crew start in the plaza, out of the company's lift.
+# busy as the day they arrived. The crew start in the plaza, out of the Company's lift.
 id: session-2-afternoon
 name: "The afternoon"
 act: "Act 2: The Vigil"
@@ -18,7 +18,7 @@ maps:
   bots: {mood: day}
   med: {mood: white, shown: [screen]}
 tokens:
-  # the crew, in the plaza by the company's lift
+  # the crew, in the plaza by the Company's lift
   - {kind: crew, ref: lale, map: promenade, at: [24.0, 4.4, 0]}
   - {kind: crew, ref: marlo, map: promenade, at: [25.6, 4.8, 0]}
   - {kind: crew, ref: tally, map: promenade, at: [22.6, 4.8, 0]}

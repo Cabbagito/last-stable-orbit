@@ -26,7 +26,7 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     name: "Her desk"
     at: [3.17, 2.5, 0.83]
     closeup: [960.2, 410.34]
-    text: "A lamp, and a manual for an instrument the company doesn't list."
+    text: "A lamp, and a manual for an instrument the Company doesn't list."
   - id: maintenance-door
     name: "The old maintenance door"
     at: [6.87, 1.27, 0.61]

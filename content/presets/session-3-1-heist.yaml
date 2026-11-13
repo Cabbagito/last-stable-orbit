@@ -1,5 +1,5 @@
 # Session 3, the heist: night, and the crew start on the Promenade, outside the bar's door, with the street between them
-# and the company's lift, which has its usual two guards. Who's where upstairs is the Heist playground's Night layer, with more guards. The Bot bays are at
+# and the Company's lift, which has its usual two guards. Who's where upstairs is the Heist playground's Night layer, with more guards. The Bot bays are at
 # Night: the mech is still in the repair frame under its tarp, in the art only, with no chip for it until its fight.
 id: session-3-heist
 name: "The heist"
@@ -19,7 +19,7 @@ maps:
   bots: {mood: night}
   med: {mood: white, shown: [screen]}
 tokens:
-  # the crew, outside the bar's door: the Night Market and the plaza lie between them and the company's lift
+  # the crew, outside the bar's door: the Night Market and the plaza lie between them and the Company's lift
   - {kind: crew, ref: lale, map: promenade, at: [38.4, 2.4, 0]}
   - {kind: crew, ref: marlo, map: promenade, at: [40.0, 2.8, 0]}
   - {kind: crew, ref: tally, map: promenade, at: [37.0, 2.8, 0]}

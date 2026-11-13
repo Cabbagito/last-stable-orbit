@@ -6,7 +6,7 @@ subtitle: Deck 2
 description: >-
   The Promenade seen from above at an angle, a long street: Dock 7 in spotless white with queue rails and an
   11:00 board, a plaza with a gold mural of Ilija and a huge window on the black hole, the Concierge's desk and
-  the company's blue lift, the Night Market with striped awnings and strings of amber and teal lanterns, a
+  the Company's blue lift, the Night Market with striped awnings and strings of amber and teal lanterns, a
   too-clean side alley, the bar's warm door, a hazard-striped service door and the white Med Bay.
 display: [3600, 2160]
 origin: [360, 190]
@@ -17,7 +17,7 @@ moods:
   # Takeover is Act 4, the mercenaries holding the street: shot up a few minutes ago, on emergency light, the stalls still
   # open and lit. scripts/promenade_takeover.py paints it over Calm, so nothing on the street has moved.
   - {id: takeover, label: Occupied, base: maps/promenade/base-takeover.png, glow: maps/promenade/glow-takeover.png}
-switches:  # ISCO's lift: the company's lift on the plaza opens by itself, on white-violet light, once the crew hold the Seal
+switches:  # ISCO's lift: the Company's lift on the plaza opens by itself, on white-violet light, once the crew hold the Seal
   - {id: isco_lift, label: "ISCO's lift", type: bool}
 overlays:  # patches, drawn over the base (scripts/isco_lift.py)
   - {id: lift-open-calm, src: maps/promenade/patch-lift-calm.png, layer: patch, mood: calm, switch: isco_lift, value: 1}
@@ -50,7 +50,7 @@ objects:  # things players can inspect, once the GM reveals them. DRAFT texts, f
     closeup: [1500, 1130]
     text: A ring of old gold set into the plaza floor, worn smooth by feet. People walk around the black disc in its middle, never across it.
   - id: company-lift
-    name: The company's lift
+    name: The Company's lift
     at: [24.4, 0.2, 1.6]
     closeup: [2170, 950]
     text: "A blue lift behind a guard post. The panel has one lit arrow, pointing up. Under it is a second arrow that has never been lit."  # DRAFT
@@ -78,7 +78,7 @@ pins:
   - {k: "10", label: "Med Bay, with 99.97% over the door", at: [45.1, 0.2, 1.6]}
   - {k: A, label: Window on the black hole, at: [19.1, 0, 2.2]}
   - {k: B, label: "Company lift: up to the executive decks. Down to the lift station is ISCO's, dead all campaign. It opens by itself once the crew hold the Seal: the ISCO's lift switch", at: [24.4, 0.2, 1.6]}
-  - {k: C, label: "Guard post, where ISCO's reach stops: up is the company's, down is ISCO's", at: [26.4, 1.5, 1.4]}
+  - {k: C, label: "Guard post, where ISCO's reach stops: up is the Company's, down is ISCO's", at: [26.4, 1.5, 1.4]}
   - {k: D, label: Clean alley with a charging dock, at: [32.2, 12.8, 0]}
   - {k: E, label: Service door down to Maintenance, at: [42.5, 0.1, 1.2]}
   - {k: F, label: The bar's small sign outside, at: [38, 0, 3.75]}
@@ -89,7 +89,7 @@ pins:
 # Where the crew land when you send them here: off the Patience, in front of the Dock 7 gangway, in crew order.
 arrive: [[1.6, 4.6, 0], [2.4, 4.0, 0], [0.8, 5.4, 0], [2.2, 5.6, 0], [1.4, 6.2, 0]]
 # Coming from another map, they land at the door they came through instead: the bar's door, the service door up from
-# the Bot bays, the company's lift down from deck 6, and the Med Bay's door.
+# the Bot bays, the Company's lift down from deck 6, and the Med Bay's door.
 arrive_from:
   event-horizon: [[38.4, 2.4, 0], [40.0, 2.8, 0], [37.0, 2.8, 0], [39.0, 4.1, 0], [37.5, 4.1, 0]]
   bots: [[42.4, 1.6, 0], [43.4, 2.4, 0], [41.4, 2.4, 0], [42.9, 3.6, 0], [41.7, 3.6, 0]]
