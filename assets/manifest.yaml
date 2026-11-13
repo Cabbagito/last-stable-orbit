@@ -1588,29 +1588,29 @@ assets:
   - path: maps/promenade/base-calm.png
     store: MAPS
     asset_id: "ce23081f90adf7185bd95a41f54fe3f8"
-    sha256: "dd150cf24121eb763e71c7656b6fa223c906f431942435f9ecc79becded37fba"
-    bytes: 176498
+    sha256: "35b1f98c900e488ffcb7309da62c8b5d19f56296499e829e5bc17172ac499da7"
+    bytes: 176919
     width: 1800
     height: 1080
   - path: maps/promenade/glow-calm.png
     store: MAPS
     asset_id: "acb361f744fd41f72a136ccf0f77fb5c"
-    sha256: "cae791f3b761f69b8e62e2fa775a78692e28671b8e06a55a20633fdd0fde12aa"
-    bytes: 118219
+    sha256: "43eb7d8fd914ceb1fd47a0e93ffd5227437a935d1a1b0776458c81389ac34f6f"
+    bytes: 116220
     width: 1800
     height: 1080
   - path: maps/promenade/base-takeover.png
     store: TAKEOVER
     asset_id: "fdc4ca41e567c813317f5ccc65b6be87"
-    sha256: "ca05b1474d43354b8c6e2552ef25357dff72cbb9a32ad763a34c41ab1bf0f1a9"
-    bytes: 260851
+    sha256: "9df4cce95165ae3c7af86e87052c6174dd943ad61ba31b6c9aecc42631dd3c46"
+    bytes: 261205
     width: 1800
     height: 1080
   - path: maps/promenade/glow-takeover.png
     store: TAKEOVER
     asset_id: "9b604e9829a2a4990ac8131621a7d608"
-    sha256: "eabdb50c7ee230f3d028a48c83164d1e486d2aed306fdff16b565bcb845ad5bf"
-    bytes: 127706
+    sha256: "d5699421a87fb864a1f2f8b74e70f4bbcb1fccae2918be20bb64934ac60dc801"
+    bytes: 126825
     width: 1800
     height: 1080
   - path: maps/promenade/hole.gif

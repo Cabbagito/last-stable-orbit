@@ -259,8 +259,8 @@
   gm_note: Patience is the ship ISCO leaves on if it wins. Day one starts aboard.
 
 - id: vendor
-  name: Night Market vendor
-  role: Vendor
+  name: Miro Sato
+  role: "Sato, the chrome clinic"
   group: Locals
   portrait: portraits/vendor.gif
   codex: vendor
@@ -269,7 +269,7 @@
   health: 2  # DRAFT for Peter
   mood: Haggling
   note: Chrome, implants, fittings. Whatever you need, by tonight.
-  gm_note: "The legit chrome: 400 a piece, skill or stat alike, one piece per person. The app charges nothing: take the credits off their card and hand the piece over from its chrome menu. Buys what the crew finds, too (the To sell shelf)."  # DRAFT, from the 2026-11-12 economy
+  gm_note: "The legit chrome: 400 a piece, skill or stat alike, one piece per person. The app charges nothing: take the credits off their card and hand the piece over from its chrome menu. Buys what the crew finds, too (the To sell shelf). Bato's brother. The shop was SATO & SATO until they fought over whose Sato came first; Bato sawed his half off the sign and left, and they haven't spoken since. Neither will say what it was about. Each has a petty errand against the other for anyone who'll take it. Bring them together (the two signs fit; Sarge's ledger has what they ordered as boys) and they build one piece between them, half clinic and half duct tape, and give it away."  # DRAFT, the Sato brothers, 2026-11-14
 
 - id: nurse
   name: Med Bay nurse
@@ -282,7 +282,7 @@
   health: 2  # DRAFT for Peter
   mood: Soothing
   note: Asks how you're feeling, and writes it down.
-  gm_note: "Satisfaction reads 99.97% because the Med Bay sedates anyone who complains. A crew that loses a fight wakes here, feeling wonderful."
+  gm_note: "A person, not a machine. Satisfaction reads 99.97% because the Med Bay sedates anyone who complains, and she knows exactly what the sedation does: she thinks it's kindness. \"Nobody has ever left my bay unhappy.\" The stack of surveys, every answer a ten in one handwriting, is hers. A crew that loses a fight wakes here, feeling wonderful."  # the handwriting and her belief are DRAFT, 2026-11-14
 
 - id: guard
   name: Security guard
@@ -990,19 +990,20 @@
   note: Going to the Vigil for her mother.  # DRAFT
 
 - id: resident-shopkeeper
-  name: Shopkeeper
-  role: Resident
-  group: Residents
+  name: Bato Sato
+  role: "& Sato, the knock-off cart"
+  group: Locals
   portrait: portraits/resident-shopkeeper.gif
   color: "#a9a2bc"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 8, empathy: 8}  # DRAFT
   health: 1  # DRAFT
   mood: Opinionated  # DRAFT
   note: Sells spare parts and opinions. The opinions are free.  # DRAFT
+  gm_note: "The bootleg chrome: 200 a piece, and a God roll at install decides what it gives. Miro's brother, trained in the same shop, and the half of the sign taped to his cart reads & SATO. See Miro for the feud and what ends it."  # DRAFT, the Sato brothers, 2026-11-14
 
 - id: robot-cook
-  name: Stall cook
-  role: Resident, machine mind
+  name: Sarge
+  role: "Noodle stall, machine mind"
   group: Residents
   portrait: portraits/robot-cook.gif
   color: "#a9a2bc"
@@ -1010,6 +1011,7 @@
   health: 2  # DRAFT
   mood: Busy  # DRAFT
   note: Runs a noodle stall. Its visor glows brighter when you order seconds.  # DRAFT
+  gm_note: "Built as a boarding unit for a colony war that ended before it shipped. Never used, sold as surplus, and it chose noodles. The regulars think the name is a joke about how it runs the queue. Small tells on day one: knife work that is frighteningly exact, orders called \"tickets\" and each one confirmed, and nothing about before the stall. It has no sense of taste and judges a bowl by the customer's face. It keeps a ledger of every bowl it has served, the Sato brothers' as boys included, and has never charged the noodle gran. In Act 4 the crew finds it holding the stall against the mercenaries with a wok and a knife, cutting them up and making noodles while it does."  # DRAFT, 2026-11-14
 
 - id: robot-miner
   name: Old miner

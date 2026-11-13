@@ -208,7 +208,7 @@ entries:
   npc: vendor
   label: NPC · vendor
   art: {src: portraits/vendor.gif, kind: bust, pos: 50% 10%}
-  lead: Runs the chrome clinic at the Night Market. Chrome, implants, fittings. Whatever you need, by tonight.
+  lead: Miro Sato runs Sato, the chrome clinic at the Night Market. Chrome, implants, fittings. Whatever you need, by tonight. The sign used to be longer.
   see: [promenade, chrome]
 - id: unit-14
   sec: chars
