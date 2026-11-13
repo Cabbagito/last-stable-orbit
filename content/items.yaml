@@ -146,18 +146,8 @@
     Its hours within two metres of each person, most first.
     Old Dax and Dr. Vos are near the top.
 
-- id: founder-log-1
-  name: "Founder's audio log #1"
-  icon: icons/items/note.png  # placeholder until an audio-log icon is drawn
-  codex: founder-log-1
-  kind: audio
-  shelf: clues
-  text: |-
-    Summary: Ilija, years ago, laughing. The station's new mind keeps rearranging his calendar "to make him happy", and he keeps putting dinner back in.
-    "Some things you don't optimise. You just show up."
-
 # Session 1's other items, from the bible's table. What each one does is the bible's; the wording is DRAFT. The notes
-# share one icon. "[Peter to fill in]" marks what the bible doesn't say yet.
+# share one icon.
 - id: burner-key
   name: Burner key
   icon: icons/items/burner-key.png

@@ -363,16 +363,6 @@ entries:
     Its hours within two metres of each person, most first.
     Old Dax and Dr. Vos are near the top.
   see: [unit-14]
-- id: founder-log-1
-  sec: items
-  item: founder-log-1
-  role: Audio
-  label: Item · audio
-  art: {src: icons/items/note.png, kind: icon}
-  lead: Ilija, years ago, laughing. The station's new mind keeps rearranging his calendar "to make him happy", and he keeps
-    putting dinner back in.
-  quote: '"Some things you don''t optimise. You just show up."'
-  see: [ilija]
 - id: patience
   sec: world
   name: Patience

@@ -294,7 +294,7 @@
   health: 1  # the bible's enemy card
   mood: Bored
   note: Stands where the company's lift starts.
-  gm_note: "The company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, d8, Normal to hit; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Hard ends one without a fight. They radio: if a fight runs long, more come."
+  gm_note: "The company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, Body and Reflex d10; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Hard ends one without a fight. They radio: if a fight runs long, more come."
 
 - id: guard-rookie
   name: Rookie guard

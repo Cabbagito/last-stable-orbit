@@ -104,9 +104,9 @@ async def test_gm_gives_takes_and_moves(engine):
 
 
 async def test_two_of_the_same_note_are_two_items(engine):
-    await run(engine, GM, "gm.item.give", {"holder": "ves", "item": "founder-log-1"})
-    await run(engine, GM, "gm.item.give", {"holder": "ves", "item": "founder-log-1"})
-    logs = [e for e in pockets(engine, "ves") if e.item == "founder-log-1"]
+    await run(engine, GM, "gm.item.give", {"holder": "ves", "item": "cleaning-log"})
+    await run(engine, GM, "gm.item.give", {"holder": "ves", "item": "cleaning-log"})
+    logs = [e for e in pockets(engine, "ves") if e.item == "cleaning-log"]
     assert len(logs) == 2 and logs[0].uid != logs[1].uid
 
 
