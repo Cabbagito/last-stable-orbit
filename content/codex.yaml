@@ -14,7 +14,7 @@
 
 sections:
 - id: chars
-  name: Characters
+  name: Faces
   short: Characters
   tiles:
   - {src: portraits/tally.gif, l: 0, t: -96, w: 192}
@@ -38,7 +38,7 @@ sections:
   - {src: icons/items/splice-kit.png, l: 182, t: -48, w: 96}
   - {src: icons/items/credits.png, l: 268, t: -48, w: 96}
 - id: world
-  name: Places & objects
+  name: Ergo
   short: Places
   tiles:
   - {src: maps/event-horizon/base-open.png, l: -640, t: -350, w: 2560}
