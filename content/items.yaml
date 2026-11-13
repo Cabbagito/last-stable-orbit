@@ -175,14 +175,14 @@
     "No one on Ergo waits more than 11 minutes."
     "No one has ever beaten the slots."
 
-- id: gumshoe-card
+- id: gumshoe-card  # the date is a DRAFT (2026-11-13), for Peter
   name: The Gumshoe's card
   icon: icons/items/note.png
   kind: note
   shelf: clues
   text: |-
     A card with a name and a date on the back.
-    The victim: [Peter to fill in]. The date: [Peter to fill in].
+    The victim: Jonah Pell. The date: eleven days ago.
 
 - id: antidote
   name: Antidote
@@ -191,14 +191,14 @@
   shelf: useful
   text: One antidote, 3 doses. Wakes someone who's been sedated. Anyone can give a dose.
 
-- id: admissions-record
+- id: admissions-record  # the entry is a DRAFT (2026-11-13), for Peter: Rudi Fenn, sedated the night he killed Jonah Pell
   name: Admissions record
   icon: icons/items/note.png
   kind: note
   shelf: clues
   text: |-
     The Med Bay's admissions for the night of the scrubbed alley.
-    Who came in that night: [Peter to fill in].
+    One admission: Rudi Fenn, brought in distressed a little after midnight. Discharged in the morning. "Feeling wonderful."
 
 - id: cleaning-log
   name: Cleaning log

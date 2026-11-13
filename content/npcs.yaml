@@ -19,7 +19,7 @@
   mood: Watching the door
   note: Keeps one table nobody sits at.
   codex: dax
-  gm_note: "His family has kept the founder's table and the bar for 300 years. Holds the stockroom door in session 4. Irena's lover; they meet in the hidey-hole behind the Bot bays' boiler. He hates what the slots do to his regulars. Two favours for now: the slots, and the bar fight on day 1. He sees the rope after night one and trusts the crew less on day 2."
+  gm_note: "His family has kept the founder's table and the bar for 300 years. On day 1 the first of the crew into the bar overhears him and Irena agree to meet \"tomorrow night, at the place\". Session 4 opens at his shotgun: won over, he fights the mercenaries beside the crew, tells them to go and stays for Lucan; if not, they fight without him and leave by the hatch. Lucan kills him either way. Irena's lover; they meet in the hidey-hole behind the Bot bays' boiler. He hates what the slots do to his regulars. Two favours for now: the slots, and the bar fight on day 1. He sees the rope after night one and trusts the crew less on day 2."
 
 - id: fixer
   name: Lucan Merrow
@@ -269,7 +269,7 @@
   health: 2  # DRAFT for Peter
   mood: Haggling
   note: Chrome, implants, fittings. Whatever you need, by tonight.
-  gm_note: Contacts and supplies for the crew in session 1.
+  gm_note: "The legit chrome: 400 a piece, skill or stat alike, one piece per person. The app charges nothing: take the credits off their card and hand the piece over from its chrome menu. Buys what the crew finds, too (the To sell shelf)."  # DRAFT, from the 2026-11-12 economy
 
 - id: nurse
   name: Med Bay nurse
@@ -649,7 +649,7 @@
   health: 4  # DRAFT placeholder
   mood: On watch  # DRAFT
   note: A lookout with nobody to look out for.  # DRAFT, from the bible
-  gm_note: "Ves's side quest, and only the Ves player knows him. Lookout on her old crew, sold off as surplus when she got out through a vent while he held the door; he believes she never came back. An offworld machine ISCO never registered, so the cleaners clean around him like furniture. Depressed and literal, and he'll talk about the old days to anyone, Tomo included. \"Hello, Vesna. You're late.\" The heart of it is Ves telling him she came back. By day the bible has him on the gantry over the Dock 7 queue, timing it; at night he sleeps in a spare cradle in the Bot bays."
+  gm_note: "Ves's side quest, and only the Ves player knows him. Lookout on her old crew, sold off as surplus when she got out through a vent while he held the door; he believes she never came back. An offworld machine ISCO never registered, so the cleaners clean around him like furniture. Depressed and literal, and he'll talk about the old days to anyone, Tomo included. \"Hello, Vesna. You're late.\" The heart of it is Ves telling him she came back. By day he's on the gantry over the Dock 7 queue, timing it; at night he sleeps in a spare cradle in the Bot bays."
 
 - id: static
   name: Static Kováč
@@ -674,7 +674,7 @@
   health: 3  # DRAFT
   mood: Grinning  # DRAFT
   note: Pink crest, studs, grins at everything.  # DRAFT
-  gm_note: "Static Kováč's people, the possible fight on Marlo's thread. Placeholder dice and health."
+  gm_note: "Static Kováč's people, the possible fight on Marlo's thread."
 
 - id: static-door
   name: Door
@@ -686,7 +686,7 @@
   health: 4  # DRAFT
   mood: Unimpressed  # DRAFT
   note: A chrome brow and no small talk.  # DRAFT
-  gm_note: "Static Kováč's people, the possible fight on Marlo's thread. Placeholder dice and health."
+  gm_note: "Static Kováč's people, the possible fight on Marlo's thread."
 
 - id: static-neon
   name: Neon
@@ -698,7 +698,7 @@
   health: 3  # DRAFT
   mood: Watching  # DRAFT
   note: A tattoo that glows, and pink eyes to match.  # DRAFT
-  gm_note: "Static Kováč's people, the possible fight on Marlo's thread. Placeholder dice and health."
+  gm_note: "Static Kováč's people, the possible fight on Marlo's thread."
 
 - id: gumshoe
   name: The Gumshoe
@@ -733,7 +733,7 @@
   group: Passengers
   portrait: portraits/frail-passenger.gif
   color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  stats: {body: 4, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
   health: 1  # DRAFT placeholder
   mood: Breathing carefully
   note: Came a long way for the Vigil.

@@ -501,7 +501,7 @@ entries:
   label: Lore · the station
   sub: A station hanging above a black hole.
   art: {src: codex/ergo.png, px: 720, cx: 354, y0: 0, k: 1, km: 1, pos: 50% 0%}
-  lead: Humanity has spread across some 20 to 100 star systems, without faster-than-light travel. Everyone relies on one machine
+  lead: Humanity has spread across some 40 star systems, without faster-than-light travel. Everyone relies on one machine
     at one black hole, and Ergo is the door to it.
   blocks:
   - id: deck-exec
