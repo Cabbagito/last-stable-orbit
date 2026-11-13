@@ -32,7 +32,7 @@
   mood: Patient
   note: Asked nicely.
   codex: fixer
-  gm_note: "Uploaded man in a chassis. Thinks a rich client hired him; the client is ISCO. After the bar, ISCO tells him the truth and manipulates him; he stays for the money and kills Dax. Final boss at the lift: 10 health, d20, Very hard to hit."
+  gm_note: "Uploaded man in a chassis. Thinks a rich client hired him; the client is ISCO. After the bar, ISCO tells him the truth and manipulates him; he stays for the money and kills Dax. Final boss at the lift: 10 health, d20, Savage to hit."
   # His three Burns: only you see them, and their films play only on the TV. No Entropy is tracked; keep count yourself.
   burns:
     - id: legendary-action
@@ -120,7 +120,7 @@
   health: 4  # the bible's enemy card
   mood: Bored
   note: Paid by the job.
-  gm_note: "The fixer's. 4 health, d12, Hard to hit. Once the fixer is down, Cool at Normal sends the rest running."
+  gm_note: "The fixer's. 4 health, d12, Grim to hit. Once the fixer is down, Cool at Dicey sends the rest running."
 
 - id: hired-gun-mask
   name: Hired gun, masked
@@ -132,7 +132,7 @@
   health: 4  # the bible's enemy card
   mood: Silent  # DRAFT
   note: Helmet, respirator, red lenses. You never see the face.  # DRAFT
-  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Grim to hit."
 
 - id: hired-gun-eye
   name: Hired gun, chrome eye
@@ -144,7 +144,7 @@
   health: 4  # the bible's enemy card
   mood: Watching  # DRAFT
   note: Runs the crew for Lucan.  # DRAFT
-  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Grim to hit."
 
 - id: hired-gun-watch
   name: Hired gun, watch cap
@@ -156,7 +156,7 @@
   health: 4  # the bible's enemy card
   mood: On the radio  # DRAFT
   note: Calls the lift, and the shots.  # DRAFT
-  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Grim to hit."
 
 - id: hired-gun-patch
   name: Hired gun, half plate
@@ -168,7 +168,7 @@
   health: 4  # the bible's enemy card
   mood: Staring  # DRAFT
   note: Half a face of cheap plate. The red eye doesn't blink.  # DRAFT
-  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Grim to hit."
 
 - id: hired-gun-skull
   name: Hired gun, skull cap
@@ -180,7 +180,7 @@
   health: 4  # the bible's enemy card
   mood: Twitchy  # DRAFT
   note: Cables showing, and a cracked lens over one eye.  # DRAFT
-  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Grim to hit."
 
 - id: hired-gun-grille
   name: Hired gun, grille
@@ -192,7 +192,7 @@
   health: 4  # the bible's enemy card
   mood: Quiet  # DRAFT
   note: No jaw left. Talks through a speaker, when he talks.  # DRAFT
-  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Hard to hit."
+  gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Grim to hit."
 
 - id: lucan-brute
   name: Leverage
@@ -294,7 +294,7 @@
   health: 1  # the bible's enemy card
   mood: Bored
   note: Stands where the Company's lift starts.
-  gm_note: "The Company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, Body and Reflex d10; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Hard ends one without a fight. They radio: if a fight runs long, more come."
+  gm_note: "The Company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, Body and Reflex d10; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Grim ends one without a fight. They radio: if a fight runs long, more come."
 
 - id: guard-rookie
   name: Rookie guard
@@ -622,7 +622,7 @@
   health: 13  # the bible's enemy card
   mood: Dormant
   note: Six legs, a cluster of red lenses, twin guns under its chin.
-  gm_note: "The Company's boss machine; ISCO doesn't run it. Out of the heist: under repair in the Bot bays from day 2, with techs and guards around it, and getting near it weakens it for the probe run (how much is still open). By session 4 it's gone: mercenaries get hold of it and bring it up the freight lift as the boss. Enemy card: 13 health, d12, Hard to hit, fights alone. Heavy guns, so at least 2 damage. At 6 health or less its shell cracks: Normal to hit, and it attacks with a d20. Weak: Tech at Hard, once, blinds its lenses (it loses its next action and is Normal to hit). Strong: too big to grapple, and ISCO can't shut it down for you."
+  gm_note: "The Company's boss machine; ISCO doesn't run it. Out of the heist: under repair in the Bot bays from day 2, with techs and guards around it, and getting near it weakens it for the probe run (how much is still open). By session 4 it's gone: mercenaries get hold of it and bring it up the freight lift as the boss. Enemy card: 13 health, d12, Grim to hit, fights alone. Heavy guns, so at least 2 damage. At 6 health or less its shell cracks: Dicey to hit, and it attacks with a d20. Weak: Tech at Grim, once, blinds its lenses (it loses its next action and is Dicey to hit). Strong: too big to grapple, and ISCO can't shut it down for you."
 
 # The rest of the bible's "Other faces" (added 2026-11-08). The dice and health are flat placeholders, because the
 # bible gives none: DRAFTS for Peter to set. Each borrows another NPC's portrait until the real art is imported.

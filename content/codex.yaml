@@ -756,7 +756,7 @@ entries:
   - id: weapons
     h: Weapons
     text: Bare hands always deal 1, and weapons deal damage by the margin. Heavy weapons deal at least 2. A gun unlocks shooting,
-      rolled with Reflex. Attacks are never easier than Normal, and ending a fight in one move is two steps harder. If they
+      rolled with Reflex. Attacks are never easier than Dicey, and ending a fight in one move is two steps harder. If they
       never saw it coming, there's no roll.
   - id: hold
     h: Grappling
@@ -774,7 +774,7 @@ entries:
   blocks:
   - id: patch
     h: Patch up
-    text: In a fight, roll Intel at Normal to give someone back 1 health.
+    text: In a fight, roll Intel at Dicey to give someone back 1 health.
   - id: medbay
     h: The Med Bay
     text: It restores all of it. A crew that loses a fight wakes up there, feeling great.

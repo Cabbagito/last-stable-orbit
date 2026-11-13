@@ -57,7 +57,7 @@ pins:
   - {k: "1", label: "Irena's room. She's always there", at: [3.17, 2.5, 0.83]}
   - {k: "2", label: "Plots, her hidden folder and the probe manual", at: [3.17, 0, 2.29]}
   - {k: "3", label: "Old maintenance door: the only unseen way into the closet, through her room", at: [6.87, 1.27, 0.61]}
-  - {k: "4", label: "Power closet. Loop the cameras here: Tech, Very hard, nobody knows", at: [7.63, 0.7, 1.19]}
+  - {k: "4", label: "Power closet. Loop the cameras here: Tech, Savage, nobody knows", at: [7.63, 0.7, 1.19]}
   - {k: "5", label: "Security office: the operator sees every camera, decks 6 to 9", at: [14.17, 0, 2.01]}
   - {k: "6", label: "The operator's door, under the camera, in its blind spot", at: [14.03, 4.63, 0.28]}
   - {k: "7", label: "Glass offices connect: a camera-free route full of people", at: [7.67, 11, 0.14]}
