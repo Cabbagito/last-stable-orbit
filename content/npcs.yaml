@@ -95,7 +95,7 @@
   portrait: portraits/happy-resident.gif
   color: "#a9a2bc"
   stats: {body: 6, reflex: 6, tech: 4, intel: 6, cool: 8, empathy: 12}
-  health: 2  # DRAFT for Peter
+  health: 1  # DRAFT for Peter
   mood: Happy
   note: Very happy.
 
@@ -363,7 +363,7 @@
   portrait: portraits/reviewer-a.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 4, tech: 10, intel: 10, cool: 8, empathy: 6}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Approving  # DRAFT
   note: Approves each part because each part looks fine.  # DRAFT
 
@@ -374,7 +374,7 @@
   portrait: portraits/reviewer-b.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 4, tech: 10, intel: 10, cool: 8, empathy: 6}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Approving  # DRAFT
   note: Same desk, same screen, same green tick.  # DRAFT
 
@@ -385,7 +385,7 @@
   portrait: portraits/camera-operator.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 6, tech: 10, intel: 6, cool: 12, empathy: 4}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Bored  # DRAFT
   note: Has watched the same corridor for nine years.  # DRAFT
   gm_note: "The bored operator from deck 6's gossip."
@@ -397,7 +397,7 @@
   portrait: portraits/tech-welder.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 6, tech: 12, intel: 6, cool: 8, empathy: 4}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Mid-weld  # DRAFT
   note: Welds the mech's plates back on. Goggles up, soot on the cheek.  # DRAFT
   gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
@@ -409,7 +409,7 @@
   portrait: portraits/tech-lamp.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 6, tech: 12, intel: 10, cool: 8, empathy: 6}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Absorbed  # DRAFT
   note: Headlamp on, eyes on the tablet, never on you.  # DRAFT
   gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
@@ -421,7 +421,7 @@
   portrait: portraits/tech-chief.gif
   color: "#7fb4ff"
   stats: {body: 6, reflex: 4, tech: 20, intel: 12, cool: 12, empathy: 6}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Unhurried  # DRAFT
   note: Thirty years on the company's machines, and a loupe screwed into one eye.  # DRAFT
   gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
@@ -433,7 +433,7 @@
   portrait: portraits/board-chair.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 4, tech: 6, intel: 12, cool: 20, empathy: 8}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Composed  # DRAFT
   note: Has never once raised her voice.  # DRAFT
 
@@ -444,7 +444,7 @@
   portrait: portraits/board-young.gif
   color: "#7fb4ff"
   stats: {body: 6, reflex: 6, tech: 8, intel: 10, cool: 12, empathy: 4}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Pleased with himself  # DRAFT
   note: Youngest on the board, and wants you to know it.  # DRAFT
 
@@ -455,7 +455,7 @@
   portrait: portraits/board-old.gif
   color: "#7fb4ff"
   stats: {body: 6, reflex: 4, tech: 4, intel: 8, cool: 12, empathy: 10}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Jovial  # DRAFT
   note: Thirty years on the board. Laughs first, and longest.  # DRAFT
 
@@ -466,7 +466,7 @@
   portrait: portraits/scientist-junior.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 6, tech: 12, intel: 12, cool: 6, empathy: 8}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Puzzled  # DRAFT
   note: Thinks the 0.49 plot is a bug in their own code.  # DRAFT
 
@@ -477,7 +477,7 @@
   portrait: portraits/scientist-physicist.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 4, tech: 12, intel: 20, cool: 8, empathy: 6}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Uneasy  # DRAFT
   note: Measures the hole, and doesn't like what it says.  # DRAFT
 
@@ -488,7 +488,7 @@
   portrait: portraits/receptionist.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 6, tech: 8, intel: 8, cool: 12, empathy: 12}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Polite  # DRAFT
   note: Deck 8's front desk. Can find anyone, and won't.  # DRAFT
 
@@ -499,7 +499,7 @@
   portrait: portraits/clerk.gif
   color: "#7fb4ff"
   stats: {body: 4, reflex: 4, tech: 8, intel: 8, cool: 10, empathy: 4}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Filing  # DRAFT
   note: Files the reviewers' approvals. Has never read one.  # DRAFT
 
@@ -510,7 +510,7 @@
   portrait: portraits/chef.gif
   color: "#7fb4ff"
   stats: {body: 10, reflex: 8, tech: 6, intel: 6, cool: 10, empathy: 10}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Tasting  # DRAFT
   note: Feeds the whole floor at noon and judges every plate that comes back.  # DRAFT
 
@@ -521,7 +521,7 @@
   portrait: portraits/kitchen-hand.gif
   color: "#7fb4ff"
   stats: {body: 6, reflex: 8, tech: 4, intel: 6, cool: 8, empathy: 8}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Listening  # DRAFT
   note: Carries the plates, hears everything said over lunch.  # DRAFT
 
@@ -645,7 +645,7 @@
   group: Locals
   portrait: portraits/bolt-7.gif  # the cyan version from the Portraits canvas; its background is still the slot bank
   color: "#5fd8e6"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  stats: {body: 8, reflex: 6, tech: 10, intel: 8, cool: 4, empathy: 10}  # DRAFT placeholder
   health: 4  # DRAFT placeholder
   mood: On watch  # DRAFT
   note: A lookout with nobody to look out for.  # DRAFT, from the bible
@@ -658,8 +658,8 @@
   portrait: portraits/static.gif
   codex: static
   color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
+  stats: {body: 8, reflex: 8, tech: 12, intel: 10, cool: 12, empathy: 4}  # DRAFT placeholder
+  health: 4  # DRAFT placeholder
   mood: Expecting someone  # DRAFT
   note: A crime boss on Ergo, with a chrome plate and eye.  # DRAFT wording
   gm_note: "Marlo's ex-lover and the person he owes. He borrowed from her to pay off another shark, ran with the money and pointed the shark at her. She had to take the shark out, which Marlo doesn't know, and she wants revenge for all three: leaving her, the money and the shark. Her chrome plate and eye date from the night the shark came. She knows his real face and spots his fakes, so she fully counters him. Her thread plays out at the table with no planned ending, and her crew is a possible fight."
@@ -707,7 +707,7 @@
   portrait: portraits/gumshoe.gif
   codex: gumshoe
   color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  stats: {body: 6, reflex: 6, tech: 4, intel: 12, cool: 10, empathy: 8}  # DRAFT placeholder
   health: 2  # DRAFT placeholder
   mood: Working the case  # DRAFT
   note: "\"They've asked me like 17 times. I have enough paperwork as it is.\""
@@ -734,7 +734,7 @@
   portrait: portraits/frail-passenger.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
   mood: Breathing carefully
   note: Came a long way for the Vigil.
   gm_note: "The wrist under Lale's fingers in the intro film. An ordinary pulse, which she can compare with the sedated people's identical ones in the Med Bay."
@@ -746,7 +746,7 @@
   portrait: portraits/passenger.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
   mood: Tired from the crossing
   note: Came to see the Vigil.
   gm_note: "One of the ship's crowd, on the Patience and then in the Dock 7 queue."
@@ -758,7 +758,7 @@
   portrait: portraits/passenger-flowers.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
   mood: Enthralled
   note: Brought flowers for the Vigil.
   gm_note: "Part of Marlo's audience on the Patience."
@@ -770,7 +770,7 @@
   portrait: portraits/passenger-candles.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
   mood: Laughing
   note: Brought candles for the Vigil.
   gm_note: "Part of Marlo's audience on the Patience."
@@ -782,7 +782,7 @@
   portrait: portraits/passenger-old.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
   mood: Not convinced
   note: Has been to every Vigil there was a berth for.
   gm_note: "In the lounge on the Patience, then the Dock 7 queue."
@@ -794,7 +794,7 @@
   portrait: portraits/passenger-young.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
   mood: Hanging on every word
   note: First Vigil.
   gm_note: "Part of Marlo's audience on the Patience."
@@ -806,7 +806,7 @@
   portrait: portraits/passenger-tourist.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
   mood: Taking it all in  # DRAFT
   note: Here for the spectacle more than the founder.  # DRAFT
   gm_note: "In the lounge on the Patience, then the Dock 7 queue."
@@ -818,7 +818,7 @@
   portrait: portraits/passenger-traveller.gif
   color: "#8f88a3"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
   mood: Dozing  # DRAFT
   note: Has slept through most of the trip.  # DRAFT
   gm_note: "In the lounge on the Patience, then the Dock 7 queue."
@@ -868,7 +868,7 @@
   portrait: portraits/resident-noodles.gif
   color: "#a9a2bc"
   stats: {body: 4, reflex: 4, tech: 4, intel: 8, cool: 12, empathy: 10}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Content  # DRAFT
   note: Same stall every night for forty years.  # DRAFT
 
@@ -879,7 +879,7 @@
   portrait: portraits/resident-courier.gif
   color: "#a9a2bc"
   stats: {body: 6, reflex: 12, tech: 8, intel: 6, cool: 6, empathy: 6}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Late  # DRAFT
   note: Always running, always late, always fine.  # DRAFT
 
@@ -890,7 +890,7 @@
   portrait: portraits/resident-nightshift.gif
   color: "#a9a2bc"
   stats: {body: 8, reflex: 6, tech: 10, intel: 6, cool: 8, empathy: 8}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Going home  # DRAFT
   note: Cable maintenance. Tired and content.  # DRAFT
 
@@ -926,7 +926,7 @@
   portrait: portraits/resident-student.gif
   color: "#a9a2bc"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 8, empathy: 8}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Explaining  # DRAFT
   note: Studies something about the hole. Can explain it, at length.  # DRAFT
 
@@ -937,7 +937,7 @@
   portrait: portraits/resident-beanie.gif
   color: "#a9a2bc"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 8, empathy: 8}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Laughing  # DRAFT
   note: Fixes air scrubbers. Laughs at his own jokes first.  # DRAFT
 
@@ -948,7 +948,7 @@
   portrait: portraits/resident-coral.gif
   color: "#a9a2bc"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 8, empathy: 8}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Quiet  # DRAFT
   note: Going to the Vigil for her mother.  # DRAFT
 
@@ -959,7 +959,7 @@
   portrait: portraits/resident-shopkeeper.gif
   color: "#a9a2bc"
   stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 8, empathy: 8}  # DRAFT
-  health: 2  # DRAFT
+  health: 1  # DRAFT
   mood: Opinionated  # DRAFT
   note: Sells spare parts and opinions. The opinions are free.  # DRAFT
 
