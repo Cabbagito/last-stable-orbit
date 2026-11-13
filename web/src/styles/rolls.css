@@ -70,6 +70,16 @@
 .r17-skn{margin-top:6px;font-size:17px;font-weight:500;line-height:1.2;color:#fff}
 @keyframes r17-skin{0%{transform:translateX(34px) scale(.8);opacity:0;filter:brightness(3)}100%{transform:none;opacity:1;filter:none}}
 .r17-pl.p-nat1 .r17-ptiles{opacity:.16}
+.r17-lad{position:relative;display:flex;gap:6px;margin-top:12px;animation:r17-ladin .35s ease-out .25s both}
+.r17-lad.out{animation:r17-plout .5s ease-in both}
+.r17-rung{flex:1;display:flex;flex-direction:column;gap:7px;color:#5b6069;font-family:'Michroma',sans-serif;font-size:13px;letter-spacing:.06em;white-space:nowrap}
+.r17-rung b{font-weight:400;opacity:.7}
+.r17-rbar{height:4px;background:#24272d}
+.r17-rung.met{color:#e7e9ec}
+.r17-rung.met .r17-rbar{background:var(--fx)}
+.r17-rung.top{color:#fff}
+.r17-rung.top .r17-rbar{box-shadow:0 0 14px color-mix(in srgb,var(--fx) 80%,transparent)}
+@keyframes r17-ladin{0%{opacity:0;transform:translateY(-8px)}100%{opacity:1;transform:none}}
 .r17-insult{position:absolute;left:14px;right:16px;top:50px;font-family:'Michroma',sans-serif;font-size:21px;line-height:1.3;color:#ff5b4d;animation:r17-insult .3s cubic-bezier(.2,1.6,.4,1) both}
 @keyframes r17-insult{0%{transform:scale(1.8);opacity:0}100%{transform:none;opacity:1}}
 
@@ -181,4 +191,4 @@
 .r17-jdie .r5-sec{box-shadow:inset 0 1px 0 #1e2024;padding-top:12px}
 .r17-rseg.r17-jmodes{flex:none;width:174px}
 
-@media (prefers-reduced-motion:reduce){.r17-pl,.r17-strip,.r17-mo-slam,.r17-mo-cool,.r17-mo-pulse path,.r17-num,.r17-tile,.r17-sk,.r17-insult,.r17-ribbon,.r17-sweep,.r17-shock,.r17-spark,.r17-pushf,.r17-chipw,.r17-rgod.on,.r17-g1,.r17-g2,.r17-gnum span,.r17-gside{animation-duration:.01ms!important;animation-iteration-count:1!important}.r17-mo-pulse path{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.r17-pl,.r17-strip,.r17-mo-slam,.r17-mo-cool,.r17-mo-pulse path,.r17-num,.r17-tile,.r17-sk,.r17-insult,.r17-lad,.r17-ribbon,.r17-sweep,.r17-shock,.r17-spark,.r17-pushf,.r17-chipw,.r17-rgod.on,.r17-g1,.r17-g2,.r17-gnum span,.r17-gside{animation-duration:.01ms!important;animation-iteration-count:1!important}.r17-mo-pulse path{stroke-dashoffset:0}}

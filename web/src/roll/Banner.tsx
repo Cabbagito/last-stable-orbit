@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { useGame } from '../store/game'
 import type { RollView, View } from '../types'
 import { livePlates, type LivePlate } from './banners'
-import { dieIcon, lookOf, statIcon } from './stats'
+import { LADDER, dieIcon, lookOf, statIcon } from './stats'
 
 // Round 17: a roll on anyone else's screen is one big banner. The face and name, what's being rolled, the skill, and
 // a box where each stat's motion runs while the dice fly and the number slams in when they land. The map isn't dimmed
@@ -20,6 +20,7 @@ const STRIPS = {
 const WIDE = 862 // a banner with a skill in it, at full size
 const NARROW = 724 // one without
 const HEIGHT = 188
+const LADDER_H = 58 // the ladder under a banner on the TV, with its gap
 
 /** The banners up on this screen right now. */
 export function usePlates(): LivePlate[] {
@@ -63,7 +64,7 @@ function Motion({ r, die }: { r: RollView; die: string }) {
   )
 }
 
-function Plate({ p, y, k }: { p: LivePlate; y: number; k: number }) {
+function Plate({ p, y, k, tv }: { p: LivePlate; y: number; k: number; tv: boolean }) {
   const view = useGame((s) => s.view)
   if (!view) return null
   const { r, phase } = p
@@ -81,6 +82,9 @@ function Plate({ p, y, k }: { p: LivePlate; y: number; k: number }) {
   const doing = shut ? 'ROLLED' : rolling ? 'ROLLING' : phase === 'nat1' ? 'NATURAL 1' : landed || hold ? 'ROLLED' : ''
   const sub = phase === 'land' && (r.count ?? 1) > 1 ? `×${r.count}` : pushedNow ? 'PUSHED' : ''
   const fx = phase === 'land' || phase === 'boom' || phase === 'nat1' || pushedNow
+  // The TV shows which rungs a landed roll cleared, for any roll it may know the number of (never a hidden one)
+  const ladder = tv && !r.sealed && !nat1 && r.value !== undefined && (landed || hold)
+  const top = ladder ? LADDER.filter(([, v]) => r.value! >= v).length - 1 : -1
   const say = `${who.name} rolls ${L.title}${r.entry ? ` using ${r.entry}` : ''}` + (landed ? `: ${nat1 ? 'natural 1' : r.value}` : shut ? ', hidden' : '')
   return (
     <div className="r17-plw" style={{ top: y, '--k': k, '--c': L.col, '--fx': L.fx } as CSSProperties}>
@@ -174,6 +178,18 @@ function Plate({ p, y, k }: { p: LivePlate; y: number; k: number }) {
         )}
         {(phase === 'roll' || phase === 'land') && <span key={phase} className="r17-sweep" />}
       </div>
+      {ladder && (
+        <div className={'r17-lad' + (phase === 'out' ? ' out' : '')} aria-hidden="true">
+          {LADDER.map(([name, v], i) => (
+            <div key={name} className={'r17-rung' + (i <= top ? ' met' : '') + (i === top ? ' top' : '')}>
+              <span className="r17-rbar" />
+              <span className="r17-rlab">
+                {name} <b>{v}</b>
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -205,7 +221,7 @@ export function Banners({ where, low = false }: { where: 'scene' | 'page' | 'tv'
     <div ref={box} className={`r17-lane ${where}${card ? ' card' : ''}`}>
       {tv && <div className={'r17-spot' + (plates.length ? ' on' : '')} />}
       {plates.map((p, i) => (
-        <Plate key={p.r.id} p={p} y={y0 + i * (HEIGHT * k + 10)} k={k} />
+        <Plate key={p.r.id} p={p} y={y0 + i * ((tv ? HEIGHT + LADDER_H : HEIGHT) * k + 10)} k={k} tv={tv} />
       ))}
       <div className="app-sr" aria-live="polite">
         {last && landed ? `${rollerOf(useGame.getState().view!, last.r).name} rolled ${lookOf(last.r.stat).title}: ${last.r.phase === 'nat1' ? 'a natural 1' : last.r.value}` : ''}

@@ -622,16 +622,18 @@ entries:
   lead: Say what you want to do. Peter picks a stat and how hard it is. Roll that stat's die. If you meet the number, it happens.
   rows_label: How hard
   rows:
-  - n: Easy
+  - n: Routine
     d: '3'
-  - n: Normal
+  - n: Dicey
     d: '5'
-  - n: Hard
+  - n: Grim
     d: '7'
-  - n: Very hard
+  - n: Savage
     d: '9'
   - n: Heroic
     d: '11'
+  - n: Black Swan
+    d: '15'
   blocks:
   - id: boom
     h: Explosions

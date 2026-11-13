@@ -35,11 +35,13 @@ export function effectiveDie(sides: number, stepped: boolean): { sides: number; 
 export const statIcon = (s: StatKey) => `/assets/icons/stats/${s}.png`
 export const dieIcon = (s: StatKey, sides: number) => `/assets/icons/dice/${s}-d${sides}.png`
 
-// R6's reference ladder. The app never says pass or fail; Peter names the difficulty out loud.
+// The reference ladder (renamed and given a sixth rung by Peter, 2026-11-14). The app never says pass or fail; Peter
+// names the difficulty out loud. It shows on the roller's own roll screen, and on the TV for any roll the TV may see.
 export const LADDER: [string, number][] = [
-  ['Easy', 3],
-  ['Normal', 5],
-  ['Hard', 7],
-  ['Very hard', 9],
+  ['Routine', 3],
+  ['Dicey', 5],
+  ['Grim', 7],
+  ['Savage', 9],
   ['Heroic', 11],
+  ['Black Swan', 15],
 ]
