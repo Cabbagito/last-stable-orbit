@@ -178,11 +178,12 @@
 .gx-step button:focus-visible{color:#fff}
 .gx-step button:disabled,.gx-row:hover .gx-step button:disabled{color:#2f3238;cursor:default}
 .gx-max{font-size:17px;color:#5e626a}
-.gx-mid{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2f3238 #000;display:flex;flex-direction:column;gap:12px}
+.gx-mid{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#2f3238 #000;display:flex;flex-direction:column;gap:12px}
 .gx-mid section{flex:none}
-/* Add someone and Start a fight: square icon buttons; hovered or open, they get the active tab's pink corner ticks. The fist jabs */
+/* Add someone and Start a fight: square icon buttons; hovered or open, their corners turn pink like the active tab's (on the
+   border, not outside it, or the column scrolls sideways). The fist jabs */
 .gx-ibtn{position:relative;width:30px;height:30px;display:grid;place-items:center;padding:0;background:#000;border:1px solid #2f3238;color:#e7e9ec;cursor:pointer;flex:none;transition:color .15s,background .15s,border-color .15s}
-.gx-ibtn::before{content:'';position:absolute;inset:-4px;pointer-events:none;opacity:0;transition:opacity .15s;background:linear-gradient(#ff4fa3,#ff4fa3) 0 0/7px 1px no-repeat,linear-gradient(#ff4fa3,#ff4fa3) 0 0/1px 7px no-repeat,linear-gradient(#ff4fa3,#ff4fa3) 100% 100%/7px 1px no-repeat,linear-gradient(#ff4fa3,#ff4fa3) 100% 100%/1px 7px no-repeat}
+.gx-ibtn::before{content:'';position:absolute;inset:-1px;pointer-events:none;opacity:0;transition:opacity .15s;background:linear-gradient(#ff4fa3,#ff4fa3) 0 0/7px 1px no-repeat,linear-gradient(#ff4fa3,#ff4fa3) 0 0/1px 7px no-repeat,linear-gradient(#ff4fa3,#ff4fa3) 100% 100%/7px 1px no-repeat,linear-gradient(#ff4fa3,#ff4fa3) 100% 100%/1px 7px no-repeat}
 .gx-ibtn:hover::before,.gx-ibtn.on::before,.gx-ibtn:focus-visible::before{opacity:1}
 .gx-ibtn:hover{border-color:#5e626a;color:#fff}
 .gx-ibtn.on{border-color:#ff4fa3;background:#180c13;color:#ff7dbb}
