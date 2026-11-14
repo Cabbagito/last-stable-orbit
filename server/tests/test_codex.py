@@ -190,3 +190,78 @@ async def test_a_preset_brings_its_own_codex(engine):
     assert (await run(engine, GM, "gm.world.load_preset", {"preset": "session-1-night"}))["ok"]
     ids = {e["id"] for e in codex(engine, TALLY)["entries"]}
     assert {"dax", "fixer", "mural", "ilija"} <= ids and "scientist" not in ids
+
+
+# ---------- private briefs ----------
+# Each crew page carries one private block: its character's brief. Like pockets, it goes to that player and the GM
+# and to nobody else. To catch a leak anywhere in a feed (not just on the page), each brief here gets text no other
+# part of the game has.
+
+CREW = ["lale", "marlo", "tally", "ves", "tomo"]
+
+
+def secret(char):
+    return f"ONLY-{char.upper()}-KNOWS-7f3a"
+
+
+@pytest.fixture
+def briefed(tmp_path):
+    from lso.models import CodexPart
+
+    c = load_content(ROOT / "content", ROOT / "assets")  # a fresh copy, so the module's content stays as shipped
+    for k, e in list(c.codex.items()):
+        if e.crew:
+            c.codex[k] = e.model_copy(update={"private": [CodexPart(h="Only you know.", text=secret(e.crew))]})
+    return Engine(c, Store(tmp_path / "b.db"), clock=lambda: 1000.0)
+
+
+def test_every_crew_page_has_a_brief_and_nothing_else_does(content):
+    assert {e.crew for e in content.codex.values() if e.private} == set(content.characters)
+    assert all(e.crew for e in content.codex.values() if e.private)
+
+
+def test_a_player_never_receives_another_characters_private_block(briefed):
+    for me in CREW:
+        viewer = Viewer(me, "player")
+        feed = project(briefed.state, briefed.content, viewer)
+        whole = json.dumps(feed)
+        assert secret(me) in whole
+        for other in CREW:
+            if other != me:
+                assert secret(other) not in whole, f"{me} received {other}'s brief"
+        for e in feed["codex"]["entries"]:
+            if e["crew"] and e["crew"]["id"] != me:
+                assert e["private"] is None  # not even a sign that there is one
+        mine = next(e for e in feed["codex"]["entries"] if e["crew"] and e["crew"]["id"] == me)
+        assert mine["private"]["parts"] == [{"h": "Only you know.", "text": secret(me)}]
+
+
+def test_the_tv_gets_no_brief_and_the_gm_gets_all_five(briefed):
+    tv = json.dumps(project(briefed.state, briefed.content, STAGE))
+    assert not any(secret(c) in tv for c in CREW)
+    gm = project(briefed.state, briefed.content, GM)
+    whole = json.dumps(gm)
+    assert all(secret(c) in whole for c in CREW)
+    lale = next(e for e in gm["codex"]["entries"] if e["id"] == "lale")
+    assert lale["private"]["who"] == "Lale"
+
+
+async def test_a_players_own_page_is_always_open_to_them(briefed):
+    briefed.state.codex = [k for k in briefed.state.codex if k not in CREW]  # the GM locked every crew page
+    ids = {e["id"] for e in codex(briefed, TALLY)["entries"]}
+    assert "tally" in ids and not ids & {"lale", "marlo", "ves", "tomo"}
+    assert secret("tally") in json.dumps(project(briefed.state, briefed.content, TALLY))
+    assert (await run(briefed, TALLY, "codex.read", {"entry": "tally"}))["ok"]
+    assert not (await run(briefed, TALLY, "codex.read", {"entry": "ves"}))["ok"]
+
+
+async def test_a_held_player_can_read_their_page_and_still_do_nothing_else(briefed):
+    from lso.commands import CommandError, handle
+
+    await run(briefed, GM, "gm.opening.set", {"on": True})
+    assert briefed.state.stage.opening
+    assert (await run(briefed, TALLY, "codex.read", {"entry": "tally"}))["ok"]
+    with pytest.raises(CommandError) as e:
+        handle(TALLY, briefed.state, briefed.content, "burn.use", {})
+    assert e.value.code == "forbidden"
+    assert secret("tally") in json.dumps(project(briefed.state, briefed.content, TALLY))

@@ -805,7 +805,7 @@ def handle(
         raise _invalid("args must be an object")
     rng = rng or random.SystemRandom()
 
-    if viewer.char and state.stage.opening:
+    if viewer.char and state.stage.opening and kind != "codex.read":  # the held page is their own Codex page
         raise _forbid("the opening is on: you're let in when it ends")
 
     if kind == "token.move":
@@ -833,7 +833,7 @@ def handle(
         if not viewer.char:
             raise _invalid("players mark what they've read")
         e = content.codex.get(_str(args, "entry"))
-        if not e or e.id not in state.codex:
+        if not e or (e.id not in state.codex and e.crew != viewer.char):  # your own page is always open to you
             raise _invalid("there's no page like that")
         keys = [e.id] + [f"{e.id}/{b.id}" for b in e.blocks if b.locked and f"{e.id}/{b.id}" in state.codex]
         fresh = [k for k in keys if k not in state.codex_read.get(viewer.char, [])]

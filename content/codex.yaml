@@ -11,6 +11,8 @@
 #   with px (its width), cx (the x to centre on), y0 (the y at the card's top), k (card zoom), km (See also zoom),
 #   pos (where the page's picture is anchored) and z (the page's zoom).
 # see: other entries, by id. A locked one is left out for players.
+# private: a crew page only. That character's brief, in short parts, each a run-in lead and its text. Only the player
+#   logged in as that character and the GM ever receive it, and on first play it's the page they wait on.
 
 sections:
 - id: chars
@@ -68,7 +70,7 @@ entries:
 - id: lale
   sec: chars
   crew: lale
-  label: Crew · the doctor
+  label: Crew · the ripperdoc
   sub: Mid-40s, no implants at all.
   art: {src: portraits/lale.gif, kind: bust, pos: 50% 10%}
   lead: She used to put chrome into people, and she was good at it. Now she runs a clinic for people without slots, the ones
@@ -76,7 +78,7 @@ entries:
   blocks:
   - id: history
     h: History
-    text: Years as a chrome surgeon, well paid, with a waiting list of her own. She doesn't say why she stopped. She has
+    text: Years as a ripperdoc, well paid, with a waiting list of her own. She doesn't say why she stopped. She has
       no implants herself, and she can tell whose work yours is from across a room.  # DRAFT
   - id: work
     h: How she works
@@ -86,9 +88,14 @@ entries:
   facts:
   - [Age, Mid-40s]
   - [Lifeform, 'Human, no implants']
-  - [Job, The doctor]
-  - [Before, Chrome surgeon]
+  - [Job, Patches the crew up]  # DRAFT
+  - [Before, Ripperdoc]
   see: [rule-health, med]
+  private:  # PLACEHOLDER until the brief is written with Peter
+  - {h: Why you came., text: To be written.}
+  - {h: What you were promised., text: To be written. It must agree with the letter in your pockets.}
+  - {h: Before., text: To be written.}
+  - {h: Only you know., text: To be written.}
 - id: marlo
   sec: chars
   crew: marlo
@@ -105,6 +112,11 @@ entries:
   - [Lifeform, 'Human, with chrome']
   - [Job, Talks the way in]
   see: [executive]
+  private:  # PLACEHOLDER until the brief is written with Peter
+  - {h: Why you came., text: To be written.}
+  - {h: What you were promised., text: To be written. It must agree with the letter in your pockets.}
+  - {h: Before., text: To be written.}
+  - {h: Only you know., text: To be written.}
 - id: tally
   sec: chars
   crew: tally
@@ -121,6 +133,11 @@ entries:
   - [Lifeform, Native machine mind]
   - [Job, Gets past the systems]
   see: [slots, chrome]
+  private:  # PLACEHOLDER until the brief is written with Peter
+  - {h: Why you came., text: To be written.}
+  - {h: What you were promised., text: To be written. It must agree with the letter in your pockets.}
+  - {h: Before., text: To be written.}
+  - {h: Only you know., text: To be written.}
 - id: ves
   sec: chars
   crew: ves
@@ -145,6 +162,11 @@ entries:
   - [Married to, Tomo Dragan]
   - [Job, Gets everyone in unseen]
   see: [tomo, event-horizon]
+  private:  # PLACEHOLDER until the brief is written with Peter
+  - {h: Why you came., text: To be written.}
+  - {h: What you were promised., text: To be written. It must agree with the letter in your pockets.}
+  - {h: Before., text: To be written.}
+  - {h: Only you know., text: To be written.}
 - id: tomo
   sec: chars
   crew: tomo
@@ -162,6 +184,11 @@ entries:
   - [Married to, Vesna Dragan]
   - [Job, For when it goes wrong]
   see: [ves]
+  private:  # PLACEHOLDER until the brief is written with Peter
+  - {h: Why you came., text: To be written.}
+  - {h: What you were promised., text: To be written. It must agree with the letter in your pockets.}
+  - {h: Before., text: To be written.}
+  - {h: Only you know., text: To be written.}
 - id: dax
   sec: chars
   npc: dax

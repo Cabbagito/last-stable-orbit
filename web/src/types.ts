@@ -378,7 +378,7 @@ export interface StageView {
   film: FilmView | null
   opening?: OpeningView | null // the TV and the GM
   opening_film?: { name: string; sub: string; still: string; length: number } // GM only
-  held?: { loop: string; still: string } // a player only: the opening is on, and this laptop shows only the waiting loop
+  held?: { loop: string; still: string; rolling?: boolean } // a player only: the opening is on. Their own Codex page, then once Play is pressed (rolling) the waiting loop
   burn: BurnView | null
   npc_burn?: NpcBurnView // the GM and the TV only: an NPC's Burn playing now
   npc_burn_films?: string[] // the TV only: every NPC Burn film, fetched ahead
@@ -602,6 +602,7 @@ export interface CodexEntryView {
     burn: { name: string; when: string; text: string; icon: string } | null
   } | null
   npc: { mood: string } | null
+  private: { who: string; parts: { h: string; text: string }[] } | null // a crew page's brief: only its own player, and the GM, ever get it
   new?: boolean // players: not read yet
   unlocked?: boolean // GM only
 }

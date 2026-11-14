@@ -26,6 +26,8 @@ file, to have them ready, because only the TV plays films.
 The Codex: a player gets only the entries the GM has unlocked, and on each page only the blocks that are open.
 A locked entry's id, name and art never leave the server: not in the Codex, not in See also, not on a Codex button
 in the Scene. Pages never list what anyone carries. The TV gets no Codex. The GM gets every entry, marked.
+A player's own crew page is always open to them. Its private brief goes to that player and the GM, and to nobody
+else, the same way pockets do: not to the rest of the crew, not to the TV, and not as a hint that one exists.
 
 The Station: everyone but the TV gets all of Ergo's places, but a place the crew hasn't been to (and the GM hasn't
 shown) is dark: no lit overlay and no map preview, and the core goes by "The core". Players see where each of the
@@ -38,8 +40,9 @@ starts and ends, and shows the opening's waiting loop meanwhile. A Burn's film p
 dark for one: they get who is burning (not the file) and stay on the game, with the Burn's mark on the burner's
 token and rail ring.
 
-The opening: only the TV gets the film, the sound and the timing. While it's on, a player's feed has only the waiting
-loop and its still, and their laptop shows that and nothing else until the film ends.
+The opening: only the TV gets the film, the sound and the timing. While it's on, a player's laptop shows their own
+Codex page and nothing else of the game. Once Play is pressed their feed says so (`rolling`, no times), and the laptop
+swaps the page for the waiting loop until the film ends.
 """
 
 from __future__ import annotations
@@ -62,7 +65,8 @@ def codex_open(state: GameState, content: Content, viewer: Viewer) -> set[str]:
         return set(content.codex)
     if viewer.is_stage:
         return set()
-    return {k for k in state.codex if k in content.codex}
+    own = {e.id for e in content.codex.values() if e.crew and e.crew == viewer.char}  # you always know who you are
+    return {k for k in state.codex if k in content.codex} | own
 
 
 def _link(entry: str | None, open_: set[str]) -> str | None:
@@ -242,6 +246,7 @@ def _entry_view(state: GameState, content: Content, e, viewer: Viewer, open_: se
         "shots": [{"src": url(x.src), "cap": x.cap, "pos": x.pos} for x in e.shots],
         "crew": None,
         "npc": None,
+        "private": None,
     }
     if e.crew:
         c = content.characters[e.crew]
@@ -254,6 +259,8 @@ def _entry_view(state: GameState, content: Content, e, viewer: Viewer, open_: se
             "skills": [{"icon": url(k.icon), "name": k.name, "text": k.text, "downside": k.downside} for k in c.entries],
             "burn": {"name": c.burn.name, "when": c.burn.when, "text": c.burn.text, "icon": url(c.burn.icon)} if c.burn else None,
         }
+        if e.private and (gm or viewer.char == c.id):  # like pockets: only its owner, and the GM
+            out["private"] = {"who": c.short, "parts": [{"h": p.h, "text": p.text} for p in e.private]}
     elif e.npc:
         n = content.npcs[e.npc]
         name, role = name or n.name, role or n.role
@@ -459,8 +466,8 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
             film |= {"loop": url(game.loop), "still": url(game.still)}
         out["film"] = film
     o = st.opening
-    if o and game and viewer.char:
-        out["held"] = {"loop": url(game.loop), "still": url(game.still)}
+    if o and game and viewer.char:  # held: their own Codex page, then once Play is pressed the loop, until the film ends
+        out["held"] = {"loop": url(game.loop), "still": url(game.still)} | ({"rolling": True} if o.film_at is not None else {})
     elif viewer.is_stage or viewer.is_gm:
         times = {"loop_at": o.loop_at, "film_at": o.film_at, "ends": o.ends} if o and game else None
         out["opening"] = times | {"loop": url(game.loop), "film": url(game.film), "audio": url(game.audio), "still": url(game.still)} if times and viewer.is_stage else times

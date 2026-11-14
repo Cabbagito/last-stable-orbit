@@ -270,6 +270,8 @@ def _codex_problems(c: Content) -> list[str]:
             problems.append(f"{where}: unknown NPC {e.npc!r}")
         if e.item and e.item not in c.items:
             problems.append(f"{where}: unknown item {e.item!r}")
+        if e.private and not e.crew:
+            problems.append(f"{where}: only a crew page has a private brief")
         if not (e.name or e.crew or e.npc or e.item):
             problems.append(f"{where}: needs a name")
     crew_pages = [e.crew for e in c.codex.values() if e.crew]

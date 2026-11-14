@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { serverClock } from '../net/clock'
 import type { RollSound } from '../roll/sound'
+import { HeldCodex } from '../pages/Codex'
 import { FullscreenButton } from '../shell/Header'
 import { useGame } from '../store/game'
 import type { OpeningView } from '../types'
@@ -100,26 +101,35 @@ function Pictures({ opening }: { opening: OpeningView }) {
 }
 
 /**
- * A player's laptop while the GM holds them on the opening: the TV's waiting loop, silent, until the film ends and it
- * fades to the game. Black until the first view arrives, so nothing of the game flashes up after the login. Moving the
- * mouse shows full screen and a way out, for a player who picked the wrong character; the GM's view of a player has none.
+ * A player's laptop while the GM holds them on the opening: their own character's Codex page, brief first, and nothing
+ * else of the game. When the GM presses Play it fades to the TV's waiting loop, silent, until the film ends and that
+ * fades to the game. Black until the first view arrives, so nothing of the game flashes up after the login. On the
+ * loop, moving the mouse shows full screen and a way out; the page has both in its bar. The GM's view of a player has none.
  */
 export function LaptopHold({ onLogout }: { onLogout?: () => void }) {
   const view = useGame((s) => s.view)
   const held = view?.stage.held ?? null
   const shown = useLingering(held)
   const awake = useAwake()
+  const own = !!view?.codex?.entries.some((e) => e.crew && e.crew.id === view.me.char)
+  const page = !!held && !held.rolling && own // Play takes the page away
+  const pageShown = useLingering(page ? true : null)
   const up = !!held || !view
   return (
     <div className={'app-film app-held' + (view && !shown ? ' hard' : '') + (up ? ' on' : '') + (awake ? ' awake' : '')} aria-hidden={!up}>
       {shown && <LaptopLoop loop={shown.loop} still={shown.still} />}
-      {held && <div className="app-sr" role="status">The opening is on the TV.</div>}
-      {held && onLogout && (
+      {held && <div className="app-sr" role="status">{page ? 'Your page, until the opening starts.' : 'The opening is on the TV.'}</div>}
+      {held && !page && onLogout && (
         <div className="app-heldbar">
           <FullscreenButton />
           <button type="button" className="r4-btn" onClick={onLogout}>
             Change character
           </button>
+        </div>
+      )}
+      {pageShown && (
+        <div className={'app-heldcx' + (page ? ' on' : '')}>
+          <HeldCodex onLogout={onLogout} />
         </div>
       )}
     </div>

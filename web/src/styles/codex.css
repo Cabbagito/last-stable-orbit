@@ -144,3 +144,15 @@
 .cx .app-cx-shut .txt{color:#6c7078}
 .cx .app-cx-down{display:flex;flex-direction:column;gap:4px;margin-top:6px;color:#c4c7cd;font-size:13.5px}
 .cx .app-cx-down .lab{color:#f2b544}
+/* a crew page's private brief: only its own player and the GM get it (the server sees to that). Amber, the board's `.blk.mine`, with the Codex's corner ticks */
+.cx .app-cx-priv{grid-column:1 / -1;position:relative;gap:14px;padding:22px 26px 24px;box-shadow:inset 0 0 0 1px #2f3238;background:#050608}
+.cx .app-cx-priv .lab{color:#f2b544}
+.cx .app-cx-priv .pk{position:absolute;width:11px;height:11px;border:0 solid #f2b544}
+.cx .app-cx-priv .pk.a{left:0;top:0;border-top-width:1px;border-left-width:1px}
+.cx .app-cx-priv .pk.b{right:0;top:0;border-top-width:1px;border-right-width:1px}
+.cx .app-cx-priv .pk.c{left:0;bottom:0;border-bottom-width:1px;border-left-width:1px}
+.cx .app-cx-priv .pk.d{right:0;bottom:0;border-bottom-width:1px;border-right-width:1px}
+.cx .app-cx-privhd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cx .app-cx-privnote{margin-left:auto;font-style:italic;font-size:13px;color:#8a8e96}
+.cx .app-cx-priv p{margin:0;color:#c4c7cd;font-size:15.5px;line-height:1.55}
+.cx .app-cx-priv b{font-weight:500;color:#fff}

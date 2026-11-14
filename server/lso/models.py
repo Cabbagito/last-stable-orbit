@@ -413,6 +413,13 @@ class CodexShot(Strict):
     pos: str = "50% 50%"  # object-position, as the board's shots
 
 
+class CodexPart(Strict):
+    """One paragraph of a private brief: a short run-in lead ("Why you came.") and its text."""
+
+    h: str
+    text: str
+
+
 class CodexEntry(Strict):
     """One Codex page. `crew`, `npc` or `item` ties it to that sheet: a crew page shows its stats, health, skills and
     Burn, an NPC's its mood. Text is draft, for Peter to edit."""
@@ -436,6 +443,7 @@ class CodexEntry(Strict):
     see: list[str] = []
     shots_label: str = ""
     shots: list[CodexShot] = []
+    private: list[CodexPart] = []  # a crew page only: that character's brief, sent to that player and the GM alone
 
     @model_validator(mode="after")
     def _one_sheet(self) -> "CodexEntry":

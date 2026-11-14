@@ -395,6 +395,7 @@ async def test_held_players_get_only_the_waiting_loop(engine, content, clock):
     feed = json.dumps(project(engine.state, content, TALLY))
     assert MOVIE not in feed and AUDIO not in feed and "loop_at" not in feed
     await ok(engine, GM, "gm.opening.play", {})
+    assert stage_of(engine, content, TALLY)["held"]["rolling"] is True  # Play takes their Codex page away
     feed = json.dumps(project(engine.state, content, TALLY))
     assert MOVIE not in feed and AUDIO not in feed and "film_at" not in feed
 

@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react'
+import { FullscreenButton, Logo } from '../shell/Header'
 import { gmRun, send, useGame } from '../store/game'
 import { STATS, type CodexArt, type CodexEntryView, type CodexSec, type CodexTile, type View } from '../types'
 
@@ -215,7 +216,73 @@ function Section({ view, sec, isGm }: { view: View; sec: CodexSec; isGm: boolean
   )
 }
 
-function Page({ view, e, isGm, win }: { view: View; e: CodexEntryView; isGm: boolean; win: { w: number; h: number } }) {
+/**
+ * First play: while the GM holds the players for the opening, a player's laptop shows their own character's page, brief
+ * first, and nothing else of the game: no tabs, no links to other pages. Change character is always there, for a
+ * wrong pick. The GM's Play takes it away.
+ */
+export function HeldCodex({ onLogout }: { onLogout?: () => void }) {
+  const view = useGame((s) => s.view)
+  const win = useWindow()
+  const e = view?.codex?.entries.find((x) => x.crew && x.crew.id === view.me.char) ?? null
+  if (!view || !e) return null
+  return (
+    <>
+      <header className="r4-head">
+        <Logo />
+        <span className="app-heldwait">
+          <i aria-hidden="true" />
+          Waiting for the opening
+        </span>
+        <div className="app-headright">
+          <span className="r4-lab">{view.me.seat.toUpperCase()}</span>
+          {onLogout && <FullscreenButton />}
+          {onLogout && (
+            <button type="button" className="app-link" onClick={onLogout}>
+              Change character
+            </button>
+          )}
+        </div>
+      </header>
+      <div className="cx" style={{ '--art': '40%' } as CSSProperties}>
+        <Page view={view} e={e} isGm={false} win={win} held />
+      </div>
+    </>
+  )
+}
+
+/** A crew page's brief. Its owner reads "Only you"; the GM sees whose it is. The server sends it to nobody else. */
+function Private({ p, isGm }: { p: NonNullable<CodexEntryView['private']>; isGm: boolean }) {
+  return (
+    <section className="blk app-cx-priv" aria-label={isGm ? `${p.who}'s private brief` : 'Your private brief'}>
+      <span className="pk a" />
+      <span className="pk b" />
+      <span className="pk c" />
+      <span className="pk d" />
+      <div className="app-cx-privhd">
+        <span className="lab">
+          <Lock />
+          {isGm ? `Private · ${p.who} only` : `Only you · ${p.who}`}
+        </span>
+        <span className="app-cx-privnote">{isGm ? `Only ${p.who} and you see this.` : "The rest of the crew can't see this."}</span>
+      </div>
+      {p.parts.map((x, i) => (
+        <p key={i}>
+          <b>{x.h}</b> {x.text}
+        </p>
+      ))}
+    </section>
+  )
+}
+
+const Lock = () => (
+  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
+    <rect x="3" y="7" width="10" height="7" />
+    <path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" />
+  </svg>
+)
+
+function Page({ view, e, isGm, win, held = false }: { view: View; e: CodexEntryView; isGm: boolean; win: { w: number; h: number }; held?: boolean }) {
   const list = view.codex!.entries.filter((x) => x.sec === e.sec)
   const secName = view.codex!.sections.find((x) => x.id === e.sec)!.name
   const i = list.findIndex((x) => x.id === e.id)
@@ -229,13 +296,16 @@ function Page({ view, e, isGm, win }: { view: View; e: CodexEntryView; isGm: boo
   }, [e.id, isNew])
 
   // the sprite at the largest whole-number zoom that fits, leaving room for its strip (the board's rule)
-  const zoom = Math.max(3, Math.min(Math.floor((win.h - 56 - 44 - 84) / 96), Math.floor((win.w * 0.48) / 96)))
+  const zoom = Math.max(3, Math.min(Math.floor((win.h - 56 - (held ? 0 : 44) - 84) / 96), Math.floor((win.w * 0.48) / 96)))
   const sprite = e.art.kind === 'bust'
   const a = e.art
   const facts: [string, string][] = e.crew ? [['Health', String(e.crew.health)], ...e.facts] : e.facts
 
+  const brief = e.private && <Private p={e.private} isGm={isGm} />
+
   return (
     <>
+      {!held && (
       <nav className="crumb" aria-label="Entry">
         <button type="button" className="back" onClick={() => go(e.sec)}>
           <Back />
@@ -255,7 +325,8 @@ function Page({ view, e, isGm, win }: { view: View; e: CodexEntryView; isGm: boo
           </span>
         )}
       </nav>
-      <article className="pin" aria-label={e.name}>
+      )}
+      <article className={'pin' + (held ? ' app-cx-held' : '')} aria-label={e.name}>
         <div className="pin-l" style={{ width: zoom * 96 }}>
           <div className={'pin-art' + (sprite ? ' sq' : '')}>
             <img
@@ -299,6 +370,7 @@ function Page({ view, e, isGm, win }: { view: View; e: CodexEntryView; isGm: boo
             </div>
           </div>
           <div className="pin-cols">
+            {held && brief}
             <div className="pin-main">
               {e.lead && <p className="lead">{e.lead}</p>}
               {e.quote && <p className="quote">{e.quote}</p>}
@@ -394,7 +466,7 @@ function Page({ view, e, isGm, win }: { view: View; e: CodexEntryView; isGm: boo
                   </dl>
                 </section>
               )}
-              {e.see.length > 0 && (
+              {!held && e.see.length > 0 && (
                 <section className="blk">
                   <span className="lab">See also</span>
                   <div className="minis">
@@ -413,6 +485,7 @@ function Page({ view, e, isGm, win }: { view: View; e: CodexEntryView; isGm: boo
                 </section>
               )}
             </aside>
+            {!held && brief}
           </div>
         </div>
       </article>

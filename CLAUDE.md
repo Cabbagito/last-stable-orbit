@@ -21,10 +21,11 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 ## Scope decisions (override the artifacts)
 
 - No Humanity, no ISCO compute meter, no Comms, no AI features for now.
-- Tabs: Scene / Station / Codex, plus a GM-only tab. There is no Crew tab (crew pages are in the Codex) and no Items tab. Private briefs aren't in the app.
+- Tabs: Scene / Station / Codex, plus a GM-only tab. There is no Crew tab (crew pages are in the Codex) and no Items tab.
+- **Private briefs:** each crew member's Codex page has one private block (`private:` in `content/codex.yaml`), sent only to the player logged in as that character and to the GM, like pockets. A player's own page is always open to them. Design: the LSO — Private briefs canvas (https://claude.ai/artifact/RDa5xguvF5MnGNjCR8HAb9).
 - **Rolls:** the full animation shows only on the roller's screen. Everyone else sees a big banner, then the number on the token (Round 17). The GM picks what players see for each NPC roll: Public, Hidden, Someone, Secret or God.
 - **The TV is always there:** cutscenes, Burn films, a failed skill's downside and all the sound play only on the TV, and laptops are silent. The TV / no TV / Online choice is gone. The GM's Play waits until a TV is connected. See the plan's Stage section.
-- **The opening:** the GM's On screen page holds players on the stars-and-station loop, silent, and nothing else, while the TV loops it with the music. Play starts the intro film on the music's next beat, and its end lets everyone in. It's the one film whose sound is a separate file, played by the TV. See `content/opening.yaml` and the plan's Progress section.
+- **The opening:** the GM's On screen page holds players on their own character's Codex page, brief first, with nothing else of the game reachable and Change character always there, while the TV loops the stars and station with the music. Play takes the page away (the laptops show the silent loop) and starts the intro film on the music's next beat, and its end lets everyone in. It's the one film whose sound is a separate file, played by the TV. See `content/opening.yaml` and the plan's Progress section.
 - **The GM controls:** map moods and switches, HP and Entropy and the most of each a character can have, rolls (including hidden ones), NPCs, every inventory, and chrome. Clues are handed out as items, such as a note. The GM doesn't roll or Burn for a player.
 - **Chrome:** a piece is a fourth skill on the sheet, or an item that raises a maximum by 1 while it's held. It's the only item effect the app applies.
 - **Login:** players pick their character; only the GM has a passcode. The GM and the TV are the two icons in the login's top-right corner.
