@@ -269,7 +269,7 @@
   health: 2  # DRAFT for Peter
   mood: Haggling
   note: Chrome, implants, fittings. Whatever you need, by tonight.
-  gm_note: "The legit chrome: 400 a piece, skill or stat alike, one piece per person. The app charges nothing: take the credits off their card and hand the piece over from its chrome menu. Buys what the crew finds, too (the To sell shelf). Bato's brother. The shop was SATO & SATO until they fought over whose Sato came first; Bato sawed his half off the sign and left, and they haven't spoken since. Neither will say what it was about. Each has a petty errand against the other for anyone who'll take it. Bring them together (the two signs fit; Sarge's ledger has what they ordered as boys) and they build one piece between them, half clinic and half duct tape, and give it away."  # DRAFT, the Sato brothers, 2026-11-14
+  gm_note: "The legit chrome: 400 a piece, skill or stat alike, one piece per person. The app charges nothing: take the credits off their card and hand the piece over from its chrome menu. Buys what the crew finds, too (the To sell shelf). Bato's brother. The shop was SATO & SATO until they fought over whose Sato came first; Bato sawed his half off the sign and left, and they haven't spoken since. Neither will say what it was about. Each has a petty errand against the other for anyone who'll take it. Bring them together (the two signs fit; Sarge's ledger has what they ordered as boys) and they build one piece between them, half clinic and half duct tape, and give it away: the Sato & Sato Special, under Sato & Sato in the chrome menu. If a roll with it fails, the plunger sticks to the wrong thing, and you pick what."  # DRAFT, the Sato brothers, 2026-11-14
 
 - id: nurse
   name: Med Bay nurse

@@ -1212,6 +1212,13 @@ assets:
     bytes: 1441
     width: 48
     height: 48
+  - path: icons/items/sato-special.png
+    store: ITEMS
+    asset_id: "020ad65f1b6a569a05de9941b5fd7b78"
+    sha256: "af52b644b6995df2be9177312ba58e55b33f785252187ad35b068c9ea0130a62"
+    bytes: 2099
+    width: 48
+    height: 48
   - path: icons/items/antidote.png
     store: ITEMS
     asset_id: "2b1a41c9a5d9c26d37d0b590aaaa676b"

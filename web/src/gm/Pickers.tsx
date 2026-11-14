@@ -111,9 +111,10 @@ function Amount({ it, to }: { it: Item; to: CrewMember }) {
   )
 }
 
-const SHOPS: ['clinic' | 'cart', string][] = [
+const SHOPS: ['clinic' | 'cart' | 'both', string][] = [
   ['clinic', 'The clinic'],
   ['cart', 'The knock-off cart'],
+  ['both', 'Sato & Sato'],
 ]
 
 /**

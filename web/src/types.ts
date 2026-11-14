@@ -245,7 +245,7 @@ export interface Item {
   codex: string | null
   // GM only: how the pickers sort it
   shelf?: string | null // its group; chrome has none
-  chrome?: 'clinic' | 'cart' | null // chrome, and the shop that sells it
+  chrome?: 'clinic' | 'cart' | 'both' | null // chrome, and the shop that sells it ('both': the Sato brothers' gift)
   raises?: 'health' | 'entropy' | null // chrome that's held, and adds 1 to that maximum
 }
 

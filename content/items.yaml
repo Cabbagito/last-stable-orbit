@@ -585,3 +585,11 @@
   chrome: cart
   raises: entropy
   text: A gold-painted die in a cage of sticks, held shut with a rubber band. It raises your maximum Entropy, probably.
+
+# The Sato brothers' gift (2026-11-14): one free piece for whoever brings Miro and Bato back together. Not for sale.
+- id: sato-special
+  name: The Sato & Sato Special
+  icon: icons/items/sato-special.png
+  kind: gear
+  chrome: both
+  text: A clinic rail along the forearm, with a hopper of plungers taped on top. It fires one, very hard, and it stays where it lands. Add it to a roll when you want something stuck where it is, like a door, a hand or a camera. The plungers are second-hand. Nobody asks.

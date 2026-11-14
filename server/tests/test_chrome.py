@@ -57,7 +57,7 @@ def test_every_item_is_on_a_shelf_or_is_chrome(content):
     shelves = {s.id for s in content.shelves}
     for it in content.items.values():
         assert (it.shelf in shelves) != bool(it.chrome), it.id
-    assert sum(1 for it in content.items.values() if it.chrome) == 14
+    assert sum(1 for it in content.items.values() if it.chrome) == 15
     assert {it.id for it in content.items.values() if it.raises} == {"chrome-health", "chrome-entropy", "bootleg-chrome-health", "bootleg-chrome-entropy"}
     assert [s.id for s in content.shelves if s.draw] == ["useful", "sell", "odd", "trash"]
 

@@ -136,7 +136,7 @@ class Item(Strict):
     counted: bool = False  # credits: one entry holding an amount, instead of one entry per piece
     codex: str | None = None
     shelf: str | None = None  # its group in the GM's item pickers (shelves.yaml); chrome has none
-    chrome: Literal["clinic", "cart"] | None = None  # chrome, and the shop that sells it: handed over from the chrome menu
+    chrome: Literal["clinic", "cart", "both"] | None = None  # chrome, and the shop that sells it ("both": the Sato brothers' gift): handed over from the chrome menu
     raises: Literal["health", "entropy"] | None = None  # chrome that's held, and adds 1 to that maximum while it is
 
 
