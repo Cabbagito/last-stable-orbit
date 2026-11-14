@@ -12,7 +12,7 @@ import { RingPortrait } from '../shell/RingPortrait'
 import { Flare, burnSpeech, useBurnMark } from '../stage/BurnMark'
 import { gmRoll, gmRun, useGame } from '../store/game'
 import type { CrewMember, MapView, RosterNpc, TokenView, View } from '../types'
-import { CameraIcon, Cross, Diamond, Eye, MiniStep } from './parts'
+import { CameraIcon, Cross, Diamond, Eye, MiniStep, PlusIcon } from './parts'
 import { filmOn } from './StageSections'
 
 const DICE = [4, 6, 8, 10, 12, 20]
@@ -127,8 +127,8 @@ function HereRows({ view, map, now, canFight }: { view: View; map: MapView; now:
       <div className="gx-sh">
         <span className="r5-sec">Here</span>
         {view.roster && (
-          <button ref={add} type="button" className={'gx-mini' + (adding ? ' on' : '')} aria-expanded={adding} onClick={() => setAdding(!adding)}>
-            + Add
+          <button ref={add} type="button" className={'gx-ibtn' + (adding ? ' on' : '')} title="Add someone" aria-label="Add someone" aria-expanded={adding} onClick={() => setAdding(!adding)}>
+            <PlusIcon />
           </button>
         )}
         {canFight && <StartFight map={map} />}
@@ -228,7 +228,7 @@ function ThingRows({ map }: { map: MapView }) {
   )
 }
 
-/** Everyone who can be put on a map, by the groups in npcs.yaml. It stays open, so you can add a few. */
+/** Everyone who can be put on a map, by the groups in npcs.yaml, flowed into columns so short groups stack. It stays open, so you can add a few. */
 function AddNpc({ roster, map, anchor, onClose }: { roster: RosterNpc[]; map: MapView; anchor: HTMLElement | null; onClose: () => void }) {
   const box = useRef<HTMLElement>(null)
   const centre = unproj(map.origin, [map.display[0] / 2, map.display[1] / 2], 0)
@@ -267,6 +267,7 @@ function AddNpc({ roster, map, anchor, onClose }: { roster: RosterNpc[]; map: Ma
         </button>
       </div>
       <div className="gx-dir">
+        <div className="gx-cols">
         {groups.map((g) => (
           <div key={g} className="gx-dcol">
             <div className="r5-sec">{g}</div>
@@ -280,6 +281,7 @@ function AddNpc({ roster, map, anchor, onClose }: { roster: RosterNpc[]; map: Ma
               ))}
           </div>
         ))}
+        </div>
       </div>
     </section>,
     document.querySelector('.r4') ?? document.body,

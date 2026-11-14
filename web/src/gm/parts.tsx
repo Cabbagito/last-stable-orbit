@@ -42,6 +42,25 @@ export function CameraIcon({ size = 16 }: { size?: number }) {
   )
 }
 
+/** The Add button's plus. */
+export function PlusIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M8 2.5v11M2.5 8h11" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  )
+}
+
+/** Start a fight: a fist, knuckles up, the thumb folded across. */
+export function FistIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" strokeLinecap="round">
+      <path d="M3.4 8.6V5.6a1.3 1.3 0 0 1 2.6 0v2.2M6 7.4V4.3a1.3 1.3 0 0 1 2.6 0v3.3M8.6 7.6V4.5a1.3 1.3 0 0 1 2.6 0v3.3M11.2 7.8V5.9a1.3 1.3 0 0 1 2.6 0v4.4c0 2.6-1.9 4.2-4.6 4.2H8.1c-2.8 0-4.7-1.7-4.7-4.4V8.6" />
+      <path d="M3.4 9.6h5.1a1.3 1.3 0 0 0 0-2.6H5.6" />
+    </svg>
+  )
+}
+
 export function Cross() {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">

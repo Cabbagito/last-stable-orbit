@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { gmRun, useGame } from '../store/game'
+import { FistIcon } from '../gm/parts'
 import { serverClock } from '../net/clock'
 import type { FightView, MapView, TokenView } from '../types'
 import { fightOn } from './fights'
@@ -14,8 +15,8 @@ export function StartFight({ map }: { map: MapView }) {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <button type="button" className="gx-mini" onClick={() => setOpen(true)}>
-        Start a fight
+      <button type="button" className={'gx-ibtn fight' + (open ? ' on' : '')} title="Start a fight" aria-label="Start a fight" onClick={() => setOpen(true)}>
+        <FistIcon />
       </button>
       {open && <FightDialog map={map} onClose={() => setOpen(false)} />}
     </>

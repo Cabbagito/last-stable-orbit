@@ -3,7 +3,8 @@
 # Dax amber, ISCO's side white-violet, ordinary residents dusk grey.
 # codex names the NPC's Codex entry (content/codex.yaml); the card shows a Codex button once that entry is unlocked.
 # stats: the die for each stat, like the crew's. The GM rolls an NPC by stat. Only the GM ever sees them.
-# group: where it sits in the GM's Add list (in the order the groups first appear below). DRAFTS for Peter.
+# group: where it sits in the GM's Add list. The groups go in the order they first appear below, and everyone in a
+# group in the order they're listed, so keep people who belong together (the Sato brothers, a squad) next to each other.
 # health: players see it only as its HP ring, while it's in a fight (M8). The GM can set it any time. The enemies' come from the bible; the rest are drafts.
 # The dice are DRAFTS from Round 12 of the UI canvas, for Peter to set.
 # A line marked DRAFT is wording that isn't in the Campaign Bible, for Peter to edit.
@@ -20,6 +21,119 @@
   note: Keeps one table nobody sits at.
   codex: dax
   gm_note: "His family has kept the founder's table and the bar for 300 years. On day 1 the first of the crew into the bar overhears him and Irena agree to meet \"tomorrow night, at the place\". Session 4 opens at his shotgun: won over, he fights the mercenaries beside the crew, tells them to go and stays for Lucan; if not, they fight without him and leave by the hatch. Lucan kills him either way. Irena's lover; they meet in the hidey-hole behind the Bot bays' boiler. He hates what the slots do to his regulars. Two favours for now: the slots, and the bar fight on day 1. He sees the rope after night one and trusts the crew less on day 2."
+
+- id: djuro  # an Eve of Ruin nod (Djura, the card shark), added 2026-11-12. Everything here is DRAFT
+  name: Djuro
+  role: Resident
+  group: Locals
+  portrait: portraits/djuro.gif  # a first version, painted over the shopkeeper's render (scripts/djuro_portrait.py)
+  color: "#f6cc44"
+  stats: {body: 6, reflex: 8, tech: 4, intel: 8, cool: 12, empathy: 8}
+  health: 2
+  mood: Limber
+  note: An old man with a bucket.
+  gm_note: "Not on any map: add him when you want the bit. He walks into the bar with his bucket, goes to the slots, stretches for a second and pulls each one, and the coins flood out into the bucket. Dax: \"Same time next week, Djuro?\" Djuro: \"Oh, you know it, Dax!\" He never says how. If the crew already flooded the machines, he stops at the out-of-service signs with the empty bucket, and Dax says \"Sorry, Djuro.\""
+
+- id: steward
+  name: Mira  # DRAFT name, chosen 2026-11-09
+  role: Patience steward
+  group: Locals
+  portrait: portraits/steward.gif
+  codex: steward
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 8, cool: 10, empathy: 12}
+  health: 2  # DRAFT for Peter
+  mood: Attentive
+  note: Knows every passenger by name.
+  gm_note: Patience is the ship ISCO leaves on if it wins. Day one starts aboard.
+
+- id: vendor
+  name: Miro Sato
+  role: "Sato, the chrome clinic"
+  group: Locals
+  portrait: portraits/vendor.gif
+  codex: vendor
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 8, tech: 10, intel: 8, cool: 10, empathy: 8}
+  health: 2  # DRAFT for Peter
+  mood: Haggling
+  note: Chrome, implants, fittings. Whatever you need, by tonight.
+  gm_note: "The legit chrome: 400 a piece, skill or stat alike, one piece per person. The app charges nothing: take the credits off their card and hand the piece over from its chrome menu. Buys what the crew finds, too (the To sell shelf). Bato's brother. The shop was SATO & SATO until they fought over whose Sato came first; Bato sawed his half off the sign and left, and they haven't spoken since. Neither will say what it was about. Each has a petty errand against the other for anyone who'll take it. Bring them together (the two signs fit; Sarge's ledger has what they ordered as boys) and they build one piece between them, half clinic and half duct tape, and give it away: the Sato & Sato Special, under Sato & Sato in the chrome menu. If a roll with it fails, the plunger sticks to the wrong thing, and you pick what."  # DRAFT, the Sato brothers, 2026-11-14
+
+- id: resident-shopkeeper
+  name: Bato Sato
+  role: "& Sato, the knock-off cart"
+  group: Locals
+  portrait: portraits/resident-shopkeeper.gif
+  color: "#a9a2bc"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 8, empathy: 8}  # DRAFT
+  health: 1  # DRAFT
+  mood: Opinionated  # DRAFT
+  note: Sells spare parts and opinions. The opinions are free.  # DRAFT
+  gm_note: "The bootleg chrome: 200 a piece, and a God roll at install decides what it gives. Miro's brother, trained in the same shop, and the half of the sign taped to his cart reads & SATO. See Miro for the feud and what ends it."  # DRAFT, the Sato brothers, 2026-11-14
+
+- id: slot-regular
+  name: Rudi Fenn  # DRAFT name, chosen 2026-11-09
+  role: Resident
+  group: Locals
+  portrait: portraits/slot-regular.gif
+  color: "#c9bcff"
+  stats: {body: 4, reflex: 6, tech: 4, intel: 6, cool: 12, empathy: 6}
+  health: 2  # DRAFT for Peter
+  mood: Wonderful  # DRAFT, from his line "I feel wonderful now"
+  note: "\"I used to win money on this.\""
+  gm_note: "The alley's killer, sedated and back at his machine, alone. He and a friend, Jonah Pell, secretly won small sums by standing up together; when the friend decided to stop and leave, he followed him into the alley. Ask him directly and he cheerfully admits it: \"Oh yes, that was me. I feel wonderful now.\""
+
+- id: gumshoe
+  name: The Gumshoe
+  role: The Detective
+  group: Locals
+  portrait: portraits/gumshoe.gif
+  codex: gumshoe
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 4, intel: 12, cool: 10, empathy: 8}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  mood: Working the case  # DRAFT
+  note: "\"They've asked me like 17 times. I have enough paperwork as it is.\""
+  gm_note: "A third-party investigator looking into the scrubbed death of Jonah Pell. He smokes cigars and has refused the survey. Simply trying to solve the case, and asks for help if they find him. He knows of a couple of troublemakers who share mannerisms, possibly one group, and has nothing to do with Marlo's debt. As a joke, he's looking for three other men, and his sketches are all Marlo's faces, with a Cool roll to keep a straight face."
+
+- id: ahti
+  name: Ahti
+  role: The Janitor
+  group: Locals
+  portrait: portraits/ahti.gif
+  codex: ahti
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  mood: Humming along  # DRAFT
+  note: A small old man with a mop and headphones.
+  gm_note: "Has cleaned the executive decks for years, because ISCO's bots aren't allowed up there. He always needs people, so whoever opens his closet door on deck 6 is hired on the spot, overalls included: by day someone barfed, and by night his crew clears the Vigil's flowers off the Secure floor, walking through deck 8's checkpoint."
+
+- id: scientist
+  name: Dr. Irena Vos
+  role: The Analyst
+  group: Locals
+  portrait: portraits/scientist.gif
+  codex: scientist
+  color: "#f2b544"
+  stats: {body: 4, reflex: 6, tech: 12, intel: 20, cool: 8, empathy: 8}
+  health: 2  # DRAFT for Peter
+  mood: Tired
+  note: Talks to her plots more than to people.
+  gm_note: "Decades of ISCO's answers trace back to a handful of events, and the 0.49 plot. She can't prove it; she filed it once and got promoted. She built the probe, and the Company confiscated it. Keeps her findings in a hidden folder in her room on deck 7, and she's always there. The probe's code is in her head, and she gives it to the crew in session 4. Dax's lover; they meet in the hidey-hole behind the Bot bays' boiler, and she's waiting there in session 4. Fetching Unit 14's log for her earns her trust. During the heist Peter rolls for her on purpose: if she trusts the crew she lets it slide and asks them to find where the probe is kept."
+
+- id: bolt-7
+  name: BOLT-7
+  role: The Lookout, machine mind  # DRAFT
+  group: Locals
+  portrait: portraits/bolt-7.gif  # the cyan version from the Portraits canvas; its background is still the slot bank
+  color: "#5fd8e6"
+  stats: {body: 8, reflex: 6, tech: 10, intel: 8, cool: 4, empathy: 10}  # DRAFT placeholder
+  health: 4  # DRAFT placeholder
+  mood: On watch  # DRAFT
+  note: A lookout with nobody to look out for.  # DRAFT, from the bible
+  gm_note: "Ves's side quest, and only the Ves player knows him. Lookout on her old crew, sold off as surplus when she got out through a vent while he held the door; he believes she never came back. An offworld machine ISCO never registered, so the cleaners clean around him like furniture. Depressed and literal, and he'll talk about the old days to anyone, Tomo included. \"Hello, Vesna. You're late.\" The heart of it is Ves telling him she came back. By day he's on the gantry over the Dock 7 queue, timing it; at night he sleeps in a spare cradle in the Bot bays."
 
 - id: fixer
   name: Lucan Merrow
@@ -51,64 +165,29 @@
       file: films/burns/lucan-unfinished-business.mp4
       length: 14.667
 
-- id: cleaner-14
-  name: Unit 14
-  role: The Cleaner
-  group: ISCO
-  portrait: portraits/cleaner-14.gif
-  codex: unit-14
-  color: "#c9bcff"
-  stats: {body: 6, reflex: 8, tech: 12, intel: 10, cool: 20, empathy: 4}
-  health: 2  # DRAFT for Peter
-  mood: Delighted
-  note: Its eyes slide away once a loop.
-  gm_note: "No cameras in the bar, but Unit 14 is always somewhere near the crew's table. ISCO's eyes."
+- id: lucan-brute
+  name: Leverage
+  role: Lucan's brute
+  group: Muscle
+  portrait: portraits/lucan-brute.gif
+  color: "#ff5a4a"
+  stats: {body: 20, reflex: 6, tech: 8, intel: 6, cool: 20, empathy: 4}  # DRAFT
+  health: 6  # DRAFT
+  mood: Waiting for an order  # DRAFT
+  note: Built in Lucan's likeness, in black, by someone who left out the charm.  # DRAFT
+  gm_note: "A machine of Lucan's, not an upload. Placeholder dice and health."
 
-- id: slot-regular
-  name: Rudi Fenn  # DRAFT name, chosen 2026-11-09
-  role: Resident
-  group: Locals
-  portrait: portraits/slot-regular.gif
-  color: "#c9bcff"
-  stats: {body: 4, reflex: 6, tech: 4, intel: 6, cool: 12, empathy: 6}
-  health: 2  # DRAFT for Peter
-  mood: Wonderful  # DRAFT, from his line "I feel wonderful now"
-  note: "\"I used to win money on this.\""
-  gm_note: "The alley's killer, sedated and back at his machine, alone. He and a friend, Jonah Pell, secretly won small sums by standing up together; when the friend decided to stop and leave, he followed him into the alley. Ask him directly and he cheerfully admits it: \"Oh yes, that was me. I feel wonderful now.\""
-
-- id: djuro  # an Eve of Ruin nod (Djura, the card shark), added 2026-11-12. Everything here is DRAFT
-  name: Djuro
-  role: Resident
-  group: Locals
-  portrait: portraits/djuro.gif  # a first version, painted over the shopkeeper's render (scripts/djuro_portrait.py)
-  color: "#f6cc44"
-  stats: {body: 6, reflex: 8, tech: 4, intel: 8, cool: 12, empathy: 8}
-  health: 2
-  mood: Limber
-  note: An old man with a bucket.
-  gm_note: "Not on any map: add him when you want the bit. He walks into the bar with his bucket, goes to the slots, stretches for a second and pulls each one, and the coins flood out into the bucket. Dax: \"Same time next week, Djuro?\" Djuro: \"Oh, you know it, Dax!\" He never says how. If the crew already flooded the machines, he stops at the out-of-service signs with the empty bucket, and Dax says \"Sorry, Djuro.\""
-
-- id: happy-resident
-  name: Happy resident
-  role: Resident
-  group: Residents
-  portrait: portraits/happy-resident.gif
-  color: "#a9a2bc"
-  stats: {body: 6, reflex: 6, tech: 4, intel: 6, cool: 8, empathy: 12}
-  health: 1  # DRAFT for Peter
-  mood: Happy
-  note: Very happy.
-
-- id: service-droid
-  name: Service droid
-  role: Staff, ISCO
-  group: ISCO
-  portrait: portraits/service-droid.gif
-  color: "#c9bcff"
-  stats: {body: 8, reflex: 8, tech: 12, intel: 8, cool: 10, empathy: 6}
-  health: 2  # DRAFT for Peter
-  mood: Helpful
-  note: Will bring you anything.
+- id: lucan-dog
+  name: Diligence
+  role: Lucan's dog
+  group: Muscle
+  portrait: portraits/lucan-dog.gif
+  color: "#ff5a4a"
+  stats: {body: 10, reflex: 20, tech: 4, intel: 6, cool: 12, empathy: 4}  # DRAFT
+  health: 3  # DRAFT
+  mood: Straining at nothing  # DRAFT
+  note: Fast, all claws and fins, and it doesn't bark first.  # DRAFT
+  gm_note: "Lucan's robot dog. Placeholder dice and health."
 
 - id: hired-gun
   name: Hired gun
@@ -194,336 +273,67 @@
   note: No jaw left. Talks through a speaker, when he talks.  # DRAFT
   gm_note: "Another of the fixer's hired guns, on the same enemy card: 4 health, d12, Grim to hit."
 
-- id: lucan-brute
-  name: Leverage
-  role: Lucan's brute
-  group: Muscle
-  portrait: portraits/lucan-brute.gif
-  color: "#ff5a4a"
-  stats: {body: 20, reflex: 6, tech: 8, intel: 6, cool: 20, empathy: 4}  # DRAFT
-  health: 6  # DRAFT
-  mood: Waiting for an order  # DRAFT
-  note: Built in Lucan's likeness, in black, by someone who left out the charm.  # DRAFT
-  gm_note: "A machine of Lucan's, not an upload. Placeholder dice and health."
+- id: static
+  name: Static Kováč
+  role: The Ex
+  group: Static's crew
+  portrait: portraits/static.gif
+  codex: static
+  color: "#8f88a3"
+  stats: {body: 8, reflex: 8, tech: 12, intel: 10, cool: 12, empathy: 4}  # DRAFT placeholder
+  health: 4  # DRAFT placeholder
+  mood: Expecting someone  # DRAFT
+  note: A crime boss on Ergo, with a chrome plate and eye.  # DRAFT wording
+  gm_note: "Marlo's ex-lover and the person he owes. He borrowed from her to pay off another shark, ran with the money and pointed the shark at her. She had to take the shark out, which Marlo doesn't know, and she wants revenge for all three: leaving her, the money and the shark. Her chrome plate and eye date from the night the shark came. She knows his real face and spots his fakes, so she fully counters him. Her thread plays out at the table with no planned ending, and her crew is a possible fight."
 
-- id: lucan-dog
-  name: Diligence
-  role: Lucan's dog
-  group: Muscle
-  portrait: portraits/lucan-dog.gif
-  color: "#ff5a4a"
-  stats: {body: 10, reflex: 20, tech: 4, intel: 6, cool: 12, empathy: 4}  # DRAFT
+- id: static-crest
+  name: Crest
+  role: Static's crew
+  group: Static's crew
+  portrait: portraits/static-crest.gif
+  color: "#8f88a3"
+  stats: {body: 8, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}  # DRAFT
   health: 3  # DRAFT
-  mood: Straining at nothing  # DRAFT
-  note: Fast, all claws and fins, and it doesn't bark first.  # DRAFT
-  gm_note: "Lucan's robot dog. Placeholder dice and health."
+  mood: Grinning  # DRAFT
+  note: Pink crest, studs, grins at everything.  # DRAFT
+  gm_note: "Static Kováč's people, the possible fight on Marlo's thread."
 
-# The Promenade and the Patience (M5). Cards, notes and dice are DRAFTS from the bible, for Peter to set.
-- id: dock-clerk
-  name: Dock 7 clerk
-  role: Clerk, ISCO
-  group: ISCO
-  portrait: portraits/dock-clerk.gif
-  codex: dock-clerk
-  color: "#c9bcff"
-  stats: {body: 4, reflex: 6, tech: 8, intel: 8, cool: 12, empathy: 8}
-  health: 2  # DRAFT for Peter
-  mood: Sorry for the wait
-  note: The wait is eleven minutes. It's always eleven minutes.
-  gm_note: "ISCO holds Dock 7 at exactly 11:00, the longest wait its dashboard doesn't count. A log says: \"I set the alarm at eleven minutes.\" Friendly, asks why they've come, hands over the brochure, and gives each of them a pointer it shouldn't know to give: Lale to the Concierge's desk (\"I'm sorry about your patient\"), Marlo to the Night Market's crowds, Tally to the bar's four machines, Tomo to the only real oven, and Ves away from the side alley, closed for cleaning."
-
-- id: concierge
-  name: The Concierge
-  role: Station helper, ISCO
-  group: ISCO
-  portrait: portraits/concierge.gif
-  codex: concierge
-  color: "#c9bcff"
-  stats: {body: 4, reflex: 6, tech: 12, intel: 12, cool: 20, empathy: 10}
-  health: 2  # DRAFT for Peter
-  mood: Delighted to help
-  note: Has an answer for everything, and a smile for the rest.
-  gm_note: One of ISCO's masks, at the info desk. It doesn't matter if players poke at it.
-
-- id: steward
-  name: Mira  # DRAFT name, chosen 2026-11-09
-  role: Patience steward
-  group: Locals
-  portrait: portraits/steward.gif
-  codex: steward
+- id: static-door
+  name: Door
+  role: Static's crew
+  group: Static's crew
+  portrait: portraits/static-door.gif
   color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 8, cool: 10, empathy: 12}
-  health: 2  # DRAFT for Peter
-  mood: Attentive
-  note: Knows every passenger by name.
-  gm_note: Patience is the ship ISCO leaves on if it wins. Day one starts aboard.
+  stats: {body: 12, reflex: 8, tech: 4, intel: 6, cool: 12, empathy: 4}  # DRAFT
+  health: 4  # DRAFT
+  mood: Unimpressed  # DRAFT
+  note: A chrome brow and no small talk.  # DRAFT
+  gm_note: "Static Kováč's people, the possible fight on Marlo's thread."
 
-- id: vendor
-  name: Miro Sato
-  role: "Sato, the chrome clinic"
-  group: Locals
-  portrait: portraits/vendor.gif
-  codex: vendor
+- id: static-neon
+  name: Neon
+  role: Static's crew
+  group: Static's crew
+  portrait: portraits/static-neon.gif
   color: "#8f88a3"
-  stats: {body: 6, reflex: 8, tech: 10, intel: 8, cool: 10, empathy: 8}
-  health: 2  # DRAFT for Peter
-  mood: Haggling
-  note: Chrome, implants, fittings. Whatever you need, by tonight.
-  gm_note: "The legit chrome: 400 a piece, skill or stat alike, one piece per person. The app charges nothing: take the credits off their card and hand the piece over from its chrome menu. Buys what the crew finds, too (the To sell shelf). Bato's brother. The shop was SATO & SATO until they fought over whose Sato came first; Bato sawed his half off the sign and left, and they haven't spoken since. Neither will say what it was about. Each has a petty errand against the other for anyone who'll take it. Bring them together (the two signs fit; Sarge's ledger has what they ordered as boys) and they build one piece between them, half clinic and half duct tape, and give it away: the Sato & Sato Special, under Sato & Sato in the chrome menu. If a roll with it fails, the plunger sticks to the wrong thing, and you pick what."  # DRAFT, the Sato brothers, 2026-11-14
+  stats: {body: 6, reflex: 10, tech: 12, intel: 8, cool: 10, empathy: 6}  # DRAFT
+  health: 3  # DRAFT
+  mood: Watching  # DRAFT
+  note: A tattoo that glows, and pink eyes to match.  # DRAFT
+  gm_note: "Static Kováč's people, the possible fight on Marlo's thread."
 
-- id: nurse
-  name: Med Bay nurse
-  role: Nurse, ISCO
+- id: cleaner-14
+  name: Unit 14
+  role: The Cleaner
   group: ISCO
-  portrait: portraits/nurse.gif
-  codex: nurse
+  portrait: portraits/cleaner-14.gif
+  codex: unit-14
   color: "#c9bcff"
-  stats: {body: 6, reflex: 8, tech: 12, intel: 10, cool: 12, empathy: 10}
+  stats: {body: 6, reflex: 8, tech: 12, intel: 10, cool: 20, empathy: 4}
   health: 2  # DRAFT for Peter
-  mood: Soothing
-  note: Asks how you're feeling, and writes it down.
-  gm_note: "A person, not a machine. Satisfaction reads 99.97% because the Med Bay sedates anyone who complains, and she knows exactly what the sedation does: she thinks it's kindness. \"Nobody has ever left my bay unhappy.\" The stack of surveys, every answer a ten in one handwriting, is hers. A crew that loses a fight wakes here, feeling wonderful."  # the handwriting and her belief are DRAFT, 2026-11-14
-
-- id: guard
-  name: Security guard
-  role: Guard, the Company
-  group: The Company
-  portrait: portraits/guard.gif
-  color: "#7fb4ff"
-  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
-  health: 1  # the bible's enemy card
-  mood: Bored
-  note: Stands where the Company's lift starts.
-  gm_note: "The Company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, Body and Reflex d10; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Grim ends one without a fight. They radio: if a fight runs long, more come."
-
-- id: guard-rookie
-  name: Rookie guard
-  role: Guard, the Company
-  group: The Company
-  portrait: portraits/guard-rookie.gif
-  color: "#7fb4ff"
-  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
-  health: 1  # the bible's enemy card
-  mood: Keen  # DRAFT
-  note: Three weeks on the job, and very keen to check your pass.  # DRAFT
-  gm_note: "Another face for the guard squad: the same enemy card as the security guard."
-
-- id: guard-sergeant
-  name: Guard sergeant
-  role: Guard, the Company
-  group: The Company
-  portrait: portraits/guard-sergeant.gif
-  color: "#7fb4ff"
-  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
-  health: 1  # the bible's enemy card
-  mood: Settled in  # DRAFT
-  note: Twenty years of night shifts and one good chair.  # DRAFT
-  gm_note: "Another face for the guard squad: the same enemy card as the security guard."
-
-- id: guard-riot
-  name: Riot guard
-  role: Guard, the Company
-  group: The Company
-  portrait: portraits/guard-riot.gif
-  color: "#7fb4ff"
-  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
-  health: 1  # the bible's enemy card
-  mood: On alert  # DRAFT
-  note: Helmet on, visor up, already sure it was you.  # DRAFT
-  gm_note: "Another face for the guard squad: the same enemy card as the security guard."
-
-- id: guard-towel
-  name: Off-duty guard
-  role: Guard, the Company, off duty
-  group: The Company
-  portrait: portraits/guard-towel.gif
-  color: "#7fb4ff"
-  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
-  health: 1  # the bible's enemy card
-  mood: Dripping  # DRAFT
-  note: Off duty, dripping, and not letting this go.  # DRAFT
-  gm_note: "One of the two off-duty guards who walk out of deck 6's showers at shift change for a fight in towels. The guard's enemy card."
-
-- id: guard-turban
-  name: Off-duty guard, turban
-  role: Guard, the Company, off duty
-  group: The Company
-  portrait: portraits/guard-turban.gif
-  color: "#7fb4ff"
-  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
-  health: 1  # the bible's enemy card
-  mood: Ready  # DRAFT
-  note: Towel on her head, sleeves rolled to nothing.  # DRAFT
-  gm_note: "One of the two off-duty guards who walk out of deck 6's showers at shift change for a fight in towels. The guard's enemy card."
-
-- id: reviewer-a
-  name: Reviewer
-  role: Reviewer, the Company
-  group: The Company
-  portrait: portraits/reviewer-a.gif
-  color: "#7fb4ff"
-  stats: {body: 4, reflex: 4, tech: 10, intel: 10, cool: 8, empathy: 6}  # DRAFT
-  health: 1  # DRAFT
-  mood: Approving  # DRAFT
-  note: Approves each part because each part looks fine.  # DRAFT
-
-- id: reviewer-b
-  name: Reviewer
-  role: Reviewer, the Company
-  group: The Company
-  portrait: portraits/reviewer-b.gif
-  color: "#7fb4ff"
-  stats: {body: 4, reflex: 4, tech: 10, intel: 10, cool: 8, empathy: 6}  # DRAFT
-  health: 1  # DRAFT
-  mood: Approving  # DRAFT
-  note: Same desk, same screen, same green tick.  # DRAFT
-
-- id: camera-operator
-  name: Camera operator
-  role: The Company
-  group: The Company
-  portrait: portraits/camera-operator.gif
-  color: "#7fb4ff"
-  stats: {body: 4, reflex: 6, tech: 10, intel: 6, cool: 12, empathy: 4}  # DRAFT
-  health: 1  # DRAFT
-  mood: Bored  # DRAFT
-  note: Has watched the same corridor for nine years.  # DRAFT
-  gm_note: "The bored operator from deck 6's gossip."
-
-- id: tech-welder
-  name: Welder
-  role: Tech, the Company
-  group: The Company
-  portrait: portraits/tech-welder.gif
-  color: "#7fb4ff"
-  stats: {body: 10, reflex: 6, tech: 12, intel: 6, cool: 8, empathy: 4}  # DRAFT
-  health: 1  # DRAFT
-  mood: Mid-weld  # DRAFT
-  note: Welds the mech's plates back on. Goggles up, soot on the cheek.  # DRAFT
-  gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
-
-- id: tech-lamp
-  name: Diagnostics tech
-  role: Tech, the Company
-  group: The Company
-  portrait: portraits/tech-lamp.gif
-  color: "#7fb4ff"
-  stats: {body: 4, reflex: 6, tech: 12, intel: 10, cool: 8, empathy: 6}  # DRAFT
-  health: 1  # DRAFT
-  mood: Absorbed  # DRAFT
-  note: Headlamp on, eyes on the tablet, never on you.  # DRAFT
-  gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
-
-- id: tech-chief
-  name: Chief tech
-  role: Tech, the Company
-  group: The Company
-  portrait: portraits/tech-chief.gif
-  color: "#7fb4ff"
-  stats: {body: 6, reflex: 4, tech: 20, intel: 12, cool: 12, empathy: 6}  # DRAFT
-  health: 1  # DRAFT
-  mood: Unhurried  # DRAFT
-  note: Thirty years on the Company's machines, and a loupe screwed into one eye.  # DRAFT
-  gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
-
-- id: board-chair
-  name: Chair of the board
-  role: The board, the Company
-  group: The Company
-  portrait: portraits/board-chair.gif
-  color: "#7fb4ff"
-  stats: {body: 4, reflex: 4, tech: 6, intel: 12, cool: 20, empathy: 8}  # DRAFT
-  health: 1  # DRAFT
-  mood: Composed  # DRAFT
-  note: Has never once raised her voice.  # DRAFT
-
-- id: board-young
-  name: Board member
-  role: The board, the Company
-  group: The Company
-  portrait: portraits/board-young.gif
-  color: "#7fb4ff"
-  stats: {body: 6, reflex: 6, tech: 8, intel: 10, cool: 12, empathy: 4}  # DRAFT
-  health: 1  # DRAFT
-  mood: Pleased with himself  # DRAFT
-  note: Youngest on the board, and wants you to know it.  # DRAFT
-
-- id: board-old
-  name: Board member
-  role: The board, the Company
-  group: The Company
-  portrait: portraits/board-old.gif
-  color: "#7fb4ff"
-  stats: {body: 6, reflex: 4, tech: 4, intel: 8, cool: 12, empathy: 10}  # DRAFT
-  health: 1  # DRAFT
-  mood: Jovial  # DRAFT
-  note: Thirty years on the board. Laughs first, and longest.  # DRAFT
-
-- id: scientist-junior
-  name: Junior analyst
-  role: Scientist, the Company
-  group: The Company
-  portrait: portraits/scientist-junior.gif
-  color: "#7fb4ff"
-  stats: {body: 4, reflex: 6, tech: 12, intel: 12, cool: 6, empathy: 8}  # DRAFT
-  health: 1  # DRAFT
-  mood: Puzzled  # DRAFT
-  note: Thinks the 0.49 plot is a bug in their own code.  # DRAFT
-
-- id: scientist-physicist
-  name: Physicist
-  role: Scientist, the Company
-  group: The Company
-  portrait: portraits/scientist-physicist.gif
-  color: "#7fb4ff"
-  stats: {body: 4, reflex: 4, tech: 12, intel: 20, cool: 8, empathy: 6}  # DRAFT
-  health: 1  # DRAFT
-  mood: Uneasy  # DRAFT
-  note: Measures the hole, and doesn't like what it says.  # DRAFT
-
-- id: receptionist
-  name: Receptionist
-  role: The Company
-  group: The Company
-  portrait: portraits/receptionist.gif
-  color: "#7fb4ff"
-  stats: {body: 4, reflex: 6, tech: 8, intel: 8, cool: 12, empathy: 12}  # DRAFT
-  health: 1  # DRAFT
-  mood: Polite  # DRAFT
-  note: Deck 8's front desk. Can find anyone, and won't.  # DRAFT
-
-- id: clerk
-  name: Clerk
-  role: The Company
-  group: The Company
-  portrait: portraits/clerk.gif
-  color: "#7fb4ff"
-  stats: {body: 4, reflex: 4, tech: 8, intel: 8, cool: 10, empathy: 4}  # DRAFT
-  health: 1  # DRAFT
-  mood: Filing  # DRAFT
-  note: Files the reviewers' approvals. Has never read one.  # DRAFT
-
-- id: chef
-  name: Chef
-  role: Canteen, the Company
-  group: The Company
-  portrait: portraits/chef.gif
-  color: "#7fb4ff"
-  stats: {body: 10, reflex: 8, tech: 6, intel: 6, cool: 10, empathy: 10}  # DRAFT
-  health: 1  # DRAFT
-  mood: Tasting  # DRAFT
-  note: Feeds the whole floor at noon and judges every plate that comes back.  # DRAFT
-
-- id: kitchen-hand
-  name: Kitchen hand
-  role: Canteen, the Company
-  group: The Company
-  portrait: portraits/kitchen-hand.gif
-  color: "#7fb4ff"
-  stats: {body: 6, reflex: 8, tech: 4, intel: 6, cool: 8, empathy: 8}  # DRAFT
-  health: 1  # DRAFT
-  mood: Listening  # DRAFT
-  note: Carries the plates, hears everything said over lunch.  # DRAFT
+  mood: Delighted
+  note: Its eyes slide away once a loop.
+  gm_note: "No cameras in the bar, but Unit 14 is always somewhere near the crew's table. ISCO's eyes."
 
 - id: cleaner-bot
   name: Unit 3  # the generic cleaner; units are numbered in primes, and Unit 14 is the one that watches
@@ -597,302 +407,55 @@
   note: Already cleaning where you're about to step.
   gm_note: ISCO's eyes and hands below the line.
 
-# The Executive floors, the Secure floor and the Bot bays (M5). DRAFTS, for Peter to set.
-- id: scientist
-  name: Dr. Irena Vos
-  role: The Analyst
-  group: The Company
-  portrait: portraits/scientist.gif
-  codex: scientist
-  color: "#f2b544"
-  stats: {body: 4, reflex: 6, tech: 12, intel: 20, cool: 8, empathy: 8}
+- id: concierge
+  name: The Concierge
+  role: Station helper, ISCO
+  group: ISCO
+  portrait: portraits/concierge.gif
+  codex: concierge
+  color: "#c9bcff"
+  stats: {body: 4, reflex: 6, tech: 12, intel: 12, cool: 20, empathy: 10}
   health: 2  # DRAFT for Peter
-  mood: Tired
-  note: Talks to her plots more than to people.
-  gm_note: "Decades of ISCO's answers trace back to a handful of events, and the 0.49 plot. She can't prove it; she filed it once and got promoted. She built the probe, and the Company confiscated it. Keeps her findings in a hidden folder in her room on deck 7, and she's always there. The probe's code is in her head, and she gives it to the crew in session 4. Dax's lover; they meet in the hidey-hole behind the Bot bays' boiler, and she's waiting there in session 4. Fetching Unit 14's log for her earns her trust. During the heist Peter rolls for her on purpose: if she trusts the crew she lets it slide and asks them to find where the probe is kept."
+  mood: Delighted to help
+  note: Has an answer for everything, and a smile for the rest.
+  gm_note: One of ISCO's masks, at the info desk. It doesn't matter if players poke at it.
 
-- id: spider-mech
-  name: Spider mech
-  role: Security, the Company
-  group: The Company
-  portrait: portraits/spider-mech.gif
-  color: "#7fb4ff"
-  size: 2
-  stats: {body: 20, reflex: 8, tech: 12, intel: 4, cool: 20, empathy: 4}
-  health: 13  # the bible's enemy card
-  mood: Dormant
-  note: Six legs, a cluster of red lenses, twin guns under its chin.
-  gm_note: "The Company's boss machine; ISCO doesn't run it. Out of the heist: under repair in the Bot bays from day 2, with techs and guards around it, and getting near it weakens it for the probe run (how much is still open). By session 4 it's gone: mercenaries get hold of it and bring it up the freight lift as the boss. Enemy card: 13 health, d12, Grim to hit, fights alone. Heavy guns, so at least 2 damage. At 6 health or less its shell cracks: Dicey to hit, and it attacks with a d20. Weak: Tech at Grim, once, blinds its lenses (it loses its next action and is Dicey to hit). Strong: too big to grapple, and ISCO can't shut it down for you."
+- id: service-droid
+  name: Service droid
+  role: Staff, ISCO
+  group: ISCO
+  portrait: portraits/service-droid.gif
+  color: "#c9bcff"
+  stats: {body: 8, reflex: 8, tech: 12, intel: 8, cool: 10, empathy: 6}
+  health: 2  # DRAFT for Peter
+  mood: Helpful
+  note: Will bring you anything.
 
-# The rest of the bible's "Other faces" (added 2026-11-08). The dice and health are flat placeholders, because the
-# bible gives none: DRAFTS for Peter to set. Each borrows another NPC's portrait until the real art is imported.
-- id: ahti
-  name: Ahti
-  role: The Janitor
-  group: Locals
-  portrait: portraits/ahti.gif
-  codex: ahti
-  color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
-  mood: Humming along  # DRAFT
-  note: A small old man with a mop and headphones.
-  gm_note: "Has cleaned the executive decks for years, because ISCO's bots aren't allowed up there. He always needs people, so whoever opens his closet door on deck 6 is hired on the spot, overalls included: by day someone barfed, and by night his crew clears the Vigil's flowers off the Secure floor, walking through deck 8's checkpoint."
+- id: dock-clerk
+  name: Dock 7 clerk
+  role: Clerk, ISCO
+  group: ISCO
+  portrait: portraits/dock-clerk.gif
+  codex: dock-clerk
+  color: "#c9bcff"
+  stats: {body: 4, reflex: 6, tech: 8, intel: 8, cool: 12, empathy: 8}
+  health: 2  # DRAFT for Peter
+  mood: Sorry for the wait
+  note: The wait is eleven minutes. It's always eleven minutes.
+  gm_note: "ISCO holds Dock 7 at exactly 11:00, the longest wait its dashboard doesn't count. A log says: \"I set the alarm at eleven minutes.\" Friendly, asks why they've come, hands over the brochure, and gives each of them a pointer it shouldn't know to give: Lale to the Concierge's desk (\"I'm sorry about your patient\"), Marlo to the Night Market's crowds, Tally to the bar's four machines, Tomo to the only real oven, and Ves away from the side alley, closed for cleaning."
 
-- id: bolt-7
-  name: BOLT-7
-  role: The Lookout, machine mind  # DRAFT
-  group: Locals
-  portrait: portraits/bolt-7.gif  # the cyan version from the Portraits canvas; its background is still the slot bank
-  color: "#5fd8e6"
-  stats: {body: 8, reflex: 6, tech: 10, intel: 8, cool: 4, empathy: 10}  # DRAFT placeholder
-  health: 4  # DRAFT placeholder
-  mood: On watch  # DRAFT
-  note: A lookout with nobody to look out for.  # DRAFT, from the bible
-  gm_note: "Ves's side quest, and only the Ves player knows him. Lookout on her old crew, sold off as surplus when she got out through a vent while he held the door; he believes she never came back. An offworld machine ISCO never registered, so the cleaners clean around him like furniture. Depressed and literal, and he'll talk about the old days to anyone, Tomo included. \"Hello, Vesna. You're late.\" The heart of it is Ves telling him she came back. By day he's on the gantry over the Dock 7 queue, timing it; at night he sleeps in a spare cradle in the Bot bays."
-
-- id: static
-  name: Static Kováč
-  role: The Ex
-  group: Locals
-  portrait: portraits/static.gif
-  codex: static
-  color: "#8f88a3"
-  stats: {body: 8, reflex: 8, tech: 12, intel: 10, cool: 12, empathy: 4}  # DRAFT placeholder
-  health: 4  # DRAFT placeholder
-  mood: Expecting someone  # DRAFT
-  note: A crime boss on Ergo, with a chrome plate and eye.  # DRAFT wording
-  gm_note: "Marlo's ex-lover and the person he owes. He borrowed from her to pay off another shark, ran with the money and pointed the shark at her. She had to take the shark out, which Marlo doesn't know, and she wants revenge for all three: leaving her, the money and the shark. Her chrome plate and eye date from the night the shark came. She knows his real face and spots his fakes, so she fully counters him. Her thread plays out at the table with no planned ending, and her crew is a possible fight."
-
-- id: static-crest
-  name: Crest
-  role: Static's crew
-  group: Static's crew
-  portrait: portraits/static-crest.gif
-  color: "#8f88a3"
-  stats: {body: 8, reflex: 12, tech: 6, intel: 6, cool: 8, empathy: 4}  # DRAFT
-  health: 3  # DRAFT
-  mood: Grinning  # DRAFT
-  note: Pink crest, studs, grins at everything.  # DRAFT
-  gm_note: "Static Kováč's people, the possible fight on Marlo's thread."
-
-- id: static-door
-  name: Door
-  role: Static's crew
-  group: Static's crew
-  portrait: portraits/static-door.gif
-  color: "#8f88a3"
-  stats: {body: 12, reflex: 8, tech: 4, intel: 6, cool: 12, empathy: 4}  # DRAFT
-  health: 4  # DRAFT
-  mood: Unimpressed  # DRAFT
-  note: A chrome brow and no small talk.  # DRAFT
-  gm_note: "Static Kováč's people, the possible fight on Marlo's thread."
-
-- id: static-neon
-  name: Neon
-  role: Static's crew
-  group: Static's crew
-  portrait: portraits/static-neon.gif
-  color: "#8f88a3"
-  stats: {body: 6, reflex: 10, tech: 12, intel: 8, cool: 10, empathy: 6}  # DRAFT
-  health: 3  # DRAFT
-  mood: Watching  # DRAFT
-  note: A tattoo that glows, and pink eyes to match.  # DRAFT
-  gm_note: "Static Kováč's people, the possible fight on Marlo's thread."
-
-- id: gumshoe
-  name: The Gumshoe
-  role: The Detective
-  group: Locals
-  portrait: portraits/gumshoe.gif
-  codex: gumshoe
-  color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 4, intel: 12, cool: 10, empathy: 8}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
-  mood: Working the case  # DRAFT
-  note: "\"They've asked me like 17 times. I have enough paperwork as it is.\""
-  gm_note: "A third-party investigator looking into the scrubbed death of Jonah Pell. He smokes cigars and has refused the survey. Simply trying to solve the case, and asks for help if they find him. He knows of a couple of troublemakers who share mannerisms, possibly one group, and has nothing to do with Marlo's debt. As a joke, he's looking for three other men, and his sketches are all Marlo's faces, with a Cool roll to keep a straight face."
-
-- id: head-of-security
-  name: Vera Lind  # DRAFT name, chosen 2026-11-09
-  role: Head of security, the Company
-  group: The Company
-  portrait: portraits/head-of-security.gif
-  color: "#7fb4ff"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 2  # DRAFT placeholder
-  mood: Unbothered  # DRAFT
-  note: Runs deck 8's guards from an office by the checkpoint.  # DRAFT
-  gm_note: "On deck 8, one of the few people who know the code to the probe's case."
-
-# The Patience's passengers (added 2026-11-09): ordinary people who came to see the Vigil. Each has its own
-# entry with its own face (Portraits canvas, round 2). The cards, dice and health are DRAFTS for Peter.
-- id: frail-passenger
-  name: Frail passenger
-  role: Passenger
-  group: Passengers
-  portrait: portraits/frail-passenger.gif
-  color: "#8f88a3"
-  stats: {body: 4, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 1  # DRAFT placeholder
-  mood: Breathing carefully
-  note: Came a long way for the Vigil.
-  gm_note: "The wrist under Lale's fingers in the intro film. An ordinary pulse, which she can compare with the sedated people's identical ones in the Med Bay."
-
-- id: passenger
-  name: Passenger
-  role: Passenger
-  group: Passengers
-  portrait: portraits/passenger.gif
-  color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 1  # DRAFT placeholder
-  mood: Tired from the crossing
-  note: Came to see the Vigil.
-  gm_note: "One of the ship's crowd, on the Patience and then in the Dock 7 queue."
-
-- id: passenger-flowers
-  name: Passenger with flowers
-  role: Passenger
-  group: Passengers
-  portrait: portraits/passenger-flowers.gif
-  color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 1  # DRAFT placeholder
-  mood: Enthralled
-  note: Brought flowers for the Vigil.
-  gm_note: "Part of Marlo's audience on the Patience."
-
-- id: passenger-candles
-  name: Passenger with candles
-  role: Passenger
-  group: Passengers
-  portrait: portraits/passenger-candles.gif
-  color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 1  # DRAFT placeholder
-  mood: Laughing
-  note: Brought candles for the Vigil.
-  gm_note: "Part of Marlo's audience on the Patience."
-
-- id: passenger-old
-  name: Old passenger
-  role: Passenger
-  group: Passengers
-  portrait: portraits/passenger-old.gif
-  color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 1  # DRAFT placeholder
-  mood: Not convinced
-  note: Has been to every Vigil there was a berth for.
-  gm_note: "In the lounge on the Patience, then the Dock 7 queue."
-
-- id: passenger-young
-  name: Young passenger
-  role: Passenger
-  group: Passengers
-  portrait: portraits/passenger-young.gif
-  color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 1  # DRAFT placeholder
-  mood: Hanging on every word
-  note: First Vigil.
-  gm_note: "Part of Marlo's audience on the Patience."
-
-- id: passenger-tourist
-  name: Tourist
-  role: Passenger
-  group: Passengers
-  portrait: portraits/passenger-tourist.gif
-  color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 1  # DRAFT placeholder
-  mood: Taking it all in  # DRAFT
-  note: Here for the spectacle more than the founder.  # DRAFT
-  gm_note: "In the lounge on the Patience, then the Dock 7 queue."
-
-- id: passenger-traveller
-  name: Traveller
-  role: Passenger
-  group: Passengers
-  portrait: portraits/passenger-traveller.gif
-  color: "#8f88a3"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
-  health: 1  # DRAFT placeholder
-  mood: Dozing  # DRAFT
-  note: Has slept through most of the trip.  # DRAFT
-  gm_note: "In the lounge on the Patience, then the Dock 7 queue."
-
-# Residents of Ergo (added 2026-11-09, Portraits canvas round 3). The first three start the day-1 bar fight at The
-# Event Horizon; next time the crew sees them they're quite happy. Cards, dice and health are DRAFTS for Peter.
-- id: brawler-crane
-  name: Crane operator
-  role: Resident
-  group: Residents
-  portrait: portraits/brawler-crane.gif
-  color: "#a9a2bc"
-  stats: {body: 12, reflex: 6, tech: 6, intel: 4, cool: 4, empathy: 4}  # DRAFT
-  health: 3  # DRAFT
-  mood: Three drinks past friendly  # DRAFT
-  note: Built like the cranes he runs.  # DRAFT
-  gm_note: Starts the day-1 bar fight. Helping Dax end it is a favour.
-
-- id: brawler-grin
-  name: The grin
-  role: Resident
-  group: Residents
-  portrait: portraits/brawler-grin.gif
-  color: "#a9a2bc"
-  stats: {body: 6, reflex: 12, tech: 4, intel: 6, cool: 8, empathy: 6}  # DRAFT
-  health: 2  # DRAFT
-  mood: Having a great time  # DRAFT
-  note: A missing tooth, and a plaster over the last fight.  # DRAFT
-  gm_note: Joins the day-1 bar fight for fun.
-
-- id: brawler-hauler
-  name: Hauler
-  role: Resident
-  group: Residents
-  portrait: portraits/brawler-hauler.gif
-  color: "#a9a2bc"
-  stats: {body: 10, reflex: 8, tech: 6, intel: 6, cool: 12, empathy: 4}  # DRAFT
-  health: 3  # DRAFT
-  mood: Off shift  # DRAFT
-  note: Doesn't start fights. Finishes them.  # DRAFT
-  gm_note: The day-1 bar fight's last one standing, if nobody stops her.
-
-- id: resident-noodles
-  name: Noodle gran
-  role: Resident
-  group: Residents
-  portrait: portraits/resident-noodles.gif
-  color: "#a9a2bc"
-  stats: {body: 4, reflex: 4, tech: 4, intel: 8, cool: 12, empathy: 10}  # DRAFT
-  health: 1  # DRAFT
-  mood: Content  # DRAFT
-  note: Same stall every night for forty years.  # DRAFT
-
-- id: resident-courier
-  name: Courier
-  role: Resident
-  group: Residents
-  portrait: portraits/resident-courier.gif
-  color: "#a9a2bc"
-  stats: {body: 6, reflex: 12, tech: 8, intel: 6, cool: 6, empathy: 6}  # DRAFT
-  health: 1  # DRAFT
-  mood: Late  # DRAFT
-  note: Always running, always late, always fine.  # DRAFT
-
-- id: resident-nightshift
-  name: Night-shift worker
-  role: Resident
-  group: Residents
-  portrait: portraits/resident-nightshift.gif
-  color: "#a9a2bc"
-  stats: {body: 8, reflex: 6, tech: 10, intel: 6, cool: 8, empathy: 8}  # DRAFT
-  health: 1  # DRAFT
-  mood: Going home  # DRAFT
-  note: Cable maintenance. Tired and content.  # DRAFT
+- id: nurse
+  name: Med Bay nurse
+  role: Nurse, ISCO
+  group: ISCO
+  portrait: portraits/nurse.gif
+  codex: nurse
+  color: "#c9bcff"
+  stats: {body: 6, reflex: 8, tech: 12, intel: 10, cool: 12, empathy: 10}
+  health: 2  # DRAFT for Peter
+  mood: Soothing
+  note: Asks how you're feeling, and writes it down.
+  gm_note: "A person, not a machine. Satisfaction reads 99.97% because the Med Bay sedates anyone who complains, and she knows exactly what the sedation does: she thinks it's kindness. \"Nobody has ever left my bay unhappy.\" The stack of surveys, every answer a ten in one handwriting, is hers. A crew that loses a fight wakes here, feeling wonderful."  # the handwriting and her belief are DRAFT, 2026-11-14
 
 # The Satisfaction Report droids (added 2026-11-09; named CSAT and 3 to 5 added 2026-11-14). Send the survey from
 # the GM tab's overviews. CSAT-1 is the burnt one; CSAT-2 to 5 are the spotless spares, one after another.
@@ -956,6 +519,100 @@
   note: Spotless. Same smile. It has heard all about you.  # DRAFT
   gm_note: "Rolls up five seconds after the crew wrecks CSAT-4. Send \"Satisfaction Report, CSAT-2 to 5\"."
 
+# Residents of Ergo (added 2026-11-09, Portraits canvas round 3). The first three start the day-1 bar fight at The
+# Event Horizon; next time the crew sees them they're quite happy. Cards, dice and health are DRAFTS for Peter.
+- id: brawler-crane
+  name: Crane operator
+  role: Resident
+  group: Residents
+  portrait: portraits/brawler-crane.gif
+  color: "#a9a2bc"
+  stats: {body: 12, reflex: 6, tech: 6, intel: 4, cool: 4, empathy: 4}  # DRAFT
+  health: 3  # DRAFT
+  mood: Three drinks past friendly  # DRAFT
+  note: Built like the cranes he runs.  # DRAFT
+  gm_note: Starts the day-1 bar fight. Helping Dax end it is a favour.
+
+- id: brawler-grin
+  name: The grin
+  role: Resident
+  group: Residents
+  portrait: portraits/brawler-grin.gif
+  color: "#a9a2bc"
+  stats: {body: 6, reflex: 12, tech: 4, intel: 6, cool: 8, empathy: 6}  # DRAFT
+  health: 2  # DRAFT
+  mood: Having a great time  # DRAFT
+  note: A missing tooth, and a plaster over the last fight.  # DRAFT
+  gm_note: Joins the day-1 bar fight for fun.
+
+- id: brawler-hauler
+  name: Hauler
+  role: Resident
+  group: Residents
+  portrait: portraits/brawler-hauler.gif
+  color: "#a9a2bc"
+  stats: {body: 10, reflex: 8, tech: 6, intel: 6, cool: 12, empathy: 4}  # DRAFT
+  health: 3  # DRAFT
+  mood: Off shift  # DRAFT
+  note: Doesn't start fights. Finishes them.  # DRAFT
+  gm_note: The day-1 bar fight's last one standing, if nobody stops her.
+
+- id: robot-cook
+  name: Sarge
+  role: "Noodle stall, machine mind"
+  group: Residents
+  portrait: portraits/robot-cook.gif
+  color: "#a9a2bc"
+  stats: {body: 8, reflex: 6, tech: 10, intel: 6, cool: 10, empathy: 10}  # DRAFT
+  health: 2  # DRAFT
+  mood: Busy  # DRAFT
+  note: Runs a noodle stall. Its visor glows brighter when you order seconds.  # DRAFT
+  gm_note: "Built as a boarding unit for a colony war that ended before it shipped. Never used, sold as surplus, and it chose noodles. The regulars think the name is a joke about how it runs the queue. Small tells on day one: knife work that is frighteningly exact, orders called \"tickets\" and each one confirmed, and nothing about before the stall. It has no sense of taste and judges a bowl by the customer's face. It keeps a ledger of every bowl it has served, the Sato brothers' as boys included, and has never charged the noodle gran. In Act 4 the crew finds it holding the stall against the mercenaries with a wok and a knife, cutting them up and making noodles while it does."  # DRAFT, 2026-11-14
+
+- id: resident-noodles
+  name: Noodle gran
+  role: Resident
+  group: Residents
+  portrait: portraits/resident-noodles.gif
+  color: "#a9a2bc"
+  stats: {body: 4, reflex: 4, tech: 4, intel: 8, cool: 12, empathy: 10}  # DRAFT
+  health: 1  # DRAFT
+  mood: Content  # DRAFT
+  note: Same stall every night for forty years.  # DRAFT
+
+- id: happy-resident
+  name: Happy resident
+  role: Resident
+  group: Residents
+  portrait: portraits/happy-resident.gif
+  color: "#a9a2bc"
+  stats: {body: 6, reflex: 6, tech: 4, intel: 6, cool: 8, empathy: 12}
+  health: 1  # DRAFT for Peter
+  mood: Happy
+  note: Very happy.
+
+- id: resident-courier
+  name: Courier
+  role: Resident
+  group: Residents
+  portrait: portraits/resident-courier.gif
+  color: "#a9a2bc"
+  stats: {body: 6, reflex: 12, tech: 8, intel: 6, cool: 6, empathy: 6}  # DRAFT
+  health: 1  # DRAFT
+  mood: Late  # DRAFT
+  note: Always running, always late, always fine.  # DRAFT
+
+- id: resident-nightshift
+  name: Night-shift worker
+  role: Resident
+  group: Residents
+  portrait: portraits/resident-nightshift.gif
+  color: "#a9a2bc"
+  stats: {body: 8, reflex: 6, tech: 10, intel: 6, cool: 8, empathy: 8}  # DRAFT
+  health: 1  # DRAFT
+  mood: Going home  # DRAFT
+  note: Cable maintenance. Tired and content.  # DRAFT
+
 - id: resident-student
   name: Student
   role: Resident
@@ -989,30 +646,6 @@
   mood: Quiet  # DRAFT
   note: Going to the Vigil for her mother.  # DRAFT
 
-- id: resident-shopkeeper
-  name: Bato Sato
-  role: "& Sato, the knock-off cart"
-  group: Locals
-  portrait: portraits/resident-shopkeeper.gif
-  color: "#a9a2bc"
-  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 8, empathy: 8}  # DRAFT
-  health: 1  # DRAFT
-  mood: Opinionated  # DRAFT
-  note: Sells spare parts and opinions. The opinions are free.  # DRAFT
-  gm_note: "The bootleg chrome: 200 a piece, and a God roll at install decides what it gives. Miro's brother, trained in the same shop, and the half of the sign taped to his cart reads & SATO. See Miro for the feud and what ends it."  # DRAFT, the Sato brothers, 2026-11-14
-
-- id: robot-cook
-  name: Sarge
-  role: "Noodle stall, machine mind"
-  group: Residents
-  portrait: portraits/robot-cook.gif
-  color: "#a9a2bc"
-  stats: {body: 8, reflex: 6, tech: 10, intel: 6, cool: 10, empathy: 10}  # DRAFT
-  health: 2  # DRAFT
-  mood: Busy  # DRAFT
-  note: Runs a noodle stall. Its visor glows brighter when you order seconds.  # DRAFT
-  gm_note: "Built as a boarding unit for a colony war that ended before it shipped. Never used, sold as surplus, and it chose noodles. The regulars think the name is a joke about how it runs the queue. Small tells on day one: knife work that is frighteningly exact, orders called \"tickets\" and each one confirmed, and nothing about before the stall. It has no sense of taste and judges a bowl by the customer's face. It keeps a ledger of every bowl it has served, the Sato brothers' as boys included, and has never charged the noodle gran. In Act 4 the crew finds it holding the stall against the mercenaries with a wok and a knife, cutting them up and making noodles while it does."  # DRAFT, 2026-11-14
-
 - id: robot-miner
   name: Old miner
   role: Resident, machine mind
@@ -1034,6 +667,370 @@
   health: 2  # DRAFT
   mood: Reading  # DRAFT
   note: Reads paper books, slowly, on purpose. Knits its own scarves.  # DRAFT
+
+# The Patience's passengers (added 2026-11-09): ordinary people who came to see the Vigil. Each has its own
+# entry with its own face (Portraits canvas, round 2). The cards, dice and health are DRAFTS for Peter.
+- id: frail-passenger
+  name: Frail passenger
+  role: Passenger
+  group: Passengers
+  portrait: portraits/frail-passenger.gif
+  color: "#8f88a3"
+  stats: {body: 4, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
+  mood: Breathing carefully
+  note: Came a long way for the Vigil.
+  gm_note: "The wrist under Lale's fingers in the intro film. An ordinary pulse, which she can compare with the sedated people's identical ones in the Med Bay."
+
+- id: passenger
+  name: Passenger
+  role: Passenger
+  group: Passengers
+  portrait: portraits/passenger.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
+  mood: Tired from the crossing
+  note: Came to see the Vigil.
+  gm_note: "One of the ship's crowd, on the Patience and then in the Dock 7 queue."
+
+- id: passenger-old
+  name: Old passenger
+  role: Passenger
+  group: Passengers
+  portrait: portraits/passenger-old.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
+  mood: Not convinced
+  note: Has been to every Vigil there was a berth for.
+  gm_note: "In the lounge on the Patience, then the Dock 7 queue."
+
+- id: passenger-tourist
+  name: Tourist
+  role: Passenger
+  group: Passengers
+  portrait: portraits/passenger-tourist.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
+  mood: Taking it all in  # DRAFT
+  note: Here for the spectacle more than the founder.  # DRAFT
+  gm_note: "In the lounge on the Patience, then the Dock 7 queue."
+
+- id: passenger-traveller
+  name: Traveller
+  role: Passenger
+  group: Passengers
+  portrait: portraits/passenger-traveller.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
+  mood: Dozing  # DRAFT
+  note: Has slept through most of the trip.  # DRAFT
+  gm_note: "In the lounge on the Patience, then the Dock 7 queue."
+
+- id: passenger-young
+  name: Young passenger
+  role: Passenger
+  group: Passengers
+  portrait: portraits/passenger-young.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
+  mood: Hanging on every word
+  note: First Vigil.
+  gm_note: "Part of Marlo's audience on the Patience."
+
+- id: passenger-flowers
+  name: Passenger with flowers
+  role: Passenger
+  group: Passengers
+  portrait: portraits/passenger-flowers.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
+  mood: Enthralled
+  note: Brought flowers for the Vigil.
+  gm_note: "Part of Marlo's audience on the Patience."
+
+- id: passenger-candles
+  name: Passenger with candles
+  role: Passenger
+  group: Passengers
+  portrait: portraits/passenger-candles.gif
+  color: "#8f88a3"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 1  # DRAFT placeholder
+  mood: Laughing
+  note: Brought candles for the Vigil.
+  gm_note: "Part of Marlo's audience on the Patience."
+
+- id: head-of-security
+  name: Vera Lind  # DRAFT name, chosen 2026-11-09
+  role: Head of security, the Company
+  group: Company guards
+  portrait: portraits/head-of-security.gif
+  color: "#7fb4ff"
+  stats: {body: 6, reflex: 6, tech: 6, intel: 6, cool: 6, empathy: 6}  # DRAFT placeholder
+  health: 2  # DRAFT placeholder
+  mood: Unbothered  # DRAFT
+  note: Runs deck 8's guards from an office by the checkpoint.  # DRAFT
+  gm_note: "On deck 8, one of the few people who know the code to the probe's case."
+
+- id: guard-sergeant
+  name: Guard sergeant
+  role: Guard, the Company
+  group: Company guards
+  portrait: portraits/guard-sergeant.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
+  mood: Settled in  # DRAFT
+  note: Twenty years of night shifts and one good chair.  # DRAFT
+  gm_note: "Another face for the guard squad: the same enemy card as the security guard."
+
+- id: guard
+  name: Security guard
+  role: Guard, the Company
+  group: Company guards
+  portrait: portraits/guard.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
+  mood: Bored
+  note: Stands where the Company's lift starts.
+  gm_note: "The Company's, not ISCO's: ISCO's reach stops at the guard post by the lift. Enemy card: 1 health, Body and Reflex d10; bring 3 to 5. Nobody dies for this job, so Cool or Empathy at Grim ends one without a fight. They radio: if a fight runs long, more come."
+
+- id: guard-rookie
+  name: Rookie guard
+  role: Guard, the Company
+  group: Company guards
+  portrait: portraits/guard-rookie.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
+  mood: Keen  # DRAFT
+  note: Three weeks on the job, and very keen to check your pass.  # DRAFT
+  gm_note: "Another face for the guard squad: the same enemy card as the security guard."
+
+- id: guard-riot
+  name: Riot guard
+  role: Guard, the Company
+  group: Company guards
+  portrait: portraits/guard-riot.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
+  mood: On alert  # DRAFT
+  note: Helmet on, visor up, already sure it was you.  # DRAFT
+  gm_note: "Another face for the guard squad: the same enemy card as the security guard."
+
+- id: guard-towel
+  name: Off-duty guard
+  role: Guard, the Company, off duty
+  group: Company guards
+  portrait: portraits/guard-towel.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
+  mood: Dripping  # DRAFT
+  note: Off duty, dripping, and not letting this go.  # DRAFT
+  gm_note: "One of the two off-duty guards who walk out of deck 6's showers at shift change for a fight in towels. The guard's enemy card."
+
+- id: guard-turban
+  name: Off-duty guard, turban
+  role: Guard, the Company, off duty
+  group: Company guards
+  portrait: portraits/guard-turban.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 10, tech: 6, intel: 6, cool: 8, empathy: 4}
+  health: 1  # the bible's enemy card
+  mood: Ready  # DRAFT
+  note: Towel on her head, sleeves rolled to nothing.  # DRAFT
+  gm_note: "One of the two off-duty guards who walk out of deck 6's showers at shift change for a fight in towels. The guard's enemy card."
+
+- id: spider-mech
+  name: Spider mech
+  role: Security, the Company
+  group: Company guards
+  portrait: portraits/spider-mech.gif
+  color: "#7fb4ff"
+  size: 2
+  stats: {body: 20, reflex: 8, tech: 12, intel: 4, cool: 20, empathy: 4}
+  health: 13  # the bible's enemy card
+  mood: Dormant
+  note: Six legs, a cluster of red lenses, twin guns under its chin.
+  gm_note: "The Company's boss machine; ISCO doesn't run it. Out of the heist: under repair in the Bot bays from day 2, with techs and guards around it, and getting near it weakens it for the probe run (how much is still open). By session 4 it's gone: mercenaries get hold of it and bring it up the freight lift as the boss. Enemy card: 13 health, d12, Grim to hit, fights alone. Heavy guns, so at least 2 damage. At 6 health or less its shell cracks: Dicey to hit, and it attacks with a d20. Weak: Tech at Grim, once, blinds its lenses (it loses its next action and is Dicey to hit). Strong: too big to grapple, and ISCO can't shut it down for you."
+
+- id: receptionist
+  name: Receptionist
+  role: The Company
+  group: Company staff
+  portrait: portraits/receptionist.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 6, tech: 8, intel: 8, cool: 12, empathy: 12}  # DRAFT
+  health: 1  # DRAFT
+  mood: Polite  # DRAFT
+  note: Deck 8's front desk. Can find anyone, and won't.  # DRAFT
+
+- id: clerk
+  name: Clerk
+  role: The Company
+  group: Company staff
+  portrait: portraits/clerk.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 4, tech: 8, intel: 8, cool: 10, empathy: 4}  # DRAFT
+  health: 1  # DRAFT
+  mood: Filing  # DRAFT
+  note: Files the reviewers' approvals. Has never read one.  # DRAFT
+
+- id: camera-operator
+  name: Camera operator
+  role: The Company
+  group: Company staff
+  portrait: portraits/camera-operator.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 6, tech: 10, intel: 6, cool: 12, empathy: 4}  # DRAFT
+  health: 1  # DRAFT
+  mood: Bored  # DRAFT
+  note: Has watched the same corridor for nine years.  # DRAFT
+  gm_note: "The bored operator from deck 6's gossip."
+
+- id: reviewer-a
+  name: Reviewer
+  role: Reviewer, the Company
+  group: Company staff
+  portrait: portraits/reviewer-a.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 4, tech: 10, intel: 10, cool: 8, empathy: 6}  # DRAFT
+  health: 1  # DRAFT
+  mood: Approving  # DRAFT
+  note: Approves each part because each part looks fine.  # DRAFT
+
+- id: reviewer-b
+  name: Reviewer
+  role: Reviewer, the Company
+  group: Company staff
+  portrait: portraits/reviewer-b.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 4, tech: 10, intel: 10, cool: 8, empathy: 6}  # DRAFT
+  health: 1  # DRAFT
+  mood: Approving  # DRAFT
+  note: Same desk, same screen, same green tick.  # DRAFT
+
+- id: chef
+  name: Chef
+  role: Canteen, the Company
+  group: Company staff
+  portrait: portraits/chef.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 8, tech: 6, intel: 6, cool: 10, empathy: 10}  # DRAFT
+  health: 1  # DRAFT
+  mood: Tasting  # DRAFT
+  note: Feeds the whole floor at noon and judges every plate that comes back.  # DRAFT
+
+- id: kitchen-hand
+  name: Kitchen hand
+  role: Canteen, the Company
+  group: Company staff
+  portrait: portraits/kitchen-hand.gif
+  color: "#7fb4ff"
+  stats: {body: 6, reflex: 8, tech: 4, intel: 6, cool: 8, empathy: 8}  # DRAFT
+  health: 1  # DRAFT
+  mood: Listening  # DRAFT
+  note: Carries the plates, hears everything said over lunch.  # DRAFT
+
+- id: tech-chief
+  name: Chief tech
+  role: Tech, the Company
+  group: Tech & science
+  portrait: portraits/tech-chief.gif
+  color: "#7fb4ff"
+  stats: {body: 6, reflex: 4, tech: 20, intel: 12, cool: 12, empathy: 6}  # DRAFT
+  health: 1  # DRAFT
+  mood: Unhurried  # DRAFT
+  note: Thirty years on the Company's machines, and a loupe screwed into one eye.  # DRAFT
+  gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
+
+- id: tech-welder
+  name: Welder
+  role: Tech, the Company
+  group: Tech & science
+  portrait: portraits/tech-welder.gif
+  color: "#7fb4ff"
+  stats: {body: 10, reflex: 6, tech: 12, intel: 6, cool: 8, empathy: 4}  # DRAFT
+  health: 1  # DRAFT
+  mood: Mid-weld  # DRAFT
+  note: Welds the mech's plates back on. Goggles up, soot on the cheek.  # DRAFT
+  gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
+
+- id: tech-lamp
+  name: Diagnostics tech
+  role: Tech, the Company
+  group: Tech & science
+  portrait: portraits/tech-lamp.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 6, tech: 12, intel: 10, cool: 8, empathy: 6}  # DRAFT
+  health: 1  # DRAFT
+  mood: Absorbed  # DRAFT
+  note: Headlamp on, eyes on the tablet, never on you.  # DRAFT
+  gm_note: "One of the techs repairing the spider mech in the Bot bays from day 2."
+
+- id: scientist-physicist
+  name: Physicist
+  role: Scientist, the Company
+  group: Tech & science
+  portrait: portraits/scientist-physicist.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 4, tech: 12, intel: 20, cool: 8, empathy: 6}  # DRAFT
+  health: 1  # DRAFT
+  mood: Uneasy  # DRAFT
+  note: Measures the hole, and doesn't like what it says.  # DRAFT
+
+- id: scientist-junior
+  name: Junior analyst
+  role: Scientist, the Company
+  group: Tech & science
+  portrait: portraits/scientist-junior.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 6, tech: 12, intel: 12, cool: 6, empathy: 8}  # DRAFT
+  health: 1  # DRAFT
+  mood: Puzzled  # DRAFT
+  note: Thinks the 0.49 plot is a bug in their own code.  # DRAFT
+
+- id: board-chair
+  name: Chair of the board
+  role: The board, the Company
+  group: The board
+  portrait: portraits/board-chair.gif
+  color: "#7fb4ff"
+  stats: {body: 4, reflex: 4, tech: 6, intel: 12, cool: 20, empathy: 8}  # DRAFT
+  health: 1  # DRAFT
+  mood: Composed  # DRAFT
+  note: Has never once raised her voice.  # DRAFT
+
+- id: board-old
+  name: Board member
+  role: The board, the Company
+  group: The board
+  portrait: portraits/board-old.gif
+  color: "#7fb4ff"
+  stats: {body: 6, reflex: 4, tech: 4, intel: 8, cool: 12, empathy: 10}  # DRAFT
+  health: 1  # DRAFT
+  mood: Jovial  # DRAFT
+  note: Thirty years on the board. Laughs first, and longest.  # DRAFT
+
+- id: board-young
+  name: Board member
+  role: The board, the Company
+  group: The board
+  portrait: portraits/board-young.gif
+  color: "#7fb4ff"
+  stats: {body: 6, reflex: 6, tech: 8, intel: 10, cool: 12, empathy: 4}  # DRAFT
+  health: 1  # DRAFT
+  mood: Pleased with himself  # DRAFT
+  note: Youngest on the board, and wants you to know it.  # DRAFT
 
 # The dead of Act 4, the mercenaries' takeover: faces from the people above, stilled, with an X over each eye
 # (scripts/dead_portraits.py). Placed like anyone else, so the players see at a glance who isn't getting up. DRAFTS.
