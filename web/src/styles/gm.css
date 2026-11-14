@@ -253,8 +253,9 @@
 .gx-np:hover{background:#0b0b0d}
 .gx-np img{width:28px;height:28px;border-radius:50%;background:#000;flex:none}
 .gx-dcol .gx-np:last-child{border-bottom:1px solid #1e2024}
-/* Add someone: the groups flow down newspaper columns as many as fit, so short groups stack; the list scrolls under a fixed header */
-.gx-add > .gx-dir{display:block;overflow-y:auto;min-height:0;margin-right:-8px;padding-right:8px}
+/* Add someone: the groups flow down newspaper columns as many as fit, so short groups stack; the list scrolls under a fixed header,
+   with 4px of room on the left so the first column's portrait rings aren't clipped */
+.gx-add > .gx-dir{display:block;overflow-y:auto;min-height:0;margin:0 -8px 0 -4px;padding:0 8px 0 4px}
 .gx-add .gx-cols{columns:140px;column-gap:16px}
 .gx-add .gx-dcol{break-inside:avoid;padding-bottom:16px}
 .gx-add .gx-np{min-height:34px;font-size:13px;line-height:1.15}
