@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { ChipFx } from '../fx/ChipFx'
 import { FightBlock, StartFight } from '../fight/FightControls'
@@ -247,9 +247,18 @@ function AddNpc({ roster, map, anchor, onClose }: { roster: RosterNpc[]; map: Ma
       window.removeEventListener('pointerdown', onDown)
     }
   }, [anchor, onClose])
-  const style: CSSProperties = { left: 348, top: Math.max(64, Math.min(r?.top ?? 200, window.innerHeight - 380)), width: 'min(900px, calc(100vw - 364px))' }
+  // It opens level with the Add button, moves up as far as the header to fit everyone, and only then scrolls.
+  const [top, setTop] = useState(() => Math.max(64, Math.min(r?.top ?? 200, window.innerHeight - 480)))
+  useLayoutEffect(() => {
+    const el = box.current
+    const dir = el?.querySelector<HTMLElement>('.gx-dir')
+    if (!el || !dir) return
+    const natural = el.offsetHeight - dir.clientHeight + dir.scrollHeight
+    setTop(Math.max(64, Math.min(r?.top ?? 200, window.innerHeight - 16 - natural)))
+  }, [roster.length])
+  const style: CSSProperties = { left: 348, top, width: 'min(1280px, calc(100vw - 364px))', maxHeight: window.innerHeight - top - 16 }
   return createPortal(
-    <section ref={box} className="gx-pop" role="dialog" aria-label="Add someone" style={style}>
+    <section ref={box} className="gx-pop gx-add" role="dialog" aria-label="Add someone" style={style}>
       <div className="gx-poph">
         <span className="r4-name">Add someone</span>
         <span className="r5-role">They land hidden, in the middle of the map. Drag them from there.</span>
@@ -257,7 +266,7 @@ function AddNpc({ roster, map, anchor, onClose }: { roster: RosterNpc[]; map: Ma
           <Cross />
         </button>
       </div>
-      <div className="gx-dir" style={{ gridTemplateColumns: `repeat(${groups.length}, minmax(0, 1fr))` }}>
+      <div className="gx-dir">
         {groups.map((g) => (
           <div key={g} className="gx-dcol">
             <div className="r5-sec">{g}</div>
