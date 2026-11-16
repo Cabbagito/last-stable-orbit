@@ -291,11 +291,13 @@ def asset_paths(c: Content) -> set[str]:
     paths: set[str] = set()
     for ch in c.characters.values():
         paths.add(ch.portrait)
+        paths |= {f for f in (ch.hurt, ch.down) if f}
         paths |= {e.icon for e in ch.entries if e.icon}
         if ch.burn:
             paths.add(ch.burn.icon)
             paths |= {x.file for x in ch.burn.cuts}
     paths |= {n.portrait for n in c.npcs.values()}
+    paths |= {f for n in c.npcs.values() for f in (n.hurt, n.down) if f}
     paths |= {b.file for n in c.npcs.values() for b in n.burns}
     paths |= {p.card for p in c.presets.values() if p.card}
     paths |= {i.icon for i in c.items.values()}

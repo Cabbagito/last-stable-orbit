@@ -77,6 +77,8 @@ class Character(Strict):
     short: str  # rail and token name
     role: str  # "The Thief"
     portrait: str
+    hurt: str | None = None  # the portrait at two thirds of their health or less (views._face)
+    down: str | None = None  # and at 0; with none, the chip just greys out
     color: str = "#ff4fa3"
     health: int = Field(ge=1, le=20)  # the most health they can have, and where they start
     stats: dict[str, int]
@@ -106,6 +108,8 @@ class Npc(Strict):
     role: str = ""
     group: str = "Others"  # where it sits in the GM's Add list
     portrait: str
+    hurt: str | None = None  # as a Character's; players see it only while it's in a fight, like its health
+    down: str | None = None
     color: str = "#8f88a3"
     stats: dict[str, int]  # the die for each stat; the GM rolls an NPC by stat. Never sent to players.
     mood: str = ""

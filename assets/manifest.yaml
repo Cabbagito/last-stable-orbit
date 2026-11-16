@@ -2537,3 +2537,101 @@ assets:
     bytes: 125789
     width: 96
     height: 96
+  - path: portraits/lale-hurt.gif  # generated from portraits/lale.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "7e8eb56f1f478390f8f2025f859cb1c151960baef24ccd58a2fad97e808836f2"
+    bytes: 137993
+    width: 96
+    height: 96
+  - path: portraits/lale-down.gif  # generated from portraits/lale.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "6d939e8fae2008b1fe577eebe9ef001ae985a4bea5a347cbcf1a222c0d88dcdd"
+    bytes: 140864
+    width: 96
+    height: 96
+  - path: portraits/marlo-hurt.gif  # generated from portraits/marlo.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "763aa6be246410771e0a6151a9710d09818fbece44d95fa83f0eaba4ea558ed7"
+    bytes: 42412
+    width: 96
+    height: 96
+  - path: portraits/marlo-down.gif  # generated from portraits/marlo.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "7ed47d1725205a993db23d65826835da10e736f68ddafd0758f832ccdb384df5"
+    bytes: 38180
+    width: 96
+    height: 96
+  - path: portraits/tally-hurt.gif  # generated from portraits/tally.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "e4d4d9c43153301948ea57c41a31071e64436a3122c2b1edb7ae0238a62d8801"
+    bytes: 70784
+    width: 96
+    height: 96
+  - path: portraits/tally-down.gif  # generated from portraits/tally.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "c911262472d39013072394f658949612f6ed3e9042c775069300f2785dd1bbe9"
+    bytes: 58452
+    width: 96
+    height: 96
+  - path: portraits/ves-hurt.gif  # generated from portraits/ves.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "77718cecf15fccc00d96ed19c87bd7e9ab7a07d3178f55a6f55b5712d182c0b0"
+    bytes: 128617
+    width: 96
+    height: 96
+  - path: portraits/ves-down.gif  # generated from portraits/ves.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "31714646ffd1ccdae771f2bc235e59cd61776877c8a99a30a9db82dc06f7a8c6"
+    bytes: 130860
+    width: 96
+    height: 96
+  - path: portraits/tomo-hurt.gif  # generated from portraits/tomo.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "c798d267a67864500e3f17a2eaf09ea6aabead9124131a14fbc5d9b9e812d0cd"
+    bytes: 119964
+    width: 96
+    height: 96
+  - path: portraits/tomo-down.gif  # generated from portraits/tomo.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "60c699d28933bd4f7a61d786a26f4ea6308fd4850906e4ba1e0cb86367da2469"
+    bytes: 122638
+    width: 96
+    height: 96
+  - path: portraits/dax-hurt.gif  # generated from portraits/dax.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "8592ab6c6351319297291b02a502ce3d84de0079d0b8e54e6ffd164e5bc48d0a"
+    bytes: 45455
+    width: 96
+    height: 96
+  - path: portraits/dax-down.gif  # generated from portraits/dax.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "d356d7028fdf11e44c341c8376dd099d0f555952940cb06ac506173b1791edfb"
+    bytes: 45023
+    width: 96
+    height: 96
+  - path: portraits/fixer-hurt.gif  # generated from portraits/fixer.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "9d5e1b5e108278c4868b00c19b655dec52127a9eca88bf008762e29166df92e0"
+    bytes: 54407
+    width: 96
+    height: 96
+  - path: portraits/fixer-down.gif  # generated from portraits/fixer.gif by scripts/hurt_portraits.py
+    store: PORTRAITS
+    asset_id: ""
+    sha256: "c1c094001a2a6df061feb545c4738e9348ee15ddb44097870a6bf22ff8de7f71"
+    bytes: 48856
+    width: 96
+    height: 96

@@ -11,6 +11,7 @@ import { Banners } from '../roll/Banner'
 import { InspectCard } from '../map/InspectCard'
 import { Sheet } from '../sheet/Sheet'
 import { CrewRail } from '../shell/CrewRail'
+import { HurtEdge, useMyStage } from '../shell/HurtEdge'
 import { isReadOnly, useGame } from '../store/game'
 import type { TokenView } from '../types'
 import { useEffect } from 'react'
@@ -20,6 +21,7 @@ export function Scene() {
   const view = useGame((s) => s.view)
   const gmMap = useGame((s) => s.gmMap)
   const readOnly = useGame(isReadOnly)
+  const hurt = useMyStage() // a player's own screen reddens at the edges when they're hurt
   const isGmHere = view?.me.role === 'gm'
   useEffect(() => {
     if (!isGmHere) return
@@ -45,10 +47,11 @@ export function Scene() {
   return (
     <div className="app-body">
       {isGm ? <GmScene map={map} /> : me && <Sheet me={me} items={view.inventory[me.id] ?? []} />}
-      <section aria-label="Current location map" className="app-mapsec">
+      <section aria-label="Current location map" className={'app-mapsec' + (hurt === 'down' ? ' app-isdown' : '')}>
         {map ? (
           <>
             <MapView key={map.id} map={map} tokens={tokens} canMove={canMove} />
+            <HurtEdge stage={hurt} />
             <div className="app-placewrap">
               {isGm && <AwayBar map={map} />}
               {isGm && <TvCameraBar view={view} map={map} />}

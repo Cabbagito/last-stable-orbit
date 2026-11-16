@@ -12,7 +12,7 @@ const COLOR: Partial<Record<Change['kind'], string>> = { heal: '#5ee08c', enDown
  */
 export function ChipFx({ id, down, children, style }: { id: string; down?: boolean; children: ReactNode; style?: CSSProperties }) {
   const fx = useGame((s) => s.fx[id])
-  const cls = 'app-fx' + (down ? ' app-down' : '') + (fx ? ` fx-${fx.kind} fx-n${fx.n % 2}` : '')
+  const cls = 'app-fx' + (down ? ' app-chipdown' : '') + (fx ? ` fx-${fx.kind} fx-n${fx.n % 2}` : '')
   return (
     <span className={cls} style={style}>
       {children}

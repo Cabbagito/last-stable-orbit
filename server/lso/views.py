@@ -125,6 +125,22 @@ def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer, o
     return out
 
 
+def _face(who, hp: int, top: int) -> str | None:
+    """The portrait for how hurt someone is: their Hurt art at two thirds of their health or less, their Down art at 0,
+    their own otherwise (and when they have no art for it: at 0 the chip greys out instead)."""
+    if hp <= 0 and who.down:
+        return url(who.down)
+    if 0 < hp and hp * 3 <= top * 2 and who.hurt:
+        return url(who.hurt)
+    return url(who.portrait)
+
+
+def _crew_face(state: GameState, content: Content, c) -> str | None:
+    v = state.vitals.get(c.id)
+    top = sheet.max_health(state, content, c.id)
+    return _face(c, v.hp if v else top, top)
+
+
 def _crew_view(content: Content, state: GameState, viewer: Viewer) -> list[dict]:
     out = []
     for c in content.characters.values():
@@ -136,7 +152,7 @@ def _crew_view(content: Content, state: GameState, viewer: Viewer) -> list[dict]
                 "name": c.name,
                 "short": c.short,
                 "role": c.role,
-                "portrait": url(c.portrait),
+                "portrait": _face(c, v.hp if v else top, top),
                 "color": c.color,
                 "stats": c.stats,
                 "list": [{**e.model_dump(), "icon": url(e.icon)} for e in c.entries] + _chrome_rows(content, state, c.id),
@@ -171,15 +187,18 @@ def crew_page(content: Content, char: str) -> str | None:
     return next((e.id for e in content.codex.values() if e.crew == char), None)
 
 
-def _token_view(content: Content, tid: str, t, gm: bool, open_: set[str]) -> dict:
+def _token_view(content: Content, state: GameState, tid: str, t, gm: bool, open_: set[str]) -> dict:
     base = {"id": tid, "kind": t.kind, "ref": t.ref, "map": t.map, "at": list(t.at)}
     if t.kind == "crew":
         c = content.characters[t.ref]
         page = _link(crew_page(content, c.id), open_)
-        base |= {"name": c.short, "role": c.role, "portrait": url(c.portrait), "color": c.color, "mood": "", "note": "", "codex": page}
+        base |= {"name": c.short, "role": c.role, "portrait": _crew_face(state, content, c), "color": c.color, "mood": "", "note": "", "codex": page}
     else:
         n = content.npcs[t.ref]
-        base |= {"name": n.name, "role": n.role, "portrait": url(n.portrait), "color": n.color, "mood": n.mood, "note": n.note, "codex": _link(n.codex, open_), "size": n.size}
+        # its health is the GM's until it's in a fight, and so is how hurt it looks
+        fighting = any(tid in f.order for f in state.fights.values())
+        face = _face(n, n.health if t.hp is None else t.hp, n.health) if gm or fighting else url(n.portrait)
+        base |= {"name": n.name, "role": n.role, "portrait": face, "color": n.color, "mood": n.mood, "note": n.note, "codex": _link(n.codex, open_), "size": n.size}
         if gm:
             base |= {"gm_note": n.gm_note, "stats": n.stats}  # an NPC's dice are the GM's secret
             if n.burns:  # and so are its Burns, until one plays
@@ -546,10 +565,11 @@ def _fights_view(state: GameState, content: Content, viewer: Viewer, here: str) 
                 c = content.characters[t.ref]
                 v = state.vitals.get(c.id)
                 top = sheet.max_health(state, content, c.id)
-                d = {"name": c.short, "portrait": url(c.portrait), "color": c.color, "hp": v.hp if v else top, "health": top}
+                d = {"name": c.short, "portrait": _face(c, v.hp if v else top, top), "color": c.color, "hp": v.hp if v else top, "health": top}
             else:
                 n = content.npcs[t.ref]
-                d = {"name": n.name, "portrait": url(n.portrait), "color": n.color, "hp": n.health if t.hp is None else t.hp, "health": n.health}
+                hp = n.health if t.hp is None else t.hp
+                d = {"name": n.name, "portrait": _face(n, hp, n.health), "color": n.color, "hp": hp, "health": n.health}
             d |= {"token": tid, "kind": t.kind, "ref": t.ref, "ini": f.ini.get(tid, 0), "joined": f.joined.get(tid, f.started)}
             fighters.append(d)
         seen = {x["token"] for x in fighters}
@@ -610,7 +630,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
     open_ = codex_open(state, content, viewer)
     map_ids = list(content.maps) if gm else ([here] if here in content.maps else [])
     tokens = {
-        tid: _token_view(content, tid, t, gm, open_)
+        tid: _token_view(content, state, tid, t, gm, open_)
         for tid, t in state.tokens.items()
         if gm or (t.map in map_ids and not t.hidden)
     }

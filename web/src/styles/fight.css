@@ -58,8 +58,9 @@
 
 /* ---------------------------------------------------------------- look C: the chip reacts (Round 14) */
 .app-fx{flex:none}
-.app-down .r3-px{filter:grayscale(1) brightness(.5);transition:filter .8s ease .3s}
-.app-down .app-ring{opacity:.45;transition:opacity .8s ease .3s}
+.app-chipdown .r3-px{filter:grayscale(1) brightness(.5);transition:filter .8s ease .3s}
+.app-chipdown .r3-px[src*="-down."]{filter:none}  /* a painted Down portrait (scripts/hurt_portraits.py) is dark already */
+.app-chipdown .app-ring{opacity:.45;transition:opacity .8s ease .3s}
 .fx-layer{position:absolute;inset:0;pointer-events:none}
 .fx-hit.fx-n0,.fx-down.fx-n0{animation:app-shakeA .45s ease}
 .fx-hit.fx-n1,.fx-down.fx-n1{animation:app-shakeB .45s ease}
@@ -109,3 +110,14 @@
   .app-fx,.app-fslot,.app-fhead,.app-fdiv,.app-tvfslot,.app-tvfhead,.app-tvfpos{animation:none!important;transition:none!important}
   .app-freel{animation:none}
 }
+
+/* ---------------------------------------------------------------- the red screen edge (LSO — Hurt portraits canvas) */
+.app-hurtedge{position:absolute;inset:0;pointer-events:none;opacity:0}  /* over the map, under the rail, cards and banners */
+.app-hurtedge.hurt{background:radial-gradient(ellipse at center,rgba(160,0,10,0) 55%,rgba(160,0,10,.28) 78%,rgba(190,10,20,.62) 100%);animation:app-edge-in .8s ease forwards,app-edge-hurt 4s ease-in-out .8s infinite}
+.app-hurtedge.down{background:radial-gradient(ellipse at center,rgba(120,0,8,0) 38%,rgba(150,0,10,.45) 68%,rgba(200,8,18,.85) 100%);animation:app-edge-in .5s ease forwards,app-edge-down 1.6s ease-in-out .5s infinite}
+@keyframes app-edge-in{from{opacity:0}to{opacity:.8}}
+@keyframes app-edge-hurt{0%,100%{opacity:.55}50%{opacity:.9}}
+@keyframes app-edge-down{0%,100%{opacity:.75}12%{opacity:1}24%{opacity:.8}36%{opacity:1}}
+.app-mapbox{transition:filter 1s ease}
+.app-isdown .app-mapbox{filter:saturate(.35) brightness(.7)}
+@media (prefers-reduced-motion: reduce){.app-hurtedge.hurt,.app-hurtedge.down{animation:none;opacity:.8}}

@@ -3,6 +3,7 @@
 # list: three skills, one pick per roll. A skill can be a trait, a talent, knowledge or chrome; the sheet doesn't label which.
 # text: what it covers. downside: what happens every time a roll using it fails.
 # health: where their health starts and the most it can be (the bible's crew table).
+# hurt, down: the portrait at two thirds of their health or less, and at 0 (scripts/hurt_portraits.py).
 # burn: the signature move, from the bible and the Burn animations canvas. It spends 2 Entropy, can't fail, and
 # plays its film on the TV. Peter applies what it does by hand.
 # `cuts` are the films; the first is the one the Burn row plays. Ves's second cut is for outside a fight.
@@ -12,6 +13,8 @@
   short: Lale
   role: The Ripperdoc
   portrait: portraits/lale.gif
+  hurt: portraits/lale-hurt.gif
+  down: portraits/lale-down.gif
   health: 5
   stats: {body: 6, reflex: 6, tech: 8, intel: 12, cool: 8, empathy: 20}
   list:
@@ -32,6 +35,8 @@
   short: Marlo
   role: The Face
   portrait: portraits/marlo.gif
+  hurt: portraits/marlo-hurt.gif
+  down: portraits/marlo-down.gif
   health: 5
   stats: {body: 4, reflex: 8, tech: 6, intel: 10, cool: 20, empathy: 12}
   list:
@@ -52,6 +57,8 @@
   short: Tally
   role: The Hacker
   portrait: portraits/tally.gif
+  hurt: portraits/tally-hurt.gif
+  down: portraits/tally-down.gif
   health: 7
   stats: {body: 10, reflex: 10, tech: 20, intel: 12, cool: 4, empathy: 4}
   list:
@@ -73,6 +80,8 @@
   short: Ves
   role: The Thief
   portrait: portraits/ves.gif
+  hurt: portraits/ves-hurt.gif
+  down: portraits/ves-down.gif
   health: 4
   stats: {body: 4, reflex: 20, tech: 10, intel: 8, cool: 12, empathy: 6}
   list:
@@ -94,6 +103,8 @@
   short: Tomo
   role: The Bruiser
   portrait: portraits/tomo.gif
+  hurt: portraits/tomo-hurt.gif
+  down: portraits/tomo-down.gif
   health: 9
   stats: {body: 20, reflex: 8, tech: 6, intel: 6, cool: 8, empathy: 12}
   list:
