@@ -5,11 +5,14 @@ import { BurnRow } from '../sheet/BurnRow'
 import { send, useGame } from '../store/game'
 import { STATS, type CrewMember, type RollView, type StatKey } from '../types'
 import { RollClock } from './clock'
+import { useKeyHandler, useKeys } from '../keys/registry'
 import { RollFX } from './rollfx'
 import { LADDER, STAT_LOOK, dieIcon, effectiveDie, lookOf, statIcon } from './stats'
 
 // The R6 roll screen, on the roller's laptop only: Pick -> Rolling -> Done. The dice come from the server;
 // this screen tells the server as each one lands, so everyone else sees the result at the same moment.
+
+const PUSH_HOLD_MS = 500 // as long as a Burn's hold
 
 const FONTS = ['800 40px Doto', '40px VT323', '20px Silkscreen', '700 40px Archivo']
 
@@ -67,6 +70,8 @@ function Pick({ me, initial, initialEntry }: { me: CrewMember; initial: StatKey;
   const E = effectiveDie(me.stats[pick], entry >= 0)
 
   const rollIt = async () => {
+    if (busy) return
+    useKeys.setState({ lastStat: pick })
     setBusy(true)
     setErr('')
     const ack = await send('roll.start', { stat: pick, entry: entry >= 0 ? entry : null })
@@ -79,6 +84,19 @@ function Pick({ me, initial, initialEntry }: { me: CrewMember; initial: StatKey;
     const mine = v?.rolls.find((r) => r.by === v.me.seat && r.open)
     if (mine) openRoll(mine.id)
   }
+
+  // keys: 1-6 a stat, 7 8 9 0 a skill or chrome, Enter rolls, Esc closes
+  useKeyHandler('pick.stat', (i) => {
+    setPick(STATS[i])
+    setJig((j) => j + 1)
+  })
+  useKeyHandler('pick.entry', (i) => {
+    if (!me.list[i]) return false
+    setEntry((e) => (e === i ? -1 : i))
+    setJig((j) => j + 1)
+  })
+  useKeyHandler('dialog.enter', () => void rollIt())
+  useKeyHandler('dialog.close', closeDialog)
 
   return (
     <>
@@ -276,6 +294,36 @@ function Stage({ rollId, resume }: { rollId: string; resume: boolean }) {
   }
   const skip = () => clock.current?.skip()
   const release = () => clock.current?.release(performance.now())
+  const push = async () => {
+    setPushing(true)
+    const ack = await send('roll.push', { roll: rollId })
+    setPushing(false)
+    setErr(ack.ok ? '' : ack.code === 'offline' ? 'Not connected. Try again in a moment.' : ack.error || 'That push did not land.')
+  }
+
+  // keys: Enter is the button that's up (Skip, Roll again, Back to the map), Esc closes, holding P pushes
+  const [pushHold, setPushHold] = useState(false)
+  const pushTimer = useRef(0)
+  useEffect(() => () => window.clearTimeout(pushTimer.current), [])
+  useKeyHandler('dialog.enter', () => {
+    if (phase === 'done') close()
+    else if (gate) release()
+    else skip()
+  })
+  useKeyHandler('dialog.close', close)
+  useKeyHandler('push.down', () => {
+    const can = phase === 'done' && !!roll?.char && roll.open && !pushing && (crew?.entropy ?? 0) > 0 && roll.pushes < 2 && roll.dice?.[0] !== 1
+    if (!can) return false
+    setPushHold(true)
+    pushTimer.current = window.setTimeout(() => {
+      setPushHold(false)
+      void push()
+    }, PUSH_HOLD_MS)
+  })
+  useKeyHandler('push.up', () => {
+    window.clearTimeout(pushTimer.current)
+    setPushHold(false)
+  })
 
   if (!roll?.dice) return null
   const dice = roll.dice
@@ -292,13 +340,6 @@ function Stage({ rollId, resume }: { rollId: string; resume: boolean }) {
   if (pushed) breakdown += ` + ${pushed} push`
   if (nat1) breakdown = "You fail. Entropy can't save this."
   if (!bonus && !pushed && !exploded && !nat1) breakdown = ''
-
-  const push = async () => {
-    setPushing(true)
-    const ack = await send('roll.push', { roll: rollId })
-    setPushing(false)
-    setErr(ack.ok ? '' : ack.code === 'offline' ? 'Not connected. Try again in a moment.' : ack.error || 'That push did not land.')
-  }
 
   return (
     <>
@@ -345,8 +386,11 @@ function Stage({ rollId, resume }: { rollId: string; resume: boolean }) {
           )}
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8 }}>
             {!nat1 && roll.char && (
-              <button type="button" className="r4-btn" onClick={push} disabled={noPush}>
-                Push +{gain} for 1 Entropy, {entropy} left
+              <button type="button" className="r4-btn app-holdbtn" onClick={push} disabled={noPush} title="Or hold P">
+                <span className={'app-holdfill' + (pushHold ? ' on' : '')} />
+                <span>
+                  Push +{gain} for 1 Entropy, {entropy} left
+                </span>
               </button>
             )}
             {!nat1 && roll.char && (

@@ -6,6 +6,7 @@ import { serverClock } from '../net/clock'
 import type { FightView, MapView, TokenView } from '../types'
 import { fightOn } from './fights'
 import { useLanding } from './Strip'
+import { useKeyHandler } from '../keys/registry'
 
 /** "The Promenade" mid-sentence: "on the Promenade". */
 const inText = (name: string) => name.replace(/^The /, 'the ')
@@ -33,6 +34,10 @@ export function FightBlock({ fight, map }: { fight: FightView; map: MapView }) {
   const { place } = useLanding(fight)
   const t = serverClock.now() / 1000
   const settling = fight.fighters.some((x) => t < place[x.token])
+  useKeyHandler('fight.next', () => {
+    if (settling) return false
+    void gmRun('gm.fight.next', { map: fight.map })
+  })
   useEffect(() => setArmed(false), [map.id])
   useEffect(() => {
     if (!armed) return
@@ -41,7 +46,7 @@ export function FightBlock({ fight, map }: { fight: FightView; map: MapView }) {
   }, [armed])
   return (
     <section className="gx-fight" aria-label="The fight">
-      <button type="button" className="r10-roll" disabled={settling} onClick={() => void gmRun('gm.fight.next', { map: fight.map })}>
+      <button type="button" className="r10-roll" disabled={settling} title="Next turn (N)" onClick={() => void gmRun('gm.fight.next', { map: fight.map })}>
         {settling ? 'Rolling…' : 'Next turn'}
       </button>
       <div className="gx-fmeta">

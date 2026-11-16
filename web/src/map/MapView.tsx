@@ -14,6 +14,8 @@ import { calloutsBy } from '../roll/callouts'
 import { BurnCallout, Flare, burnSpeech, useBurnMark } from '../stage/BurnMark'
 import { Eye } from '../gm/parts'
 import { MapLayers } from './MapLayers'
+import { PAN, ZOOM } from '../keys/bindings'
+import { held, useKeyHandler } from '../keys/registry'
 
 interface Cam {
   px: number
@@ -135,6 +137,81 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
     const r = remote[t.id]
     return r ? r.at : t.at
   }
+
+  // The keyboard's camera: WASD or the arrows pan while held (Shift faster), Q and E zoom, F frames you (the GM:
+  // whoever is selected, or the crew). One animation frame loop runs while any of those keys is down.
+  const camRef = useRef(cam)
+  camRef.current = cam
+  const sizeRef = useRef(size)
+  sizeRef.current = size
+  const loop = useRef(0)
+  useEffect(() => () => cancelAnimationFrame(loop.current), [])
+  useKeyHandler('cam.go', () => {
+    if (!camRef.current) return false
+    if (loop.current) return true
+    let last = performance.now()
+    const step = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000)
+      last = now
+      let dx = 0
+      let dy = 0
+      let dz = 0
+      for (const c of held) {
+        const p = PAN[c]
+        if (p) {
+          dx += p[0]
+          dy += p[1]
+        }
+        dz += ZOOM[c] ?? 0
+      }
+      if (!dx && !dy && !dz && ![...held].some((c) => c in PAN || c in ZOOM)) {
+        loop.current = 0
+        return
+      }
+      const len = Math.hypot(dx, dy) || 1
+      const speed = (held.has('ShiftLeft') || held.has('ShiftRight') ? 1800 : 850) * dt
+      const [w, h] = sizeRef.current
+      setCam((c) => {
+        if (!c) return c
+        let { px, py, zoom } = c
+        px -= (dx / len) * speed
+        py -= (dy / len) * speed
+        if (dz) {
+          const nz = clamp(zoom * Math.exp(Math.sign(dz) * 1.6 * dt), ZMIN, ZMAX)
+          const k = nz / zoom
+          px = w / 2 - (w / 2 - px) * k
+          py = h / 2 - (h / 2 - py) * k
+          zoom = nz
+        }
+        return { px, py, zoom }
+      })
+      loop.current = requestAnimationFrame(step)
+    }
+    loop.current = requestAnimationFrame(step)
+    return true
+  })
+  useKeyHandler('cam.focus', () => {
+    const c = camRef.current
+    const [w, h] = sizeRef.current
+    if (!c || !w || !h) return false
+    const sel = isGm && selected ? tokens.find((t) => t.id === selected) : undefined
+    const pick = isGm
+      ? sel
+        ? [sel]
+        : tokens.filter((t) => t.kind === 'crew')
+      : tokens.filter((t) => t.kind === 'crew' && t.ref === myChar)
+    if (!pick.length) {
+      fit()
+      return true
+    }
+    const pts = pick.map((t) => proj(map.origin, where(t)))
+    const xs = pts.map((p) => p[0])
+    const ys = pts.map((p) => p[1] - 40) // a chip stands above its feet
+    const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)]
+    const zoom = pts.length === 1 ? Math.max(c.zoom, 1) : clamp(Math.min(w / (x1 - x0 + 320), h / (y1 - y0 + 320), 1.4), ZMIN, ZMAX)
+    setCam({ zoom, px: w / 2 - ((x0 + x1) / 2) * zoom, py: h / 2 - ((y0 + y1) / 2) * zoom })
+    return true
+  })
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0 || !cam) return

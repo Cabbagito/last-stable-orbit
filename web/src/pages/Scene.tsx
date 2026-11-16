@@ -14,7 +14,6 @@ import { CrewRail } from '../shell/CrewRail'
 import { HurtEdge, useMyStage } from '../shell/HurtEdge'
 import { isReadOnly, useGame } from '../store/game'
 import type { TokenView } from '../types'
-import { useEffect } from 'react'
 
 /** SCENE: the sheet (or the GM's "In this scene" column) on the left, the current location's map filling the rest. */
 export function Scene() {
@@ -22,19 +21,6 @@ export function Scene() {
   const gmMap = useGame((s) => s.gmMap)
   const readOnly = useGame(isReadOnly)
   const hurt = useMyStage() // a player's own screen reddens at the edges when they're hurt
-  const isGmHere = view?.me.role === 'gm'
-  useEffect(() => {
-    if (!isGmHere) return
-    // M goes somewhere else, unless you're typing
-    const onKey = (e: KeyboardEvent) => {
-      const t = e.target as HTMLElement | null
-      if (e.key.toLowerCase() !== 'm' || e.metaKey || e.ctrlKey || e.altKey || t?.closest('input, textarea, select')) return
-      const { mapPicker, setMapPicker } = useGame.getState()
-      setMapPicker(mapPicker ? null : { token: null })
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [isGmHere])
   if (!view) return <div className="app-body app-wait">Docking…</div>
   const isGm = view.me.role === 'gm'
   const mapId = isGm && gmMap && view.maps[gmMap] ? gmMap : view.party_map

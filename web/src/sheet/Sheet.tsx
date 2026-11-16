@@ -22,6 +22,7 @@ const STAT_NAME: Record<string, string> = {
 /** The R6 character sheet: portrait in its ring, name, the Burn row, the 3x2 stat table, skills, items. */
 export function Sheet({ me, items }: { me: CrewMember; items: InvEntry[] }) {
   const openPick = useGame((s) => s.openPick)
+  const dialog = useGame((s) => !!s.dialog)
   const [hover, setHover] = useState<Anchor | null>(null)
   const [cut, setCut] = useState<string | null>(null)
   // M8: in a fight, Ves's Burn goes back to its first cut, the one for a fight
@@ -42,7 +43,7 @@ export function Sheet({ me, items }: { me: CrewMember; items: InvEntry[] }) {
       </div>
       {me.burn && (
         <div style={{ flex: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <BurnRow me={me} cut={cut} tip={{ on: hover?.key === 'burn', enter: (el) => onHover('burn', el), leave: () => onLeave('burn') }} />
+          <BurnRow me={me} cut={cut} keyed={!dialog} tip={{ on: hover?.key === 'burn', enter: (el) => onHover('burn', el), leave: () => onLeave('burn') }} />
           <BurnCuts me={me} cut={cut} onCut={setCut} />
         </div>
       )}
@@ -103,7 +104,7 @@ function SheetTip({ hover, me, items }: { hover: Anchor; me: CrewMember; items: 
       <Inspector {...at} label="BURN" name={b.name} media={<InspectIcon src={b.icon} fallback="BURN" />} sub={<span className="app-ins-sub">{b.when}</span>}>
         <div className="app-ins-txt">{b.text}</div>
         <InspectBlock label={`${BURN_COST} ENTROPY`} tone="down">
-          <div className="app-ins-txt">Hold to burn. It can't fail. Say who it's for, and Peter does the rest.</div>
+          <div className="app-ins-txt">Hold to burn (or hold B). It can't fail. Say who it's for, and Peter does the rest.</div>
         </InspectBlock>
       </Inspector>
     )

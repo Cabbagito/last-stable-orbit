@@ -1,0 +1,24 @@
+/* The keyboard: the ? sheet, the soundboard's digits, and the states B and R leave the screen in. */
+.app-keyscrim{z-index:600}
+.app-keyhelp{width:min(520px,100%)}
+.app-keys{margin:0;display:flex;flex-direction:column}
+.app-keys>div{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:baseline;padding:6px 0;border-bottom:1px solid #16171b}
+.app-keys>div:last-child{border-bottom:0}
+.app-keys dt{font-family:'Michroma',sans-serif;font-size:9px;letter-spacing:.12em;color:#ff7dbb;white-space:nowrap}
+.app-keys dd{margin:0;font-size:13px;color:#b4b8c0}
+
+/* B pressed: the soundboard waits for a digit */
+.gx-sb.keyed .gx-sbbtn:not(:disabled){color:#fff}
+.gx-sb.keyed{box-shadow:0 0 0 1px #ff4fa3}
+.gx-sbmenu button{display:flex;align-items:center;gap:18px}
+.gx-sbcode{margin-left:auto;font-family:'Michroma',sans-serif;font-size:9px;letter-spacing:.2em;color:#8a8e96}
+.gx-sbmenu button:hover .gx-sbcode{color:#ff7dbb}
+
+/* R pressed: the open NPC card's stats wait for a digit */
+.r12-rgrid.keyed{box-shadow:0 0 0 1px #ff4fa3}
+
+/* a key held on Push: the button fills like Burn does */
+.app-holdbtn{position:relative;overflow:hidden}
+.app-holdfill{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(242,181,68,.24);box-shadow:inset -2px 0 0 #f2b544;pointer-events:none}
+.app-holdfill.on{width:100%;transition:width .5s linear}
+.app-holdbtn>span:not(.app-holdfill){position:relative}

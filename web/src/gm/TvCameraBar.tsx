@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { gmRun } from '../store/game'
 import type { MapView, View } from '../types'
 import { filmOn, useTick } from './StageSections'
+import { useKeyHandler } from '../keys/registry'
 
 /**
  * What the TV looks at, on the Scene tab: the whole crew, whoever rolls, one of the crew, or anyone else on this map.
@@ -31,6 +32,16 @@ export function TvCameraBar({ view, map }: { view: View; map: MapView }) {
   }, [open])
 
   const shoot = (args: Record<string, unknown>) => void gmRun('gm.stage.camera', args)
+  // T: whole crew <-> cut to whoever rolls (from following someone, back to the crew). Shift+1-5: follow that one.
+  useKeyHandler('tv.toggle', () => {
+    if (busy) return false
+    shoot({ camera: camera === 'crew' ? 'roller' : 'crew' })
+  })
+  useKeyHandler('tv.follow', (i) => {
+    const c = view.crew[i]
+    if (busy || !c) return false
+    shoot({ camera: 'follow', follow: c.id })
+  })
   const here = Object.values(view.tokens)
     .filter((t) => t.map === map.id && t.kind === 'npc' && !t.hidden) // the TV can't follow what it isn't shown
     .sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id))
@@ -39,16 +50,16 @@ export function TvCameraBar({ view, map }: { view: View; map: MapView }) {
 
   return (
     <div className="r10-mood r10-cam" role="group" aria-label="The TV's camera">
-      <button type="button" className={camera === 'crew' ? 'on' : ''} aria-pressed={camera === 'crew'} disabled={busy} title="Keep the whole crew in frame" onClick={() => shoot({ camera: 'crew' })}>
+      <button type="button" className={camera === 'crew' ? 'on' : ''} aria-pressed={camera === 'crew'} disabled={busy} title="Keep the whole crew in frame (T)" onClick={() => shoot({ camera: 'crew' })}>
         Crew
       </button>
-      <button type="button" className={camera === 'roller' ? 'on' : ''} aria-pressed={camera === 'roller'} disabled={busy} title="Show the crew, cut to whoever rolls, then come back" onClick={() => shoot({ camera: 'roller' })}>
+      <button type="button" className={camera === 'roller' ? 'on' : ''} aria-pressed={camera === 'roller'} disabled={busy} title="Show the crew, cut to whoever rolls, then come back (T)" onClick={() => shoot({ camera: 'roller' })}>
         Rolls
       </button>
-      {view.crew.map((c) => {
+      {view.crew.map((c, i) => {
         const on = camera === 'follow' && follow === c.id
         return (
-          <button key={c.id} type="button" className={'r10-camface' + (on ? ' on' : '')} aria-pressed={on} aria-label={`Follow ${c.short}`} title={`Follow ${c.short}`} disabled={busy} onClick={() => shoot({ camera: 'follow', follow: c.id })}>
+          <button key={c.id} type="button" className={'r10-camface' + (on ? ' on' : '')} aria-pressed={on} aria-label={`Follow ${c.short}`} title={`Follow ${c.short}${i < 5 ? ` (Shift+${i + 1})` : ''}`} disabled={busy} onClick={() => shoot({ camera: 'follow', follow: c.id })}>
             <img src={c.portrait} alt="" className="r3-px" />
           </button>
         )

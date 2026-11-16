@@ -9,6 +9,7 @@ import { serverClock } from '../net/clock'
 import { STAT_LOOK, statIcon } from '../roll/stats'
 import { RingPortrait } from '../shell/RingPortrait'
 import { gmRoll, gmRun, isReadOnly, send, useGame, type GmRollMode } from '../store/game'
+import { endChord, useKeyHandler, useKeys } from '../keys/registry'
 import { seatsLabel } from '../slots/slots'
 import { STATS, type MapObject, type SlotsCard, type TokenView } from '../types'
 
@@ -199,9 +200,18 @@ function NpcRolls({ t, stats }: { t: TokenView; stats: NonNullable<TokenView['st
   const modes = t.hidden ? UNSEEN_MODES : SEEN_MODES
   const mode = modes.find(([id]) => id === pick)?.[0] ?? modes[0][0]
   const label = armed ? 'God' : modes.find(([id]) => id === mode)?.[1]
+  // keys: R, then 1-6 rolls that stat in the mode picked here; G arms or disarms GOD
+  const keyed = useKeys((s) => s.chord === 'roll')
+  useKeyHandler('npc.start', () => void useKeys.setState({ chord: 'roll', soundCat: null }))
+  useKeyHandler('npc.stat', (i) => {
+    endChord()
+    setArmed(false)
+    void gmRoll({ token: t.id, stat: STATS[i], mode: armed ? 'god' : mode })
+  })
+  useKeyHandler('npc.god', () => setArmed((a) => !a))
   return (
     <InspectBlock label="ROLL">
-      <div className="r12-rgrid">
+      <div className={'r12-rgrid' + (keyed ? ' keyed' : '')}>
         {STATS.map((s) => (
           <button
             key={s}
@@ -242,7 +252,7 @@ function NpcRolls({ t, stats }: { t: TokenView; stats: NonNullable<TokenView['st
             )
           })}
         </div>
-        <button type="button" className={'r17-rgod' + (armed ? ' on' : '')} aria-pressed={armed} title="The next roll is God's: the whole screen, on every screen" onClick={() => setArmed(!armed)}>
+        <button type="button" className={'r17-rgod' + (armed ? ' on' : '')} aria-pressed={armed} title="The next roll is God's: the whole screen, on every screen (G)" onClick={() => setArmed(!armed)}>
           GOD
         </button>
       </div>

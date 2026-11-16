@@ -9,6 +9,8 @@ import { Placeholder } from './pages/Placeholder'
 import { Station } from './pages/Station'
 import { Scene } from './pages/Scene'
 import { Header, type Tab } from './shell/Header'
+import { KeyHelp } from './keys/KeyHelp'
+import { KeyLayer } from './keys/KeyLayer'
 import { LaptopFilm } from './stage/Film'
 import { LaptopHold } from './stage/Opening'
 import { Tv } from './stage/Tv'
@@ -127,6 +129,12 @@ function Game({ me, onLogout }: { me: Me; onLogout?: () => void }) {
       <RollStage world={world} />
       <LaptopFilm />
       {!isGm && <LaptopHold onLogout={onLogout} />}
+      {(!preview || acting) && (
+        <>
+          <KeyLayer tab={tab} />
+          <KeyHelp role={isGm ? 'gm' : 'player'} />
+        </>
+      )}
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { send, useGame } from '../store/game'
+import { useKeyHandler } from '../keys/registry'
 import type { CrewMember, View } from '../types'
 
 export const BURN_COST = 2
@@ -19,7 +20,7 @@ type Phase = 'idle' | 'hold' | 'flash' | 'fade'
  * pulses for 5 seconds after one of the others is hurt, and Tally's after a die lands. That never blocks
  * anything: the Burn still works once the line runs out. The player says who it's aimed at; Peter applies it.
  */
-export function BurnRow({ me, cut, tip }: { me: CrewMember; cut: string | null; tip: { on: boolean; enter: (el: HTMLElement) => void; leave: () => void } }) {
+export function BurnRow({ me, cut, tip, keyed = true }: { me: CrewMember; cut: string | null; tip: { on: boolean; enter: (el: HTMLElement) => void; leave: () => void }; keyed?: boolean }) {
   const b = me.burn
   const [phase, setPhase] = useState<Phase>('idle')
   const [err, setErr] = useState('')
@@ -32,6 +33,16 @@ export function BurnRow({ me, cut, tip }: { me: CrewMember; cut: string | null; 
     const t = window.setTimeout(() => tick((n) => n + 1), Math.max(0, until - Date.now()) + 20)
     return () => window.clearTimeout(t)
   }, [until])
+  // holding B does what holding the row does (the sheet's row gives way to the roll screen's while that's open)
+  useKeyHandler(
+    'burn.down',
+    () => {
+      if (!b || me.entropy < BURN_COST || phase !== 'idle') return false
+      start()
+    },
+    keyed && !!b,
+  )
+  useKeyHandler('burn.up', () => stop(), keyed && !!b)
   if (!b) return null
   const can = me.entropy >= BURN_COST
   const reacting = !!until && Date.now() < until && phase === 'idle'
