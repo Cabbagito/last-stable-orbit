@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import RULES, BurnState, NpcBurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, MaxAdjust, OpeningState, OverviewState, Preset, PresetItem, RollState, RushBowl, RushServe, RushState, SlotBank, SlotSeat, SoundPlayed, TokenState, Vitals
+from .models import RULES, BurnState, NpcBurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, MaxAdjust, OpeningState, OverviewState, Preset, PresetItem, RaceLook, RacePrep, RaceRoll, RaceState, RollState, RushBowl, RushServe, RushState, SlotBank, SlotSeat, SoundPlayed, TokenState, Vitals
 
 SOUNDS_KEPT = 8  # soundboard presses kept for the TV: a quick run of them can land in one frame
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
@@ -113,6 +113,18 @@ def _leave_slots(s: GameState, char: str) -> None:
         _settle_window(bank)
 
 
+def _leave_race(s: GameState, chars: list[str]) -> None:
+    """Racers whose prep was closed (taken back, or replaced by another event) leave the race, if the lights haven't come
+    on yet; a race nobody's left in is over. Once it's running on the TV, it runs."""
+    r = s.race
+    if not r or r.start is not None:
+        return
+    for c in chars:
+        r.preps.pop(c, None)
+    if not r.preps:
+        s.race = None
+
+
 def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     s = state.model_copy(deep=True)
     s.seq = seq
@@ -123,6 +135,7 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
             fresh.stage.camera, fresh.stage.follow = "crew", None
         fresh.overviews = s.overviews  # and what's open on someone's screen stays open
         fresh.rush = s.rush
+        fresh.race = s.race
         fresh.slots = {k: SlotBank(out=True) for k, b in s.slots.items() if b.out}  # a flood is for good; everyone's up
         if data.get("scene"):  # only the scene: who stands where and each map's mood. What the crew has and knows stays
             fresh.vitals, fresh.inventory, fresh.seen = s.vitals, s.inventory, s.seen
@@ -282,10 +295,32 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
             s.rush = RushState(char=data["chars"][0], id=data["id"], seed=int(data["seed"]))
         elif s.rush and s.rush.char in data["chars"]:
             s.rush = None
+        if "race" in data:  # a race: everyone picked starts a bot with their own name and number
+            rc = data["race"]
+            preps = {c: RacePrep(look=RaceLook.model_validate(rc["look"]), name=rc["bots"][c]["name"], num=rc["bots"][c]["num"]) for c in data["chars"]}
+            s.race = RaceState(id=data["id"], final=bool(rc["final"]), seed=int(rc["seed"]), preps=preps)
+        else:
+            _leave_race(s, data["chars"])
     elif ev_type == "overview.closed":  # the player closed it, or the GM took it back
         s.overviews.pop(data["char"], None)
         if s.rush and s.rush.char == data["char"]:
             s.rush = None
+        _leave_race(s, [data["char"]])
+    elif ev_type.startswith("race.") and (not s.race or s.race.id != data["id"]):
+        pass  # a race that's gone
+    elif ev_type == "race.dressed":
+        p = s.race.preps[data["char"]]
+        p.look, p.name, p.num = RaceLook.model_validate(data["look"]), data["name"], data["num"]
+    elif ev_type == "race.tuned":
+        s.race.preps[data["char"]].tune = RaceRoll(dice=list(data["dice"]), rung=int(data["rung"]))
+    elif ev_type == "race.fueled":
+        s.race.preps[data["char"]].fuel = data["item"]
+    elif ev_type == "race.revved":
+        s.race.preps[data["char"]].level = float(data["level"])
+    elif ev_type == "race.started":
+        s.race.start = float(data["start"])
+    elif ev_type == "race.ended":
+        s.race = None
     elif ev_type.startswith("rush.") and (not s.rush or s.rush.id != data["id"]):
         pass  # a shift that's gone
     elif ev_type == "rush.clocked_in":

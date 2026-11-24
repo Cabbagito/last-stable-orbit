@@ -68,13 +68,9 @@ tokens:
   - {kind: npc, ref: passenger-young, map: promenade, at: [30.5, 4.5, 0]}
   - {kind: npc, ref: passenger, map: promenade, at: [28.9, 3.6, 0]}
   - {kind: npc, ref: passenger-traveller, map: promenade, at: [37.4, 5.0, 0]}
-  # the bar, open: Dax at his place, the three at the bar, a couple of passengers
+  # the bar, open: Dax at his place and a couple of passengers (Rudi and the three are at the bot races)
   - {kind: npc, ref: dax, map: event-horizon, at: [11.6, 1.05, 0]}
   - {kind: npc, ref: cleaner-14, map: event-horizon, at: [6.3, 5.4, 0]}
-  - {kind: npc, ref: slot-regular, map: event-horizon, at: [-0.86, 10.35, 0]}
-  - {kind: npc, ref: brawler-crane, map: event-horizon, at: [9.98, 3.9, 0]}
-  - {kind: npc, ref: brawler-grin, map: event-horizon, at: [11.2, 3.9, 0]}
-  - {kind: npc, ref: brawler-hauler, map: event-horizon, at: [12.42, 3.9, 0]}
   - {kind: npc, ref: happy-resident, map: event-horizon, at: [5.9, 10.6, 0]}
   - {kind: npc, ref: passenger-candles, map: event-horizon, at: [12.6, 5.1, 0]}
   - {kind: npc, ref: passenger-flowers, map: event-horizon, at: [10.6, 5.8, 0]}
@@ -99,6 +95,21 @@ tokens:
   - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
   - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
   - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}  # hidden, on the pad numbered 7
+  # Bot bay racing, by day: the crowd round the dispatch desk, and Lou Carrow calling it from the desk. Rudi and
+  # the three from the day-1 bar fight are in it, cheerful now.
+  - {kind: npc, ref: lou-carrow, map: bots, at: [9.0, 9.2, 0.58]}  # on the desk
+  - {kind: npc, ref: slot-regular, map: bots, at: [11.6, 9.6, 0]}
+  - {kind: npc, ref: brawler-crane, map: bots, at: [12.3, 10.3, 0]}
+  - {kind: npc, ref: brawler-grin, map: bots, at: [12.9, 9.5, 0]}
+  - {kind: npc, ref: brawler-hauler, map: bots, at: [13.5, 10.4, 0]}
+  - {kind: npc, ref: happy-resident, map: bots, at: [14.1, 9.7, 0]}
+  - {kind: npc, ref: resident-student, map: bots, at: [13.2, 10.9, 0]}
+  - {kind: npc, ref: resident-coral, map: bots, at: [7.9, 5.2, 0]}
+  - {kind: npc, ref: resident-courier, map: bots, at: [8.6, 5.5, 0]}
+  - {kind: npc, ref: happy-resident, map: bots, at: [9.3, 5.2, 0]}
+  - {kind: npc, ref: resident-nightshift, map: bots, at: [5.5, 7.4, 0]}
+  - {kind: npc, ref: robot-reader, map: bots, at: [16.2, 9.8, 0]}
+  - {kind: npc, ref: resident-beanie, map: bots, at: [16.6, 10.5, 0]}
   # deck 6, office hours: a full floor of reviewers
   - {kind: npc, ref: guard-sergeant, map: deck-6, at: [11.43, 3.37, 0]}
   - {kind: npc, ref: ahti, map: deck-6, at: [14.64, 1.48, 0], hidden: true}  # hidden in his closet: whoever opens the door is hired

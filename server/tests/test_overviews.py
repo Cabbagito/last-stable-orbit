@@ -72,6 +72,8 @@ async def test_the_gm_sees_what_can_be_sent_and_whose_screen_has_one_open(engine
             {"id": "satisfaction-new", "name": "Satisfaction Report, CSAT-2 to 5"},
             {"id": "golf", "name": "Mini-golf"},
             {"id": "rush", "name": "Sarge's rush", "one": True},
+            {"id": "race", "name": "Bot bay race"},
+            {"id": "final", "name": "The final", "one": True},
         ],
         "open": {},
     }

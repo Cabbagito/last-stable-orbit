@@ -1,0 +1,157 @@
+# Bot bay racing: the race, and the final against the champion. Two events in the GM tab's Events (overviews.yaml).
+# From the canvas LSO — Bot bay racing (https://claude.ai/artifact/5r9V3M158fam1CqMDdEKgn) and the kit Peter handed over
+# on Nov 24 (minigames/race_fuel_lines.py, mg_sound.py, mg_music.py, cup_icon.py in the claude.ai Project). Every number
+# is the prototype's. The race itself (the track, the director, the caller's lines) is code: web/src/race/sim.ts, ported
+# exactly and checked against the prototype's own races.
+#
+# Each picked player preps a bot on their laptop: dress it, tune it (the server rolls their Tech), burn one item from
+# their pockets as fuel (or nothing), and rev. When the last one revs, the TV runs the lights and the race from the seed.
+# There is no buy-in, pot or payout anywhere: the players bet out loud and Peter settles it, and hands over the purse
+# (150 credits for a race, 300 for the final) and the Satisfaction Cup himself with the Give picker.
+
+map: maps/bots/base-day.png  # the race is drawn over the Bot bays by day
+laps: {race: 5, final: 3}
+lead: 1.5  # seconds from the last rev to the lights, so the TV hears in time
+intro: 3.6  # the final: CSAT-1 rolls in, with his horn, this long before the lights
+hold: 14  # seconds the result stays on the TV before it closes
+
+# Each player's bot starts with this name and number, which they can change, and wears the player's colour (their
+# portrait's light, as on the canvas).
+crew:
+  lale: {name: STAT, num: "2", color: "#a8f4c4"}
+  marlo: {name: ALIBI, num: "3", color: "#ff8ac4"}
+  tally: {name: MEAN, num: "5", color: "#8ef6ff"}
+  ves: {name: SHH, num: "7", color: "#ff6a40"}
+  tomo: {name: LOAF, num: "11", color: "#ffb050"}
+# The parts a new bot starts with, as places in each list (web/src/race/draw.js: SPOILERS, STRIPES and so on).
+look: {spoiler: 2, stripes: 1, wheels: 0, topper: 0, face: 0, paint: 0, lights: 0}
+
+# The tune: one roll of the player's Tech die, exploding. A natural 1 is a loose wheel whatever the total.
+tunes:
+  - {name: LOOSE WHEEL, grip: 0.7}
+  - {from: 5, name: STOCK, grip: 1.0}
+  - {from: 7, name: TIGHT, grip: 1.15}
+  - {from: 9, name: GLUED, grip: 1.3}
+
+# The rev: where the needle sits when the lights go out, 0 to 1. Green is 78 to 88; past it the bot stalls on the line.
+# How fast it climbs and falls back are constants on the prep screen (web/src/race/Prep.tsx), the prototype's.
+revs:
+  - {below: 0.5, name: SLUGGISH, launch: 0.2}
+  - {below: 0.78, name: CLEAN, launch: 0.6}
+  - {below: 0.88, name: PERFECT, launch: 1}
+  - {name: STALLED, launch: -1}
+
+# The house bots fill the grid to five, in colours no player uses.
+house:
+  - {name: MOPSY, color: "#b79cff", look: {spoiler: 4, stripes: 0, wheels: 0, topper: 0, face: 0, paint: 0, lights: 0}}
+  - {name: UNIT 9, color: "#e6e8f0", look: {spoiler: 0, stripes: 1, wheels: 0, topper: 0, face: 2, paint: 0, lights: 0}}
+  - {name: BIG SCRUB, color: "#c6e84e", look: {spoiler: 2, stripes: 2, wheels: 1, topper: 2, face: 1, paint: 0, lights: 0}}
+  - {name: DUSTIN, color: "#5f8dff", look: {spoiler: 1, stripes: 3, wheels: 2, topper: 1, face: 0, paint: 0, lights: 0}}
+  - {name: SIR SUDS, color: "#7fb0a8", look: {spoiler: 3, stripes: 0, wheels: 3, topper: 3, face: 3, paint: 0, lights: 0}}
+house_bot: {grip: 1.0, fuel: 1.0, launch: 0.6}
+# The champion, in the final.
+csat: {name: CSAT-1, color: "#f4ecd4", grip: 1.2, fuel: 1.0, launch: 0.7, portrait: portraits/survey-droid.gif}
+
+# What each kind of fuel does to the bot. Players never see these, before or after: only the line.
+effects:
+  fast2: {fuel: 1.02}  # QUICK +
+  fast: {fuel: 1.012}  # QUICK
+  slow: {fuel: 0.99}  # SLOW
+  grip: {grip: 0.1}  # GRIP
+  loose: {grip: -0.15}  # LOOSE
+  chaos: {chaos: true}  # GAMBLE: once, 12 to 26 s in, a coin flip: a huge surge or a smoking stall
+  stink: {stink: true}  # STINK: no bot can slipstream behind it
+  cup: {fuel: 1.08}  # the Satisfaction Cup: on a stock bot it wins about 65% against four house bots (sim.test.ts)
+  none: {}
+
+# Every item, by id: its name on the fuel screen, the line the bot says once it's burned, and its effect.
+# An item that isn't here burns with the fallback line and no effect. `none` is burning nothing.
+fallback: {name: "", line: THE BOT EATS IT. NOTHING HAPPENS.}
+fuel:
+  sidearm: {name: "STUN PISTOL", line: "THE BOT IS STUNNED. BRIEFLY. THEN VERY AWAKE.", fx: chaos}
+  stun-rings: {name: "STUN RINGS", line: "A SPARK. THE BOT'S EYES GO WIDE.", fx: fast}
+  fob-watch: {name: "FOB WATCH", line: "THE BOT KEEPS ITS OWN TIME NOW.", fx: fast}
+  sourdough-jar: {name: "SOURDOUGH STARTER", line: "IT IS ALIVE IN THERE. SO IS THE BOT, NOW.", fx: fast}
+  splice-kit: {name: "SPLICE KIT", line: "THE BOT REWIRES ITSELF. NEATLY.", fx: grip}
+  credits: {name: "CREDITS", line: "THE BOT ACCEPTS YOUR MONEY. NOTHING ELSE CHANGES.", fx: none}
+  letter-lale: {name: "LALE'S LETTER", line: "THE BOT READS IT. THE BOT IS NOT ON THE LIST.", fx: none}
+  letter-marlo: {name: "MARLO'S LETTER", line: "THE BOT EATS THE EVIDENCE.", fx: none}
+  letter-tally: {name: "TALLY'S LETTER", line: "THE BOT FILES IT. INTERNALLY.", fx: none}
+  letter-ves: {name: "VES'S LETTER", line: "THE BOT SWALLOWS THE WAX SEAL WHOLE.", fx: none}
+  letter-tomo: {name: "TOMO'S LETTER", line: "THE BOT CHEWS THE PAPER. POLITELY.", fx: none}
+  tally-notebook: {name: "TALLY'S NOTEBOOK", line: "THE BOT LEARNS A LOT ABOUT HUMANS. IT SLOWS DOWN.", fx: slow}
+  access-chit: {name: "ACCESS CHIT", line: "SOMEWHERE INSIDE THE BOT, A DOOR OPENS.", fx: none}
+  maintenance-log: {name: "UNIT 14'S LOG", line: "THE BOT KNOWS THAT HANDWRITING.", fx: none}
+  burner-key: {name: "BURNER KEY", line: "THE BOT HACKS ITSELF. NO ROLL NEEDED.", fx: fast2}
+  brochure: {name: "THE BROCHURE", line: "THE BOT FEELS WELCOME ON ERGO.", fx: none}
+  gumshoe-card: {name: "THE GUMSHOE'S CARD", line: "THE BOT WOULD RATHER NOT GET INVOLVED.", fx: none}
+  antidote: {name: "ANTIDOTE", line: "THE BOT WAKES UP. IT WAS NOT ASLEEP.", fx: fast}
+  admissions-record: {name: "ADMISSIONS RECORD", line: "THE BOT HAS BEEN ADMITTED.", fx: none}
+  cleaning-log: {name: "CLEANING LOG", line: "THE BOT REMEMBERS THE ALLEY. IT SAYS NOTHING.", fx: none}
+  coin-pouch: {name: "COIN POUCH", line: "THE BOT RATTLES NOW. EXPENSIVELY.", fx: slow}
+  ration-bar: {name: "KRALJ ORAH WALNUT BAR", line: "KRALJ ORAH. THE BOT FEELS LIKE A KING.", fx: fast}
+  painkiller-patch: {name: "PAINKILLER PATCH", line: "THE BOT FEELS NOTHING. PERFECT.", fx: grip}
+  hip-flask: {name: "HIP FLASK", line: "THE BOT HICCUPS. THEN IT PURRS.", fx: fast2}
+  staff-lanyard: {name: "STAFF LANYARD", line: "THE BOT IS STAFF NOW. IT WANTS A BREAK.", fx: slow}
+  service-keycard: {name: "SERVICE KEYCARD", line: "ACCESS GRANTED. TO WHAT, NOBODY KNOWS.", fx: none}
+  code-note: {name: "STICKY NOTE", line: "4719. THE BOT WILL NOT FORGET.", fx: none}
+  earpiece-pair: {name: "EARPIECE PAIR", line: "THE BOT HEARS ITSELF THINK. TWICE.", fx: none}
+  multitool: {name: "MULTITOOL", line: "THE BOT TIGHTENS ITS OWN WHEELS.", fx: grip}
+  loyalty-card: {name: "NOODLE LOYALTY CARD", line: "NINE STAMPS. THE BOT WANTS THE TENTH.", fx: fast}
+  vigil-coin: {name: "VIGIL COIN", line: "THE BOT OBSERVES A MOMENT OF SILENCE.", fx: slow}
+  chrome-part: {name: "SEALED CHROME PART", line: "FACTORY SEALED. THE BOT INSTALLS IT ANYWAY.", fx: fast2}
+  exec-watch: {name: "EXECUTIVE'S WATCH", line: "THE BOT IS LATE FOR A BOARD MEETING.", fx: fast}
+  shift-rota: {name: "SHIFT ROTA", line: "THE BOT CHECKS THE ROTA. IT IS NOT ON SHIFT.", fx: none}
+  complaint-letter: {name: "UNSENT COMPLAINT", line: "THE BOT IS FURIOUS NOW. UNDERLINED IN RED.", fx: fast}
+  survey-stack: {name: "STACK OF SURVEYS", line: "TEN OUT OF TEN, EVERY TIME. THE BOT IS CONTENT.", fx: slow}
+  candle-stub: {name: "VIGIL CANDLE STUB", line: "ELEVEN MORE MINUTES OF LIGHT. INSIDE A BOT.", fx: chaos}
+  queue-ticket: {name: "QUEUE TICKET", line: "ESTIMATED WAIT: 11:00.", fx: slow}
+  kid-drawing: {name: "CHILD'S DRAWING", line: "THE BOT PUTS IT UP WHERE IT CAN SEE IT.", fx: none}
+  snow-globe: {name: "SNOW GLOBE OF ERGO", line: "IT IS SNOWING INSIDE THE BOT.", fx: loose}
+  paperback: {name: "DOG-EARED PAPERBACK", line: "THE BOT WILL NEVER KNOW HOW IT ENDS.", fx: slow}
+  vimak-plush: {name: "VIMAK PLUSH", line: "THE BOT HUGS IT. IT WILL NOT LET GO.", fx: none}
+  flute: {name: "FLUTE", line: "THE BOT PLAYS IT. BADLY.", fx: chaos}
+  bobblehead: {name: "BOBBLEHEAD", line: "IT NODS. THE BOT NODS BACK.", fx: chaos}
+  card-deck: {name: "DECK OF CARDS", line: "FIFTY-ONE CARDS. THE BOT LIKES THOSE ODDS.", fx: chaos}
+  lunch: {name: "SOMEONE'S LUNCH", line: "SOMEBODY WILL BE UPSET. NOT THE BOT.", fx: fast}
+  used-noodles: {name: "USED NOODLES", line: "THE BOT MAKES A NOISE YOU HAVE NOT HEARD BEFORE.", fx: chaos}
+  slots-ticket: {name: "LOSING SLOTS TICKET", line: "SO CLOSE. THE BOT FEELS LUCKY.", fx: chaos}
+  dead-battery: {name: "DEAD BATTERY", line: "NOTHING HAPPENS. THE BOT LOOKS AT YOU.", fx: slow}
+  chrome-finger: {name: "BROKEN CHROME FINGER", line: "IT STILL TWITCHES. NOW THE BOT DOES TOO.", fx: loose}
+  chewed-stylus: {name: "CHEWED SURVEY STYLUS", line: "THE BOT WOULD LIKE TO RATE THIS EXPERIENCE.", fx: none}
+  pocket-lint: {name: "POCKET LINT", line: "THE BOT SNEEZES.", fx: none}
+  damp-sock: {name: "DAMP SOCK", line: "THE BOT SMELLS DIFFERENT NOW.", fx: stink}
+  cheese-rind: {name: "GOLD-RIMMED CHEESE RIND", line: "GOLD RIM. THE BOT FEELS LIKE A WINNER.", fx: fast}
+  noodle-bowl: {name: "NOODLE BOWL", line: "TOO MUCH SPRING ONION. THE BOT DOES NOT MIND.", fx: fast}
+  dax-drink: {name: "A DRINK AT DAX'S", line: "DAX DID NOT ASK WHAT THE BOT WANTED.", fx: fast2}
+  vending-snack: {name: "VENDING SNACK", line: "CRUNCHY. THE BOT ANSWERS A FEW QUESTIONS.", fx: fast}
+  jump-boots: {name: "JUMP BOOTS", line: "THE BOT HOPS. ONCE. EXPERIMENTALLY.", fx: chaos}
+  grapple-hand: {name: "GRAPPLING-HOOK HAND", line: "THE BOT EYES THE BOT IN FRONT.", fx: fast}
+  static-palm: {name: "STATIC PALM", line: "EVERY HAIR ON THE BOT STANDS UP. IT HAS NO HAIR.", fx: fast}
+  throat-speaker: {name: "THROAT SPEAKER", line: "THE BOT HAS A VOICE NOW. IT IS VERY LOUD.", fx: none}
+  magnet-plate: {name: "MAGNET PLATE", line: "THE BOT PICKS UP A SPOON. AND A BOLT. AND A SPOON.", fx: slow}
+  chrome-health: {name: "REINFORCED CORE", line: "REINFORCED. THE BOT FEARS NOTHING.", fx: grip}
+  chrome-entropy: {name: "ENTROPY CELL", line: "SOMETHING GOLD IS HUMMING IN THERE.", fx: fast2}
+  bootleg-jump-boots: {name: "SPRING BOOTS", line: "BEDSPRINGS. THE BOT BOUNCES. IT KEEPS BOUNCING.", fx: chaos}
+  bootleg-grapple-hand: {name: "HOOK GLOVE", line: "COAT HANGERS. THE BOT SNAGS ON EVERYTHING.", fx: loose}
+  bootleg-static-palm: {name: "BATTERY GLOVE", line: "THE BATTERY IS TAPED ON. THE BOT IS CONCERNED.", fx: chaos}
+  bootleg-throat-speaker: {name: "TIN-CAN SPEAKER", line: "THE BOT SOUNDS LIKE A TIN CAN. IT IS ONE NOW.", fx: none}
+  bootleg-magnets: {name: "BODY MAGNET", line: "THE WHOLE BOT IS A MAGNET. EVERYTHING DRIFTS CLOSER.", fx: slow}
+  bootleg-chrome-health: {name: "JAM-JAR CORE", line: "SOMETHING GREEN. THE BOT DRINKS IT ANYWAY.", fx: chaos}
+  bootleg-chrome-entropy: {name: "LUCKY CUBE", line: "THE BOT ROLLS THE CUBE. IT COMES UP GOLD.", fx: chaos}
+  sato-special: {name: "THE SATO & SATO SPECIAL", line: "THWOCK. THE BOT WEARS THE PLUNGER LIKE A HAT.", fx: chaos}
+  none: {name: "NOTHING", line: "RUNNING ON CHARGE ALONE.", fx: none}
+  satisfaction-cup: {name: "THE CUP", line: "IT DRINKS FROM THE CHAMP'S HEAD. TASTES LIKE WINNING.", fx: cup}  # Peter, Nov 24: a big boost
+
+# All of it plays on the TV only. Effects at `volume`, the songs at `music_volume`. Each song's file is exactly one loop
+# of `bars` bars of 4/4 at `bpm` (test_race.py checks the files). soundboard: the ids of sounds the soundboard already has.
+sound:
+  dir: race/sound
+  volume: 0.9
+  music_volume: 0.5
+  music:
+    grid: {file: music_grid, bars: 8, bpm: 100}
+    race: {file: music_race, bars: 32, bpm: 150}
+    final: {file: music_final, bars: 32, bpm: 160}
+  effects: [lights_go, surge, spin, crash, overheat, flip, kick_up, last_lap, photo_finish, guard, win, champion, retains]
+  soundboard: {horn: main_approach, destroyed: main_destroyed, csat2: spotless_approach, survey: droid_question, bottle: bottle_smash}

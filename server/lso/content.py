@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, RunAct, Opening, Overview, Preset, PresetItem, RushGame, Scenario, Shelf, SlotsGame, Sound, SoundCategory, Station
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, RunAct, Opening, Overview, Preset, PresetItem, RaceGame, RushGame, Scenario, Shelf, SlotsGame, Sound, SoundCategory, Station
 
 log = logging.getLogger("lso.content")
 
@@ -38,6 +38,7 @@ class Content:
     overviews: dict[str, Overview] = field(default_factory=dict)  # little games the GM sends to players' screens
     slots: SlotsGame | None = None  # the slot machines' rules
     rush: RushGame | None = None  # Sarge's rush (rush.yaml)
+    race: RaceGame | None = None  # Bot bay racing (race.yaml)
     soundboard: list[SoundCategory] = field(default_factory=list)  # the GM's top bar, in order
     missing_assets: list[str] = field(default_factory=list)
 
@@ -124,6 +125,9 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
     rs = content_dir / "rush.yaml"
     if rs.is_file():
         c.rush = _parse(RushGame, _read(rs), "rush.yaml")
+    rc = content_dir / "race.yaml"
+    if rc.is_file():
+        c.race = _parse(RaceGame, _read(rc), "race.yaml")
     ins = content_dir / "insults.yaml"
     c.insults = _insults((_read(ins) or {}) if ins.is_file() else {})
     if clash := set(c.characters) & set(c.npcs):
@@ -159,6 +163,12 @@ def check_refs(c: Content) -> None:
         problems += [f"slots: unknown audit character {a!r}" for a in c.slots.audit if a not in c.characters]
     if any(o.rush for o in c.overviews.values()) and not c.rush:
         problems.append("overviews: the rush needs content/rush.yaml")
+    if any(o.race for o in c.overviews.values()) and not c.race:
+        problems.append("overviews: the races need content/race.yaml")
+    if c.race:
+        problems += [f"race: no bot name and number for {ch!r}" for ch in c.characters if ch not in c.race.crew]
+        problems += [f"race: fuel for an unknown item {i!r}" for i in c.race.fuel if i != "none" and i not in c.items]
+        problems += [f"race: unknown soundboard sound {s!r}" for s in c.race.sound.soundboard.values() if s not in c.sounds]
     if len(c.sounds) != sum(len(g.sounds) for g in c.soundboard):
         problems.append("soundboard: two sounds share an id")
     if c.opening and c.opening.resets_to not in c.presets:
@@ -341,4 +351,6 @@ def asset_paths(c: Content) -> set[str]:
     if c.rush:
         paths |= set(c.rush.art.model_dump().values()) | set(c.rush.layers().values()) | set(c.rush.bins().values())
         paths |= {c.rush.sound.file(n) for n in c.rush.sound.names(c.rush.ranks)}
+    if c.race:
+        paths |= {c.race.map, c.race.csat.portrait, *c.race.sound.files()}
     return paths

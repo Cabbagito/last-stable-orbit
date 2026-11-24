@@ -111,6 +111,21 @@ tokens:
   - {kind: npc, ref: cleaner-19, map: bots, at: [6.68, 12.4, 0]}
   - {kind: npc, ref: cleaner-23, map: bots, at: [10.1, 12.45, 0]}
   - {kind: npc, ref: bolt-7, map: bots, at: [11.85, 12.5, 0], hidden: true}  # hidden, on the pad numbered 7
+  # Bot bay racing, by day: the crowd round the dispatch desk, and Lou Carrow calling it from the desk. Rudi and the
+  # three brawlers are at the bar today, for the day-1 bar fight: drag them over if the crew goes racing first.
+  - {kind: npc, ref: lou-carrow, map: bots, at: [9.0, 9.2, 0.58]}  # on the desk
+  - {kind: npc, ref: happy-resident, map: bots, at: [11.6, 9.6, 0]}
+  - {kind: npc, ref: resident-student, map: bots, at: [12.3, 10.3, 0]}
+  - {kind: npc, ref: resident-coral, map: bots, at: [12.9, 9.5, 0]}
+  - {kind: npc, ref: resident-courier, map: bots, at: [13.5, 10.4, 0]}
+  - {kind: npc, ref: happy-resident, map: bots, at: [14.1, 9.7, 0]}
+  - {kind: npc, ref: resident-nightshift, map: bots, at: [13.2, 10.9, 0]}
+  - {kind: npc, ref: resident-beanie, map: bots, at: [7.9, 5.2, 0]}
+  - {kind: npc, ref: robot-reader, map: bots, at: [8.6, 5.5, 0]}
+  - {kind: npc, ref: happy-resident, map: bots, at: [9.3, 5.2, 0]}
+  - {kind: npc, ref: resident-noodles, map: bots, at: [5.5, 7.4, 0]}
+  - {kind: npc, ref: robot-miner, map: bots, at: [16.2, 9.8, 0]}
+  - {kind: npc, ref: resident-coral, map: bots, at: [16.6, 10.5, 0]}
 inventory:  # DRAFT starting kit from the bible, for Peter to edit. Lale never carries a weapon.
   lale: [fob-watch, letter-lale, {item: credits, count: 140}]
   marlo: [stun-rings, letter-marlo, {item: credits, count: 140}]

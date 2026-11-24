@@ -1,0 +1,76 @@
+/* Bot bay racing (the canvas LSO — Bot bay racing): a player's prep, 1152 x 648 over their map, and the race on the
+   TV, 1600 x 900 scaled to fit. Every size and colour is the prototype's. */
+
+/* ---- the prep, on a racer's laptop ---- */
+.ov-dev.rc-dev{width:1152px;height:648px;top:calc(50% - 324px*var(--ov-k,1))}
+.rc-prep{position:relative;width:1152px;height:648px;overflow:hidden;background:#000;color:#e7e9ec;font-family:'VT323','Courier New',monospace;user-select:none}
+.rc-prep button:focus-visible,.rc-prep input:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.rc-big{position:absolute;left:48px;top:48px;width:480px;height:336px;image-rendering:pixelated;display:block;outline:1px solid #1e2024}
+.rc-name{position:absolute;left:48px;top:408px;width:480px;font-size:104px;line-height:.85;color:var(--rc-bot);overflow-wrap:anywhere}
+.rc-steps{position:absolute;left:600px;top:48px;width:504px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.rc-step{padding-bottom:8px;border-bottom:1px solid #1e2024;font-family:'Michroma','Arial Narrow',sans-serif;font-size:10px;letter-spacing:.16em;color:#8a8e96}
+.rc-step.past{color:#b4b8c0}
+.rc-step.on{color:#fff;border-bottom-color:#ff4fa3}
+.rc-panel{position:absolute;left:600px;top:92px;width:504px;height:508px;display:flex;flex-direction:column;gap:4px}
+.rc-panel.mid{align-items:center;gap:0}
+.rc-panel.fuel{gap:14px}
+.rc-part{display:flex;align-items:center;gap:12px;height:48px;border-bottom:1px solid #1e2024}
+.rc-lbl{width:96px;flex-shrink:0;font-family:'Michroma','Arial Narrow',sans-serif;font-size:9px;letter-spacing:.16em;color:#8a8e96}
+.rc-lbl.short{width:auto}
+.rc-arrow{width:44px;height:44px;background:#000;border:1px solid #2f3238;color:#e7e9ec;font-family:'VT323','Courier New',monospace;font-size:32px;line-height:1;cursor:pointer;padding:0}
+.rc-arrow:hover{border-color:#fff}
+.rc-val{flex:1;text-align:center;font-size:32px;line-height:1;color:#fff}
+.rc-tag{display:flex;align-items:center;gap:12px;height:52px}
+.rc-in{flex:1;min-width:0;height:44px;box-sizing:border-box;background:#000;border:0;border-bottom:2px solid #2f3238;color:#fff;font-family:'VT323','Courier New',monospace;font-size:32px;text-transform:uppercase;text-align:center;padding:0}
+.rc-in.num{flex:none;width:72px}
+.rc-cta{margin-top:auto;flex-shrink:0;align-self:flex-end;height:56px;padding:0 44px;background:#000;border:1px solid #ff4fa3;color:#ff7dbb;font-family:'Michroma','Arial Narrow',sans-serif;font-size:12px;letter-spacing:.16em;cursor:pointer}
+.rc-cta:hover{background:#ff4fa3;color:#000}
+.rc-cta:disabled{cursor:default}
+.rc-cta.rc-space{width:504px;height:84px;font-size:16px;letter-spacing:.4em;padding:0}
+.rc-cta.rc-space:disabled:hover{background:#000;color:#ff7dbb}
+.rc-die{font-size:44px;line-height:1;color:#8a8e96;margin-top:36px}
+.rc-shown{font-size:240px;line-height:.82}
+.rc-tune{font-size:72px;line-height:1;min-height:72px}
+.rc-fuels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 12px;margin-top:16px;max-height:340px;overflow-y:auto;padding:2px}
+.rc-fuel{background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.rc-icon{width:96px;height:96px;display:block;box-shadow:0 0 0 1px #1e2024}
+.rc-fuel.on .rc-icon{box-shadow:0 0 0 1px #ff4fa3;background:#180c13}
+.rc-icon img{width:96px;height:96px;image-rendering:pixelated;display:block}
+.rc-fname{font-size:20px;line-height:1;color:#b4b8c0;max-width:116px;text-align:center}
+.rc-fuel.on .rc-fname{color:#fff}
+.rc-line{font-size:40px;line-height:.95;color:#f3e3bd;text-shadow:0 0 6px rgba(255,214,150,.45);min-height:76px}
+.rc-lamps{display:flex;gap:18px;margin-top:40px}
+.rc-lamp{width:64px;height:64px;border-radius:50%;background:#2a1014}
+.rc-lamp.on{background:#ff3b4a;box-shadow:0 0 20px rgba(255,59,74,.7)}
+.rc-gauge{position:relative;width:504px;height:56px;background:#15161c;margin-top:44px}
+.rc-green{position:absolute;left:78%;top:0;width:10%;height:56px;background:#1c7a4c}
+.rc-red{position:absolute;left:88%;top:0;width:12%;height:56px;background:#7a1c26}
+.rc-fill{position:absolute;left:0;top:0;height:56px;background:rgba(231,233,236,.28)}
+.rc-needle{position:absolute;top:-8px;width:4px;height:72px;margin-left:-2px;background:#fff}
+.rc-rev{font-size:88px;line-height:1;margin-top:28px;min-height:88px}
+
+/* ---- the race, on the TV ---- */
+.rc-tv{position:absolute;inset:0;z-index:30;background:#000;overflow:hidden}
+.rc-tvk{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform:translate(-50%,-50%) scale(var(--rc-k,1))}
+.rc-board{position:relative;width:1600px;height:900px;overflow:hidden;background:#000;color:#e7e9ec;font-family:'VT323','Courier New',monospace}
+.rc-map{position:absolute;left:-300px;top:-430px;width:2220px;height:1400px;max-width:none;image-rendering:pixelated;display:block}
+.rc-race{position:absolute;left:0;top:0;width:1600px;height:900px;image-rendering:pixelated;display:block}
+.rc-ui{position:absolute;left:0;top:0;width:1600px;height:900px;pointer-events:none}
+.rc-stand{position:absolute;left:28px;top:24px;width:300px;box-sizing:border-box;padding:14px 18px 8px;background:rgba(0,0,0,.82);border:1px solid #1e2024;display:flex;flex-direction:column}
+.rc-lap{font-size:52px;line-height:.95;color:#fff;padding-bottom:6px}
+.rc-row{display:flex;align-items:center;gap:10px;height:40px;border-top:1px solid #1e2024}
+.rc-pos{width:18px;font-size:32px;color:#8a8e96}
+.rc-sw{width:14px;height:14px;flex-shrink:0}
+.rc-who{font-size:32px;line-height:1;color:#fff;white-space:nowrap}
+.rc-tag{margin-left:auto;font-size:24px;line-height:1;color:#ff7dbb}
+.rc-caller{position:absolute;left:0;right:0;bottom:0;height:84px;box-sizing:border-box;padding:0 36px;background:rgba(0,0,0,.88);border-top:1px solid #1e2024;display:flex;align-items:center;font-size:52px;line-height:1;color:#f3e3bd;text-shadow:0 0 6px rgba(255,214,150,.45);white-space:nowrap}
+.rc-lights{position:absolute;left:0;right:0;top:150px;display:flex;justify-content:center;pointer-events:none}
+.rc-lampbox{display:flex;gap:18px;padding:18px 26px;background:rgba(0,0,0,.88);border:1px solid #1e2024}
+.rc-lamp.big.on{box-shadow:0 0 22px rgba(255,59,74,.7)}
+.rc-guard{position:absolute;left:0;right:0;top:280px;text-align:center;pointer-events:none;font-size:190px;line-height:.9;color:#fff;text-shadow:0 4px 0 #000}
+.rc-photo{position:absolute;left:0;right:0;top:120px;text-align:center;pointer-events:none;font-size:130px;line-height:1;color:#ff7dbb;text-shadow:0 3px 0 #000}
+.rc-intro{position:absolute;left:400px;top:210px;width:800px;box-sizing:border-box;padding:24px;background:rgba(0,0,0,.92);border:1px solid #1e2024;display:flex;align-items:center;gap:32px}
+.rc-intro img{width:288px;height:288px;image-rendering:pixelated;display:block;flex-shrink:0}
+.rc-champ{font-size:44px;line-height:1;color:#ff7dbb}
+.rc-csat{font-size:150px;line-height:.8;color:#fff;white-space:nowrap}
+.rc-result{position:absolute;left:0;right:0;top:330px;padding:28px 0 30px;background:rgba(0,0,0,.92);text-align:center;pointer-events:none;font-size:170px;line-height:.85;letter-spacing:.03em}

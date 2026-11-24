@@ -593,3 +593,12 @@
   kind: gear
   chrome: both
   text: A clinic rail along the forearm, with a hopper of plungers taped on top. It fires one, very hard, and it stays where it lands. Add it to a roll when you want something stuck where it is, like a door, a hand or a camera. The plungers are second-hand. Nobody asks.
+
+# Bot bay racing's trophy (2026-11-24, the racing canvas's Cup board; icon by minigames/cup_icon.py): built from
+# CSAT-1 once someone beats him in the final. Peter hands it over with the Give picker, with the purse. It burns as fuel.
+- id: satisfaction-cup
+  name: The Satisfaction Cup
+  icon: icons/items/satisfaction-cup.png
+  kind: gear
+  shelf: prizes
+  text: Awarded to the champion. Was the champion.

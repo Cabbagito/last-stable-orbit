@@ -117,3 +117,13 @@
 - id: rush
   name: Sarge's rush
   rush: true
+
+# Bot bay racing, from the canvas LSO — Bot bay racing (https://claude.ai/artifact/5r9V3M158fam1CqMDdEKgn). Each picked
+# player preps a bot on their laptop, and the TV runs the race once they all have. The final is one player against
+# CSAT-1, the champion. Its numbers, lines and sound are in content/race.yaml.
+- id: race
+  name: Bot bay race
+  race: race
+- id: final
+  name: The final
+  race: final

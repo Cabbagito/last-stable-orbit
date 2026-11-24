@@ -11,7 +11,7 @@ import random
 from . import rules, rush, sheet
 from .auth import Viewer
 from .content import Content
-from .models import STATION_STATES, BURN_COST, CAMERA_PAN_MAX, CAMERA_ZOOM_MAX, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_CAP, HEALTH_CAP, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
+from .models import STATION_STATES, RaceLook, BURN_COST, CAMERA_PAN_MAX, CAMERA_ZOOM_MAX, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_CAP, HEALTH_CAP, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
 from .state import state_from_preset
 from .views import viewer_map
 
@@ -30,6 +30,7 @@ BURN_LEAD = 0.4  # and every Burn film, so a Burn starts almost at once
 BURN_HOLD = 0.75  # seconds a Burn film's last frame stays up before the hard cut back
 RUSH_BEHIND = 3000  # ms: a serve the cook's laptop says happened longer ago than this lands this long ago
 RUSH_AHEAD = 500  # ms: and one it says happens later than now lands this much later at most
+RACE_LONGEST = 3.3 + 100  # s from the lights to the flag, at most: the lights, and the longest race (web/src/race/sim.test.ts)
 
 
 class CommandError(Exception):
@@ -504,7 +505,19 @@ def _cue_sets(state: GameState, content: Content, cue) -> Events:
     return events
 
 
-def _gm_overview(state: GameState, content: Content, kind: str, args: dict, rng) -> Events:
+def _race_go(state: GameState, content: Content, without: set[str], now: float) -> Events:
+    """Racers are leaving before the lights (the GM took it back, or sent them something else). If everyone left has
+    revved, the race starts now."""
+    r, g = state.race, content.race
+    if not r or not g or r.start is not None:
+        return []
+    left = [q for c, q in r.preps.items() if c not in without]
+    if not left or any(q.level is None for q in left):
+        return []
+    return [("race.started", {"id": r.id, "start": round(now + g.lead + (g.intro if r.final else 0), 3)})]
+
+
+def _gm_overview(state: GameState, content: Content, kind: str, args: dict, rng, now: float) -> Events:
     """The GM tab's Events: send an overview to some of the crew, or take one back. Sending one replaces what's open."""
     if kind == "gm.overview.send":
         ov = content.overviews.get(_str(args, "overview"))
@@ -519,12 +532,21 @@ def _gm_overview(state: GameState, content: Content, kind: str, args: dict, rng)
                 raise _invalid("Sarge's rush has one cook: pick one of the crew")
             events: Events = [("overview.closed", {"char": state.rush.char})] if state.rush and state.rush.char != chars[0] else []
             return events + [("overview.sent", {"kind": ov.id, "chars": chars, "id": f"o{state.seq + 1}", "seed": rng.randrange(2**31)})]
-        return [("overview.sent", {"kind": ov.id, "chars": chars, "id": f"o{state.seq + 1}"})]
+        if ov.race:  # one race at a time: a new one replaces it, on every screen
+            g = content.race
+            if ov.race == "final" and len(chars) != 1:
+                raise _invalid("the final is one player against CSAT-1: pick one of the crew")
+            old = state.race
+            events = [("overview.closed", {"char": c}) for c in old.preps if c not in chars and c in state.overviews] if old else []
+            bots = {c: g.crew[c].model_dump() for c in chars}
+            race = {"final": ov.race == "final", "seed": 1 + rng.randrange(2**31 - 2), "bots": bots, "look": g.look.model_dump()}
+            return events + [("overview.sent", {"kind": ov.id, "chars": chars, "id": f"o{state.seq + 1}", "race": race})]
+        return [("overview.sent", {"kind": ov.id, "chars": chars, "id": f"o{state.seq + 1}"})] + _race_go(state, content, set(chars), now)
     if kind == "gm.overview.recall":
         char = _str(args, "char")
         if char not in content.characters:
             raise _invalid("unknown character")
-        return [("overview.closed", {"char": char})] if char in state.overviews else []
+        return [("overview.closed", {"char": char})] + _race_go(state, content, {char}, now) if char in state.overviews else []
     raise _invalid(f"unknown intent {kind!r}")
 
 
@@ -569,6 +591,59 @@ def _rush_intent(viewer: Viewer, state: GameState, content: Content, kind: str, 
     if at >= rush.ms(g.shift):
         return []
     return [("rush.served", {"id": r.id, "serve": {"k": k, "at": at, **bowl}})]
+
+
+def _race_intent(viewer: Viewer, state: GameState, content: Content, kind: str, args: dict, rng, now: float) -> Events:
+    """A player preps their own bot, in order: dress it, tune it, burn its fuel, rev it. Nobody else touches it, the
+    GM included. Fuel is the one thing a player ever takes out of their own pockets, and only while their prep is open."""
+    r, g = state.race, content.race
+    if not r or not g or not viewer.char or viewer.char not in r.preps:
+        raise _forbid("only the racers prep their bots")
+    char = viewer.char
+    p = r.preps[char]
+    if args.get("id") != r.id or p.level is not None or r.start is not None:
+        return []  # a race that's gone, or a bot that's done
+    ev = {"id": r.id, "char": char}
+
+    if kind == "race.dress":
+        try:
+            look = RaceLook.model_validate(args.get("look"))
+        except ValueError as e:
+            raise _invalid(f"look: {e}") from e
+        name = "".join(ch for ch in str(args.get("name", "")).upper() if ch.isprintable()).strip()[:10]
+        num = "".join(ch for ch in str(args.get("num", "")) if ch in "0123456789")[:2]
+        if look == p.look and name == p.name and num == p.num:
+            return []
+        return [("race.dressed", ev | {"look": look.model_dump(), "name": name, "num": num})]
+
+    if kind == "race.tune":  # one roll of their Tech, on the server's dice like every roll, and no second go
+        if p.tune is not None:
+            return []
+        dice = rules.roll_dice(content.characters[char].stats["tech"], rng)
+        return [("race.tuned", ev | {"dice": dice, "rung": g.tune(dice)})]
+
+    if kind == "race.fuel":  # an item from their own pockets, gone for good, or nothing
+        if p.tune is None:
+            raise _invalid("tune it first")
+        if p.fuel is not None:
+            return []
+        if args.get("uid") is None:
+            return [("race.fueled", ev | {"item": "none"})]
+        e = _held(state, char, _str(args, "uid"))
+        return [("item.taken", {"holder": char, "uid": e.uid}), *_fit(state, content, char, without=e.uid), ("race.fueled", ev | {"item": e.item})]
+
+    if kind == "race.rev":  # where the needle was when their lights went out
+        if p.fuel is None:
+            raise _invalid("fuel it first")
+        level = args.get("level")
+        if not isinstance(level, (int, float)) or isinstance(level, bool) or not math.isfinite(level):
+            raise _invalid("level is where the needle was, 0 to 1")
+        events: Events = [("race.revved", ev | {"level": round(min(1.0, max(0.0, float(level))), 4)})]
+        if all(q.level is not None for c, q in r.preps.items() if c != char):  # the last one in: lights
+            events.append(("race.started", {"id": r.id, "start": round(now + g.lead + (g.intro if r.final else 0), 3)}))
+        return events
+
+    raise _invalid(f"unknown intent {kind!r}")
 
 
 def _slots_key(content: Content, args: dict) -> str:
@@ -833,6 +908,10 @@ def sweep(state: GameState, now: float, online: set[str], content: Content | Non
             events.append(("rush.ended", {"id": r.id} | {k: end[k] for k in ("out", "wrong", "lost", "score", "rank")}))
         if el >= rg.shift + rg.hold:
             events.append(("overview.closed", {"char": r.char}))
+    race, rc = state.race, content.race if content else None
+    if race and rc and race.start is not None and now >= race.start + RACE_LONGEST + rc.hold:  # the TV's result has closed
+        events += [("overview.closed", {"char": c}) for c in race.preps if (o := state.overviews.get(c)) and o.id == race.id]
+        events.append(("race.ended", {"id": race.id}))
     if state.stage.flood and now >= state.stage.flood.ends:
         events.append(("slots.flood_ended", {}))
     if state.stage.opening and state.stage.opening.ends is not None and now >= state.stage.opening.ends:
@@ -908,6 +987,9 @@ def handle(
 
     if kind.startswith("rush."):
         return _rush_intent(viewer, state, content, kind, args, now)
+
+    if kind.startswith("race."):
+        return _race_intent(viewer, state, content, kind, args, rng, now)
 
     if kind == "overview.close":
         # the player is done with it. What they answered stays on their screen
@@ -1098,7 +1180,7 @@ def handle(
         return _gm_stage(state, content, kind, args, now)
 
     if kind.startswith("gm.overview."):
-        return _gm_overview(state, content, kind, args, rng)
+        return _gm_overview(state, content, kind, args, rng, now)
 
     if kind == "gm.slots.service":
         key = _slots_key(content, args)

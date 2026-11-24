@@ -629,11 +629,12 @@ class Overview(Strict):
     survey: Survey | None = None
     golf: GolfGreen | None = None
     rush: bool = False  # Sarge's rush (content/rush.yaml): one cook at a time, and the TV shows it
+    race: Literal["race", "final"] | None = None  # Bot bay racing (content/race.yaml): a race, or the final against CSAT-1
 
     @model_validator(mode="after")
     def _one_game(self) -> "Overview":
-        if sum(map(bool, (self.survey, self.golf, self.rush))) != 1:
-            raise ValueError(f"overview {self.id}: needs a survey, a green or the rush, just one")
+        if sum(map(bool, (self.survey, self.golf, self.rush, self.race))) != 1:
+            raise ValueError(f"overview {self.id}: needs a survey, a green, the rush or a race, just one")
         if self.survey:
             if not self.device or not self.screen:
                 raise ValueError(f"overview {self.id}: a survey needs its device and screen")
@@ -806,6 +807,160 @@ class RushGame(Strict):
     def bins(self) -> dict[str, str]:
         art = self.art.bowl.rsplit("/", 1)[0]
         return {i: f"{art}/bin-{i}.png" for shelf in ("noodles", "broths", "toppings") for i in self.ids(shelf)}
+
+
+LOOK_PARTS = {"spoiler": 5, "stripes": 5, "wheels": 4, "topper": 4, "face": 5, "paint": 4, "lights": 3}  # how many of each (draw.js)
+
+
+class RaceLook(Strict):
+    """A bot's parts, each a place in its list on the prep screen."""
+
+    spoiler: int = 0
+    stripes: int = 0
+    wheels: int = 0
+    topper: int = 0
+    face: int = 0
+    paint: int = 0
+    lights: int = 0
+
+    @model_validator(mode="after")
+    def _in_range(self) -> "RaceLook":
+        for k, n in LOOK_PARTS.items():
+            if not 0 <= getattr(self, k) < n:
+                raise ValueError(f"{k} is 0 to {n - 1}")
+        return self
+
+
+class RaceLaps(Strict):
+    race: int
+    final: int
+
+
+class RaceCrewBot(Strict):
+    name: str
+    num: str
+    color: str
+
+
+class RaceTune(Strict):
+    name: str
+    grip: float
+    from_: int = Field(0, alias="from")  # the lowest total that gets it
+
+
+class RaceRev(Strict):
+    name: str
+    launch: float
+    below: float | None = None  # the needle under this; the last band has none
+
+
+class RaceHouse(Strict):
+    name: str
+    color: str
+    look: RaceLook
+
+
+class RaceStats(Strict):
+    grip: float
+    fuel: float
+    launch: float
+
+
+class RaceChamp(RaceStats):
+    name: str
+    color: str
+    portrait: str
+
+
+class RaceEffect(Strict):
+    fuel: float = 1.0
+    grip: float = 0.0
+    chaos: bool = False
+    stink: bool = False
+
+
+class RaceFuel(Strict):
+    name: str
+    line: str
+    fx: str = "none"
+
+
+class RaceSong(Strict):
+    file: str
+    bars: int
+    bpm: float
+
+    @property
+    def length(self) -> float:
+        """Seconds: the file is exactly one loop, bars of 4/4."""
+        return self.bars * 4 * 60 / self.bpm
+
+
+class RaceMusic(Strict):
+    grid: RaceSong
+    race: RaceSong
+    final: RaceSong
+
+
+class RaceSound(Strict):
+    dir: str
+    volume: float
+    music_volume: float
+    music: RaceMusic
+    effects: list[str]
+    soundboard: dict[str, str]  # a cue -> the soundboard sound it plays
+
+    def file(self, name: str) -> str:
+        return f"{self.dir}/{name}.flac"
+
+    def files(self) -> list[str]:
+        return [self.file(n) for n in self.effects] + [self.file(s.file) for s in (self.music.grid, self.music.race, self.music.final)]
+
+
+class RaceGame(Strict):
+    """Bot bay racing (content/race.yaml): the prep's ladders, the grid's other bots, what fuel does, and the sound."""
+
+    map: str  # the Bot bays by day: the race is drawn over a slice of it
+    laps: RaceLaps
+    lead: float
+    intro: float
+    hold: float
+    crew: dict[str, RaceCrewBot]
+    look: RaceLook
+    tunes: list[RaceTune] = Field(min_length=1)
+    revs: list[RaceRev] = Field(min_length=1)
+    house: list[RaceHouse] = Field(min_length=4)
+    house_bot: RaceStats
+    csat: RaceChamp
+    effects: dict[str, RaceEffect]
+    fallback: RaceFuel
+    fuel: dict[str, RaceFuel]
+    sound: RaceSound
+
+    @model_validator(mode="after")
+    def _ladders(self) -> "RaceGame":
+        if [t.from_ for t in self.tunes] != sorted(t.from_ for t in self.tunes):
+            raise ValueError("tunes go worst first")
+        if any(r.below is None for r in self.revs[:-1]) or self.revs[-1].below is not None:
+            raise ValueError("every rev band but the last has `below`")
+        if "none" not in self.fuel:
+            raise ValueError("fuel needs `none`, for burning nothing")
+        if bad := {f.fx for f in self.fuel.values()} - set(self.effects):
+            raise ValueError(f"unknown effects {sorted(bad)}")
+        return self
+
+    def tune(self, dice: list[int]) -> int:
+        """Which rung of the tune ladder a roll lands on. A natural 1 is the bottom rung, whatever it adds up to."""
+        total = sum(dice)
+        if dice and dice[0] == 1:
+            return 0
+        return max(i for i, t in enumerate(self.tunes) if total >= t.from_)
+
+    def rev(self, level: float) -> RaceRev:
+        return next(r for r in self.revs if r.below is None or level < r.below)
+
+    def fuel_of(self, item: str) -> RaceFuel:
+        return self.fuel.get(item, self.fallback)
 
 
 class SlotsGame(Strict):
@@ -1138,6 +1293,33 @@ class RushState(Strict):
     tally: dict | None = None  # out, wrong, lost, score, rank: set when the shift ends
 
 
+class RaceRoll(Strict):
+    dice: list[int]
+    rung: int  # its place on the tune ladder
+
+
+class RacePrep(Strict):
+    """One player's bot, as they prep it on their laptop: dress, tune, fuel, rev, in that order."""
+
+    look: RaceLook
+    name: str
+    num: str
+    tune: RaceRoll | None = None  # the server's Tech roll
+    fuel: str | None = None  # the item id burned, or "none"; the line it says is all the player ever learns
+    level: float | None = None  # where the needle was when their lights went out: they're done
+
+
+class RaceState(Strict):
+    """A bot bay race, or the final. The players prep; when the last one revs, the TV runs the lights and the race from
+    the seed (web/src/race/sim.ts), the same race on any TV, even one that reloads halfway."""
+
+    id: str  # the overview's sending
+    final: bool
+    seed: int
+    preps: dict[str, RacePrep]  # character -> their bot, in the crew's order
+    start: float | None = None  # server time the lights come on; set when the last one revs
+
+
 class GameState(Strict):
     seq: int = 0  # seq of the last applied event
     rules: int = 0  # the rules version this game is on (RULES); boot brings an older game up to date
@@ -1158,3 +1340,4 @@ class GameState(Strict):
     overviews: dict[str, OverviewState] = {}  # character -> the overview open on their screen, one at a time
     slots: dict[str, SlotBank] = {}  # "map/object" -> the machines there: who's seated, and whether they still work
     rush: RushState | None = None  # Sarge's rush, while it's open on the cook's screen (and so on the TV)
+    race: RaceState | None = None  # Bot bay racing: from the GM sending it until the TV's result has closed

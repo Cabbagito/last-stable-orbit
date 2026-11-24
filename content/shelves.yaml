@@ -11,3 +11,4 @@
 - {id: odd, name: Curios, draw: true}
 - {id: trash, name: Trash, draw: true}
 - {id: food, name: Food and drink}
+- {id: prizes, name: Prizes}  # what Peter awards: the Satisfaction Cup

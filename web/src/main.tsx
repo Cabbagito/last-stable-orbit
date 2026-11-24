@@ -12,6 +12,7 @@ import './styles/rolls.css'
 import './styles/overview.css'
 import './styles/slots.css'
 import './styles/rush.css'
+import './styles/race.css'
 import './styles/keys.css'
 import './styles/login.css'
 

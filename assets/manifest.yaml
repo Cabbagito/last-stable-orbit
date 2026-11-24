@@ -22,6 +22,7 @@ stores:
   ITEMS: https://claude.ai/artifact/TwKnStbVEabCxiFdKqgKLv  # every item on one board; the findables are rendered in a claude.ai session by ui/find_icons_*.py
   KEEPER: https://claude.ai/artifact/G3omhDn8wAePmtBzufSGHv  # the storyboard; rendered in a claude.ai session by cutscenes/keeper_film.py
   RUSH: https://claude.ai/artifact/5aYBgU1YhVv3cr1m1CQvHN  # drawn by minigames/sarge_art.py, sound by mg_sound.py and mg_music.py
+  RACE: https://claude.ai/artifact/5r9V3M158fam1CqMDdEKgn  # Bot bay racing. Sound by minigames/mg_sound.py and mg_music.py, from the kit Peter handed over
 assets:
   - path: maps/event-horizon/base-open.png
     store: MAPS
@@ -2891,3 +2892,88 @@ assets:
     asset_id: "459c642b7a895050d13ba24eb234d151"  # decoded from the canvas's Opus WebM
     sha256: "aa8d90acaf5a5aa039f7d293cf8aef41bcadef90055fa8c65e8975dc4b144897"
     bytes: 121199
+  - path: race/sound/lights_go.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "29aa0531fcea0414f850122a652a0433bcdfb6e7a18e40c5fbc835b12d4abb2f"
+    bytes: 178968
+  - path: race/sound/surge.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "1aebe2449fcbcbc3f77e8d9ec93d6ad96dd85903ebd91166f6232164272686e3"
+    bytes: 38249
+  - path: race/sound/spin.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "3028b1e840f36b5101171b3770562e2033475f873895110735a6178facf07420"
+    bytes: 51508
+  - path: race/sound/crash.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "01f2f1ec0b4a382b8f4cd7a81201938ee95eddb100176f17949cb7ba480e7c06"
+    bytes: 24629
+  - path: race/sound/overheat.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "836ca9efa0e1e2b127f0a8d19019482548c107c90d593388124c7131d2ee5e00"
+    bytes: 86813
+  - path: race/sound/flip.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "2b49bfcc3646c5c644ba728c4129e734c2231dbeb9f677dbf42d4a4c9c30b09e"
+    bytes: 21286
+  - path: race/sound/kick_up.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "a21849510153b5ec8c08a73afc2e70d25df39cf8a52a9c75f317cf953e3d598a"
+    bytes: 11194
+  - path: race/sound/last_lap.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "6a6b877f5f87704837161236a8a2662a428e5062c7d5277a2afbb4ef1e613243"
+    bytes: 35684
+  - path: race/sound/photo_finish.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "b9141054a939b4e55d686acbe92ef9f8906d57bf371ca0954f26bfc1795f1b49"
+    bytes: 83082
+  - path: race/sound/guard.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "319caa6979f4992e182adfb7caadbf680725ce10463c4f04fb26e632200cfbfd"
+    bytes: 42222
+  - path: race/sound/win.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "d402a2f96ef423d08e38d1113b66a60f4d4931581af1787fc1165f671dc73d8c"
+    bytes: 78320
+  - path: race/sound/champion.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "ce916fe8e79d7358b33fd4cd89dd01ef331d6757b4dede6ce0439fb53c482f7f"
+    bytes: 179972
+  - path: race/sound/retains.flac
+    store: RACE
+    asset_id: null  # mg_sound.py's WAV from the kit, as FLAC
+    sha256: "0cf3b9bb5958dede928d8a3130e02f472a7154e08d4f7def0ebb1464a08927a8"
+    bytes: 48878
+  - path: race/sound/music_grid.flac
+    store: RACE
+    asset_id: null  # mg_music.py's FLAC from the kit, one loop long
+    sha256: "53dcdf1cd0727d9d39db24c237fb5148856adcd853e8e6784cfc6ed4cb2151ba"
+    bytes: 2423443
+  - path: race/sound/music_race.flac
+    store: RACE
+    asset_id: null  # mg_music.py's FLAC from the kit, one loop long
+    sha256: "aebc7793feddc4a8392a53ab1c73f1f3381fc35c397df8bc80a1f0f24ce5e0b7"
+    bytes: 6466467
+  - path: race/sound/music_final.flac
+    store: RACE
+    asset_id: null  # mg_music.py's FLAC from the kit, one loop long
+    sha256: "99ae1dc4b35f24d3d99d67a42dddf21bf20ee62da1c4bb3f6f26a082f9483f86"
+    bytes: 6000817
+  - path: icons/items/satisfaction-cup.png
+    store: RACE
+    asset_id: "11879c47bf6e6f1495346cffcac642c6"
+    sha256: "3cd477414ae7a2c77828a7ea0e2426fbd9a033c39e7220ba7017962ce87af308"
+    bytes: 1123

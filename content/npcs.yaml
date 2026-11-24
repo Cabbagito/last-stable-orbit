@@ -585,6 +585,20 @@
   note: Same stall every night for forty years.  # DRAFT
   gm_note: "Her usual, for Sarge's rush: udon in clear broth, with egg and scallion. She orders \"the usual\" and nothing more, and the ticket never spells it out: whoever talked to her knows it."
 
+# Bot bay racing's caller (2026-11-24, the racing canvas and the bible's Minigames). Everything here is DRAFT, and the
+# portrait is the courier's until Lou gets one of their own.
+- id: lou-carrow
+  name: Lou Carrow
+  role: The caller
+  group: Residents
+  portrait: portraits/resident-courier.gif  # DRAFT: a stand-in
+  color: "#a9a2bc"
+  stats: {body: 4, reflex: 6, tech: 6, intel: 6, cool: 10, empathy: 10}  # DRAFT
+  health: 1  # DRAFT
+  mood: Taking bets  # DRAFT
+  note: Stands on the dispatch desk with a megaphone. Calls every race like it's the last one.  # DRAFT
+  gm_note: "Calls the bot races round the dispatch desk in the Bot bays, by day; the station tolerates it \"for satisfaction\". Send Bot bay race (any of the crew) or The final (one, against CSAT-1) from Events. There's no pot in the app: the players bet out loud, and you hand over the purse (150 credits for a race, 300 for the final) and the Satisfaction Cup with the Give picker."  # DRAFT
+
 - id: happy-resident
   name: Happy resident
   role: Resident

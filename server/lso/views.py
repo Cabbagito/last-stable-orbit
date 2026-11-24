@@ -653,6 +653,82 @@ def _rush_view(state: GameState, content: Content, viewer: Viewer) -> dict | Non
     return out
 
 
+def race_entries(state: GameState, content: Content) -> list[dict]:
+    """The grid, as the race reads it (web/src/race/sim.ts, Entry): the players' bots in the crew's order, then house
+    bots up to five, or CSAT-1 in the final. A bot still being prepped races stock until its player is done. The fuel's
+    effects are in here, so only the TV ever gets this."""
+    r, g = state.race, content.race
+    out: list[dict] = []
+    for c, p in r.preps.items():
+        fx = g.effects[g.fuel_of(p.fuel).fx] if p.fuel else g.effects["none"]
+        grip = g.tunes[p.tune.rung].grip if p.tune else g.house_bot.grip
+        launch = g.rev(p.level).launch if p.level is not None else g.house_bot.launch
+        e = {"id": c, "name": p.name or g.crew[c].name, "num": p.num, "color": g.crew[c].color, "look": p.look.model_dump(), "grip": grip + fx.grip, "fuel": fx.fuel, "launch": launch}
+        out += [e | ({"chaos": True} if fx.chaos else {}) | ({"stink": True} if fx.stink else {})]
+    if r.final:
+        cs = g.csat
+        out.append({"id": "csat", "name": cs.name, "color": cs.color, "csat": True, "grip": cs.grip, "fuel": cs.fuel, "launch": cs.launch})
+    else:
+        hb = g.house_bot.model_dump()
+        out += [{"id": f"house{i}", "name": h.name, "color": h.color, "look": h.look.model_dump(), **hb} for i, h in enumerate(g.house[: max(0, 5 - len(out))])]
+    return out
+
+
+def _race_view(state: GameState, content: Content, viewer: Viewer) -> dict | None:
+    """Bot bay racing. A racer gets their own bot's prep and nothing of anyone else's: the line their fuel said, never
+    what it does. The TV gets the whole grid, the seed and the start, and runs the race from them. Everyone else, the
+    GM included, gets nothing: the GM sees who has it open in Events, and watches the TV."""
+    r, g = state.race, content.race
+    if not r or not g:
+        return None
+    if viewer.is_stage:
+        sd = g.sound
+        return {
+            "id": r.id,
+            "final": r.final,
+            "seed": r.seed,
+            "start": r.start,
+            "laps": g.laps.final if r.final else g.laps.race,
+            "intro": g.intro,
+            "hold": g.hold,
+            "entries": race_entries(state, content),
+            "map": url(g.map),
+            "csat": url(g.csat.portrait),
+            "sound": {
+                "volume": sd.volume,
+                "music_volume": sd.music_volume,
+                "files": {n: url(sd.file(n)) for n in sd.effects} | {cue: url(content.sounds[sid].file) for cue, sid in sd.soundboard.items()},
+                "music": {k: {"src": url(sd.file(m.file)), "length": m.length} for k, m in (("grid", sd.music.grid), ("race", sd.music.race), ("final", sd.music.final))},
+            },
+        }
+    p = r.preps.get(viewer.char) if viewer.char else None
+    if not p:
+        return None
+    ch = content.characters[viewer.char]
+    tune = None
+    if p.tune:
+        t = g.tunes[p.tune.rung]
+        tune = {"dice": p.tune.dice, "total": sum(p.tune.dice), "name": t.name, "bad": p.tune.rung == 0}
+    fuel = {"item": p.fuel, "name": g.fuel_of(p.fuel).name, "line": g.fuel_of(p.fuel).line} if p.fuel else None
+    held = state.inventory.get(viewer.char, [])
+    return {
+        "id": r.id,
+        "final": r.final,
+        "color": g.crew[viewer.char].color,
+        "look": p.look.model_dump(),
+        "name": p.name,
+        "num": p.num,
+        "die": ch.stats["tech"],
+        "tune": tune,
+        "fuel": fuel,
+        "done": p.level is not None,
+        "rev": g.rev(p.level).name if p.level is not None else None,
+        "revs": [{"name": x.name, "below": x.below} for x in g.revs],
+        "names": {e.item: g.fuel.get(e.item, g.fallback).name or content.items[e.item].name.upper() for e in held if e.item in content.items},
+        "none": g.fuel["none"].name,
+    }
+
+
 def _slots_view(state: GameState, content: Content, viewer: Viewer) -> dict | None:
     """The machine this player is sitting at. Theirs alone: nobody else, the GM included, hears how it's going."""
     game = content.slots
@@ -707,6 +783,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         "overview": _overview_view(state, content, viewer),
         "slots": _slots_view(state, content, viewer),
         "rush": _rush_view(state, content, viewer),
+        "race": _race_view(state, content, viewer),
     }
     if gm:
         view["roster"] = [
@@ -721,7 +798,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         view["items"] = [_item_view(it, open_, gm=True) for it in content.items.values()]  # the catalogue, for giving
         view["shelves"] = [s.model_dump() for s in content.shelves]  # and the groups it's sorted into
         view["overviews"] = {  # the Events section: what can be sent, and whose screen has one open now
-            "games": [{"id": o.id, "name": o.name} | ({"one": True} if o.rush else {}) for o in content.overviews.values()],
+            "games": [{"id": o.id, "name": o.name} | ({"one": True} if o.rush or o.race == "final" else {}) for o in content.overviews.values()],
             "open": {c: {"kind": o.kind, "id": o.id} for c, o in state.overviews.items()},
         }
     return view

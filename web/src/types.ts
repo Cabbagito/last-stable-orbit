@@ -1,4 +1,5 @@
 // Mirrors server/lso/views.py: project(). Keep the two in step.
+import type { Entry as RaceEntry, Look as RaceLook } from './race/sim'
 import type { RushBowl, RushGame, RushServe } from './rush/sim'
 
 export type Vec3 = [number, number, number]
@@ -472,6 +473,7 @@ export interface View {
   overview: OverviewView | null // the overview open on this player's screen; never anyone else's
   slots: SlotView | null // the slot machine this player is sitting at
   rush: RushView | null // Sarge's rush: the cook's and the TV's, nobody else's
+  race: RacePrepView | RaceTvView | null // Bot bay racing: a racer's own prep, or the TV's whole race; nobody else's
   overviews?: { games: { id: string; name: string; one?: boolean }[]; open: Record<string, { kind: string; id: string }> } // GM only
   station_mood?: StationMood // GM only: the one Day / Night / Alert / Occupied control and the maps that follow it
   map_groups?: MapGroup[] // GM only: how the map picker lays out the station
@@ -567,6 +569,7 @@ export interface SurveyOverview extends OverviewBase {
   survey: Survey
   golf: null
   rush?: false
+  race?: null
 }
 
 export interface GolfOverview extends OverviewBase {
@@ -575,6 +578,7 @@ export interface GolfOverview extends OverviewBase {
   survey: null
   golf: GolfGreen
   rush?: false
+  race?: null
 }
 
 /** Sarge's rush: the shift itself is `View.rush`, which the TV gets too. */
@@ -584,10 +588,54 @@ export interface RushOverview extends OverviewBase {
   survey: null
   golf: null
   rush: true
+  race?: null
+}
+
+/** Bot bay racing: the prep is `View.race`. */
+export interface RaceOverview extends OverviewBase {
+  device: null
+  screen: null
+  survey: null
+  golf: null
+  rush?: false
+  race: 'race' | 'final'
 }
 
 /** An overview the GM sent to this player. */
-export type OverviewView = SurveyOverview | GolfOverview | RushOverview
+export type OverviewView = SurveyOverview | GolfOverview | RushOverview | RaceOverview
+
+/** Bot bay racing, for a racer: their own bot as they prep it. The line their fuel said, never what it does. */
+export interface RacePrepView {
+  id: string
+  final: boolean
+  color: string
+  look: RaceLook
+  name: string
+  num: string
+  die: number // their Tech die, which the tune rolls
+  tune: { dice: number[]; total: number; name: string; bad: boolean } | null
+  fuel: { item: string; name: string; line: string } | null // item "none": burned nothing
+  done: boolean // revved: the TV has it from here
+  rev: string | null
+  revs: { name: string; below: number | null }[]
+  names: Record<string, string> // item id -> its name on the fuel screen
+  none: string
+}
+
+/** Bot bay racing, for the TV: the whole grid and the seed, so it runs the race itself (race/sim.ts). */
+export interface RaceTvView {
+  id: string
+  final: boolean
+  seed: number
+  start: number | null // server time (s) the lights come on; null while they prep
+  laps: number
+  intro: number // the final: CSAT-1 rolls in this long before the lights
+  hold: number // the result stays this long
+  entries: RaceEntry[]
+  map: string
+  csat: string
+  sound: { volume: number; music_volume: number; files: Record<string, string>; music: Record<'grid' | 'race' | 'final', { src: string; length: number }> }
+}
 
 /** Sarge's rush, for the cook and the TV: each plays the shift out from the seed and the serves (rush/sim.ts). */
 export interface RushView {

@@ -13,6 +13,7 @@ import { RollSound } from '../roll/sound'
 import { RingPortrait } from '../shell/RingPortrait'
 import { TvFlood } from '../slots/TvFlood'
 import { TvRush } from '../rush/Rush'
+import { TvRace } from '../race/RaceTv'
 import { useGame } from '../store/game'
 import type { MapView, TokenView, Vec3, View } from '../types'
 import { Downside } from './Downside'
@@ -76,6 +77,7 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
       </div>
       <TvFlood />
       <TvRush sound={started ? sound.current : null} />
+      <TvRace sound={started ? sound.current : null} />
       <Banners where="tv" />
       <RollStage world={world} tv sound={started ? sound.current : null} />
       <Downside />
