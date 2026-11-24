@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { serverClock } from '../net/clock'
 import { bareUrl } from '../stage/JoinCard'
 import { gmRun } from '../store/game'
-import type { Camera, CueView, StageView, View } from '../types'
+import type { Camera, StageView, View } from '../types'
 
 const mss = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`
 
@@ -27,7 +27,7 @@ export function filmOn({ film, opening }: StageView) {
  * that. Play asks twice, and when the film ends the server lets everyone in and turns this off by itself. Reset the
  * game is here rather than in the film, so the intro can be shown without losing the game.
  */
-function OpeningRow({ view }: { view: View }) {
+export function OpeningRow({ view, bare, mark, className = '' }: { view: View; bare?: boolean; mark?: ReactNode; className?: string }) {
   const { opening, tv, opening_film: game } = view.stage
   const [asking, setAsking] = useState<'play' | 'reset' | null>(null)
   const [wasReset, setWasReset] = useState(false)
@@ -62,161 +62,78 @@ function OpeningRow({ view }: { view: View }) {
     setAsking(null)
     void gmRun(kind, {}).then((ack) => ack.ok && after?.())
   }
+  const row = (
+    <div className={'r5-row r12-cue' + (on ? ' on' : '') + className}>
+      <img src={game.still} alt="" className="r12-cthumb" />
+      {bare && <span className="gx-kind film">FILM</span>}
+      <div className="r12-cmeta">
+        <span className="gx-cnamerow">
+          <span className="r12-cname">{game.name}</span>
+          {held && <span className="r12-tag gx-amber">PLAYERS HELD</span>}
+          {mark}
+        </span>
+        <span className="r10-dimtxt" aria-live="polite">
+          {sub}
+        </span>
+        {started && (
+          <>
+            <span className="r12-prog" role="progressbar" aria-label="The opening, playing" aria-valuemin={0} aria-valuemax={Math.round(game.length)} aria-valuenow={Math.round(el)}>
+              <span style={{ width: `${Math.min(100, (el / game.length) * 100)}%` }} />
+            </span>
+            <span className="r12-ptime">{now < filmAt ? 'Starting on the TV…' : `Playing on the TV · ${mss(el)} of ${mss(game.length)}`}</span>
+          </>
+        )}
+      </div>
+      <div className="r12-cact">
+        {!on && (
+          <button type="button" className="r10-btn" disabled={filmOn(view.stage)} onClick={() => set(true)}>
+            Hold players
+          </button>
+        )}
+        {held && !ask && (
+          <>
+            <button type="button" className="r10-btn" onClick={() => setAsking('reset')}>
+              Reset the game
+            </button>
+            <button type="button" className="r10-btn" onClick={() => set(false)}>
+              Let them in
+            </button>
+            <button type="button" className="r10-btn" disabled={!tv} onClick={() => setAsking('play')}>
+              Play
+            </button>
+          </>
+        )}
+        {ask === 'play' && (
+          <>
+            <button type="button" className="r12-go" disabled={!tv} onClick={() => go('gm.opening.play')}>
+              Play it now
+            </button>
+            <button type="button" className="r10-btn" onClick={() => setAsking(null)}>
+              Cancel
+            </button>
+          </>
+        )}
+        {ask === 'reset' && (
+          <>
+            <button type="button" className="r12-go" onClick={() => go('gm.opening.reset', () => setWasReset(true))}>
+              Reset it
+            </button>
+            <button type="button" className="r10-btn" onClick={() => setAsking(null)}>
+              Cancel
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  )
+  if (bare) return row // a row of the Run sheet, under its act
   return (
     <div role="group" aria-label="The opening">
       <div className="gx-sh">
         <span className="r5-sec">Opening</span>
       </div>
-      <div className="r5-rows">
-        <div className={'r5-row r12-cue' + (on ? ' on' : '')}>
-          <img src={game.still} alt="" className="r12-cthumb" />
-          <div className="r12-cmeta">
-            <span className="gx-cnamerow">
-              <span className="r12-cname">{game.name}</span>
-              {held && <span className="r12-tag gx-amber">PLAYERS HELD</span>}
-            </span>
-            <span className="r10-dimtxt" aria-live="polite">
-              {sub}
-            </span>
-            {started && (
-              <>
-                <span className="r12-prog" role="progressbar" aria-label="The opening, playing" aria-valuemin={0} aria-valuemax={Math.round(game.length)} aria-valuenow={Math.round(el)}>
-                  <span style={{ width: `${Math.min(100, (el / game.length) * 100)}%` }} />
-                </span>
-                <span className="r12-ptime">{now < filmAt ? 'Starting on the TV…' : `Playing on the TV · ${mss(el)} of ${mss(game.length)}`}</span>
-              </>
-            )}
-          </div>
-          <div className="r12-cact">
-            {!on && (
-              <button type="button" className="r10-btn" disabled={filmOn(view.stage)} onClick={() => set(true)}>
-                Hold players
-              </button>
-            )}
-            {held && !ask && (
-              <>
-                <button type="button" className="r10-btn" onClick={() => setAsking('reset')}>
-                  Reset the game
-                </button>
-                <button type="button" className="r10-btn" onClick={() => set(false)}>
-                  Let them in
-                </button>
-                <button type="button" className="r10-btn" disabled={!tv} onClick={() => setAsking('play')}>
-                  Play
-                </button>
-              </>
-            )}
-            {ask === 'play' && (
-              <>
-                <button type="button" className="r12-go" disabled={!tv} onClick={() => go('gm.opening.play')}>
-                  Play it now
-                </button>
-                <button type="button" className="r10-btn" onClick={() => setAsking(null)}>
-                  Cancel
-                </button>
-              </>
-            )}
-            {ask === 'reset' && (
-              <>
-                <button type="button" className="r12-go" onClick={() => go('gm.opening.reset', () => setWasReset(true))}>
-                  Reset it
-                </button>
-                <button type="button" className="r10-btn" onClick={() => setAsking(null)}>
-                  Cancel
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
+      <div className="r5-rows">{row}</div>
     </div>
-  )
-}
-
-/**
- * Round 12's Cutscenes section (board R12TabCutscenes): the opening, then the cue list in the order you'll use them.
- * Play asks twice, because a film can't be stopped once it starts, and waits for the TV, the only screen that plays
- * films. The cue sets the map behind the film.
- */
-export function CutscenesSection({ view }: { view: View }) {
-  const { film, tv } = view.stage
-  const cues = view.stage.cues ?? []
-  const [armed, setArmed] = useState<string | null>(null)
-  const now = serverClock.now() / 1000
-  const held = !!view.stage.opening
-  const busy = held || filmOn(view.stage)
-  useTick(busy)
-  const line = held ? 'The films wait until the opening has ended.' : busy ? 'A film is on the TV. The laptops are dark until it ends.' : tv ? '' : 'No TV, so Play waits for it.'
-
-  const play = async (q: CueView) => {
-    setArmed(null)
-    await gmRun('gm.film.play', { cue: q.id })
-  }
-
-  return (
-    <section className="gx-cues" aria-label="Cutscenes">
-      <div className="gx-h2row">
-        <div className="gx-h2">Cutscenes</div>
-        {line && (
-          <div className="r10-hint" aria-live="polite">
-            {line}
-          </div>
-        )}
-      </div>
-      <OpeningRow view={view} />
-      {[...new Set(cues.map((q) => q.act))].map((act) => (
-        <div key={act} role="group" aria-label={act}>
-          <div className="gx-sh">
-            <span className="r5-sec">{act}</span>
-          </div>
-          <div className="r5-rows">
-            {cues.filter((q) => q.act === act).map((q) => {
-              const playing = busy && film?.cue === q.id
-              const el = playing && film ? Math.max(0, now - film.at) : 0
-              const len = q.length ?? 0
-              return (
-                <div key={q.id} className={'r5-row r12-cue' + (playing ? ' on' : '') + (q.ready ? '' : ' off')}>
-                  {q.still ? <img src={q.still} alt="" className="r12-cthumb" /> : <span className="r12-cthumb r12-none">NOT MADE YET</span>}
-                  <div className="r12-cmeta">
-                    <span className="r12-cname">{q.name}</span>
-                    <span className="r10-dimtxt">{q.sub}</span>
-                    {q.ends && <span className="r12-cend">{q.ends}</span>}
-                    {playing && film && (
-                      <>
-                        <span className="r12-prog" role="progressbar" aria-label={`${q.name}, playing`} aria-valuemin={0} aria-valuemax={Math.round(len)} aria-valuenow={Math.round(el)}>
-                          <span style={{ width: `${len ? Math.min(100, (el / len) * 100) : 0}%` }} />
-                        </span>
-                        <span className="r12-ptime">
-                          {now < film.at ? 'Starting on the TV…' : `Playing on the TV · ${mss(el)} of ${mss(len)}`}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                  <div className="r12-cact">
-                    {!q.ready && <span className="r12-tag">NOT MADE YET</span>}
-                    {q.ready && !playing && armed !== q.id && (
-                      <button type="button" className="r10-btn" disabled={busy || !tv} onClick={() => setArmed(q.id)}>
-                        Play
-                      </button>
-                    )}
-                    {q.ready && armed === q.id && !busy && tv && (
-                      <>
-                        <button type="button" className="r12-go" onClick={() => void play(q)}>
-                          Play it now
-                        </button>
-                        <button type="button" className="r10-btn" onClick={() => setArmed(null)}>
-                          Cancel
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      ))}
-    </section>
   )
 }
 

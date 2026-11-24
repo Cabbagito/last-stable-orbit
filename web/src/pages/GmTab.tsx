@@ -1,13 +1,12 @@
 import { useEffect, useState, type DragEvent } from 'react'
 import { Bench, Seats } from '../gm/Bench'
 import { CodexSection } from '../gm/CodexSection'
-import { EventsSection } from '../gm/EventsSection'
 import { StationButtons, liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
 import { crewFaces, isFar, moodArt } from '../gm/mapTiles'
 import { ENTROPY_CAP, Eye, GIVE_COUNTED, HEALTH_CAP, Pocket, Step, byShelf, itemAria, onShelf } from '../gm/parts'
 import { ChromeMenu } from '../gm/Pickers'
 import { SendCrew } from '../gm/SendCrew'
-import { CutscenesSection, TvSection } from '../gm/StageSections'
+import { RunSection } from '../gm/RunSection'
 import { ViewAs } from '../gm/ViewAs'
 import { useItemTip, type TipBind } from '../inspect/ItemTip'
 import { ring } from '../lib/ring'
@@ -15,14 +14,13 @@ import { RingPortrait } from '../shell/RingPortrait'
 import { gmRun, useGame } from '../store/game'
 import type { CrewMember, InvEntry, Item, MapView, View } from '../types'
 
-type Section = 'pockets' | 'show' | 'maps' | 'codex' | 'acts' | 'bench' | 'seats'
+type Section = 'pockets' | 'run' | 'maps' | 'codex' | 'bench' | 'seats'
 
 const SECTIONS: [Section, string][] = [
   ['pockets', 'Pockets'],
-  ['show', 'On screen'],
+  ['run', 'Run'],
   ['maps', 'Maps'],
   ['codex', 'Codex'],
-  ['acts', 'Acts'],
 ]
 const SANDBOX: [Section, string][] = [
   ['bench', 'Bench'],
@@ -32,7 +30,8 @@ const SANDBOX: [Section, string][] = [
 /** `#gm/maps`: the section is in the URL, so a reload keeps your place. */
 function useSection(all: [Section, string][]): Section {
   const read = () => {
-    const s = location.hash.slice(1).split('/')[1] as Section
+    const raw = location.hash.slice(1).split('/')[1]
+    const s = (raw === 'show' || raw === 'acts' ? 'run' : raw) as Section // the two pages Run replaced
     return all.some(([id]) => id === s) ? s : 'pockets'
   }
   const [section, setSection] = useState(read)
@@ -72,10 +71,9 @@ export function GmTab() {
       </div>
       <div className="gx-body">
         {section === 'pockets' && <PocketsSection view={view} onView={setViewAs} />}
-        {section === 'show' && <OnScreen view={view} />}
+        {section === 'run' && <RunSection view={view} />}
         {section === 'maps' && <MapsSection view={view} />}
         {section === 'codex' && <CodexSection view={view} />}
-        {section === 'acts' && <ActsSection view={view} />}
         {section === 'bench' && view.bench && <Bench view={view} bench={view.bench} />}
         {section === 'seats' && view.bench && <Seats view={view} />}
       </div>
@@ -315,18 +313,6 @@ function CountInput({ value, label, onCommit }: { value: number; label: string; 
 }
 
 /** Everything you put on people's screens: films, little games, and the TV. */
-function OnScreen({ view }: { view: View }) {
-  return (
-    <div className="gx-show">
-      <CutscenesSection view={view} />
-      <div className="gx-showcol">
-        <TvSection view={view} />
-        <EventsSection view={view} />
-      </div>
-    </div>
-  )
-}
-
 /** Every map on one page, in the picker's three places: who's there, its mood and its switches. The station's one control is on top. */
 function MapsSection({ view }: { view: View }) {
   const station = view.station_mood
@@ -408,52 +394,3 @@ function MapRow({ view, m, under }: { view: View; m: MapView; under: number }) {
   )
 }
 
-/**
- * Where to start the night: one picture for each. Loading one only moves things: everyone's position, the NPCs and each
- * map's mood. HP, Entropy, pockets and the Codex stay as they are.
- */
-function ActsSection({ view }: { view: View }) {
-  const [picked, setPicked] = useState<string | null>(null)
-  const presets = view.presets ?? []
-  const load = async (id: string) => {
-    const ack = await gmRun('gm.world.load_preset', { preset: id, scene: true })
-    setPicked(null)
-    if (!ack.ok) return
-    useGame.setState({ gmMap: null }) // the Scene goes to wherever the party now is
-    location.hash = 'scene'
-  }
-  return (
-    <section className="gx-session" aria-label="Acts">
-      {[...new Set(presets.map((p) => p.act))].map((act) => (
-        <div key={act} role="group" aria-label={act}>
-          <div className="gx-sh">
-            <span className="r5-sec">{act}</span>
-          </div>
-          <div className="gx-cards">
-            {presets.filter((p) => p.act === act).map((p) => (
-              <div key={p.id} className={'gx-card' + (picked === p.id ? ' on' : '')}>
-                <button type="button" className="gx-cardpick" aria-pressed={picked === p.id} onClick={() => setPicked(picked === p.id ? null : p.id)}>
-                  {p.card && <img src={p.card} alt="" />}
-                  <span className="gx-cardt">
-                    <span className="gx-cardn">{p.name}</span>
-                    <span className="gx-cardb">{p.blurb}</span>
-                  </span>
-                </button>
-                {picked === p.id && (
-                  <div className="gx-cardgo" role="alertdialog" aria-label={`Load ${p.name}?`}>
-                    <button type="button" className="r12-go" title="Moves everyone, places the NPCs, sets every map's mood, and ends any fight. HP, Entropy, pockets and the Codex stay as they are." onClick={() => void load(p.id)}>
-                      Load it
-                    </button>
-                    <button type="button" className="r10-btn" onClick={() => setPicked(null)}>
-                      Cancel
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-    </section>
-  )
-}

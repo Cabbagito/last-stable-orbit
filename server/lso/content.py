@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, Opening, Overview, Preset, PresetItem, RushGame, Scenario, Shelf, SlotsGame, Sound, SoundCategory, Station
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, RunAct, Opening, Overview, Preset, PresetItem, RushGame, Scenario, Shelf, SlotsGame, Sound, SoundCategory, Station
 
 log = logging.getLogger("lso.content")
 
@@ -29,6 +29,7 @@ class Content:
     scenarios: dict[str, Scenario] = field(default_factory=dict)  # the sandbox's setups to test from
     map_groups: list[MapGroup] = field(default_factory=list)  # the GM's map picker
     insults: dict[str, list[str]] = field(default_factory=dict)  # "any" plus one pool per stat
+    runsheet: list[RunAct] = field(default_factory=list)  # the GM's Run page: every film and scene, in play order
     cutscenes: dict[str, Cutscene] = field(default_factory=dict)  # in the order the GM will use them
     opening: Opening | None = None  # the waiting loop and the intro film
     codex: dict[str, CodexEntry] = field(default_factory=dict)  # in reading order within each section
@@ -96,6 +97,8 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
     c.map_groups = [_parse(MapGroup, g, "map_groups.yaml") for g in _read(content_dir / "map_groups.yaml")]
     cut = content_dir / "cutscenes.yaml"
     c.cutscenes = _by_id(Cutscene, _read(cut), "cutscenes.yaml") if cut.is_file() else {}
+    run = content_dir / "runsheet.yaml"
+    c.runsheet = [_parse(RunAct, a, "runsheet.yaml") for a in _read(run)] if run.is_file() else []
     op = content_dir / "opening.yaml"
     c.opening = _parse(Opening, _read(op), "opening.yaml") if op.is_file() else None
     board = content_dir / "soundboard.yaml"
@@ -244,6 +247,11 @@ def check_refs(c: Content) -> None:
     for s in c.shelves:
         if s.draw and not any(it.shelf == s.id and not it.counted for it in c.items.values()):
             problems.append(f"shelves.yaml: {s.id} has Draw, and nothing to draw")
+    problems += [f"cutscenes.yaml: {q.id} brings unknown preset {q.then!r}" for q in c.cutscenes.values() if q.then and q.then not in c.presets]
+    steps = [st for a in c.runsheet for st in a.steps]
+    problems += [f"runsheet.yaml: unknown film {st.film!r}" for st in steps if st.film and st.film != "opening" and st.film not in c.cutscenes]
+    problems += [f"runsheet.yaml: unknown scene {st.scene!r}" for st in steps if st.scene and st.scene not in c.presets]
+    problems += [f"runsheet.yaml: {i} is listed twice" for i in {st.id for st in steps} if [x.id for x in steps].count(i) > 1]
     listed = [e.map for g in c.map_groups for e in g.entries()]
     problems += [f"map_groups.yaml: unknown map {m!r}" for m in listed if m not in c.maps]
     problems += [f"map_groups.yaml: {m} is listed twice" for m in set(listed) if listed.count(m) > 1]

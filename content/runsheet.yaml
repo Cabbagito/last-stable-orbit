@@ -1,0 +1,33 @@
+# The GM's Run page: every film and scene of the campaign, in the order it's played (the UI review canvas,
+# "Round 4: run sheet"). A film is a cue's id from cutscenes.yaml, or `opening`. A scene is a preset's id.
+# The order is only a suggestion on the page: every row works at any time. To change it, move lines here.
+# A film that brings its scene (Welcome to the Vigil) has `then:` on its cue, and is one row.
+- act: "Act 1: The Pitch"
+  steps:
+    - {film: opening}
+    - {scene: session-1-arrival}
+    - {scene: session-1-day}
+    - {scene: session-1-night}
+    - {film: lucan}
+    - {scene: session-1}
+    - {film: act-1}
+- act: "Act 2: The Vigil"
+  steps:
+    - {film: vigil}
+    - {scene: session-2-afternoon}
+    - {film: act-2}
+- act: "Act 3: The Job"
+  steps:
+    - {scene: session-3-heist}
+    - {film: vault-opens}
+    - {film: shotgun}
+- act: "Act 4: Hostile Takeover"
+  steps:
+    - {scene: session-4-shotgun}
+    - {film: keepers-end}
+    - {scene: session-4-hidey-hole}
+- act: "Final act: Terminal"
+  steps:
+    - {scene: session-4-lift-station}
+    - {film: ride-down}
+    - {film: thank-you}

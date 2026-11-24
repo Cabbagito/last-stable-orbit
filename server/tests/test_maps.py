@@ -396,3 +396,22 @@ def test_one_press_sets_every_map_that_follows_the_station(content, tmp_path):
     st = project(e.state, content, GM)["station_mood"]
     assert [x["label"] for x in st["states"]] == ["Day", "Night", "Alert", "Occupied"] and set(st["maps"]) == follows
     assert "station_mood" not in project(e.state, content, VES)
+
+
+def test_the_run_sheet_lists_every_film_and_scene_and_follows_what_is_pressed(content, tmp_path):
+    """UI review, round 4: GM › Run. Every cue, the opening and every preset has one row; pressing a scene or a film
+    moves "you are here"; a film that brings its scene loads it; and players never get the sheet."""
+    from lso.commands import handle
+
+    steps = [s for a in content.runsheet for s in a.steps]
+    assert {s.film for s in steps if s.film} == set(content.cutscenes) | {"opening"}
+    assert {s.scene for s in steps if s.scene} == set(content.presets) - {q.then for q in content.cutscenes.values() if q.then}
+    e = Engine(content, Store(tmp_path / "r.db"), clock=lambda: 1000.0)
+    assert project(e.state, content, GM)["stage"]["run"]["at"] is None
+    events = handle(GM, e.state, content, "gm.world.load_preset", {"preset": "session-1-day", "scene": True})
+    assert events[-1] == ("run.at_set", {"step": "scene:session-1-day"})
+    events = handle(GM, e.state, content, "gm.film.play", {"cue": "vigil"}, now=1000.0)
+    kinds = [k for k, _ in events]
+    assert kinds == ["film.started", "run.at_set", "world.loaded"]
+    assert events[1][1] == {"step": "film:vigil"} and events[2][1]["preset"] == "session-2-vigil" and events[2][1]["scene"] is True
+    assert "run" not in project(e.state, content, VES)["stage"]

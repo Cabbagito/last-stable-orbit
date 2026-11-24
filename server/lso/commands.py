@@ -397,6 +397,9 @@ def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: fl
             events.append(("film.ended", {"cue": state.stage.film.cue}))
         at = round(now + FILM_LEAD, 3)
         events.append(("film.started", {"cue": cue.id, "at": at, "ends": round(at + cue.length, 3)}))
+        events.append(("run.at_set", {"step": f"film:{cue.id}"}))
+        if cue.then:  # the film brings its scene: the preset loads behind it, as "Load it" would
+            return events + [("world.loaded", {"preset": cue.then, "state": state_from_preset(content.presets[cue.then], content), "scene": True})]
         return events + _cue_sets(state, content, cue)
 
     if film_playing(state, now):
@@ -468,13 +471,14 @@ def _gm_opening(state: GameState, content: Content, kind: str, args: dict, now: 
             raise _invalid("the film has already started")
         film_at = beat_after(o.loop_at, now, game.beat)
         events: Events = [("opening.started", {"film_at": film_at, "ends": round(film_at + game.length, 3)})]
+        events.append(("run.at_set", {"step": "film:opening"}))
         return events + ([("stage.join_set", {"show": False})] if state.stage.join else [])  # everyone's in
 
     if kind == "gm.opening.reset":  # a button, not the film, so the intro can be watched without losing the game
         if o is None or o.film_at is not None:
             raise _invalid("the game can only be reset while the players are held")
         start = content.presets[game.resets_to]
-        return [("world.loaded", {"preset": start.id, "state": state_from_preset(start, content)})]
+        return [("world.loaded", {"preset": start.id, "state": state_from_preset(start, content)}), ("run.at_set", {"step": None})]
 
     raise _invalid(f"unknown intent {kind!r}")
 
@@ -1113,6 +1117,6 @@ def handle(
         if not preset:
             raise _invalid("unknown preset")
         data = {"preset": preset.id, "state": state_from_preset(preset, content)}
-        return [("world.loaded", data | {"scene": True} if args.get("scene") is True else data)]
+        return [("world.loaded", data | {"scene": True} if args.get("scene") is True else data), ("run.at_set", {"step": f"scene:{preset.id}"})]
 
     raise _invalid(f"unknown intent {kind!r}")

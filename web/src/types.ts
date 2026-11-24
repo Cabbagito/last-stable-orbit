@@ -362,6 +362,14 @@ export interface CueView {
   still: string | null
   length: number | null
   ready: boolean // its film is made
+  then?: string | null // a preset the film brings with it, loaded as it starts
+}
+
+/** One row of the GM's Run sheet: a film (a cue's id, or `opening`) or a scene (a preset's id). */
+export interface RunStepView {
+  id: string
+  kind: 'film' | 'scene'
+  ref: string
 }
 
 /** The join card: only the TV and the GM get it, and only when the server has one. */
@@ -402,6 +410,7 @@ export interface StageView {
   film: FilmView | null
   opening?: OpeningView | null // the TV and the GM
   opening_film?: { name: string; sub: string; still: string; length: number } // GM only
+  run?: { acts: { act: string; steps: RunStepView[] }[]; at: string | null } // GM only: the Run sheet, and the row last pressed
   held?: { loop: string; still: string; rolling?: boolean } // a player only: the opening is on. Their own Codex page, then once Play is pressed (rolling) the waiting loop
   burn: BurnView | null
   npc_burn?: NpcBurnView // the GM and the TV only: an NPC's Burn playing now

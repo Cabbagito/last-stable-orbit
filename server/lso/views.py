@@ -541,9 +541,15 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
                 "still": url(c.still),
                 "length": c.length,
                 "ready": bool(c.file),
+                "then": c.then,
             }
             for c in content.cutscenes.values()
         ]
+        # the Run page: every film and scene in play order, and the row the GM last pressed
+        out["run"] = {
+            "acts": [{"act": a.act, "steps": [{"id": x.id, "kind": "film" if x.film else "scene", "ref": x.film or x.scene} for x in a.steps]} for a in content.runsheet],
+            "at": st.run_at,
+        }
         out["soundboard"] = [{"id": c.id, "name": c.name, "sounds": [{"id": s.id, "name": s.name} for s in c.sounds]} for c in content.soundboard]
     if viewer.is_stage:
         out["films"] = [url(c.file) for c in content.cutscenes.values() if c.file]  # fetched ahead, so a cue starts at once

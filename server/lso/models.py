@@ -358,6 +358,7 @@ class Cutscene(Strict):
     length: float | None = None  # seconds; required with a file
     still: str | None = None  # the GM's thumbnail; never sent to players
     sets: CueSets | None = None
+    then: str | None = None  # a preset this film brings with it: loaded as the film starts, in place of `sets`
 
     @model_validator(mode="after")
     def _made(self) -> "Cutscene":
@@ -1040,6 +1041,28 @@ class FloodState(Strict):
     paid: list[int]  # what each machine paid
 
 
+class RunStep(Strict):
+    """One row of the GM's run sheet: a film (a cue's id, or `opening`) or a scene (a preset's id)."""
+
+    film: str | None = None
+    scene: str | None = None
+
+    @model_validator(mode="after")
+    def _one(self) -> "RunStep":
+        if bool(self.film) == bool(self.scene):
+            raise ValueError("a run sheet step is a film or a scene")
+        return self
+
+    @property
+    def id(self) -> str:
+        return f"film:{self.film}" if self.film else f"scene:{self.scene}"
+
+
+class RunAct(Strict):
+    act: str
+    steps: list[RunStep]
+
+
 class StageState(Strict):
     """The TV: its camera, and the film or Burn playing now, if any."""
 
@@ -1054,6 +1077,7 @@ class StageState(Strict):
     flood: FloodState | None = None
     join: bool = True  # the join card is on the TV, if the server has one, until the GM hides it
     sounds: list[SoundPlayed] = []  # the last few soundboard presses, for the TV
+    run_at: str | None = None  # the run sheet row the GM last pressed (a RunStep's id): "you are here"
 
 
 class SlotSeat(Strict):

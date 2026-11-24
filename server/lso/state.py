@@ -225,6 +225,8 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "party.map_set":
         s.party_map = data["map"]
         s.stage.pan = (0, 0)  # the shot starts centred on the new map
+    elif ev_type == "run.at_set":
+        s.stage.run_at = data["step"]
     elif ev_type == "film.started":
         s.stage.film = FilmState.model_validate(data)
     elif ev_type == "film.ended":

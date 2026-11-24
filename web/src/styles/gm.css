@@ -468,3 +468,21 @@
 .gx-station{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:4px 0 14px}
 .gx-station small{color:#8a8e96;font-size:12.5px}
 .gx-follows{font-size:12.5px;padding:0 4px;align-self:center}
+
+/* UI review, round 4: GM › Run, the films and scenes in one list (gm/RunSection.tsx). */
+.gx-run{gap:6px}
+.gx-next{display:flex;align-items:center;gap:16px;border:1px solid #2f3238;padding:10px 14px 10px 10px;margin-bottom:8px}
+.gx-next .r12-cthumb{width:128px;height:72px}
+.gx-nextk{color:#ff7dbb}
+.gx-nextn{font-family:'Jost',sans-serif;font-weight:300;font-size:24px;color:#fff;line-height:1.1}
+.gx-kind{font-family:'Michroma',sans-serif;font-size:7.5px;letter-spacing:.16em;width:44px;flex:none}
+.gx-kind.film{color:#ff7dbb}
+.gx-kind.scene{color:#9db8ff}
+.r12-tag.gx-here{color:#eceef1;box-shadow:0 0 0 1px #5e626a}
+.r12-tag.gx-nexttag{color:#ff7dbb;box-shadow:0 0 0 1px #ff4fa3}
+.r12-tag.gx-link{color:#9db8ff;box-shadow:0 0 0 1px #44506e}
+.gx-run .r12-cue{box-shadow:inset 3px 0 0 transparent;padding-left:10px}
+.gx-run .r12-cue.gx-rhere{background:#0d0f12;box-shadow:inset 3px 0 0 #eceef1}
+.gx-run .r12-cue.gx-rnext{background:#180c13;box-shadow:inset 3px 0 0 #ff4fa3}
+.gx-run .r12-cue.gx-rdone>*{opacity:.72}
+.r10-btn.gx-nextbtn{border-color:#ff4fa3;color:#ff7dbb}

@@ -39,13 +39,11 @@
   name: Welcome to the Vigil
   act: "Act 2: The Vigil"
   sub: 37 s, opens session 2
-  ends: Ends on the Secure floor packed for the silence, with the crew in the crowd. Load The Vigil preset with it.
+  ends: Ends on the Secure floor packed for the silence, with the crew in the crowd. The Vigil loads with it.
   file: films/vigil.mp4
   length: 36.7
   still: films/vigil-still.png
-  sets:
-    map: secure
-    mood: day
+  then: session-2-vigil  # the film brings its scene: the preset loads behind it (and does what `sets` would)
 
 - id: act-2
   name: Lights Out
@@ -83,7 +81,7 @@
 
 - id: keepers-end
   name: The Keeper's End
-  act: "Final act: Terminal"
+  act: "Act 4: Hostile Takeover"
   sub: 41 s, session 4, once the crew are out of the bar
   ends: Ends on black, after Dax under the mural. Lucan and his dog found him alone, so it plays the same whether he fought beside the crew or not. Nothing changes on the maps.
   file: films/keepers-end.mp4
