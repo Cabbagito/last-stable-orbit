@@ -129,6 +129,18 @@ body {
 .app-fixedtok {
   cursor: pointer;
 }
+/* A token moved by someone else glides to where it went, on the laptops and the TV. The one you're dragging doesn't. */
+.r3-tok {
+  transition: left 0.16s ease-out, top 0.16s ease-out;
+}
+.r3-tok.app-tokfree {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .r3-tok {
+    transition: none;
+  }
+}
 .app-rail {
   position: absolute;
   right: 16px;

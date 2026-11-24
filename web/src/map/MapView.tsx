@@ -31,6 +31,7 @@ const ZMIN = 0.3
 const ZMAX = 3
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
 const DRAG_HZ = 50 // ms between live drag frames
+const DROP_STILL = 400 // ms after you drop a token before it eases again
 const YOU = '#5ee08c' // your own chip's stem and the ring at its feet
 
 /** One isometric map: art layers per mood and switch, tokens on top, pan / zoom / drag. */
@@ -40,6 +41,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
   const [cam, setCam] = useState<Cam | null>(null)
   const fittedFor = useRef<string | null>(null)
   const gesture = useRef<Gesture | null>(null)
+  const dropped = useRef<Record<string, number>>({}) // tokens you just let go of: they don't glide until the server has caught up
   const remote = useGame((s) => s.remote)
   const local = useGame((s) => s.local)
   const selected = useGame((s) => s.selected)
@@ -269,6 +271,7 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
     if (g.kind === 'tok') {
       if (g.moved) {
         const token = g.token
+        dropped.current[token] = performance.now() + DROP_STILL
         send('token.move', { token, at: g.at }).then(() => {
           if (useGame.getState().local?.token === token) setLocal(null)
         })
@@ -312,11 +315,13 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
             const down = crew ? crew.hp <= 0 : !!fighter && fighter.hp <= 0
             const burn = burning && t.kind === 'crew' && t.ref === burning.char ? burning : null
             const call = burn ? undefined : callouts[t.id] // a Burn's mark takes the roll callout's place
+            // everyone else's moves glide (app.css, .r3-tok); the token under your own hand follows it exactly
+            const free = local?.token === t.id || performance.now() < (dropped.current[t.id] ?? 0)
             return (
               <button
                 key={t.id}
                 type="button"
-                className={'r3-tok' + (t.hidden ? ' app-hiddentok' : '') + (canMove(t) ? '' : ' app-fixedtok') + (isTurn ? ' app-tokturn' : '')}
+                className={'r3-tok' + (t.hidden ? ' app-hiddentok' : '') + (canMove(t) ? '' : ' app-fixedtok') + (isTurn ? ' app-tokturn' : '') + (free ? ' app-tokfree' : '')}
                 aria-label={t.name + (mine ? ' (you)' : '') + (t.hidden ? ' (hidden from players)' : '') + (isTurn ? ', their turn' : '') + (call ? `, ${calloutSpeech(call.r)}` : '') + (burn ? `, ${burnSpeech(burn)}` : '')}
                 onPointerDown={(e) => onTokenDown(e, t)}
                 onPointerEnter={() => setHover(t.id)}
