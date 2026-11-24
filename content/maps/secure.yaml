@@ -11,6 +11,8 @@ display: [3320, 2020]
 origin: [700, 150]
 order: 8
 hum: none
+# It follows the station: the GM's one Day / Night / Alert / Occupied control sets this map with the others.
+station: {day: day, night: night, alert: alert, takeover: takeover}
 moods:
   - {id: day, label: Day, base: maps/secure/base-day.png}
   - {id: night, label: Night, base: maps/secure/base-night.png}
@@ -71,3 +73,14 @@ pins:
   - {k: "G", label: "Old scanner booth and barrier arms", at: [26.83, 0.5, 1.39]}
 # Where the crew land when you send them here: inside the door from deck 8, in crew order.
 arrive: [[13.8, 20.6, 0], [14.8, 20.6, 0], [15.8, 20.6, 0], [14.3, 19.7, 0], [15.3, 19.7, 0]]
+# What moves by itself here (the Secure sign, the vault door's ring, the floor ring, the cameras, the keypad, the glass case, the lift's lamp, dust). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", at: [2704, 756], size: [220, 120], color: "170,215,255", beat: "stutter"}
+  - {kind: "glow", at: [2280, 650], size: [260, 260], color: "255,200,110", beat: "slow"}
+  - {kind: "glow", at: [1636, 1096], size: [440, 220], color: "255,200,110", beat: "slow"}
+  - {kind: "glow", points: [[730, 456], [2076, 456], [2840, 836]], step: 1.1, size: [44, 44], color: "255,80,60", beat: "slow"}
+  - {kind: "glow", at: [2480, 756], size: [100, 120], color: "150,190,255", beat: "screen"}
+  - {kind: "glow", at: [1396, 320], size: [120, 100], color: "170,215,255", beat: "twinkle"}
+  - {kind: "glow", at: [2580, 1336], size: [60, 60], color: "255,170,60", beat: "blink"}
+  - {kind: "dust", box: [400, 600, 2600, 1600], count: 22, color: "255,238,205"}

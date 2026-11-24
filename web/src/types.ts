@@ -159,6 +159,13 @@ export interface AmbientDef {
   moods: string[]
 }
 
+/** The station's four states, the maps that follow them, and the state those maps are all in (null when a preset left them apart). */
+export interface StationMood {
+  states: { id: string; label: string }[]
+  maps: string[]
+  state: string | null
+}
+
 export interface MapView {
   id: string
   name: string
@@ -455,6 +462,7 @@ export interface View {
   overview: OverviewView | null // the overview open on this player's screen; never anyone else's
   slots: SlotView | null // the slot machine this player is sitting at
   overviews?: { games: { id: string; name: string }[]; open: Record<string, { kind: string; id: string }> } // GM only
+  station_mood?: StationMood // GM only: the one Day / Night / Alert / Occupied control and the maps that follow it
   map_groups?: MapGroup[] // GM only: how the map picker lays out the station
   bench?: BenchView // GM only, and only in the sandbox
 }

@@ -34,3 +34,10 @@ pins:
   - {k: C, label: Bench, at: [-0.56, 6.04, 0.5]}
 # Where the crew land when you send them here: on the rug, just inside the bronze door, in crew order.
 arrive: [[3.67, 6.33, 0], [4.83, 6.5, 0], [2.5, 5.5, 0], [4.0, 5.33, 0], [5.25, 7.42, 0]]
+# What moves by itself here (the desk lamp, the ring on the wall, the recorder's light, dust in the lamplight). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", at: [796, 420], size: [120, 112], color: "255,200,120", beat: "candle"}
+  - {kind: "glow", at: [1036, 320], size: [260, 260], color: "255,200,110", beat: "slow"}
+  - {kind: "glow", at: [936, 516], size: [36, 28], color: "255,80,60", beat: "slow"}
+  - {kind: "dust", box: [300, 300, 1240, 840], count: 18, color: "255,238,205"}

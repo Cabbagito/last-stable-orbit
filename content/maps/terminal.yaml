@@ -65,3 +65,12 @@ pins:
   - {k: B, label: Ribs that light up when the Seal goes in, at: [2.4, -2.4, 3]}
 # Where the crew land when you send them here: on the glass, in from the crawler door, in crew order.
 arrive: [[9.0, 11.0, 0], [9.0, 10.0, 0], [10.33, 10.33, 0], [7.83, 10.17, 0], [9.5, 9.17, 0]]
+# What moves by itself here (the hole under the floor shimmering, the floor lights running in toward the pedestal, the pedestal's ring, the door). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", at: [420, 1160], size: [180, 260], color: "90,235,220", beat: "slow"}
+  - {kind: "glow", at: [1330, 1200], size: [240, 320], color: "255,100,200", beat: "twinkle"}
+  - {kind: "glow", points: [[660, 1260], [1180, 1440], [1080, 1000]], size: [100, 100], color: "255,100,200", beat: "twinkle"}
+  - {kind: "glow", points: [[626, 1032], [1344, 1392], [696, 1068], [1274, 1356], [696, 1320], [1200, 1068], [770, 1104], [1200, 1320], [770, 1284], [1130, 1104], [1130, 1284]], step: 0.3, size: [56, 40], color: "255,80,60", beat: "charge"}
+  - {kind: "glow", at: [950, 1110], size: [88, 64], color: "255,150,60", beat: "ember"}
+  - {kind: "glow", at: [770, 1496], size: [140, 60], color: "255,200,120", beat: "slow"}

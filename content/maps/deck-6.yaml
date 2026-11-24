@@ -10,6 +10,8 @@ display: [2220, 1400]
 origin: [460, 150]
 order: 4
 hum: none
+# It follows the station: the GM's one Day / Night / Alert / Occupied control sets this map with the others.
+station: {day: day, night: night, alert: alert, takeover: takeover}
 moods:
   - {id: day, label: Day, base: maps/deck-6/base-day.png}
   - {id: night, label: Night, base: maps/deck-6/base-night.png}
@@ -73,3 +75,16 @@ pins:
   - {k: "F", label: "Stairs", at: [18.15, 2.65, 0.89]}
 # Where the crew land when you send them here: out of the lift from the Promenade, in crew order.
 arrive: [[8.33, 1.33, 0], [7.33, 1.33, 0], [6.33, 1.33, 0], [8.17, 2.17, 0], [7.17, 2.17, 0]]
+# What moves by itself here (the deck sign, the Throughput board, the lift, the desks' screens, the notice board, the stove, steam from the showers, dust). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", at: [1040, 124], size: [220, 120], color: "170,215,255", beat: "stutter"}
+  - {kind: "glow", at: [1380, 370], size: [180, 180], color: "170,215,255", beat: "screen"}
+  - {kind: "glow", at: [1610, 510], size: [220, 280], color: "150,190,255", beat: "slow"}
+  - {kind: "glow", points: [[1150, 594], [1016, 670], [1274, 660], [890, 724], [1146, 724], [1400, 724], [1020, 790], [1274, 790], [1526, 790], [1146, 856], [1400, 856], [1650, 856], [1274, 920], [1526, 920], [1400, 980]], size: [68, 56], color: "150,190,255", beat: "twinkle", moods: ["day", "night"]}
+  - {kind: "glow", at: [680, 700], size: [128, 108], color: "255,200,120", beat: "screen"}
+  - {kind: "glow", at: [1280, 1096], size: [112, 72], color: "255,140,50", beat: "ember", moods: ["day"]}
+  - {kind: "glow", at: [1540, 644], size: [60, 60], color: "255,200,120", beat: "candle", moods: ["day", "night"]}
+  - {kind: "glow", at: [986, 384], size: [60, 60], color: "255,200,120", beat: "candle", moods: ["day", "night"]}
+  - {kind: "steam", at: [380, 570], moods: ["day"]}
+  - {kind: "dust", box: [640, 500, 1900, 1120], count: 18, color: "255,238,205"}

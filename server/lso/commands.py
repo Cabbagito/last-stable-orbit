@@ -11,7 +11,7 @@ import random
 from . import rules, sheet
 from .auth import Viewer
 from .content import Content
-from .models import BURN_COST, CAMERA_PAN_MAX, CAMERA_ZOOM_MAX, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_CAP, HEALTH_CAP, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
+from .models import STATION_STATES, BURN_COST, CAMERA_PAN_MAX, CAMERA_ZOOM_MAX, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_CAP, HEALTH_CAP, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
 from .state import state_from_preset
 from .views import viewer_map
 
@@ -895,6 +895,17 @@ def handle(
         if not m or mood not in {x.id for x in m.moods}:
             raise _invalid("unknown map or mood")
         return [("map.mood_set", {"map": map_id, "mood": mood})]
+
+    if kind == "gm.station.mood":
+        # one press for the whole station: every map that follows it goes to its mood for that state
+        st = _str(args, "state")
+        if st not in {k for k, _ in STATION_STATES}:
+            raise _invalid("unknown station state")
+        return [
+            ("map.mood_set", {"map": m.id, "mood": m.station[st]})
+            for m in content.maps.values()
+            if m.station and (state.maps[m.id].mood if m.id in state.maps else m.moods[0].id) != m.station[st]
+        ]
 
     if kind == "gm.map.switch":
         map_id, sw = _str(args, "map"), _str(args, "switch")

@@ -314,7 +314,7 @@
 .gx-sw:disabled{cursor:default}
 .gx-sw:disabled .gx-swn,.gx-sw:disabled .gx-swtrack{opacity:.45}
 .gx-mgroup{padding:10px 0 5px}
-.gx-mrow{display:grid;grid-template-columns:320px 150px minmax(0,1fr) 110px 150px;gap:12px;align-items:center;min-height:50px;border-top:1px solid #1e2024}
+.gx-mrow{display:grid;grid-template-columns:320px 150px minmax(0,1fr) 150px;gap:12px;align-items:center;min-height:50px;border-top:1px solid #1e2024}
 .gx-mrow:hover{background:#0b0b0d}
 .gx-mrow.party,.gx-mrow.party:hover{background:#180c13}
 .gx-mrow.far .gx-mopen{opacity:.5}
@@ -463,3 +463,8 @@
 .gx-prow.gx-phead{min-height:24px;border-top:0}
 .gx-chrome{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .gx-chrome img{width:34px;height:34px;box-shadow:0 0 0 1px #1d5560}
+
+/* UI review, round 3: the station's one control, on top of the Maps page. */
+.gx-station{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:4px 0 14px}
+.gx-station small{color:#8a8e96;font-size:12.5px}
+.gx-follows{font-size:12.5px;padding:0 4px;align-self:center}

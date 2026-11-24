@@ -31,3 +31,11 @@ pins:
   - {k: C, label: The cable rushing past in the window, at: [5.06, -2.04, 2]}
 # Where the crew land when you send them here: the board's places, in crew order.
 arrive: [[2.4, 2.4, 0], [4.8, 2.0, 0], [6.8, 3.0, 0], [2.4, 4.8, 0], [5.0, 5.0, 0]]
+# What moves by itself here (the speed readout and its screen, the hole in the window, the door's light). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", at: [270, 186], size: [152, 80], color: "190,180,255", beat: "stutter"}
+  - {kind: "glow", at: [296, 264], size: [240, 192], color: "190,180,255", beat: "screen"}
+  - {kind: "glow", at: [660, 210], size: [140, 180], color: "90,235,220", beat: "slow"}
+  - {kind: "glow", points: [[830, 280], [970, 340], [770, 270]], size: [140, 140], color: "255,100,200", beat: "twinkle"}
+  - {kind: "glow", at: [836, 644], size: [128, 76], color: "255,200,120", beat: "slow"}

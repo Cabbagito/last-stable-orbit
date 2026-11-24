@@ -10,6 +10,8 @@ display: [2220, 1400]
 origin: [460, 150]
 order: 7
 hum: none
+# It follows the station: the GM's one Day / Night / Alert / Occupied control sets this map with the others.
+station: {day: day, night: night, alert: alert, takeover: takeover}
 moods:
   - {id: day, label: Day, base: maps/deck-9/base-day.png}
   - {id: night, label: Night, base: maps/deck-9/base-night.png}
@@ -80,3 +82,14 @@ pins:
   - {k: "H", label: "Armchairs and golf caddy by the green", at: [10.5, 12.83, 0.56]}
 # Where the crew land when you send them here: at the top of the stairs from deck 8, in crew order.
 arrive: [[17.8, 3.9, 0], [16.9, 3.6, 0], [16.0, 3.3, 0], [17.1, 4.7, 0], [16.1, 4.4, 0]]
+# What moves by itself here (the deck sign, the neon over the putting green, the founder's portrait, the display cases, the desk lamp, the clock, the floor lamp, dust in the library). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", at: [1964, 600], size: [180, 100], color: "170,215,255", beat: "stutter"}
+  - {kind: "glow", at: [200, 500], size: [280, 200], color: "255,100,200", beat: "slow"}
+  - {kind: "glow", at: [1726, 550], size: [200, 248], color: "255,200,110", beat: "slow"}
+  - {kind: "glow", points: [[1540, 630], [1700, 710], [1360, 730], [1514, 800]], size: [128, 108], color: "255,235,170", beat: "twinkle"}
+  - {kind: "glow", at: [990, 464], size: [88, 60], color: "190,255,190", beat: "candle"}
+  - {kind: "glow", at: [534, 354], size: [64, 64], color: "255,200,120", beat: "slow"}
+  - {kind: "glow", at: [1556, 930], size: [72, 72], color: "150,190,255", beat: "slow"}
+  - {kind: "dust", box: [500, 300, 1440, 800], count: 18, color: "255,238,205"}

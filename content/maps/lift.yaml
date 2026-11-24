@@ -47,3 +47,16 @@ pins:
 # Where the crew land when you send them here: out of the lift, on the old wood landing, in crew order. The lift is the
 # plaza's, which ISCO opens (Peter, 2026-11-12; its doors are drawn by scripts/isco_lift.py).
 arrive: [[1.6, 21.6, 0], [2.6, 20.8, 0], [2.8, 22.4, 0], [3.8, 21.4, 0], [4.6, 22.2, 0]]
+# What moves by itself here (the hole under the floor shimmering, the cab's light, the station sign, the bulkhead's red bar, the door lamp, the cameras, the ring in the old room, dust). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", at: [1520, 940], size: [360, 460], color: "90,235,220", beat: "slow"}
+  - {kind: "glow", at: [2340, 1000], size: [280, 420], color: "255,100,200", beat: "twinkle"}
+  - {kind: "glow", points: [[1960, 600], [2560, 860], [1800, 1040], [2100, 1120]], size: [140, 140], color: "255,100,200", beat: "twinkle"}
+  - {kind: "glow", at: [1170, 470], size: [168, 140], color: "190,180,255", beat: "screen"}
+  - {kind: "glow", at: [2956, 774], size: [180, 100], color: "170,215,255", beat: "stutter"}
+  - {kind: "glow", at: [2210, 1280], size: [140, 68], color: "255,80,60", beat: "slow"}
+  - {kind: "glow", at: [300, 800], size: [160, 100], color: "150,190,255", beat: "slow"}
+  - {kind: "glow", points: [[2060, 356], [874, 490], [2776, 714], [2006, 1234]], size: [40, 40], color: "150,170,255", beat: "twinkle"}
+  - {kind: "glow", at: [784, 976], size: [240, 128], color: "255,200,110", beat: "slow"}
+  - {kind: "dust", box: [600, 1120, 2600, 1800], count: 20, color: "255,238,205"}

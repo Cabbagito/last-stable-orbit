@@ -50,7 +50,7 @@ from __future__ import annotations
 from . import rules, sheet
 from .auth import Viewer
 from .content import Content
-from .models import GameState, RollState
+from .models import STATION_STATES, GameState, RollState
 
 ASSET_PREFIX = "/assets/"
 
@@ -96,6 +96,23 @@ def _objects_view(state: GameState, content: Content, d, ms, viewer: Viewer, ope
                 v["text"] = content.slots.out_text
         out.append(v)
     return out
+
+
+def _station_mood_view(content: Content, state: GameState) -> dict:
+    """The GM's one control for the station: its four states, the maps that follow it, and the state they're all in.
+    `state` is None when they disagree, which a preset can leave them in (the Bot bays dark while the decks are lit)."""
+    maps = [m for m in content.maps.values() if m.station]
+    seen = set()
+    for m in maps:
+        if len(set(m.station.values())) < len(m.station):
+            continue  # the Promenade has one look for three of the states, so it can't say which
+        mood = state.maps[m.id].mood if m.id in state.maps else m.moods[0].id
+        seen.add(next((k for k, v in m.station.items() if v == mood), None))
+    return {
+        "states": [{"id": k, "label": label} for k, label in STATION_STATES],
+        "maps": sorted((m.id for m in maps), key=lambda i: content.maps[i].order),
+        "state": seen.pop() if len(seen) == 1 else None,
+    }
 
 
 def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer, open_: set[str]) -> dict:
@@ -657,6 +674,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
             {"id": n.id, "name": n.name, "role": n.role, "group": n.group, "portrait": url(n.portrait), "color": n.color}
             for n in content.npcs.values()
         ]
+        view["station_mood"] = _station_mood_view(content, state)
         view["map_groups"] = [{"title": g.title, "maps": [{"id": e.map, "under": e.under} for e in g.entries()]} for g in content.map_groups]
         if bench is not None:
             view["bench"] = bench  # the sandbox's, and only ever the GM's

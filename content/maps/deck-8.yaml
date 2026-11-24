@@ -10,6 +10,8 @@ display: [2220, 1400]
 origin: [460, 150]
 order: 6
 hum: none
+# It follows the station: the GM's one Day / Night / Alert / Occupied control sets this map with the others.
+station: {day: day, night: night, alert: alert, takeover: takeover}
 moods:
   - {id: day, label: Day, base: maps/deck-8/base-day.png}
   - {id: night, label: Night, base: maps/deck-8/base-night.png}
@@ -67,3 +69,13 @@ pins:
   - {k: "D", label: "The camera on its pole, watching the way to the stairs", at: [19.25, 4.75, 2.83]}
 # Where the crew land when you send them here: at the stairs, in crew order.
 arrive: [[17.8, 4.0, 0], [16.9, 3.6, 0], [16.0, 3.3, 0], [17.0, 4.8, 0], [16.0, 4.4, 0]]
+# What moves by itself here (the data wall, the deck sign, the lift, the reception screens, the candle on the low table, the lamp by the stairs, dust). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", at: [776, 230], size: [232, 248], color: "90,255,150", beat: "screen"}
+  - {kind: "glow", at: [1836, 536], size: [180, 100], color: "170,215,255", beat: "stutter"}
+  - {kind: "glow", at: [1540, 480], size: [200, 260], color: "150,190,255", beat: "slow"}
+  - {kind: "glow", points: [[1414, 570], [1630, 560]], size: [60, 52], color: "150,190,255", beat: "twinkle", moods: ["day", "night"]}
+  - {kind: "glow", at: [956, 430], size: [100, 60], color: "255,176,64", beat: "candle", moods: ["day", "night"]}
+  - {kind: "glow", at: [1796, 816], size: [68, 68], color: "190,180,255", beat: "slow"}
+  - {kind: "dust", box: [300, 440, 1900, 1120], count: 16, color: "255,238,205"}

@@ -374,3 +374,25 @@ async def test_the_spider_mech_is_a_double_size_token(engine):
     v = project(engine.state, engine.content, VES)
     mech = v["tokens"]["spider-mech"]
     assert mech["size"] == 2 and "stats" not in mech and "gm_note" not in mech
+
+
+def test_one_press_sets_every_map_that_follows_the_station(content, tmp_path):
+    """UI review, round 3: Day / Night / Alert / Occupied is one control. It moves decks 6 to 9, the Secure floor, the
+    Bot bays and the Promenade together, leaves the bar alone, and says nothing for a map already there."""
+    from lso.commands import CommandError, handle
+
+    e = Engine(content, Store(tmp_path / "s.db"))
+    follows = {m.id for m in content.maps.values() if m.station}
+    assert follows == {"deck-6", "deck-7", "deck-8", "deck-9", "secure", "bots", "promenade"}
+    events = handle(GM, e.state, content, "gm.station.mood", {"state": "takeover"})
+    assert {ev[1]["map"] for ev in events} == follows
+    assert all(ev == ("map.mood_set", {"map": ev[1]["map"], "mood": "takeover"}) for ev in events)
+    alert = handle(GM, e.state, content, "gm.station.mood", {"state": "alert"})
+    assert "promenade" not in {ev[1]["map"] for ev in alert}  # it's Calm already, and Alert is Calm there
+    with pytest.raises(CommandError):
+        handle(GM, e.state, content, "gm.station.mood", {"state": "dusk"})
+    with pytest.raises(CommandError):
+        handle(VES, e.state, content, "gm.station.mood", {"state": "night"})
+    st = project(e.state, content, GM)["station_mood"]
+    assert [x["label"] for x in st["states"]] == ["Day", "Night", "Alert", "Occupied"] and set(st["maps"]) == follows
+    assert "station_mood" not in project(e.state, content, VES)

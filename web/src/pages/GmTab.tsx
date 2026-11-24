@@ -2,9 +2,9 @@ import { useEffect, useState, type DragEvent } from 'react'
 import { Bench, Seats } from '../gm/Bench'
 import { CodexSection } from '../gm/CodexSection'
 import { EventsSection } from '../gm/EventsSection'
-import { liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
+import { StationButtons, liveSwitches, pressSwitch, switchLabel } from '../gm/MoodBar'
 import { crewFaces, isFar, moodArt } from '../gm/mapTiles'
-import { Diamond, ENTROPY_CAP, Eye, GIVE_COUNTED, HEALTH_CAP, Pocket, Step, byShelf, itemAria, onShelf } from '../gm/parts'
+import { ENTROPY_CAP, Eye, GIVE_COUNTED, HEALTH_CAP, Pocket, Step, byShelf, itemAria, onShelf } from '../gm/parts'
 import { ChromeMenu } from '../gm/Pickers'
 import { SendCrew } from '../gm/SendCrew'
 import { CutscenesSection, TvSection } from '../gm/StageSections'
@@ -327,17 +327,26 @@ function OnScreen({ view }: { view: View }) {
   )
 }
 
-/** Every map on one page, in the picker's three places: its mood, who's there, and its things and switches a click away. */
+/** Every map on one page, in the picker's three places: who's there, its mood and its switches. The station's one control is on top. */
 function MapsSection({ view }: { view: View }) {
-  const [open, setOpen] = useState<string | null>(null)
+  const station = view.station_mood
   return (
     <section aria-label="Maps">
+      {station && (
+        <div className="gx-station">
+          <span className="r5-sec">Station</span>
+          <div className="r10-mood gx-mmood" role="group" aria-label="The station's state">
+            <StationButtons station={station} />
+          </div>
+          <small>{station.state ? '' : 'The floors are in different states. '}Sets {station.maps.map((id) => view.maps[id]?.name).filter(Boolean).join(', ')}.</small>
+        </div>
+      )}
       {(view.map_groups ?? []).map((g) => (
         <div key={g.title}>
           <div className="r5-sec gx-mgroup">{g.title}</div>
           {g.maps.map(({ id, under }) => {
             const m = view.maps[id]
-            return m ? <MapRow key={id} view={view} m={m} under={under} open={open === id} toggle={() => setOpen(open === id ? null : id)} /> : null
+            return m ? <MapRow key={id} view={view} m={m} under={under} /> : null
           })}
         </div>
       ))}
@@ -345,9 +354,9 @@ function MapsSection({ view }: { view: View }) {
   )
 }
 
-function MapRow({ view, m, under, open, toggle }: { view: View; m: MapView; under: number; open: boolean; toggle: () => void }) {
+function MapRow({ view, m, under }: { view: View; m: MapView; under: number }) {
   const setGmMap = useGame((s) => s.setGmMap)
-  const shown = m.objects.filter((o) => o.shown).length
+  const follows = !!view.station_mood?.maps.includes(m.id) // its mood is the station's, set at the top of the page
   const sws = liveSwitches(m)
   const fight = view.fights?.find((f) => f.map === m.id)
   const openIt = () => {
@@ -375,49 +384,26 @@ function MapRow({ view, m, under, open, toggle }: { view: View; m: MapView; unde
           {npcs.length > 0 && <span className="r10-dimtxt gx-plus">+{npcs.length}</span>}
           {fight && <span className="r12-tag">FIGHT</span>}
         </span>
-        <div>
-          {m.moods.length > 1 && (
-            <div className="r10-mood gx-mmood" role="group" aria-label={`${m.name}: mood`}>
-              {m.moods.map((x) => (
-                <button key={x.id} type="button" className={m.mood === x.id ? 'on' : ''} aria-pressed={m.mood === x.id} onClick={() => void gmRun('gm.map.mood', { map: m.id, mood: x.id })}>
-                  {x.label}
-                </button>
-              ))}
-            </div>
-          )}
+        <div className="r10-mood gx-mmood" role="group" aria-label={`${m.name}: mood and switches`}>
+          {!follows && m.moods.length > 1 && m.moods.map((x) => (
+            <button key={x.id} type="button" className={m.mood === x.id ? 'on' : ''} aria-pressed={m.mood === x.id} onClick={() => void gmRun('gm.map.mood', { map: m.id, mood: x.id })}>
+              {x.label}
+            </button>
+          ))}
+          {follows && <span className="r10-dimtxt gx-follows">{m.moods.find((x) => x.id === m.mood)?.label}</span>}
+          {sws.map((sw) => {
+            const v = m.values[sw.id] ?? 0
+            return (
+              <button key={sw.id} type="button" className={'r10-sw' + (v ? ' on' : '')} aria-pressed={v > 0} onClick={() => void pressSwitch(m, sw)}>
+                {switchLabel(sw, v)}
+              </button>
+            )
+          })}
         </div>
-        <button type="button" className="gx-things" aria-expanded={open} onClick={toggle}>
-          {shown} of {m.objects.length} shown ⌄
-        </button>
         <div className="gx-macts">
           <SendCrew view={view} map={m} quiet />
         </div>
       </div>
-      {open && (
-        <div className="gx-mopenrow">
-          {sws.length > 0 && (
-            <div className="r10-go" style={{ flexWrap: 'wrap' }}>
-              {sws.map((sw) => {
-                const v = m.values[sw.id] ?? 0
-                return (
-                  <button key={sw.id} type="button" className={'r10-btn' + (v ? ' on' : '')} aria-pressed={v > 0} onClick={() => void pressSwitch(m, sw)}>
-                    {switchLabel(sw, v)}
-                  </button>
-                )
-              })}
-            </div>
-          )}
-          <div className="gx-mthings">
-            {m.objects.map((o) => (
-              <button key={o.id} type="button" className={'gx-thing' + (o.shown ? ' on' : '')} aria-pressed={!!o.shown} title={o.shown ? 'Players see it. Hide it.' : 'Hidden. Show it to players.'} onClick={() => void gmRun('gm.object.show', { map: m.id, object: o.id, shown: !o.shown })}>
-                <Diamond />
-                {o.name}
-                <Eye off={!o.shown} size={14} />
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </>
   )
 }

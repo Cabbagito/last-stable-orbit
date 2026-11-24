@@ -11,6 +11,8 @@ display: [2220, 1400]
 origin: [460, 150]
 order: 10
 hum: none
+# It follows the station: the GM's one Day / Night / Alert / Occupied control sets this map with the others.
+station: {day: day, night: night, alert: alert, takeover: takeover}
 moods:  # the mech is under its tarp in the frame by Day and by Night, which is day 2 and heist night. By Alert and Takeover it's gone
   - {id: day, label: Day, base: maps/bots/base-day.png}
   - {id: night, label: Night, base: maps/bots/base-night.png}

@@ -261,6 +261,10 @@ class Pin(Strict):
     at: Vec3
 
 
+# The station's four states. One GM control sets every map that follows the station (a map's `station:`) together.
+STATION_STATES: list[tuple[str, str]] = [("day", "Day"), ("night", "Night"), ("alert", "Alert"), ("takeover", "Occupied")]
+
+
 class MapDef(Strict):
     id: str
     name: str
@@ -275,6 +279,7 @@ class MapDef(Strict):
     overlays: list[Overlay] = []
     decals: list[Decal] = []
     ambient: list[Ambient] = []
+    station: dict[str, str] = {}  # for a map that follows the station: which of its moods each station state means
     feed: Feed | None = None
     objects: list[MapObject] = []
     pins: list[Pin] = []
@@ -296,6 +301,11 @@ class MapDef(Strict):
                 raise ValueError(f"overlay {o.id} names unknown mood {o.mood}")
             if o.switch not in sw:
                 raise ValueError(f"overlay {o.id} names unknown switch {o.switch}")
+        if self.station:
+            if set(self.station) != {k for k, _ in STATION_STATES}:
+                raise ValueError(f"station must name each of {[k for k, _ in STATION_STATES]}")
+            if unknown := set(self.station.values()) - mood_ids:
+                raise ValueError(f"station names unknown moods {unknown}")
         for a in self.ambient:
             if unknown := set(a.moods) - mood_ids:
                 raise ValueError(f"an ambient {a.kind} names unknown moods {unknown}")

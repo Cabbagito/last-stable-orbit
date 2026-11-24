@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom'
 import { ChipFx } from '../fx/ChipFx'
 import { FightBlock, StartFight } from '../fight/FightControls'
 import { fightOn } from '../fight/fights'
-import { objectKey } from '../inspect/objects'
 import { unproj } from '../lib/proj'
 import { ring } from '../lib/ring'
 import { Orbit, calloutSpeech, isSpinning } from '../roll/Callout'
@@ -12,7 +11,7 @@ import { RingPortrait } from '../shell/RingPortrait'
 import { Flare, burnSpeech, useBurnMark } from '../stage/BurnMark'
 import { gmRoll, gmRun, useGame } from '../store/game'
 import type { CrewMember, MapView, RosterNpc, TokenView, View } from '../types'
-import { CameraIcon, Cross, Diamond, Eye, MiniStep, PlusIcon } from './parts'
+import { CameraIcon, Cross, Eye, MiniStep, PlusIcon } from './parts'
 import { filmOn } from './StageSections'
 
 const DICE = [4, 6, 8, 10, 12, 20]
@@ -44,7 +43,6 @@ export function GmScene({ map }: { map: MapView | undefined }) {
       {map && (
         <div className="gx-mid">
           <HereRows view={view} map={map} now={fight?.now ?? null} canFight={!fight} />
-          <ThingRows map={map} />
         </div>
       )}
       <JustADie />
@@ -189,42 +187,6 @@ function EyeButton({ name, hidden, onToggle }: { name: string; hidden: boolean; 
     <button type="button" className={'r10-ico gx-eye' + (hidden ? ' off' : '')} aria-label={label} title={label} onClick={onToggle}>
       <Eye off={hidden} />
     </button>
-  )
-}
-
-function ThingRows({ map }: { map: MapView }) {
-  const select = useGame((s) => s.select)
-  const [open, setOpen] = useState(true)
-  if (!map.objects.length) return null
-  const shown = map.objects.filter((o) => o.shown).length
-  return (
-    <section aria-label="Things to inspect">
-      <div className="gx-sh">
-        <span className="r5-sec">
-          Things <span style={{ letterSpacing: '.08em' }}>· {shown} of {map.objects.length} shown</span>
-        </span>
-        <button type="button" className="gx-chev" aria-label={open ? 'Fold the things away' : 'Show the things'} aria-expanded={open} onClick={() => setOpen(!open)}>
-          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-            <path d={open ? 'M2.5 8l3.5-3.5L9.5 8' : 'M2.5 4l3.5 3.5L9.5 4'} fill="none" stroke="currentColor" strokeWidth="1.4" />
-          </svg>
-        </button>
-      </div>
-      {open && (
-        <div className="gx-rows">
-          {map.objects.map((o) => (
-            <div key={o.id} className={'gx-row thing' + (o.shown ? '' : ' dim')}>
-              <span className="gx-dimme">
-                <Diamond />
-              </span>
-              <button type="button" className="r10-nm gx-dimme" onClick={() => select(objectKey(map.id, o.id))}>
-                {o.name}
-              </button>
-              <EyeButton name={o.name} hidden={!o.shown} onToggle={() => void gmRun('gm.object.show', { map: map.id, object: o.id, shown: !o.shown })} />
-            </div>
-          ))}
-        </div>
-      )}
-    </section>
   )
 }
 

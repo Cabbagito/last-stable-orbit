@@ -12,6 +12,8 @@ display: [3600, 2160]
 origin: [360, 190]
 order: 2
 hum: street
+# It follows the station: Calm until the station is Occupied.
+station: {day: calm, night: calm, alert: calm, takeover: takeover}
 moods:
   - {id: calm, label: Calm, base: maps/promenade/base-calm.png, glow: maps/promenade/glow-calm.png}
   # Takeover is Act 4, the mercenaries holding the street: shot up a few minutes ago, on emergency light, the stalls still
