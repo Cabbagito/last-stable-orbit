@@ -391,6 +391,7 @@ entries:
     Old Dax and Dr. Vos are near the top.
   see: [unit-14]
 - id: patience
+  maps: [patience]  # opens when the crew first arrive there
   sec: world
   name: Patience
   role: The cruise liner, at Dock 7
@@ -400,6 +401,7 @@ entries:
     and a gangway down to Dock 7.
   see: [steward, promenade]
 - id: promenade
+  maps: [promenade]  # opens when the crew first arrive there
   sec: world
   name: The Promenade
   role: Deck 2
@@ -410,6 +412,7 @@ entries:
     far end.
   see: [concierge, dock-clerk, vendor, event-horizon, queue]
 - id: event-horizon
+  maps: [event-horizon]  # opens when the crew first arrive there
   sec: world
   name: The Event Horizon
   role: Deck 2, the Promenade
@@ -418,6 +421,7 @@ entries:
   lead: A long bar with amber shelves under a neon sign. Four slot machines, red leather booths, and no cameras.
   see: [dax, table, slots, mural]
 - id: executive
+  maps: [deck-6, deck-7, deck-8, deck-9]  # opens when the crew first arrive there
   sec: world
   name: The Executive floors
   role: Decks 6 to 9
@@ -427,6 +431,7 @@ entries:
     no systems on these decks, because the people who review it can't be watched by the thing they review.
   see: [isco, secure]
 - id: secure
+  maps: [secure]  # opens when the crew first arrive there
   sec: world
   name: The Secure floor
   role: Behind the guarded door on deck 8
@@ -436,6 +441,7 @@ entries:
     candles left at its door. The Company keeps its confiscated gear here too.'  # DRAFT
   see: [executive, vault]
 - id: vault
+  maps: [vault]  # opens when the crew first arrive there
   sec: world
   name: The Crypt
   role: Behind the vault door
@@ -444,6 +450,7 @@ entries:
   lead: A small room of old wood behind the bronze door. A desk, a lamp, and empty shelves.
   see: [ilija]
 - id: bots
+  maps: [bots]  # opens when the crew first arrive there
   sec: world
   name: The Bot bays
   role: Deck 1, Maintenance
@@ -452,6 +459,7 @@ entries:
   lead: Pipes, heat and the cleaner robots' charging cradles. Nobody comes down here on purpose.
   see: [unit-14]
 - id: lift
+  maps: [lift]  # opens when the crew first arrive there
   sec: world
   name: The Lift station
   role: The top of the cable
@@ -461,6 +469,7 @@ entries:
     it.
   see: [cable, cab]
 - id: cab
+  maps: [cab]  # opens when the crew first arrive there
   sec: world
   name: The crawler cab
   role: Down the cable
@@ -470,6 +479,7 @@ entries:
     the clock runs slower the deeper you go.
   see: [cable, core]
 - id: terminal
+  maps: [terminal]  # opens when the crew first arrive there
   sec: world
   name: The Terminal room
   role: At the core
@@ -478,6 +488,7 @@ entries:
   lead: A dark ribbed room with a glass floor over the black hole, and the terminal on a dais in the middle.
   see: [core, isco]
 - id: med
+  maps: [med]  # opens when the crew first arrive there
   sec: world
   name: The Med Bay
   role: Deck 2, the Promenade

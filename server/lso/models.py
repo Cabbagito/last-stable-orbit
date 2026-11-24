@@ -479,6 +479,7 @@ class CodexEntry(Strict):
     crew: str | None = None
     npc: str | None = None
     item: str | None = None
+    maps: list[str] = []  # a place's page: it opens for the crew when they first arrive on any of these maps
     lead: str = ""
     quote: str = ""
     blocks: list[CodexBlock] = []

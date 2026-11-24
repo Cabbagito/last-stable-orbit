@@ -412,6 +412,29 @@ def test_the_run_sheet_lists_every_film_and_scene_and_follows_what_is_pressed(co
     assert events[-1] == ("run.at_set", {"step": "scene:session-1-day"})
     events = handle(GM, e.state, content, "gm.film.play", {"cue": "vigil"}, now=1000.0)
     kinds = [k for k, _ in events]
-    assert kinds == ["film.started", "run.at_set", "world.loaded"]
+    assert kinds == ["film.started", "run.at_set", "world.loaded", "codex.set"]  # and the Secure floor's page opens on arrival
     assert events[1][1] == {"step": "film:vigil"} and events[2][1]["preset"] == "session-2-vigil" and events[2][1]["scene"] is True
     assert "run" not in project(e.state, content, VES)["stage"]
+
+
+def test_codex_pages_open_by_themselves(content, tmp_path):
+    """UI review, round 5: a place opens when the crew first arrive, and a thing with a page when the GM shows it. Only
+    ever opened, and only then: a page closed by hand stays closed."""
+    from lso.commands import handle
+
+    e = Engine(content, Store(tmp_path / "c.db"), clock=lambda: 1000.0)
+
+    def opened(kind, args):
+        return [k for ev, d in handle(GM, e.state, content, kind, args) if ev == "codex.set" and d["unlocked"] for k in d["keys"]]
+
+    assert "bots" not in e.state.codex and "mural" not in e.state.codex
+    assert opened("gm.world.load_preset", {"preset": "session-4-hidey-hole", "scene": True}) == ["bots"]
+    assert opened("gm.world.load_preset", {"preset": "session-2-vigil", "scene": True}) == ["secure"]
+    from lso.commands import _codex_follows
+
+    shown = lambda on: _codex_follows(e.state, content, [("object.shown", {"map": "event-horizon", "object": "mural", "shown": on})])
+    assert shown(True) == [("codex.set", {"keys": ["mural"], "unlocked": True})] and shown(False) == []
+    # an item's page doesn't open by itself: the Codex is everyone's, and a clue handed to one player is theirs alone
+    assert not [ev for ev in handle(GM, e.state, content, "gm.item.give", {"holder": "tally", "item": "access-chit"}) if ev[0] == "codex.set"]
+    places = {m for x in content.codex.values() for m in x.maps}
+    assert places == set(content.maps)  # every map has a page that opens on arrival

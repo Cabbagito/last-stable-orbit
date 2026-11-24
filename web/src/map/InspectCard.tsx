@@ -2,7 +2,7 @@ import { useEffect, useState, type CSSProperties } from 'react'
 import { CrewCard } from '../gm/CrewCard'
 import { Cross, Step } from '../gm/parts'
 import { filmOn } from '../gm/StageSections'
-import { Closeup, CodexButton, InspectBlock, Inspector } from '../inspect/Inspector'
+import { Closeup, CodexButton, InspectBlock, Inspector, OpenPageButton } from '../inspect/Inspector'
 import { findObject } from '../inspect/objects'
 import { ring } from '../lib/ring'
 import { serverClock } from '../net/clock'
@@ -60,6 +60,7 @@ export function InspectCard() {
           actions={
             <>
               {obj.codex && <CodexButton entry={obj.codex} />}
+              {obj.codex && <OpenPageButton entry={obj.codex} label="Open its page" />}
               {isGm && (
                 <button type="button" className="r4-btn app-small" onClick={() => void gmRun('gm.object.show', { map: mapId, object: obj.id, shown: !obj.shown })}>
                   {obj.shown ? 'Hide' : 'Show'}
@@ -115,6 +116,7 @@ export function InspectCard() {
         actions={
           <>
             {t.codex && <CodexButton entry={t.codex} />}
+            {t.codex && !crew && <OpenPageButton entry={t.codex} label="Open their page" />}
             {isGm && (
               <button type="button" className="r4-btn app-small" onClick={() => void gmRun('gm.token.hide', { token: t.id, hidden: !t.hidden })}>
                 {t.hidden ? 'Show' : 'Hide'}

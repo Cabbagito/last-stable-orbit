@@ -288,6 +288,7 @@ def _codex_problems(c: Content) -> list[str]:
     for e in c.codex.values():
         where = f"codex entry {e.id}"
         problems += [f"{where}: see also {s!r} isn't an entry" for s in e.see if s not in c.codex]
+        problems += [f"{where}: maps names unknown map {m!r}" for m in e.maps if m not in c.maps]
         if e.crew and e.crew not in c.characters:
             problems.append(f"{where}: unknown crew {e.crew!r}")
         if e.npc and e.npc not in c.npcs:

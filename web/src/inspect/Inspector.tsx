@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { codexHref } from '../pages/Codex'
-import { useGame } from '../store/game'
+import { gmRun, useGame } from '../store/game'
 
 /**
  * Round 9's inspector (Round 8's T3): the thing at 2x, a kind label, its name, then what it says.
@@ -95,6 +95,20 @@ export function Closeup({ art, display, centre, alt, dark }: { art: string; disp
         filter: dark ? 'brightness(.45) saturate(.4)' : undefined,
       }}
     />
+  )
+}
+
+/**
+ * The GM's way to open a page from the card of whoever or whatever it's about (UI review, round 5): shown only to the
+ * GM, and only while that page is still locked for the crew. GM › Codex can still open or close anything.
+ */
+export function OpenPageButton({ entry, label }: { entry: string; label: string }) {
+  const locked = useGame((s) => s.view?.me.role === 'gm' && s.view.codex?.entries.find((e) => e.id === entry)?.unlocked === false)
+  if (!locked) return null
+  return (
+    <button type="button" className="r4-btn app-small" title="Opens it in the Codex for the whole crew" onClick={() => void gmRun('gm.codex.unlock', { entry, unlocked: true })}>
+      {label}
+    </button>
   )
 }
 

@@ -933,7 +933,45 @@ def sweep(state: GameState, now: float, online: set[str], content: Content | Non
     return events
 
 
-def handle(
+def handle(viewer: Viewer, state: GameState, content: Content, kind: str, args: dict, rng: rules.Rng | None = None, now: float = 0.0) -> Events:
+    """One intent, checked and turned into events. Pages of the Codex that open by themselves are added last."""
+    events = _handle(viewer, state, content, kind, args, rng, now)
+    return events + _codex_follows(state, content, events)
+
+
+def _codex_follows(state: GameState, content: Content, events: Events) -> Events:
+    """The Codex pages that open by themselves (UI review, round 5): a place when the crew first arrive on its map, and
+    a thing with a page when the GM shows it on the map. It only ever opens a page, and only when one of those happens,
+    so a page the GM closes by hand stays closed. Items don't: the Codex is the whole crew's, and a clue handed to one
+    player is theirs alone (test_items.py), so an item's page is still opened by hand."""
+    places = {m: e.id for e in content.codex.values() for m in e.maps}
+    have = set(state.codex)
+    want: list[str] = []
+
+    for kind, data in events:
+        if kind == "world.loaded":
+            st = data["state"]
+            crew_maps = [t["map"] for t in st["tokens"].values() if t["kind"] == "crew"]
+            want += [places[m] for m in [st["party_map"], *crew_maps] if m in places]
+            if not data.get("scene"):  # a full load brings its own Codex
+                have = set(st["codex"])
+        elif kind == "party.map_set" and data["map"] in places:
+            want.append(places[data["map"]])
+        elif kind == "token.sent" and data["map"] in places and (t := state.tokens.get(data["token"])) and t.kind == "crew":
+            want.append(places[data["map"]])
+        elif kind == "token.placed" and data["state"]["kind"] == "crew" and data["state"]["map"] in places:
+            want.append(places[data["state"]["map"]])
+        elif kind == "object.shown" and data["shown"]:
+            o = next((o for o in content.maps[data["map"]].objects if o.id == data["object"]), None)
+            if o and o.codex:
+                want.append(o.codex)
+        elif kind == "codex.set" and data["unlocked"]:
+            have |= set(data["keys"])
+    keys = [k for k in dict.fromkeys(want) if k not in have and k in content.codex]
+    return [("codex.set", {"keys": keys, "unlocked": True})] if keys else []
+
+
+def _handle(
     viewer: Viewer,
     state: GameState,
     content: Content,
