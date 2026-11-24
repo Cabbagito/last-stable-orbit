@@ -144,6 +144,21 @@ export interface PinDef {
   at: Vec3
 }
 
+/** Something that moves by itself on a map: a light, steam or dust (content/maps/*.yaml `ambient:`, map/Ambient.tsx). In display px. */
+export interface AmbientDef {
+  kind: 'glow' | 'steam' | 'dust'
+  at: [number, number] | null
+  points: [number, number][]
+  step: number
+  size: [number, number]
+  color: string
+  beat: 'ember' | 'stutter' | 'slow' | 'screen' | 'blink' | 'charge' | 'candle' | 'twinkle'
+  blend: 'screen' | 'tint'
+  box: [number, number, number, number] | null
+  count: number
+  moods: string[]
+}
+
 export interface MapView {
   id: string
   name: string
@@ -157,6 +172,7 @@ export interface MapView {
   switches: SwitchDef[]
   overlays: OverlayDef[]
   decals: DecalDef[]
+  ambient?: AmbientDef[]
   feed: FeedDef | null
   mood: string
   values: Record<string, number>

@@ -69,3 +69,15 @@ pins:
   - {k: "D", label: "Drums", at: [18.75, 10.25, 0.83]}
 # Where the crew land when you send them here: at the foot of the ladder from Dax's hatch, in crew order.
 arrive: [[0.4, 0.5, 0], [1.2, 0.4, 0], [0.5, 1.2, 0], [1.9, 0.3, 0], [1.2, 1.2, 0]]
+# What moves by itself here (the boiler, the sign and lamp, the terminal, the cradles charging in turn (14 out of step), steam and dust). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", at: [918, 528], size: [200, 192], color: "255,176,64", beat: "ember"}
+  - {kind: "glow", at: [920, 624], size: [520, 200], color: "255,150,50", beat: "ember"}
+  - {kind: "glow", at: [1236, 272], size: [320, 208], color: "170,215,255", beat: "stutter"}
+  - {kind: "glow", at: [1060, 184], size: [88, 88], color: "255,214,140", beat: "slow"}
+  - {kind: "glow", at: [936, 758], size: [144, 108], color: "180,130,255", beat: "screen"}
+  - {kind: "glow", points: [[580, 876], [680, 930], [780, 980], [880, 1030], [980, 1080], [1080, 1130]], step: 0.45, size: [120, 52], color: "70,150,255", beat: "charge", blend: "tint"}
+  - {kind: "glow", at: [1180, 1180], size: [120, 52], color: "255,150,40", beat: "blink", blend: "tint"}
+  - {kind: "steam", at: [900, 336]}
+  - {kind: "dust", box: [300, 380, 1880, 1120], count: 26, color: "255,238,205"}

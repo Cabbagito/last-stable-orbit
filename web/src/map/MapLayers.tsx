@@ -1,4 +1,5 @@
 import type { DecalDef, FeedDef, Hum, MapView } from '../types'
+import { Ambient } from './Ambient'
 
 const HUM: Record<Hum, string> = { bar: 'r3-hum', street: 'r3-hum app-hum-street', none: 'app-hum-none', beat: 'app-hum-none app-hum-beat' }
 
@@ -38,6 +39,7 @@ export function MapLayers({ map }: { map: MapView }) {
         .map((d) => (
           <Decal key={d.id} d={d} mood={map.mood} />
         ))}
+      <Ambient map={map} />
       {map.feed && <Feed f={map.feed} values={map.values} />}
     </>
   )

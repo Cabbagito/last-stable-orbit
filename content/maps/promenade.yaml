@@ -95,3 +95,16 @@ arrive_from:
   bots: [[42.4, 1.6, 0], [43.4, 2.4, 0], [41.4, 2.4, 0], [42.9, 3.6, 0], [41.7, 3.6, 0]]
   deck-6: [[24.4, 2.6, 0], [25.6, 3.4, 0], [23.2, 3.4, 0], [25.0, 4.7, 0], [23.6, 4.7, 0]]
   med: [[45.0, 1.8, 0], [45.8, 2.8, 0], [44.2, 2.8, 0], [45.4, 4.0, 0], [44.4, 4.0, 0]]
+# What moves by itself here (the dock board, the Night Market and Sato signs, the lanterns, steam off the noodle pots, the bar's door, the founder's ring). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", at: [1030, 320], size: [440, 240], color: "170,215,255", beat: "slow"}
+  - {kind: "glow", at: [410, 304], size: [240, 120], color: "170,215,255", beat: "stutter"}
+  - {kind: "glow", at: [2440, 1030], size: [440, 180], color: "255,170,70", beat: "stutter"}
+  - {kind: "glow", at: [2610, 1255], size: [180, 120], color: "90,235,220", beat: "stutter"}
+  - {kind: "glow", points: [[2200, 1230], [2320, 1170], [2430, 1290], [2470, 1090], [2660, 1124], [2770, 1256], [3000, 1290], [2540, 1400], [2650, 1510], [2760, 1456]], size: [88, 88], color: "255,180,90", beat: "twinkle"}
+  - {kind: "glow", points: [[2140, 1260], [2260, 1200], [2370, 1130], [2490, 1250], [2720, 1076], [2830, 1210], [2940, 1340], [2820, 1420], [2710, 1484], [2600, 1370], [2480, 1426], [2370, 1316]], size: [88, 88], color: "90,235,220", beat: "twinkle"}
+  - {kind: "steam", at: [2256, 1124]}
+  - {kind: "steam", at: [2336, 1180]}
+  - {kind: "glow", at: [2990, 1480], size: [240, 300], color: "255,190,110", beat: "ember"}
+  - {kind: "glow", at: [1500, 1130], size: [480, 220], color: "255,200,110", beat: "slow"}

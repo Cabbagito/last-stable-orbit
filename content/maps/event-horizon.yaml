@@ -65,3 +65,12 @@ pins:
   - {k: L, label: Door leaves and doormat, at: [6.9, 12, 1.25]}
 # Where the crew land when you send them here: just inside the street door, in crew order.
 arrive: [[7.2, 11.6, 0], [7.8, 11.0, 0], [8.6, 10.2, 0], [9.4, 10.6, 0], [9.8, 11.4, 0]]
+# What moves by itself here (the table candles, the slot machines, the door lamps, dust in the bar's light). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", points: [[880, 844], [1186, 774], [1426, 880], [1156, 934], [1160, 1060], [1666, 1070], [1534, 1136], [1400, 1200]], step: 0.37, size: [92, 80], color: "255,176,64", beat: "candle", moods: ["open"]}
+  - {kind: "glow", at: [1018, 496], size: [112, 96], color: "255,176,64", beat: "candle", moods: ["open", "after"]}
+  - {kind: "glow", at: [300, 530], size: [380, 300], color: "190,170,255", beat: "blink"}
+  - {kind: "glow", at: [576, 936], size: [80, 80], color: "255,160,90", beat: "slow"}
+  - {kind: "glow", at: [768, 1000], size: [80, 80], color: "90,235,220", beat: "slow"}
+  - {kind: "dust", box: [640, 400, 2000, 1120], count: 26, color: "255,238,205", moods: ["open", "after"]}

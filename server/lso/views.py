@@ -112,6 +112,7 @@ def _map_view(content: Content, state: GameState, map_id: str, viewer: Viewer, o
         "switches": [s.model_dump() for s in d.switches],
         "overlays": [{**o.model_dump(), "src": url(o.src)} for o in d.overlays],
         "decals": [{**x.model_dump(), "src": url(x.src)} for x in d.decals],
+        "ambient": [a.model_dump(mode="json") for a in d.ambient],
         "hum": d.hum,
         "order": d.order,  # frames go out with sorted keys, so the GM's lists sort by this
         "feed": d.feed.model_dump() if d.feed else None,

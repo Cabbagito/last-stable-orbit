@@ -901,3 +901,106 @@ body {
     display: none;
   }
 }
+
+/* UI review, round 2: what moves by itself on a map (map/Ambient.tsx). Sizes are display px, twice the art's. */
+.amb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+.amb span {
+  position: absolute;
+  pointer-events: none;
+}
+.amb-g {
+  border-radius: 50%;
+}
+.amb-screen {
+  mix-blend-mode: screen;
+}
+.amb-ember { animation: amb-ember 3.4s ease-in-out infinite }
+@keyframes amb-ember {
+  0%, 100% { opacity: 0.4; transform: scale(0.9) }
+  40% { opacity: 1; transform: scale(1.08) }
+  62% { opacity: 0.6 }
+  75% { opacity: 0.95 }
+}
+.amb-stutter { animation: amb-stutter 6s linear infinite }
+@keyframes amb-stutter {
+  0%, 36%, 43%, 100% { opacity: 1 }
+  37% { opacity: 0.1 }
+  38.5% { opacity: 0.9 }
+  40% { opacity: 0.15 }
+  41.5% { opacity: 0.8 }
+  76% { opacity: 0.6 }
+  84% { opacity: 1 }
+}
+.amb-slow { animation: amb-slow 5s ease-in-out infinite }
+@keyframes amb-slow {
+  0%, 100% { opacity: 0.45 }
+  50% { opacity: 1 }
+}
+.amb-g.amb-b-screen { animation: amb-flick 2.2s steps(3) infinite }
+@keyframes amb-flick {
+  0%, 100% { opacity: 0.3 }
+  50% { opacity: 1 }
+}
+.amb-g.amb-blink { animation: amb-blink 1.7s steps(2) infinite }
+@keyframes amb-blink {
+  0%, 100% { opacity: 0.1 }
+  50% { opacity: 1 }
+}
+.amb-g.amb-charge { opacity: 0.05; animation: amb-charge 5.4s ease-in-out infinite }
+@keyframes amb-charge {
+  0%, 100% { opacity: 0.05 }
+  10% { opacity: 1 }
+  30% { opacity: 0.05 }
+}
+.amb-g.amb-candle { animation: amb-candle 1.9s ease-in-out infinite }
+@keyframes amb-candle {
+  0%, 100% { opacity: 0.7; transform: scale(0.96) }
+  22% { opacity: 1; transform: scale(1.05) }
+  41% { opacity: 0.6 }
+  58% { opacity: 0.95; transform: scale(1) }
+  77% { opacity: 0.75 }
+}
+.amb-g.amb-twinkle { animation: amb-twinkle 4s ease-in-out infinite }
+@keyframes amb-twinkle {
+  0%, 100% { opacity: 0.15 }
+  50% { opacity: 1 }
+}
+.amb-puff {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(225, 235, 255, 0.9);
+  filter: blur(16px);
+  opacity: 0;
+  animation: amb-puff 6s ease-out infinite;
+}
+@keyframes amb-puff {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.5) }
+  15% { opacity: 0.5 }
+  100% { opacity: 0; transform: translate(68px, -240px) scale(2.2) }
+}
+.amb-mote {
+  border-radius: 50%;
+  opacity: 0;
+  animation: amb-mote 16s linear infinite;
+}
+@keyframes amb-mote {
+  0% { opacity: 0; transform: translate(0, 0) }
+  15% { opacity: 0.75 }
+  55% { opacity: 0.3 }
+  85% { opacity: 0.7 }
+  100% { opacity: 0; transform: translate(160px, -200px) }
+}
+@media (prefers-reduced-motion: reduce) {
+  .amb span {
+    animation: none !important;
+  }
+  .amb-puff, .amb-mote, .amb-g.amb-charge {
+    display: none;
+  }
+}

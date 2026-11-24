@@ -194,6 +194,32 @@ class MapObject(Strict):
     game: Literal["slots"] | None = None  # something you can sit down and play, from its card
 
 
+class Ambient(Strict):
+    """Something on a map that moves by itself: a light breathing or flickering, steam, dust in the air (the UI review
+    canvas, "Round 2: ambient map"). Placed by hand on the art, in display px like a decal. A `glow` sits at `at`, or one
+    at each of `points`, each starting `step` seconds after the one before (0 with the twinkle beat: at random)."""
+
+    kind: Literal["glow", "steam", "dust"]
+    at: tuple[float, float] | None = None
+    points: list[tuple[float, float]] = []
+    step: float = 0
+    size: tuple[float, float] = (120, 120)
+    color: str = "255,176,64"  # r,g,b
+    beat: Literal["ember", "stutter", "slow", "screen", "blink", "charge", "candle", "twinkle"] = "slow"
+    blend: Literal["screen", "tint"] = "screen"  # tint: painted over, for light surfaces a screen blend can't brighten
+    box: tuple[float, float, float, float] | None = None  # dust: left, top, right, bottom
+    count: int = 24  # dust: how many specks
+    moods: list[str] = []  # only in these moods; empty means all
+
+    @model_validator(mode="after")
+    def _shape(self) -> "Ambient":
+        if self.kind == "dust" and not self.box:
+            raise ValueError("dust needs a box")
+        if self.kind != "dust" and not self.at and not self.points:
+            raise ValueError(f"{self.kind} needs at or points")
+        return self
+
+
 class Decal(Strict):
     """A small piece of art set into the map, such as the moving black hole in the Promenade's window. Drawn as the
     board draws it: a clipped box of `box` px, placed by a CSS matrix, holding the image at `img` (left, top, w, h).
@@ -248,6 +274,7 @@ class MapDef(Strict):
     switches: list[Switch] = []
     overlays: list[Overlay] = []
     decals: list[Decal] = []
+    ambient: list[Ambient] = []
     feed: Feed | None = None
     objects: list[MapObject] = []
     pins: list[Pin] = []
@@ -269,6 +296,9 @@ class MapDef(Strict):
                 raise ValueError(f"overlay {o.id} names unknown mood {o.mood}")
             if o.switch not in sw:
                 raise ValueError(f"overlay {o.id} names unknown switch {o.switch}")
+        for a in self.ambient:
+            if unknown := set(a.moods) - mood_ids:
+                raise ValueError(f"an ambient {a.kind} names unknown moods {unknown}")
         for d in self.decals:
             if unknown := (set(d.moods) | set(d.opacity)) - mood_ids:
                 raise ValueError(f"decal {d.id} names unknown moods {unknown}")

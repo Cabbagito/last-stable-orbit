@@ -34,3 +34,8 @@ pins:
   - {k: C, label: PROMENADE on the floor by the door, at: [9.84, 7.44, 0]}
 # Where the crew land when you send them here: one to a bed, waking up, in crew order.
 arrive: [[1.4, 1.1, 0.6], [1.4, 2.9, 0.6], [1.4, 4.7, 0.6], [1.4, 6.5, 0.6], [1.4, 8.3, 0.6]]
+# What moves by itself here (the violet cross and the screen). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", at: [850, 230], size: [220, 220], color: "170,120,255", beat: "slow", blend: "tint"}
+  - {kind: "glow", at: [1170, 390], size: [300, 180], color: "200,190,255", beat: "screen"}

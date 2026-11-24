@@ -41,3 +41,10 @@ pins:
   - {k: E, label: "The vent: the burner key is inside (hand it to Ves from Pockets)", at: [0, 7.7, 1.2]}
 # Where the crew land when you send them here: just inside the gangway, in crew order.
 arrive: [[10.0, 7.4, 0], [8.4, 7.8, 0], [11.8, 6.8, 0], [10.6, 6.0, 0], [9.0, 6.8, 0]]
+# What moves by itself here (the wall lamps, the desk lamp, the portholes, dust in the lamplight). Placed by hand on the art, in display px;
+# the styles are amb- in web/src/styles/app.css. The UI review canvas, "Round 2: ambient map".
+ambient:
+  - {kind: "glow", points: [[670, 130], [880, 236], [1096, 340], [1310, 450]], step: 1.3, size: [140, 140], color: "255,200,120", beat: "slow"}
+  - {kind: "glow", at: [1044, 674], size: [120, 112], color: "255,200,120", beat: "candle"}
+  - {kind: "glow", points: [[770, 214], [986, 320], [1204, 430]], size: [128, 140], color: "180,130,255", beat: "twinkle"}
+  - {kind: "dust", box: [240, 240, 1280, 800], count: 20, color: "255,238,205"}
