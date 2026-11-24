@@ -571,7 +571,7 @@
   health: 2  # DRAFT
   mood: Busy  # DRAFT
   note: Runs a noodle stall. Its visor glows brighter when you order seconds.  # DRAFT
-  gm_note: "Built as a boarding unit for a colony war that ended before it shipped. Never used, sold as surplus, and it chose noodles. The regulars think the name is a joke about how it runs the queue. Small tells on day one: knife work that is frighteningly exact, orders called \"tickets\" and each one confirmed, and nothing about before the stall. It has no sense of taste and judges a bowl by the customer's face. It keeps a ledger of every bowl it has served, the Sato brothers' as boys included, and has never charged the noodle gran. In Act 4 the crew finds it holding the stall against the mercenaries with a wok and a knife, cutting them up and making noodles while it does."  # DRAFT, 2026-11-14
+  gm_note: "Built as a boarding unit for a colony war that ended before it shipped. Never used, sold as surplus, and it chose noodles. The regulars think the name is a joke about how it runs the queue. Small tells on day one: knife work that is frighteningly exact, orders called \"tickets\" and each one confirmed, and nothing about before the stall. It has no sense of taste and judges a bowl by the customer's face. It keeps a ledger of every bowl it has served, the Sato brothers' as boys included, and has never charged the noodle gran. In Act 4 the crew finds it holding the stall against the mercenaries with a wok and a knife, cutting them up and making noodles while it does. Sarge's rush (Events): one of the crew works a shift, the TV shows it. Gran's usual is udon, clear broth, egg and scallion. Tips are yours to hand over, 5 to 20 by rank; Sergeant earns Sarge's word for Vigil catering."  # DRAFT, 2026-11-14
 
 - id: resident-noodles
   name: Noodle gran
@@ -583,6 +583,7 @@
   health: 1  # DRAFT
   mood: Content  # DRAFT
   note: Same stall every night for forty years.  # DRAFT
+  gm_note: "Her usual, for Sarge's rush: udon in clear broth, with egg and scallion. She orders \"the usual\" and nothing more, and the ticket never spells it out: whoever talked to her knows it."
 
 - id: happy-resident
   name: Happy resident

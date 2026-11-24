@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, Opening, Overview, Preset, PresetItem, Scenario, Shelf, SlotsGame, Sound, SoundCategory, Station
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, Opening, Overview, Preset, PresetItem, RushGame, Scenario, Shelf, SlotsGame, Sound, SoundCategory, Station
 
 log = logging.getLogger("lso.content")
 
@@ -36,6 +36,7 @@ class Content:
     station: Station | None = None  # the Station tab's cross-section
     overviews: dict[str, Overview] = field(default_factory=dict)  # little games the GM sends to players' screens
     slots: SlotsGame | None = None  # the slot machines' rules
+    rush: RushGame | None = None  # Sarge's rush (rush.yaml)
     soundboard: list[SoundCategory] = field(default_factory=list)  # the GM's top bar, in order
     missing_assets: list[str] = field(default_factory=list)
 
@@ -117,6 +118,9 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
             c.slots = SlotsGame.model_validate(_read(sl))
         except ValidationError as e:
             raise ContentError(f"slots.yaml: {e}") from e
+    rs = content_dir / "rush.yaml"
+    if rs.is_file():
+        c.rush = _parse(RushGame, _read(rs), "rush.yaml")
     ins = content_dir / "insults.yaml"
     c.insults = _insults((_read(ins) or {}) if ins.is_file() else {})
     if clash := set(c.characters) & set(c.npcs):
@@ -150,6 +154,8 @@ def check_refs(c: Content) -> None:
         problems.append(f"slots: unknown currency {c.slots.currency!r}")
     if c.slots:
         problems += [f"slots: unknown audit character {a!r}" for a in c.slots.audit if a not in c.characters]
+    if any(o.rush for o in c.overviews.values()) and not c.rush:
+        problems.append("overviews: the rush needs content/rush.yaml")
     if len(c.sounds) != sum(len(g.sounds) for g in c.soundboard):
         problems.append("soundboard: two sounds share an id")
     if c.opening and c.opening.resets_to not in c.presets:
@@ -324,4 +330,7 @@ def asset_paths(c: Content) -> set[str]:
         paths |= {p for p in (o.device, o.mask) if p}
     if c.slots:
         paths |= set(c.slots.art.model_dump().values())
+    if c.rush:
+        paths |= set(c.rush.art.model_dump().values()) | set(c.rush.layers().values()) | set(c.rush.bins().values())
+        paths |= {c.rush.sound.file(n) for n in c.rush.sound.names(c.rush.ranks)}
     return paths

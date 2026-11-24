@@ -1,0 +1,1968 @@
+{
+ "game": {
+  "shift": 90.0,
+  "rush": [
+   40.0,
+   70.0
+  ],
+  "last": 84.0,
+  "gap": 0.5,
+  "tick": 0.1,
+  "first": 1.0,
+  "every": {
+   "calm": 5.5,
+   "rush": 3.0,
+   "after": 5.0
+  },
+  "patience": {
+   "calm": 18.0,
+   "rush": 13.0
+  },
+  "easy": 14.0,
+  "two": 0.5,
+  "three": 0.3,
+  "red": 1.1,
+  "hold": 18.0,
+  "noodles": [
+   [
+    "ramen",
+    "RAMEN"
+   ],
+   [
+    "udon",
+    "UDON"
+   ],
+   [
+    "glass",
+    "GLASS"
+   ]
+  ],
+  "broths": [
+   [
+    "miso",
+    "MISO"
+   ],
+   [
+    "spicy",
+    "SPICY"
+   ],
+   [
+    "clear",
+    "CLEAR"
+   ]
+  ],
+  "toppings": [
+   [
+    "egg",
+    "EGG"
+   ],
+   [
+    "scallion",
+    "SCALLION"
+   ],
+   [
+    "chili",
+    "CHILI"
+   ],
+   [
+    "tofu",
+    "TOFU"
+   ],
+   [
+    "mushroom",
+    "MUSHROOM"
+   ]
+  ],
+  "gran": {
+   "at": 26.0,
+   "patience": 26.0,
+   "noodle": "udon",
+   "broth": "clear",
+   "toppings": [
+    "egg",
+    "scallion"
+   ]
+  },
+  "csat": {
+   "at": 52.0,
+   "patience": 15.0
+  },
+  "ticket": {
+   "number": "TICKET",
+   "broth": " BROTH",
+   "gran": {
+    "who": "GRAN",
+    "text": "THE USUAL,\nDEAR"
+   },
+   "csat": {
+    "who": "CSAT-1",
+    "text": "ONE (1) BOWL\nANY"
+   }
+  },
+  "lines": {
+   "idle": "CLOCK IN WHEN READY.",
+   "title": "SARGE'S RUSH",
+   "clock_in": "CLOCK IN",
+   "serve": "SERVE",
+   "start": "STATIONS.",
+   "rush": "INCOMING. ALL HANDS.",
+   "call": "TICKET {id}. {noodle}. {broth}. {toppings}. MOVE.",
+   "call_gran": "TICKET {id}. GRAN. THE USUAL. YOU KNOW THE USUAL.",
+   "call_csat": "TICKET {id}. THE DROID. GIVE IT A BOWL. ANY BOWL.",
+   "empty": "AN EMPTY BOWL. BOLD.",
+   "usual": "THE USUAL. CORRECT.",
+   "not_usual": "THAT IS NOT THE USUAL.",
+   "droid_served": "DO NOT FILL IN ITS FORM.",
+   "droid_left": "THE DROID LEFT. GOOD.",
+   "cease": "CEASE COOKING. ",
+   "ok": [
+    "ACCEPTABLE.",
+    "OUT THE DOOR.",
+    "NEXT.",
+    "THAT IS A BOWL.",
+    "GOOD. AGAIN."
+   ],
+   "bad": [
+    "THAT IS NOT WHAT THE TICKET SAYS.",
+    "WHO TAUGHT YOU BROTH?",
+    "READ THE TICKET. THEN COOK."
+   ],
+   "gone": [
+    "WE LOST ONE. WE DO NOT LOSE ONE.",
+    "A CUSTOMER WALKED. UNACCEPTABLE."
+   ]
+  },
+  "ranks": [
+   {
+    "min": 16,
+    "rank": "SERGEANT",
+    "line": "TELL THE CATERERS SARGE SENT YOU.",
+    "sound": "rank_sergeant"
+   },
+   {
+    "min": 9,
+    "rank": "CORPORAL",
+    "line": "YOU'LL DO. COME BACK TOMORROW.",
+    "sound": "rank_corporal"
+   },
+   {
+    "min": -99,
+    "rank": "PRIVATE",
+    "line": "YOU HELD A LADLE. THAT IS ALL I WILL SAY.",
+    "sound": "rank_private"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "seed": 12345,
+   "serves": [],
+   "upto": 90000,
+   "result": {
+    "el": 90000,
+    "done": true,
+    "slots": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "bark": "CEASE COOKING. YOU HELD A LADLE. THAT IS ALL I WILL SAY.",
+    "red": false,
+    "out": 0,
+    "wrong": 0,
+    "lost": 14,
+    "score": -14,
+    "rank": "PRIVATE",
+    "rush": false,
+    "cues": [
+     {
+      "at": 0,
+      "kind": "start",
+      "key": "start"
+     },
+     {
+      "at": 1000,
+      "kind": "ticket",
+      "key": "t1"
+     },
+     {
+      "at": 6500,
+      "kind": "ticket",
+      "key": "t2"
+     },
+     {
+      "at": 12000,
+      "kind": "ticket",
+      "key": "t3"
+     },
+     {
+      "at": 17500,
+      "kind": "ticket",
+      "key": "t4"
+     },
+     {
+      "at": 19000,
+      "kind": "lost",
+      "key": "l1"
+     },
+     {
+      "at": 23000,
+      "kind": "ticket",
+      "key": "t5"
+     },
+     {
+      "at": 24500,
+      "kind": "lost",
+      "key": "l2"
+     },
+     {
+      "at": 28500,
+      "kind": "ticket",
+      "key": "t6"
+     },
+     {
+      "at": 30000,
+      "kind": "lost",
+      "key": "l3"
+     },
+     {
+      "at": 34000,
+      "kind": "ticket",
+      "key": "t7"
+     },
+     {
+      "at": 35500,
+      "kind": "lost",
+      "key": "l4"
+     },
+     {
+      "at": 39500,
+      "kind": "ticket",
+      "key": "t8"
+     },
+     {
+      "at": 40000,
+      "kind": "rush",
+      "key": "rush"
+     },
+     {
+      "at": 41000,
+      "kind": "lost",
+      "key": "l5"
+     },
+     {
+      "at": 45000,
+      "kind": "ticket",
+      "key": "t9"
+     },
+     {
+      "at": 52000,
+      "kind": "lost",
+      "key": "l7"
+     },
+     {
+      "at": 52500,
+      "kind": "ticket",
+      "key": "t10"
+     },
+     {
+      "at": 54500,
+      "kind": "lost",
+      "key": "l6"
+     },
+     {
+      "at": 55500,
+      "kind": "ticket",
+      "key": "t11"
+     },
+     {
+      "at": 57500,
+      "kind": "lost",
+      "key": "l8"
+     },
+     {
+      "at": 58000,
+      "kind": "lost",
+      "key": "l9"
+     },
+     {
+      "at": 58500,
+      "kind": "ticket",
+      "key": "t12"
+     },
+     {
+      "at": 61500,
+      "kind": "ticket",
+      "key": "t13"
+     },
+     {
+      "at": 67500,
+      "kind": "droid_left",
+      "key": "l10"
+     },
+     {
+      "at": 68000,
+      "kind": "ticket",
+      "key": "t14"
+     },
+     {
+      "at": 68500,
+      "kind": "lost",
+      "key": "l11"
+     },
+     {
+      "at": 71000,
+      "kind": "ticket",
+      "key": "t15"
+     },
+     {
+      "at": 71500,
+      "kind": "lost",
+      "key": "l12"
+     },
+     {
+      "at": 74500,
+      "kind": "lost",
+      "key": "l13"
+     },
+     {
+      "at": 76000,
+      "kind": "ticket",
+      "key": "t16"
+     },
+     {
+      "at": 81000,
+      "kind": "lost",
+      "key": "l14"
+     },
+     {
+      "at": 81000,
+      "kind": "ticket",
+      "key": "t17"
+     },
+     {
+      "at": 89000,
+      "kind": "lost",
+      "key": "l15"
+     },
+     {
+      "at": 90000,
+      "kind": "end",
+      "key": "end"
+     }
+    ]
+   }
+  },
+  {
+   "seed": 12345,
+   "serves": [],
+   "upto": 41234,
+   "result": {
+    "el": 41234,
+    "done": false,
+    "slots": [
+     null,
+     {
+      "kind": "gran",
+      "n": "udon",
+      "b": "clear",
+      "t": [
+       "egg",
+       "scallion"
+      ],
+      "pat": 26000,
+      "id": 6,
+      "born": 28500
+     },
+     {
+      "kind": "std",
+      "n": "glass",
+      "b": "spicy",
+      "t": [
+       "tofu"
+      ],
+      "pat": 18000,
+      "id": 7,
+      "born": 34000
+     },
+     {
+      "kind": "std",
+      "n": "glass",
+      "b": "miso",
+      "t": [
+       "scallion",
+       "egg"
+      ],
+      "pat": 18000,
+      "id": 8,
+      "born": 39500
+     }
+    ],
+    "bark": "WE LOST ONE. WE DO NOT LOSE ONE.",
+    "red": true,
+    "out": 0,
+    "wrong": 0,
+    "lost": 5,
+    "score": -5,
+    "rank": null,
+    "rush": true,
+    "cues": [
+     {
+      "at": 0,
+      "kind": "start",
+      "key": "start"
+     },
+     {
+      "at": 1000,
+      "kind": "ticket",
+      "key": "t1"
+     },
+     {
+      "at": 6500,
+      "kind": "ticket",
+      "key": "t2"
+     },
+     {
+      "at": 12000,
+      "kind": "ticket",
+      "key": "t3"
+     },
+     {
+      "at": 17500,
+      "kind": "ticket",
+      "key": "t4"
+     },
+     {
+      "at": 19000,
+      "kind": "lost",
+      "key": "l1"
+     },
+     {
+      "at": 23000,
+      "kind": "ticket",
+      "key": "t5"
+     },
+     {
+      "at": 24500,
+      "kind": "lost",
+      "key": "l2"
+     },
+     {
+      "at": 28500,
+      "kind": "ticket",
+      "key": "t6"
+     },
+     {
+      "at": 30000,
+      "kind": "lost",
+      "key": "l3"
+     },
+     {
+      "at": 34000,
+      "kind": "ticket",
+      "key": "t7"
+     },
+     {
+      "at": 35500,
+      "kind": "lost",
+      "key": "l4"
+     },
+     {
+      "at": 39500,
+      "kind": "ticket",
+      "key": "t8"
+     },
+     {
+      "at": 40000,
+      "kind": "rush",
+      "key": "rush"
+     },
+     {
+      "at": 41000,
+      "kind": "lost",
+      "key": "l5"
+     }
+    ]
+   }
+  },
+  {
+   "seed": 7,
+   "serves": [
+    {
+     "k": 1,
+     "at": 2637,
+     "n": "ramen",
+     "b": "clear",
+     "t": [
+      "egg"
+     ]
+    },
+    {
+     "k": 2,
+     "at": 8137,
+     "n": "udon",
+     "b": "spicy",
+     "t": [
+      "chili"
+     ]
+    },
+    {
+     "k": 3,
+     "at": 13637,
+     "n": "glass",
+     "b": "miso",
+     "t": [
+      "chili"
+     ]
+    },
+    {
+     "k": 4,
+     "at": 19137,
+     "n": "ramen",
+     "b": "spicy",
+     "t": [
+      "chili"
+     ]
+    },
+    {
+     "k": 5,
+     "at": 24637,
+     "n": "glass",
+     "b": "miso",
+     "t": [
+      "scallion"
+     ]
+    },
+    {
+     "k": 6,
+     "at": 30137,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "egg",
+      "scallion"
+     ]
+    },
+    {
+     "k": 7,
+     "at": 35637,
+     "n": "ramen",
+     "b": "spicy",
+     "t": [
+      "egg",
+      "scallion"
+     ]
+    },
+    {
+     "k": 8,
+     "at": 41137,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "mushroom",
+      "chili"
+     ]
+    },
+    {
+     "k": 9,
+     "at": 46637,
+     "n": "ramen",
+     "b": "miso",
+     "t": [
+      "mushroom",
+      "tofu"
+     ]
+    },
+    {
+     "k": 10,
+     "at": 49637,
+     "n": "glass",
+     "b": "spicy",
+     "t": [
+      "egg",
+      "scallion"
+     ]
+    },
+    {
+     "k": 11,
+     "at": 52637,
+     "n": "glass",
+     "b": "miso",
+     "t": [
+      "mushroom",
+      "chili"
+     ]
+    },
+    {
+     "k": 12,
+     "at": 55637,
+     "n": "ramen",
+     "b": "miso",
+     "t": []
+    },
+    {
+     "k": 13,
+     "at": 58637,
+     "n": "ramen",
+     "b": "spicy",
+     "t": [
+      "egg",
+      "mushroom",
+      "scallion"
+     ]
+    },
+    {
+     "k": 14,
+     "at": 61637,
+     "n": "glass",
+     "b": "spicy",
+     "t": [
+      "tofu",
+      "mushroom",
+      "scallion"
+     ]
+    },
+    {
+     "k": 15,
+     "at": 64637,
+     "n": "glass",
+     "b": "clear",
+     "t": [
+      "chili",
+      "tofu",
+      "mushroom"
+     ]
+    },
+    {
+     "k": 16,
+     "at": 67637,
+     "n": "glass",
+     "b": "miso",
+     "t": [
+      "mushroom",
+      "chili"
+     ]
+    },
+    {
+     "k": 17,
+     "at": 70637,
+     "n": "glass",
+     "b": "clear",
+     "t": [
+      "tofu",
+      "chili"
+     ]
+    },
+    {
+     "k": 18,
+     "at": 73637,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "chili"
+     ]
+    },
+    {
+     "k": 19,
+     "at": 78637,
+     "n": "ramen",
+     "b": "clear",
+     "t": [
+      "scallion",
+      "egg"
+     ]
+    },
+    {
+     "k": 20,
+     "at": 83637,
+     "n": "udon",
+     "b": "spicy",
+     "t": [
+      "egg"
+     ]
+    }
+   ],
+   "upto": 90000,
+   "result": {
+    "el": 90000,
+    "done": true,
+    "slots": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "bark": "CEASE COOKING. TELL THE CATERERS SARGE SENT YOU.",
+    "red": false,
+    "out": 19,
+    "wrong": 0,
+    "lost": 0,
+    "score": 19,
+    "rank": "SERGEANT",
+    "rush": false,
+    "cues": [
+     {
+      "at": 0,
+      "kind": "start",
+      "key": "start"
+     },
+     {
+      "at": 1000,
+      "kind": "ticket",
+      "key": "t1"
+     },
+     {
+      "at": 2637,
+      "kind": "ok",
+      "key": "s1"
+     },
+     {
+      "at": 6500,
+      "kind": "ticket",
+      "key": "t2"
+     },
+     {
+      "at": 8137,
+      "kind": "ok",
+      "key": "s2"
+     },
+     {
+      "at": 12000,
+      "kind": "ticket",
+      "key": "t3"
+     },
+     {
+      "at": 13637,
+      "kind": "ok",
+      "key": "s3"
+     },
+     {
+      "at": 17500,
+      "kind": "ticket",
+      "key": "t4"
+     },
+     {
+      "at": 19137,
+      "kind": "ok",
+      "key": "s4"
+     },
+     {
+      "at": 23000,
+      "kind": "ticket",
+      "key": "t5"
+     },
+     {
+      "at": 24637,
+      "kind": "ok",
+      "key": "s5"
+     },
+     {
+      "at": 28500,
+      "kind": "ticket",
+      "key": "t6"
+     },
+     {
+      "at": 30137,
+      "kind": "ok",
+      "key": "s6"
+     },
+     {
+      "at": 34000,
+      "kind": "ticket",
+      "key": "t7"
+     },
+     {
+      "at": 35637,
+      "kind": "ok",
+      "key": "s7"
+     },
+     {
+      "at": 39500,
+      "kind": "ticket",
+      "key": "t8"
+     },
+     {
+      "at": 40000,
+      "kind": "rush",
+      "key": "rush"
+     },
+     {
+      "at": 41137,
+      "kind": "ok",
+      "key": "s8"
+     },
+     {
+      "at": 45000,
+      "kind": "ticket",
+      "key": "t9"
+     },
+     {
+      "at": 46637,
+      "kind": "ok",
+      "key": "s9"
+     },
+     {
+      "at": 48000,
+      "kind": "ticket",
+      "key": "t10"
+     },
+     {
+      "at": 49637,
+      "kind": "ok",
+      "key": "s10"
+     },
+     {
+      "at": 51000,
+      "kind": "ticket",
+      "key": "t11"
+     },
+     {
+      "at": 52637,
+      "kind": "ok",
+      "key": "s11"
+     },
+     {
+      "at": 54000,
+      "kind": "ticket",
+      "key": "t12"
+     },
+     {
+      "at": 55637,
+      "kind": "ok",
+      "key": "s12"
+     },
+     {
+      "at": 57000,
+      "kind": "ticket",
+      "key": "t13"
+     },
+     {
+      "at": 58637,
+      "kind": "ok",
+      "key": "s13"
+     },
+     {
+      "at": 60000,
+      "kind": "ticket",
+      "key": "t14"
+     },
+     {
+      "at": 61637,
+      "kind": "ok",
+      "key": "s14"
+     },
+     {
+      "at": 63000,
+      "kind": "ticket",
+      "key": "t15"
+     },
+     {
+      "at": 64637,
+      "kind": "ok",
+      "key": "s15"
+     },
+     {
+      "at": 66000,
+      "kind": "ticket",
+      "key": "t16"
+     },
+     {
+      "at": 67637,
+      "kind": "ok",
+      "key": "s16"
+     },
+     {
+      "at": 69000,
+      "kind": "ticket",
+      "key": "t17"
+     },
+     {
+      "at": 70637,
+      "kind": "ok",
+      "key": "s17"
+     },
+     {
+      "at": 72000,
+      "kind": "ticket",
+      "key": "t18"
+     },
+     {
+      "at": 73637,
+      "kind": "ok",
+      "key": "s18"
+     },
+     {
+      "at": 77000,
+      "kind": "ticket",
+      "key": "t19"
+     },
+     {
+      "at": 78637,
+      "kind": "ok",
+      "key": "s19"
+     },
+     {
+      "at": 82000,
+      "kind": "ticket",
+      "key": "t20"
+     },
+     {
+      "at": 83637,
+      "kind": "ok",
+      "key": "s20"
+     },
+     {
+      "at": 90000,
+      "kind": "end",
+      "key": "end"
+     }
+    ]
+   }
+  },
+  {
+   "seed": 2024,
+   "serves": [
+    {
+     "k": 1,
+     "at": 2637,
+     "n": "glass",
+     "b": "spicy",
+     "t": [
+      "mushroom"
+     ]
+    },
+    {
+     "k": 2,
+     "at": 8137,
+     "n": "udon",
+     "b": "spicy",
+     "t": [
+      "chili"
+     ]
+    },
+    {
+     "k": 3,
+     "at": 13637,
+     "n": "glass",
+     "b": "spicy",
+     "t": [
+      "chili"
+     ]
+    },
+    {
+     "k": 4,
+     "at": 19137,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "egg",
+      "chili"
+     ]
+    },
+    {
+     "k": 5,
+     "at": 19837,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "egg",
+      "chili"
+     ]
+    },
+    {
+     "k": 6,
+     "at": 24637,
+     "n": "glass",
+     "b": "miso",
+     "t": [
+      "mushroom"
+     ]
+    },
+    {
+     "k": 7,
+     "at": 30137,
+     "n": null,
+     "b": null,
+     "t": []
+    },
+    {
+     "k": 8,
+     "at": 30837,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "egg",
+      "scallion"
+     ]
+    },
+    {
+     "k": 9,
+     "at": 31537,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "egg",
+      "scallion"
+     ]
+    },
+    {
+     "k": 10,
+     "at": 35637,
+     "n": "udon",
+     "b": "spicy",
+     "t": [
+      "scallion",
+      "chili"
+     ]
+    },
+    {
+     "k": 11,
+     "at": 41137,
+     "n": "glass",
+     "b": "miso",
+     "t": [
+      "tofu",
+      "chili"
+     ]
+    },
+    {
+     "k": 12,
+     "at": 46637,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "scallion",
+      "tofu",
+      "chili"
+     ]
+    },
+    {
+     "k": 13,
+     "at": 47337,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "scallion",
+      "tofu",
+      "chili"
+     ]
+    },
+    {
+     "k": 14,
+     "at": 49637,
+     "n": null,
+     "b": null,
+     "t": []
+    },
+    {
+     "k": 15,
+     "at": 50337,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "mushroom",
+      "scallion"
+     ]
+    },
+    {
+     "k": 16,
+     "at": 52637,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "egg",
+      "scallion"
+     ]
+    },
+    {
+     "k": 17,
+     "at": 53337,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "egg",
+      "scallion"
+     ]
+    },
+    {
+     "k": 18,
+     "at": 55637,
+     "n": "ramen",
+     "b": "miso",
+     "t": []
+    },
+    {
+     "k": 19,
+     "at": 58637,
+     "n": "udon",
+     "b": "spicy",
+     "t": [
+      "tofu",
+      "egg"
+     ]
+    },
+    {
+     "k": 20,
+     "at": 61637,
+     "n": "ramen",
+     "b": "miso",
+     "t": [
+      "scallion",
+      "tofu"
+     ]
+    },
+    {
+     "k": 21,
+     "at": 62337,
+     "n": null,
+     "b": null,
+     "t": []
+    },
+    {
+     "k": 22,
+     "at": 63037,
+     "n": "ramen",
+     "b": "clear",
+     "t": [
+      "scallion",
+      "tofu"
+     ]
+    },
+    {
+     "k": 23,
+     "at": 64637,
+     "n": "ramen",
+     "b": "spicy",
+     "t": [
+      "mushroom",
+      "egg"
+     ]
+    },
+    {
+     "k": 24,
+     "at": 67637,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "mushroom",
+      "scallion"
+     ]
+    },
+    {
+     "k": 25,
+     "at": 68337,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "mushroom",
+      "scallion"
+     ]
+    },
+    {
+     "k": 26,
+     "at": 70637,
+     "n": "ramen",
+     "b": "clear",
+     "t": [
+      "tofu",
+      "chili",
+      "egg"
+     ]
+    },
+    {
+     "k": 27,
+     "at": 73637,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "chili"
+     ]
+    },
+    {
+     "k": 28,
+     "at": 78637,
+     "n": null,
+     "b": null,
+     "t": []
+    },
+    {
+     "k": 29,
+     "at": 79337,
+     "n": "ramen",
+     "b": "clear",
+     "t": [
+      "mushroom",
+      "egg"
+     ]
+    },
+    {
+     "k": 30,
+     "at": 83637,
+     "n": "udon",
+     "b": "spicy",
+     "t": [
+      "tofu"
+     ]
+    }
+   ],
+   "upto": 90000,
+   "result": {
+    "el": 90000,
+    "done": true,
+    "slots": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "bark": "CEASE COOKING. YOU'LL DO. COME BACK TOMORROW.",
+    "red": false,
+    "out": 19,
+    "wrong": 6,
+    "lost": 0,
+    "score": 13,
+    "rank": "CORPORAL",
+    "rush": false,
+    "cues": [
+     {
+      "at": 0,
+      "kind": "start",
+      "key": "start"
+     },
+     {
+      "at": 1000,
+      "kind": "ticket",
+      "key": "t1"
+     },
+     {
+      "at": 2637,
+      "kind": "ok",
+      "key": "s1"
+     },
+     {
+      "at": 6500,
+      "kind": "ticket",
+      "key": "t2"
+     },
+     {
+      "at": 8137,
+      "kind": "ok",
+      "key": "s2"
+     },
+     {
+      "at": 12000,
+      "kind": "ticket",
+      "key": "t3"
+     },
+     {
+      "at": 13637,
+      "kind": "ok",
+      "key": "s3"
+     },
+     {
+      "at": 17500,
+      "kind": "ticket",
+      "key": "t4"
+     },
+     {
+      "at": 19137,
+      "kind": "wrong",
+      "key": "s4"
+     },
+     {
+      "at": 19837,
+      "kind": "ok",
+      "key": "s5"
+     },
+     {
+      "at": 23000,
+      "kind": "ticket",
+      "key": "t5"
+     },
+     {
+      "at": 24637,
+      "kind": "ok",
+      "key": "s6"
+     },
+     {
+      "at": 28500,
+      "kind": "ticket",
+      "key": "t6"
+     },
+     {
+      "at": 30137,
+      "kind": "empty",
+      "key": "s7"
+     },
+     {
+      "at": 30837,
+      "kind": "wrong",
+      "key": "s8"
+     },
+     {
+      "at": 31537,
+      "kind": "ok",
+      "key": "s9"
+     },
+     {
+      "at": 34000,
+      "kind": "ticket",
+      "key": "t7"
+     },
+     {
+      "at": 35637,
+      "kind": "ok",
+      "key": "s10"
+     },
+     {
+      "at": 39500,
+      "kind": "ticket",
+      "key": "t8"
+     },
+     {
+      "at": 40000,
+      "kind": "rush",
+      "key": "rush"
+     },
+     {
+      "at": 41137,
+      "kind": "ok",
+      "key": "s11"
+     },
+     {
+      "at": 45000,
+      "kind": "ticket",
+      "key": "t9"
+     },
+     {
+      "at": 46637,
+      "kind": "wrong",
+      "key": "s12"
+     },
+     {
+      "at": 47337,
+      "kind": "ok",
+      "key": "s13"
+     },
+     {
+      "at": 48000,
+      "kind": "ticket",
+      "key": "t10"
+     },
+     {
+      "at": 49637,
+      "kind": "empty",
+      "key": "s14"
+     },
+     {
+      "at": 50337,
+      "kind": "ok",
+      "key": "s15"
+     },
+     {
+      "at": 51000,
+      "kind": "ticket",
+      "key": "t11"
+     },
+     {
+      "at": 52637,
+      "kind": "wrong",
+      "key": "s16"
+     },
+     {
+      "at": 53337,
+      "kind": "ok",
+      "key": "s17"
+     },
+     {
+      "at": 54000,
+      "kind": "ticket",
+      "key": "t12"
+     },
+     {
+      "at": 55637,
+      "kind": "ok",
+      "key": "s18"
+     },
+     {
+      "at": 57000,
+      "kind": "ticket",
+      "key": "t13"
+     },
+     {
+      "at": 58637,
+      "kind": "ok",
+      "key": "s19"
+     },
+     {
+      "at": 60000,
+      "kind": "ticket",
+      "key": "t14"
+     },
+     {
+      "at": 61637,
+      "kind": "wrong",
+      "key": "s20"
+     },
+     {
+      "at": 62337,
+      "kind": "empty",
+      "key": "s21"
+     },
+     {
+      "at": 63000,
+      "kind": "ticket",
+      "key": "t15"
+     },
+     {
+      "at": 63037,
+      "kind": "ok",
+      "key": "s22"
+     },
+     {
+      "at": 64637,
+      "kind": "ok",
+      "key": "s23"
+     },
+     {
+      "at": 66000,
+      "kind": "ticket",
+      "key": "t16"
+     },
+     {
+      "at": 67637,
+      "kind": "wrong",
+      "key": "s24"
+     },
+     {
+      "at": 68337,
+      "kind": "ok",
+      "key": "s25"
+     },
+     {
+      "at": 69000,
+      "kind": "ticket",
+      "key": "t17"
+     },
+     {
+      "at": 70637,
+      "kind": "ok",
+      "key": "s26"
+     },
+     {
+      "at": 72000,
+      "kind": "ticket",
+      "key": "t18"
+     },
+     {
+      "at": 73637,
+      "kind": "ok",
+      "key": "s27"
+     },
+     {
+      "at": 77000,
+      "kind": "ticket",
+      "key": "t19"
+     },
+     {
+      "at": 78637,
+      "kind": "empty",
+      "key": "s28"
+     },
+     {
+      "at": 79337,
+      "kind": "ok",
+      "key": "s29"
+     },
+     {
+      "at": 82000,
+      "kind": "ticket",
+      "key": "t20"
+     },
+     {
+      "at": 83637,
+      "kind": "ok",
+      "key": "s30"
+     },
+     {
+      "at": 90000,
+      "kind": "end",
+      "key": "end"
+     }
+    ]
+   }
+  },
+  {
+   "seed": 2024,
+   "serves": [
+    {
+     "k": 1,
+     "at": 2637,
+     "n": "glass",
+     "b": "spicy",
+     "t": [
+      "mushroom"
+     ]
+    },
+    {
+     "k": 2,
+     "at": 8137,
+     "n": "udon",
+     "b": "spicy",
+     "t": [
+      "chili"
+     ]
+    },
+    {
+     "k": 3,
+     "at": 13637,
+     "n": "glass",
+     "b": "spicy",
+     "t": [
+      "chili"
+     ]
+    },
+    {
+     "k": 4,
+     "at": 19137,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "egg",
+      "chili"
+     ]
+    },
+    {
+     "k": 5,
+     "at": 19837,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "egg",
+      "chili"
+     ]
+    },
+    {
+     "k": 6,
+     "at": 24637,
+     "n": "glass",
+     "b": "miso",
+     "t": [
+      "mushroom"
+     ]
+    },
+    {
+     "k": 7,
+     "at": 30137,
+     "n": null,
+     "b": null,
+     "t": []
+    },
+    {
+     "k": 8,
+     "at": 30837,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "egg",
+      "scallion"
+     ]
+    },
+    {
+     "k": 9,
+     "at": 31537,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "egg",
+      "scallion"
+     ]
+    },
+    {
+     "k": 10,
+     "at": 35637,
+     "n": "udon",
+     "b": "spicy",
+     "t": [
+      "scallion",
+      "chili"
+     ]
+    },
+    {
+     "k": 11,
+     "at": 41137,
+     "n": "glass",
+     "b": "miso",
+     "t": [
+      "tofu",
+      "chili"
+     ]
+    },
+    {
+     "k": 12,
+     "at": 46637,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "scallion",
+      "tofu",
+      "chili"
+     ]
+    },
+    {
+     "k": 13,
+     "at": 47337,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "scallion",
+      "tofu",
+      "chili"
+     ]
+    },
+    {
+     "k": 14,
+     "at": 49637,
+     "n": null,
+     "b": null,
+     "t": []
+    },
+    {
+     "k": 15,
+     "at": 50337,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "mushroom",
+      "scallion"
+     ]
+    },
+    {
+     "k": 16,
+     "at": 52637,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "egg",
+      "scallion"
+     ]
+    },
+    {
+     "k": 17,
+     "at": 53337,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "egg",
+      "scallion"
+     ]
+    },
+    {
+     "k": 18,
+     "at": 55637,
+     "n": "ramen",
+     "b": "miso",
+     "t": []
+    },
+    {
+     "k": 19,
+     "at": 58637,
+     "n": "udon",
+     "b": "spicy",
+     "t": [
+      "tofu",
+      "egg"
+     ]
+    },
+    {
+     "k": 20,
+     "at": 61637,
+     "n": "ramen",
+     "b": "miso",
+     "t": [
+      "scallion",
+      "tofu"
+     ]
+    },
+    {
+     "k": 21,
+     "at": 62337,
+     "n": null,
+     "b": null,
+     "t": []
+    },
+    {
+     "k": 22,
+     "at": 63037,
+     "n": "ramen",
+     "b": "clear",
+     "t": [
+      "scallion",
+      "tofu"
+     ]
+    },
+    {
+     "k": 23,
+     "at": 64637,
+     "n": "ramen",
+     "b": "spicy",
+     "t": [
+      "mushroom",
+      "egg"
+     ]
+    },
+    {
+     "k": 24,
+     "at": 67637,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "mushroom",
+      "scallion"
+     ]
+    },
+    {
+     "k": 25,
+     "at": 68337,
+     "n": "udon",
+     "b": "clear",
+     "t": [
+      "mushroom",
+      "scallion"
+     ]
+    },
+    {
+     "k": 26,
+     "at": 70637,
+     "n": "ramen",
+     "b": "clear",
+     "t": [
+      "tofu",
+      "chili",
+      "egg"
+     ]
+    },
+    {
+     "k": 27,
+     "at": 73637,
+     "n": "udon",
+     "b": "miso",
+     "t": [
+      "chili"
+     ]
+    },
+    {
+     "k": 28,
+     "at": 78637,
+     "n": null,
+     "b": null,
+     "t": []
+    },
+    {
+     "k": 29,
+     "at": 79337,
+     "n": "ramen",
+     "b": "clear",
+     "t": [
+      "mushroom",
+      "egg"
+     ]
+    },
+    {
+     "k": 30,
+     "at": 83637,
+     "n": "udon",
+     "b": "spicy",
+     "t": [
+      "tofu"
+     ]
+    }
+   ],
+   "upto": 55555,
+   "result": {
+    "el": 55555,
+    "done": false,
+    "slots": [
+     {
+      "kind": "csat",
+      "n": null,
+      "b": null,
+      "t": [],
+      "pat": 15000,
+      "id": 12,
+      "born": 54000
+     },
+     null,
+     null,
+     null
+    ],
+    "bark": "TICKET 12. THE DROID. GIVE IT A BOWL. ANY BOWL.",
+    "red": false,
+    "out": 11,
+    "wrong": 4,
+    "lost": 0,
+    "score": 7,
+    "rank": null,
+    "rush": true,
+    "cues": [
+     {
+      "at": 0,
+      "kind": "start",
+      "key": "start"
+     },
+     {
+      "at": 1000,
+      "kind": "ticket",
+      "key": "t1"
+     },
+     {
+      "at": 2637,
+      "kind": "ok",
+      "key": "s1"
+     },
+     {
+      "at": 6500,
+      "kind": "ticket",
+      "key": "t2"
+     },
+     {
+      "at": 8137,
+      "kind": "ok",
+      "key": "s2"
+     },
+     {
+      "at": 12000,
+      "kind": "ticket",
+      "key": "t3"
+     },
+     {
+      "at": 13637,
+      "kind": "ok",
+      "key": "s3"
+     },
+     {
+      "at": 17500,
+      "kind": "ticket",
+      "key": "t4"
+     },
+     {
+      "at": 19137,
+      "kind": "wrong",
+      "key": "s4"
+     },
+     {
+      "at": 19837,
+      "kind": "ok",
+      "key": "s5"
+     },
+     {
+      "at": 23000,
+      "kind": "ticket",
+      "key": "t5"
+     },
+     {
+      "at": 24637,
+      "kind": "ok",
+      "key": "s6"
+     },
+     {
+      "at": 28500,
+      "kind": "ticket",
+      "key": "t6"
+     },
+     {
+      "at": 30137,
+      "kind": "empty",
+      "key": "s7"
+     },
+     {
+      "at": 30837,
+      "kind": "wrong",
+      "key": "s8"
+     },
+     {
+      "at": 31537,
+      "kind": "ok",
+      "key": "s9"
+     },
+     {
+      "at": 34000,
+      "kind": "ticket",
+      "key": "t7"
+     },
+     {
+      "at": 35637,
+      "kind": "ok",
+      "key": "s10"
+     },
+     {
+      "at": 39500,
+      "kind": "ticket",
+      "key": "t8"
+     },
+     {
+      "at": 40000,
+      "kind": "rush",
+      "key": "rush"
+     },
+     {
+      "at": 41137,
+      "kind": "ok",
+      "key": "s11"
+     },
+     {
+      "at": 45000,
+      "kind": "ticket",
+      "key": "t9"
+     },
+     {
+      "at": 46637,
+      "kind": "wrong",
+      "key": "s12"
+     },
+     {
+      "at": 47337,
+      "kind": "ok",
+      "key": "s13"
+     },
+     {
+      "at": 48000,
+      "kind": "ticket",
+      "key": "t10"
+     },
+     {
+      "at": 49637,
+      "kind": "empty",
+      "key": "s14"
+     },
+     {
+      "at": 50337,
+      "kind": "ok",
+      "key": "s15"
+     },
+     {
+      "at": 51000,
+      "kind": "ticket",
+      "key": "t11"
+     },
+     {
+      "at": 52637,
+      "kind": "wrong",
+      "key": "s16"
+     },
+     {
+      "at": 53337,
+      "kind": "ok",
+      "key": "s17"
+     },
+     {
+      "at": 54000,
+      "kind": "ticket",
+      "key": "t12"
+     }
+    ]
+   }
+  }
+ ]
+}

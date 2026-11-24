@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import { send, useGame } from '../store/game'
 import type { OverviewView, Survey, SurveyEnding, SurveyOverview, SurveyQuestion } from '../types'
+import { BOARD, LaptopRush } from '../rush/Rush'
 import { Green } from './Green'
 import { answered, sentIn, type Answers } from './survey'
 
@@ -48,7 +49,7 @@ export function OverviewLayer() {
   useLayoutEffect(() => {
     const el = box.current
     if (!el) return
-    const { w, h } = held?.golf ? GOLF : { w: BOX, h: BOX }
+    const { w, h } = held?.rush ? BOARD : held?.golf ? GOLF : { w: BOX, h: BOX }
     const fit = () => setK(Math.min(1, (el.clientHeight - 16) / h, (el.clientWidth - 16) / w))
     fit()
     const ro = new ResizeObserver(fit)
@@ -69,8 +70,10 @@ export function OverviewLayer() {
       {held && (
         <div ref={box} className={'ov-layer' + (open ? ' open' : '')} aria-hidden={!open}>
           <div className="ov-veil" />
-          <div className={'ov-dev' + (held.golf ? ' gf-dev' : '')} style={{ '--ov-k': k } as CSSProperties} role="dialog" aria-label={held.name} aria-modal="false">
-            {held.golf ? (
+          <div className={'ov-dev' + (held.golf ? ' gf-dev' : held.rush ? ' rs-dev' : '')} style={{ '--ov-k': k } as CSSProperties} role="dialog" aria-label={held.name} aria-modal="false">
+            {held.rush ? (
+              <LaptopRush />
+            ) : held.golf ? (
               <Green key={held.id} green={held.golf} onClose={() => close(held, null)} />
             ) : (
               <>

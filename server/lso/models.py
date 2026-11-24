@@ -627,11 +627,12 @@ class Overview(Strict):
     burns: bool = False  # cigar burns on the glass
     survey: Survey | None = None
     golf: GolfGreen | None = None
+    rush: bool = False  # Sarge's rush (content/rush.yaml): one cook at a time, and the TV shows it
 
     @model_validator(mode="after")
     def _one_game(self) -> "Overview":
-        if bool(self.survey) == bool(self.golf):
-            raise ValueError(f"overview {self.id}: needs a survey or a green, not both")
+        if sum(map(bool, (self.survey, self.golf, self.rush))) != 1:
+            raise ValueError(f"overview {self.id}: needs a survey, a green or the rush, just one")
         if self.survey:
             if not self.device or not self.screen:
                 raise ValueError(f"overview {self.id}: a survey needs its device and screen")
@@ -649,6 +650,161 @@ class SlotsArt(Strict):
     crank_down: str
     reel: str
     coin: str
+
+
+
+class RushEvery(Strict):
+    calm: float
+    rush: float
+    after: float
+
+
+class RushPatience(Strict):
+    calm: float
+    rush: float
+
+
+class RushGran(Strict):
+    at: float
+    patience: float
+    noodle: str
+    broth: str
+    toppings: list[str]
+
+
+class RushCsat(Strict):
+    at: float
+    patience: float
+
+
+class RushWho(Strict):
+    who: str
+    text: str
+
+
+class RushTicketText(Strict):
+    number: str
+    broth: str
+    gran: RushWho
+    csat: RushWho
+
+
+class RushLines(Strict):
+    idle: str
+    title: str
+    clock_in: str
+    serve: str
+    start: str
+    rush: str
+    call: str
+    call_gran: str
+    call_csat: str
+    empty: str
+    usual: str
+    not_usual: str
+    droid_served: str
+    droid_left: str
+    cease: str
+    ok: list[str] = Field(min_length=1)
+    bad: list[str] = Field(min_length=1)
+    gone: list[str] = Field(min_length=1)
+
+
+class RushRank(Strict):
+    min: int
+    rank: str
+    line: str
+    sound: str
+
+
+class RushArt(Strict):
+    sarge: str
+    sarge_red: str
+    bowl: str
+
+
+class RushSong(Strict):
+    file: str
+    bars: int
+    bpm: float
+
+    @property
+    def length(self) -> float:
+        """Seconds: the file is exactly one loop, bars of 4/4."""
+        return self.bars * 4 * 60 / self.bpm
+
+
+class RushMusic(Strict):
+    shift: RushSong
+    rush: RushSong
+
+
+class RushSound(Strict):
+    dir: str
+    effects: list[str]
+    barks: list[str] = Field(min_length=1)
+    volume: float
+    bark: float
+    bark_ok: float
+    bark_delay: float
+    rank_delay: float
+    music_volume: float
+    music: RushMusic
+
+    def names(self, ranks: list[RushRank]) -> list[str]:
+        return [*self.effects, *self.barks, *(r.sound for r in ranks), self.music.shift.file, self.music.rush.file]
+
+    def file(self, name: str) -> str:
+        return f"{self.dir}/{name}.flac"
+
+
+class RushGame(Strict):
+    """Sarge's rush (content/rush.yaml): one player cooks, and the TV shows it live. Every number is the prototype's."""
+
+    shift: float
+    rush: tuple[float, float]
+    last: float
+    gap: float
+    tick: float
+    first: float
+    every: RushEvery
+    patience: RushPatience
+    easy: float
+    two: float
+    three: float
+    red: float
+    hold: float
+    noodles: list[tuple[str, str]]
+    broths: list[tuple[str, str]]
+    toppings: list[tuple[str, str]]
+    gran: RushGran
+    csat: RushCsat
+    ticket: RushTicketText
+    lines: RushLines
+    ranks: list[RushRank] = Field(min_length=1)
+    art: RushArt
+    sound: RushSound
+
+    @model_validator(mode="after")
+    def _usual_is_on_the_menu(self) -> "RushGame":
+        g = self.gran
+        if g.noodle not in self.ids("noodles") or g.broth not in self.ids("broths") or not set(g.toppings) <= set(self.ids("toppings")):
+            raise ValueError("gran's usual has to be on the menu")
+        if [r.min for r in self.ranks] != sorted((r.min for r in self.ranks), reverse=True):
+            raise ValueError("ranks go best first")
+        return self
+
+    def ids(self, shelf: str) -> list[str]:
+        return [x[0] for x in getattr(self, shelf)]
+
+    def layers(self) -> dict[str, str]:
+        """What goes into the bowl, drawn over it: b-<broth>, n-<noodle>, t-<topping>."""
+        art = self.art.bowl.rsplit("/", 1)[0]
+        return {f"{p}-{i}": f"{art}/{p}-{i}.png" for p, shelf in (("b", "broths"), ("n", "noodles"), ("t", "toppings")) for i in self.ids(shelf)}
+
+    def bins(self) -> dict[str, str]:
+        art = self.art.bowl.rsplit("/", 1)[0]
+        return {i: f"{art}/bin-{i}.png" for shelf in ("noodles", "broths", "toppings") for i in self.ids(shelf)}
 
 
 class SlotsGame(Strict):
@@ -931,6 +1087,33 @@ class OverviewState(Strict):
     id: str  # this sending, so a reload or a resend starts it fresh
 
 
+
+class RushBowl(Strict):
+    """What's in the bowl on the pass: a noodle, a broth, toppings."""
+
+    n: str | None = None
+    b: str | None = None
+    t: list[str] = []
+
+
+class RushServe(RushBowl):
+    k: int  # the cook's own count of their serves, so their screen knows which have arrived
+    at: int  # ms after clocking in
+
+
+class RushState(Strict):
+    """A shift at Sarge's stall. The tickets come from the seed, so the serves are all that's kept; the cook's laptop,
+    the TV and the server each play the shift out from them (rush.py, web/src/rush/sim.ts)."""
+
+    char: str  # the cook
+    id: str  # the overview's sending
+    seed: int
+    start: float | None = None  # server time they clocked in
+    serves: list[RushServe] = []
+    bowl: RushBowl = Field(default_factory=RushBowl)
+    tally: dict | None = None  # out, wrong, lost, score, rank: set when the shift ends
+
+
 class GameState(Strict):
     seq: int = 0  # seq of the last applied event
     rules: int = 0  # the rules version this game is on (RULES); boot brings an older game up to date
@@ -950,3 +1133,4 @@ class GameState(Strict):
     fights: dict[str, Fight] = {}  # map id -> the fight on it: one per map, so a split party can have two
     overviews: dict[str, OverviewState] = {}  # character -> the overview open on their screen, one at a time
     slots: dict[str, SlotBank] = {}  # "map/object" -> the machines there: who's seated, and whether they still work
+    rush: RushState | None = None  # Sarge's rush, while it's open on the cook's screen (and so on the TV)

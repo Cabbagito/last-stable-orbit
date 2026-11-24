@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import RULES, BurnState, NpcBurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, MaxAdjust, OpeningState, OverviewState, Preset, PresetItem, RollState, SlotBank, SlotSeat, SoundPlayed, TokenState, Vitals
+from .models import RULES, BurnState, NpcBurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, MaxAdjust, OpeningState, OverviewState, Preset, PresetItem, RollState, RushBowl, RushServe, RushState, SlotBank, SlotSeat, SoundPlayed, TokenState, Vitals
 
 SOUNDS_KEPT = 8  # soundboard presses kept for the TV: a quick run of them can land in one frame
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
@@ -122,6 +122,7 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         if fresh.stage.follow and fresh.stage.follow not in fresh.tokens:  # an NPC that isn't in this scene
             fresh.stage.camera, fresh.stage.follow = "crew", None
         fresh.overviews = s.overviews  # and what's open on someone's screen stays open
+        fresh.rush = s.rush
         fresh.slots = {k: SlotBank(out=True) for k, b in s.slots.items() if b.out}  # a flood is for good; everyone's up
         if data.get("scene"):  # only the scene: who stands where and each map's mood. What the crew has and knows stays
             fresh.vitals, fresh.inventory, fresh.seen = s.vitals, s.inventory, s.seen
@@ -275,8 +276,26 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
     elif ev_type == "overview.sent":  # the GM sent an overview: it opens on each of these players' screens
         for char in data["chars"]:
             s.overviews[char] = OverviewState(kind=data["kind"], id=data["id"])
+        if "seed" in data:  # Sarge's rush: a new shift, not clocked in yet
+            s.rush = RushState(char=data["chars"][0], id=data["id"], seed=int(data["seed"]))
+        elif s.rush and s.rush.char in data["chars"]:
+            s.rush = None
     elif ev_type == "overview.closed":  # the player closed it, or the GM took it back
         s.overviews.pop(data["char"], None)
+        if s.rush and s.rush.char == data["char"]:
+            s.rush = None
+    elif ev_type.startswith("rush.") and (not s.rush or s.rush.id != data["id"]):
+        pass  # a shift that's gone
+    elif ev_type == "rush.clocked_in":
+        s.rush.start = float(data["at"])
+    elif ev_type == "rush.bowl":
+        s.rush.bowl = RushBowl(n=data["n"], b=data["b"], t=list(data["t"]))
+    elif ev_type == "rush.served":
+        s.rush.serves.append(RushServe(**data["serve"]))
+        s.rush.bowl = RushBowl()
+    elif ev_type == "rush.ended":
+        s.rush.tally = {k: data[k] for k in ("out", "wrong", "lost", "score", "rank")}
+        s.rush.bowl = RushBowl()
     elif ev_type == "slots.sat":
         s.slots.setdefault(data["key"], SlotBank()).seats.append(SlotSeat(char=data["char"], unit=int(data["unit"])))
     elif ev_type == "slots.pulled":

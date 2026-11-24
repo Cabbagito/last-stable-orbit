@@ -3,8 +3,9 @@ import { gmRun } from '../store/game'
 import type { View } from '../types'
 
 /**
- * Events: send an overview (the Satisfaction Report, for now) to some of the crew. It rises over the map on their
- * screens. Their answers and the verdict stay there; you only see whose screen it's still open on, and can take it back.
+ * Events: send an overview (the Satisfaction Report, mini-golf, Sarge's rush) to some of the crew. It rises over the map
+ * on their screens. Their answers and the verdict stay there; you only see whose screen it's still open on, and can take
+ * it back. Sarge's rush goes to one cook, and the TV shows it.
  */
 export function EventsSection({ view }: { view: View }) {
   const games = view.overviews?.games ?? []
@@ -16,7 +17,12 @@ export function EventsSection({ view }: { view: View }) {
   const gameName = (id: string) => games.find((g) => g.id === id)?.name ?? id
   const nameOf = (id: string) => view.crew.find((c) => c.id === id)?.short ?? id
   const list = (ids: string[]) => (ids.length > 1 ? ids.slice(0, -1).join(', ') + ' and ' + ids[ids.length - 1] : ids[0])
-  const toggle = (id: string) => setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]))
+  const one = !!games.find((g) => g.id === pick)?.one // Sarge's rush: one cook
+  const toggle = (id: string) => setPicked((p) => (one ? (p[0] === id ? [] : [id]) : p.includes(id) ? p.filter((x) => x !== id) : [...p, id]))
+  const choose = (id: string) => {
+    setGame(id)
+    if (games.find((g) => g.id === id)?.one) setPicked((p) => p.slice(0, 1))
+  }
 
   const sendIt = async () => {
     if (!pick || !picked.length) return
@@ -37,7 +43,7 @@ export function EventsSection({ view }: { view: View }) {
           <div className="r5-sec">Event</div>
           <div className="ev-row">
             {games.map((g) => (
-              <button key={g.id} type="button" className={'r10-btn' + (pick === g.id ? ' on' : '')} aria-pressed={pick === g.id} onClick={() => setGame(g.id)}>
+              <button key={g.id} type="button" className={'r10-btn' + (pick === g.id ? ' on' : '')} aria-pressed={pick === g.id} onClick={() => choose(g.id)}>
                 {g.name}
               </button>
             ))}
@@ -53,9 +59,11 @@ export function EventsSection({ view }: { view: View }) {
                 <span>{c.short}</span>
               </button>
             ))}
-            <button type="button" className="r10-btn" onClick={() => setPicked(picked.length === view.crew.length ? [] : view.crew.map((c) => c.id))}>
-              {picked.length === view.crew.length ? 'Nobody' : 'Everyone'}
-            </button>
+            {!one && (
+              <button type="button" className="r10-btn" onClick={() => setPicked(picked.length === view.crew.length ? [] : view.crew.map((c) => c.id))}>
+                {picked.length === view.crew.length ? 'Nobody' : 'Everyone'}
+              </button>
+            )}
           </div>
         </div>
         <button type="button" className="r12-go ev-go" disabled={!pick || !picked.length} onClick={() => void sendIt()}>

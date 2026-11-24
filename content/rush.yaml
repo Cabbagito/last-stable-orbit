@@ -1,0 +1,86 @@
+# Sarge's rush: one player works a shift at Sarge's noodle stall on the Promenade, and the TV shows it live.
+# From the canvas LSO — Sarge's rush (https://claude.ai/artifact/5aYBgU1YhVv3cr1m1CQvHN), board Main. Peter played with
+# these numbers and liked them: they are the prototype's, exactly. Times are seconds from clocking in.
+#
+# The shift plays out the same on the cook's laptop, the TV and the server (server/lso/rush.py, web/src/rush/sim.ts):
+# every random draw comes from the shift's seed, so only the serves travel. Score is bowls out, minus wrong bowls,
+# minus lost tickets. Tips are Peter's to hand over: the screen shows no credits.
+
+shift: 90
+rush: [40, 70]  # tickets come faster and wait less in here
+last: 84  # no new ticket after this
+gap: 0.5  # a slot stays empty this long after a ticket leaves it
+tick: 0.1
+first: 1  # the first ticket
+every: {calm: 5.5, rush: 3, after: 5}  # seconds to the next ticket: before the rush, in it, after it
+patience: {calm: 18, rush: 13}  # how long a ticket waits before the customer walks
+easy: 14  # until then every ticket has one topping
+two: 0.5  # after that, two toppings this often, else one
+three: 0.3  # in the rush, two toppings, or three this often
+red: 1.1  # Sarge's visor stays red this long after a mistake
+hold: 18  # after the verdict the screen holds this long, then closes itself
+
+noodles: [[ramen, RAMEN], [udon, UDON], [glass, GLASS]]
+broths: [[miso, MISO], [spicy, SPICY], [clear, CLEAR]]
+toppings: [[egg, EGG], [scallion, SCALLION], [chili, CHILI], [tofu, TOFU], [mushroom, MUSHROOM]]
+
+# Noodle gran orders once, and her ticket never spells it out: whoever talked to her knows it (and her GM notes).
+gran: {at: 26, patience: 26, noodle: udon, broth: clear, toppings: [egg, scallion]}
+# CSAT-1 orders once. Any bowl with a noodle and a broth satisfies him, and it scores nothing.
+csat: {at: 52, patience: 15}
+
+ticket:
+  number: TICKET  # TICKET 07
+  broth: " BROTH"
+  gran: {who: GRAN, text: "THE USUAL,\nDEAR"}
+  csat: {who: CSAT-1, text: "ONE (1) BOWL\nANY"}
+
+# What Sarge says. {id} is the ticket's number; a call reads its toppings one by one.
+lines:
+  idle: CLOCK IN WHEN READY.
+  title: SARGE'S RUSH
+  clock_in: CLOCK IN
+  serve: SERVE
+  start: STATIONS.
+  rush: INCOMING. ALL HANDS.
+  call: "TICKET {id}. {noodle}. {broth}. {toppings}. MOVE."
+  call_gran: TICKET {id}. GRAN. THE USUAL. YOU KNOW THE USUAL.
+  call_csat: TICKET {id}. THE DROID. GIVE IT A BOWL. ANY BOWL.
+  empty: AN EMPTY BOWL. BOLD.
+  usual: THE USUAL. CORRECT.
+  not_usual: THAT IS NOT THE USUAL.
+  droid_served: DO NOT FILL IN ITS FORM.
+  droid_left: THE DROID LEFT. GOOD.
+  cease: "CEASE COOKING. "  # then the rank's line
+  ok: ["ACCEPTABLE.", "OUT THE DOOR.", "NEXT.", "THAT IS A BOWL.", "GOOD. AGAIN."]
+  bad: ["THAT IS NOT WHAT THE TICKET SAYS.", "WHO TAUGHT YOU BROTH?", "READ THE TICKET. THEN COOK."]
+  gone: ["WE LOST ONE. WE DO NOT LOSE ONE.", "A CUSTOMER WALKED. UNACCEPTABLE."]
+
+# Best first. About 19 tickets count in a shift.
+ranks:
+  - {min: 16, rank: SERGEANT, line: "TELL THE CATERERS SARGE SENT YOU.", sound: rank_sergeant}
+  - {min: 9, rank: CORPORAL, line: "YOU'LL DO. COME BACK TOMORROW.", sound: rank_corporal}
+  - {min: -99, rank: PRIVATE, line: "YOU HELD A LADLE. THAT IS ALL I WILL SAY.", sound: rank_private}
+
+art:
+  sarge: rush/art/sarge.gif
+  sarge_red: rush/art/sarge-red.gif  # over Sarge while he's angry
+  bowl: rush/art/bowl.png
+  # the layers in the bowl are rush/art/b-<broth>.png, n-<noodle>.png and t-<topping>.png; the bins are bin-<id>.png
+
+# All of it plays on the TV only. Volumes from the prototype: effects 0.9, music 0.5, a bark 0.8 (0.55 after a good
+# bowl), 0.12 s after what it answers.
+sound:
+  dir: rush/sound  # each sound is <name>.flac in here
+  effects: [whistle_start, whistle_end, ticket_in, serve_ok, wrong, lost, rush_klaxon]
+  barks: [bark_1, bark_2, bark_3, bark_4]  # one at random, each time Sarge speaks
+  volume: 0.9
+  bark: 0.8
+  bark_ok: 0.55
+  bark_delay: 0.12
+  rank_delay: 1.5
+  music_volume: 0.5
+  # Each song's file is exactly its loop, so it loops without a gap. The rush song is as long as the rush.
+  music:
+    shift: {file: music_shift, bars: 32, bpm: 126}
+    rush: {file: music_rush, bars: 22, bpm: 176}

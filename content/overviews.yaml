@@ -111,3 +111,9 @@
     sweeper: true
     turnstile: true
     curve: true
+
+# Sarge's rush, from the canvas LSO — Sarge's rush (https://claude.ai/artifact/5aYBgU1YhVv3cr1m1CQvHN). One cook at a
+# time, and unlike the others the TV shows it live. Its numbers, lines and art are in content/rush.yaml.
+- id: rush
+  name: Sarge's rush
+  rush: true

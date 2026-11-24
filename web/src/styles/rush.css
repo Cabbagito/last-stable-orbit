@@ -1,0 +1,49 @@
+/* Sarge's rush (the canvas LSO — Sarge's rush, board Main): a 1600 x 900 board, scaled to fit the cook's map and the TV. */
+.ov-dev.rs-dev{width:1600px;height:900px;top:calc(50% - 450px*var(--ov-k,1))}
+.rs-board{position:relative;width:1600px;height:900px;overflow:hidden;background:#0b0908;color:#e7e9ec;font-family:'VT323','Courier New',monospace;user-select:none}
+.rs-board .ctl:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.rs-board.watch button{pointer-events:none;cursor:default}
+.rs-rail{position:absolute;left:0;top:16px;width:1600px;height:4px;background:#2f3238}
+.rs-board.rush .rs-rail{background:#ff4fa3}
+.rs-slots{position:absolute;left:24px;top:8px;width:1552px;display:flex;gap:16px}
+.rs-slot{width:376px;height:238px;display:flex;flex-direction:column;align-items:center}
+.rs-clip{width:28px;height:20px;background:#7c8292;border-bottom:4px solid #23262e;flex-shrink:0}
+.rs-tk{width:376px;height:214px;box-sizing:border-box;padding:10px 18px 14px;background:#e8dcbd;color:#2c2140;display:flex;flex-direction:column}
+.rs-tk.gran{background:#f0d9cf}
+.rs-tk.csat{background:#dfe7f2}
+.rs-tkh{display:flex;justify-content:space-between;font-size:28px;line-height:1;color:#5e5140}
+.rs-tkt{margin-top:6px;font-size:38px;line-height:.9;white-space:pre-line}
+.rs-bar{margin-top:auto;height:10px;background:rgba(44,33,64,.18)}
+.rs-bar i{display:block;height:10px;background:#2c2140;transition:width .1s linear}
+.rs-bar i.low{background:#c8281e}
+.rs-sarge,.rs-bowl{position:absolute;top:252px;width:384px;height:384px}
+.rs-sarge{left:24px}
+.rs-bowl{left:860px}
+.rs-sarge img,.rs-bowl img{position:absolute;left:0;top:0;width:384px;height:384px;image-rendering:pixelated;display:block}
+.rs-sarge .red{opacity:0}
+.rs-board.red .rs-sarge .red{opacity:1}
+.rs-bark{position:absolute;left:436px;top:262px;width:400px;font-size:52px;line-height:.92;color:#f3e3bd;text-shadow:0 0 8px rgba(255,214,150,.45)}
+.rs-board.red .rs-bark{color:#ff8a7a;text-shadow:0 0 8px rgba(255,90,70,.55)}
+.rs-clock{position:absolute;left:1276px;top:262px;width:300px;font-size:120px;line-height:.8;text-align:right;color:#e7e9ec}
+.rs-board.rush .rs-clock{color:#ff7dbb}
+.rs-serve,.rs-go{background:#000;border:1px solid #ff4fa3;color:#ff7dbb;font-family:'Michroma','Arial Narrow',sans-serif;letter-spacing:.16em;cursor:pointer;padding:0}
+.rs-serve{position:absolute;left:1276px;top:516px;width:300px;height:120px;font-size:20px}
+.rs-go{height:72px;padding:0 56px;font-size:16px}
+.rs-serve:hover,.rs-go:hover{background:#ff4fa3;color:#000}
+.rs-bins{position:absolute;left:44px;top:668px;display:flex;gap:28px}
+.rs-group{display:flex;gap:6px}
+.rs-bin{width:128px;background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.rs-bin img{width:128px;height:128px;image-rendering:pixelated;display:block;box-shadow:0 0 0 2px transparent}
+.rs-bin span{font-family:'VT323','Courier New',monospace;font-size:30px;line-height:1;color:#8a8e96}
+.rs-bin[aria-pressed='true'] img{box-shadow:0 0 0 2px #ff4fa3;background:#180c13}
+.rs-bin[aria-pressed='true'] span{color:#fff}
+.rs-card{position:absolute;left:836px;top:228px;width:764px;height:432px;box-sizing:border-box;padding:0 24px;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.rs-card.done{gap:14px}
+.rs-title{font-size:132px;line-height:.85;letter-spacing:.03em;color:#fff}
+.rs-rank{font-size:170px;line-height:.8;letter-spacing:.03em;color:#fff}
+.rs-rank.top{color:#ff7dbb}
+.rs-tally{font-size:48px;line-height:1;color:#e7e9ec}
+/* On the TV it fills the screen, letterboxed in black */
+.rs-tv{position:absolute;inset:0;z-index:30;background:#000;overflow:hidden}
+.rs-tvk{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform:translate(-50%,-50%) scale(var(--rs-k,1))}
+@media (prefers-reduced-motion:reduce){.rs-bar i{transition:none}}

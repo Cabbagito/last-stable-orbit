@@ -615,6 +615,38 @@ def _overview_view(state: GameState, content: Content, viewer: Viewer) -> dict |
     return {**ov.model_dump(), "kind": ov.id, "id": o.id, "device": url(ov.device), "mask": url(ov.mask)}
 
 
+def _rush_view(state: GameState, content: Content, viewer: Viewer) -> dict | None:
+    """Sarge's rush, for the cook and the TV: the seed, when they clocked in, the serves and the bowl on the pass, so
+    each screen plays the same shift out (web/src/rush/sim.ts). Only the TV gets the sound. Other players get nothing;
+    the GM sees who has it open, and watches the TV."""
+    r, g = state.rush, content.rush
+    if not r or not g or not (viewer.is_stage or (viewer.char and viewer.char == r.char)):
+        return None
+    game = g.model_dump(exclude={"art", "sound"})
+    out = {
+        "id": r.id,
+        "seed": r.seed,
+        "start": r.start,
+        "serves": [x.model_dump() for x in r.serves],
+        "bowl": r.bowl.model_dump(),
+        "tally": r.tally,
+        "game": game,
+        "art": {
+            **{k: url(v) for k, v in g.art.model_dump().items()},
+            "layers": {k: url(v) for k, v in g.layers().items()},
+            "bins": {k: url(v) for k, v in g.bins().items()},
+        },
+    }
+    if viewer.is_stage:
+        sd = g.sound
+        out["sound"] = {
+            "files": {n: url(sd.file(n)) for n in sd.names(g.ranks)},
+            **sd.model_dump(exclude={"dir", "music"}),
+            "music": {k: {"file": v.file, "length": v.length} for k, v in (("shift", sd.music.shift), ("rush", sd.music.rush))},
+        }
+    return out
+
+
 def _slots_view(state: GameState, content: Content, viewer: Viewer) -> dict | None:
     """The machine this player is sitting at. Theirs alone: nobody else, the GM included, hears how it's going."""
     game = content.slots
@@ -668,6 +700,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         "fights": _fights_view(state, content, viewer, here),
         "overview": _overview_view(state, content, viewer),
         "slots": _slots_view(state, content, viewer),
+        "rush": _rush_view(state, content, viewer),
     }
     if gm:
         view["roster"] = [
@@ -682,7 +715,7 @@ def project(state: GameState, content: Content, viewer: Viewer, online: frozense
         view["items"] = [_item_view(it, open_, gm=True) for it in content.items.values()]  # the catalogue, for giving
         view["shelves"] = [s.model_dump() for s in content.shelves]  # and the groups it's sorted into
         view["overviews"] = {  # the Events section: what can be sent, and whose screen has one open now
-            "games": [{"id": o.id, "name": o.name} for o in content.overviews.values()],
+            "games": [{"id": o.id, "name": o.name} | ({"one": True} if o.rush else {}) for o in content.overviews.values()],
             "open": {c: {"kind": o.kind, "id": o.id} for c, o in state.overviews.items()},
         }
     return view

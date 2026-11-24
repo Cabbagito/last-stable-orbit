@@ -8,7 +8,7 @@ from __future__ import annotations
 import math
 import random
 
-from . import rules, sheet
+from . import rules, rush, sheet
 from .auth import Viewer
 from .content import Content
 from .models import STATION_STATES, BURN_COST, CAMERA_PAN_MAX, CAMERA_ZOOM_MAX, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_CAP, HEALTH_CAP, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
@@ -28,6 +28,8 @@ FILM_LEAD = 1.5  # a film starts this long after the GM presses Play. The TV has
 OPENING_LEAD = 0.75  # the opening's film starts on the first beat at least this long after Play, so the TV hears in time
 BURN_LEAD = 0.4  # and every Burn film, so a Burn starts almost at once
 BURN_HOLD = 0.75  # seconds a Burn film's last frame stays up before the hard cut back
+RUSH_BEHIND = 3000  # ms: a serve the cook's laptop says happened longer ago than this lands this long ago
+RUSH_AHEAD = 500  # ms: and one it says happens later than now lands this much later at most
 
 
 class CommandError(Exception):
@@ -498,7 +500,7 @@ def _cue_sets(state: GameState, content: Content, cue) -> Events:
     return events
 
 
-def _gm_overview(state: GameState, content: Content, kind: str, args: dict) -> Events:
+def _gm_overview(state: GameState, content: Content, kind: str, args: dict, rng) -> Events:
     """The GM tab's Events: send an overview to some of the crew, or take one back. Sending one replaces what's open."""
     if kind == "gm.overview.send":
         ov = content.overviews.get(_str(args, "overview"))
@@ -508,6 +510,11 @@ def _gm_overview(state: GameState, content: Content, kind: str, args: dict) -> E
         if not isinstance(chars, list) or not chars or not all(isinstance(c, str) and c in content.characters for c in chars):
             raise _invalid("pick one or more of the crew")
         chars = [c for c in content.characters if c in chars]
+        if ov.rush:  # one cook, and one shift at a time: the TV shows it
+            if len(chars) != 1:
+                raise _invalid("Sarge's rush has one cook: pick one of the crew")
+            events: Events = [("overview.closed", {"char": state.rush.char})] if state.rush and state.rush.char != chars[0] else []
+            return events + [("overview.sent", {"kind": ov.id, "chars": chars, "id": f"o{state.seq + 1}", "seed": rng.randrange(2**31)})]
         return [("overview.sent", {"kind": ov.id, "chars": chars, "id": f"o{state.seq + 1}"})]
     if kind == "gm.overview.recall":
         char = _str(args, "char")
@@ -515,6 +522,49 @@ def _gm_overview(state: GameState, content: Content, kind: str, args: dict) -> E
             raise _invalid("unknown character")
         return [("overview.closed", {"char": char})] if char in state.overviews else []
     raise _invalid(f"unknown intent {kind!r}")
+
+
+def _rush_bowl(content: Content, args: dict) -> dict:
+    g = content.rush
+    n, b, t = args.get("n"), args.get("b"), args.get("t", [])
+    if n is not None and n not in g.ids("noodles"):
+        raise _invalid("that's not a noodle Sarge has")
+    if b is not None and b not in g.ids("broths"):
+        raise _invalid("that's not a broth Sarge has")
+    if not isinstance(t, list) or not all(isinstance(x, str) and x in g.ids("toppings") for x in t) or len(set(t)) != len(t):
+        raise _invalid("toppings are some of Sarge's, once each")
+    return {"n": n, "b": b, "t": [x for x in g.ids("toppings") if x in t]}
+
+
+def _rush_intent(viewer: Viewer, state: GameState, content: Content, kind: str, args: dict, now: float) -> Events:
+    """The cook at Sarge's stall: clock in, fill the bowl, serve it. Nobody else touches it, the GM included. A serve
+    carries when it happened on the cook's screen, so the shift plays out there exactly as it does here and on the TV."""
+    r, g = state.rush, content.rush
+    if not r or not g or not viewer.char or viewer.char != r.char:
+        raise _forbid("only the cook works the shift")
+    if args.get("id") != r.id:
+        return []  # a shift that's over
+    if kind == "rush.clock_in":
+        return [] if r.start is not None else [("rush.clocked_in", {"id": r.id, "at": round(now, 3)})]
+    if kind not in ("rush.bowl", "rush.serve"):
+        raise _invalid(f"unknown intent {kind!r}")
+    bowl = _rush_bowl(content, args)
+    el = round((now - r.start) * 1000) if r.start is not None else -1
+    if el < 0 or r.tally is not None or el >= rush.ms(g.shift) + RUSH_AHEAD:
+        return []  # not clocked in, or the shift is over
+    if kind == "rush.bowl":
+        return [] if bowl == r.bowl.model_dump() else [("rush.bowl", {"id": r.id, **bowl})]
+    k = _int(args, "k")
+    at = args.get("at")
+    if not isinstance(at, (int, float)) or isinstance(at, bool) or not math.isfinite(at):
+        raise _invalid("at is when it was served: ms after clocking in")
+    if any(x.k == k for x in r.serves):
+        return []  # already in
+    last = r.serves[-1].at if r.serves else 0
+    at = max(last, min(max(round(at), el - RUSH_BEHIND), el + RUSH_AHEAD))
+    if at >= rush.ms(g.shift):
+        return []
+    return [("rush.served", {"id": r.id, "serve": {"k": k, "at": at, **bowl}})]
 
 
 def _slots_key(content: Content, args: dict) -> str:
@@ -771,6 +821,14 @@ def sweep(state: GameState, now: float, online: set[str], content: Content | Non
             events += _slots_close(state, game, key, bank, now)
         if seated is not None:
             events += [("slots.left", {"key": key, "char": x.char}) for x in bank.seats if x.char not in seated and x.page != "wait"]
+    r, rg = state.rush, content.rush if content else None
+    if r and rg and r.start is not None:  # the shift ends on the clock, and its screen closes itself after the verdict
+        el = now - r.start
+        if r.tally is None and el >= rg.shift:
+            end = rush.simulate(rg, r.seed, r.serves, rush.ms(rg.shift))
+            events.append(("rush.ended", {"id": r.id} | {k: end[k] for k in ("out", "wrong", "lost", "score", "rank")}))
+        if el >= rg.shift + rg.hold:
+            events.append(("overview.closed", {"char": r.char}))
     if state.stage.flood and now >= state.stage.flood.ends:
         events.append(("slots.flood_ended", {}))
     if state.stage.opening and state.stage.opening.ends is not None and now >= state.stage.opening.ends:
@@ -843,6 +901,9 @@ def handle(
         if not viewer.char:
             raise _invalid("the GM burns for someone with gm.burn.use")
         return _burn(state, content, viewer.char, args.get("cut"), now)
+
+    if kind.startswith("rush."):
+        return _rush_intent(viewer, state, content, kind, args, now)
 
     if kind == "overview.close":
         # the player is done with it. What they answered stays on their screen
@@ -1033,7 +1094,7 @@ def handle(
         return _gm_stage(state, content, kind, args, now)
 
     if kind.startswith("gm.overview."):
-        return _gm_overview(state, content, kind, args)
+        return _gm_overview(state, content, kind, args, rng)
 
     if kind == "gm.slots.service":
         key = _slots_key(content, args)

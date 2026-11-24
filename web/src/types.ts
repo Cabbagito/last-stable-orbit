@@ -1,4 +1,5 @@
 // Mirrors server/lso/views.py: project(). Keep the two in step.
+import type { RushBowl, RushGame, RushServe } from './rush/sim'
 
 export type Vec3 = [number, number, number]
 export const STATS = ['body', 'reflex', 'tech', 'intel', 'cool', 'empathy'] as const
@@ -461,7 +462,8 @@ export interface View {
   shelves?: Shelf[] // GM only: the groups it's sorted into
   overview: OverviewView | null // the overview open on this player's screen; never anyone else's
   slots: SlotView | null // the slot machine this player is sitting at
-  overviews?: { games: { id: string; name: string }[]; open: Record<string, { kind: string; id: string }> } // GM only
+  rush: RushView | null // Sarge's rush: the cook's and the TV's, nobody else's
+  overviews?: { games: { id: string; name: string; one?: boolean }[]; open: Record<string, { kind: string; id: string }> } // GM only
   station_mood?: StationMood // GM only: the one Day / Night / Alert / Occupied control and the maps that follow it
   map_groups?: MapGroup[] // GM only: how the map picker lays out the station
   bench?: BenchView // GM only, and only in the sandbox
@@ -555,6 +557,7 @@ export interface SurveyOverview extends OverviewBase {
   screen: [number, number, number, number] // left, top, width, height in the device's 900 x 900 box
   survey: Survey
   golf: null
+  rush?: false
 }
 
 export interface GolfOverview extends OverviewBase {
@@ -562,10 +565,46 @@ export interface GolfOverview extends OverviewBase {
   screen: null
   survey: null
   golf: GolfGreen
+  rush?: false
+}
+
+/** Sarge's rush: the shift itself is `View.rush`, which the TV gets too. */
+export interface RushOverview extends OverviewBase {
+  device: null
+  screen: null
+  survey: null
+  golf: null
+  rush: true
 }
 
 /** An overview the GM sent to this player. */
-export type OverviewView = SurveyOverview | GolfOverview
+export type OverviewView = SurveyOverview | GolfOverview | RushOverview
+
+/** Sarge's rush, for the cook and the TV: each plays the shift out from the seed and the serves (rush/sim.ts). */
+export interface RushView {
+  id: string
+  seed: number
+  start: number | null // server time (s) the cook clocked in
+  serves: RushServe[]
+  bowl: RushBowl // on the pass, as the cook builds it
+  tally: { out: number; wrong: number; lost: number; score: number; rank: string } | null
+  game: RushGame
+  art: { sarge: string; sarge_red: string; bowl: string; layers: Record<string, string>; bins: Record<string, string> }
+  sound?: RushSoundView // the TV only
+}
+
+export interface RushSoundView {
+  files: Record<string, string>
+  effects: string[]
+  barks: string[]
+  volume: number
+  bark: number
+  bark_ok: number
+  bark_delay: number
+  rank_delay: number
+  music_volume: number
+  music: Record<'shift' | 'rush', { file: string; length: number }>
+}
 
 export type CodexSec = 'chars' | 'items' | 'world' | 'lore' | 'rules'
 

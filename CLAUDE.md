@@ -15,6 +15,7 @@ Companion web app for Peter's sci-fi tabletop campaign. The plan, with what's do
 - **Cutscenes and the TV ("Stage"):** the claude.ai doc LSO — Cutscenes and Stage (https://claude.ai/artifact/8Bh5PsiSBjLaJaHyJfNUz8, read it with the Claude Docs connector), plus one canvas per cutscene (the first is The shotgun, https://claude.ai/artifact/ExqP99kRwpzUP9Funyg7Sv).
 - **Burns:** the Burn animations canvas (https://claude.ai/artifact/C4xxchodAbqihiwNazLQNg): the five films, their icons, and the Burn row on the sheet.
 - **The GM's crew card, the item pickers and chrome:** the canvas LSO — GM crew card and Pockets (https://claude.ai/artifact/ANA6cyA8mHu8jx8LS4soKZ), boards Card C, Give, Install chrome and Pockets A. What was built is in the plan's Progress section.
+- **Sarge's rush:** the canvas LSO — Sarge's rush (https://claude.ai/artifact/5aYBgU1YhVv3cr1m1CQvHN), board Main (the game) and Sounds; its numbers are in `content/rush.yaml`. Its Events entry follows the "GM's side" board on the Bot bay racing canvas (https://claude.ai/artifact/5r9V3M158fam1CqMDdEKgn).
 - **Slots:** the Slots canvas (https://claude.ai/artifact/EPiC8wXsHQy7o5to3Rd8kj); its numbers are in `content/slots.yaml`.
 - **Art:** imported from the claude.ai artifacts. `assets/manifest.yaml` lists each file's store and asset id. Fetch more with the Artifact tool's read action, using the asset id as the path, one call per asset.
 
