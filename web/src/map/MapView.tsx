@@ -329,7 +329,8 @@ export function MapView({ map, tokens, canMove }: { map: MapDef; tokens: TokenVi
                 style={{ left: x, top: y, transform: `scale(${scale * (t.size ?? 1)})`, zIndex: Math.round(y) + (call || burn || hover === t.id ? 3000 : 0) }}
               >
                 {mine && <span className="app-youring" style={{ '--you': YOU } as React.CSSProperties} />}
-                <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `1.5px solid ${foot}`, background: 'rgba(0,0,0,.35)' }} />
+                <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 34, height: 16, marginLeft: -17, borderRadius: '50%', boxSizing: 'border-box', border: `${on ? 2.5 : 1.5}px solid ${foot}`, background: 'rgba(0,0,0,.35)' }} />
+                {on && <span className="app-selrip" />}
                 <span style={{ position: 'absolute', left: '50%', bottom: 8, width: 1.5, height: 36, marginLeft: -0.75, background: foot }} />
                 {/* everything that belongs to the head, so it all lifts together on their turn */}
                 <span className="app-tokhead">

@@ -50,7 +50,7 @@ export function InspectCard() {
     const map = view.maps[mapId]
     const art = map.moods.find((m) => m.id === map.mood)?.base ?? map.moods[0].base
     return (
-      <aside aria-label={obj.name} className={cardClass}>
+      <aside aria-label={obj.name} className={cardClass} key={selected}>
         {corner}
         <Inspector
           label={`OBJECT · ${map.name.toUpperCase()}`}
@@ -82,13 +82,13 @@ export function InspectCard() {
   const crew = t.kind === 'crew' ? view.crew.find((c) => c.id === t.ref) : undefined
   if (isGm && crew)
     return (
-      <aside aria-label={t.name} className={cardClass}>
+      <aside aria-label={t.name} className={cardClass} key={selected}>
         {corner}
         <CrewCard view={view} c={crew} t={t} />
       </aside>
     )
   return (
-    <aside aria-label={t.name} className={cardClass}>
+    <aside aria-label={t.name} className={cardClass} key={selected}>
       {corner}
       <Inspector
         label={`${crew ? 'CREW' : 'NPC'} · ${t.role.toUpperCase()}`}

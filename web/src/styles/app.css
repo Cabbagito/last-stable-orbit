@@ -823,3 +823,81 @@ body {
   height: 32px;
   margin-left: 4px;
 }
+
+/* UI review, round 1 (the canvas page "Round 1: small motion"). */
+/* Arriving somewhere: black over the old map, the new place's name large on it, then the map back and the name to its corner (map/arrival.tsx). */
+.arr-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: #000;
+  pointer-events: none;
+}
+.arr-shade.arr-out {
+  animation: arr-out 0.4s ease both;
+}
+.arr-shade.arr-in {
+  animation: arr-in 2.4s linear both;
+}
+@keyframes arr-out {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+@keyframes arr-in {
+  0%, 21% { opacity: 1 }
+  54%, 100% { opacity: 0 }
+}
+.arr-raise {
+  z-index: 6;
+}
+.arr-label.arr-in {
+  transform-origin: 0 0;
+  animation: arr-name 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes arr-name {
+  0% { opacity: 0; transform: translate(var(--arr-dx, 0), var(--arr-dy, 0)) scale(calc(var(--arr-s, 1) * 1.05)) }
+  17%, 71% { opacity: 1; transform: translate(var(--arr-dx, 0), var(--arr-dy, 0)) scale(var(--arr-s, 1)) }
+  100% { opacity: 1; transform: none }
+}
+/* A card opening: the frame rises in, its contents a beat behind. */
+.app-card {
+  animation: app-cardin 0.33s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.app-card > * {
+  animation: app-cardtxt 0.3s ease-out 0.18s both;
+}
+@keyframes app-cardin {
+  from { opacity: 0; transform: translateY(22px) }
+  to { opacity: 1; transform: none }
+}
+@keyframes app-cardtxt {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+/* Selecting a token: one ripple leaves the ring at its feet. */
+.app-selrip {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 34px;
+  height: 16px;
+  margin-left: -17px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+  pointer-events: none;
+  opacity: 0;
+  animation: app-selrip 0.6s ease-out 1;
+}
+@keyframes app-selrip {
+  from { opacity: 0.9; transform: scale(1) }
+  to { opacity: 0; transform: scale(2.6) }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arr-shade, .arr-label.arr-in, .app-card, .app-card > *, .app-selrip {
+    animation: none;
+  }
+  .arr-shade {
+    display: none;
+  }
+}

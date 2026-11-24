@@ -17,6 +17,7 @@ import type { MapView, TokenView, Vec3, View } from '../types'
 import { Downside } from './Downside'
 import { BurnFilms, FilmPlayer } from './Film'
 import { JoinCard } from './JoinCard'
+import { ArrivalShade, useArrival, useArrivalLabel } from '../map/arrival'
 import { TvOpening } from './Opening'
 import { TvSounds } from './TvSounds'
 import { useAwake } from './useAwake'
@@ -38,9 +39,15 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
   useEffect(() => () => sound.current?.close(), [])
   const k = useScale()
   const awake = useAwake()
+  const arrival = useArrival(view?.party_map ?? '')
+  const label = useArrivalLabel(arrival.phase, arrival.shown)
+  const held = useRef<{ map: MapView; tokens: TokenView[] } | null>(null)
   if (!view) return <div className="app-tv app-wait">Docking…</div>
-  const map = view.maps[view.party_map]
-  const tokens = Object.values(view.tokens).filter((t) => map && t.map === map.id)
+  // while the old map fades out it's still the one drawn (from the first render with the new view, before the fade starts)
+  const leaving = arrival.shown !== view.party_map && held.current?.map.id === arrival.shown ? held.current : null
+  const map = leaving ? leaving.map : view.maps[view.party_map]
+  const tokens = leaving ? leaving.tokens : Object.values(view.tokens).filter((t) => map && t.map === map.id)
+  if (!leaving && map) held.current = { map, tokens }
   const mood = map?.moods.find((m) => m.id === map.mood)
 
   const start = () => {
@@ -52,12 +59,15 @@ export function Tv({ onLogout }: { onLogout?: () => void }) {
 
   return (
     <div className={'app-tv' + (awake ? ' awake' : '')} style={{ '--k': k } as React.CSSProperties}>
-      <div ref={world} className="app-rollworld tvw">
+      <div ref={world} className="app-rollworld tvw arr-box">
         {map ? <TvMap map={map} tokens={tokens} view={view} focus={focus} /> : <div className="app-wait">Somewhere the map doesn't reach.</div>}
+        <ArrivalShade phase={arrival.phase} />
         {map && (
-          <div className="app-tvplace">
-            <div className="r4-place">{map.name}</div>
-            {mood && <div className="r12-tvmood">{mood.label}</div>}
+          <div className={'app-tvplace' + (arrival.phase === 'in' ? ' arr-raise' : '')}>
+            <div ref={label} className={'arr-label' + (arrival.phase === 'in' ? ' arr-in' : '')}>
+              <div className="r4-place">{map.name}</div>
+              {mood && <div className="r12-tvmood">{mood.label}</div>}
+            </div>
           </div>
         )}
         <TvFights view={view} sound={started ? sound.current : null} />
