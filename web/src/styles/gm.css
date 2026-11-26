@@ -383,19 +383,61 @@
 .gx-seat.act .gx-frame{box-shadow:0 0 0 2px #ff4fa3}
 .gx-frame iframe{position:absolute;left:0;top:0;width:1440px;height:900px;border:0;transform-origin:0 0}
 
-/* the soundboard, on the GM's top bar: a category opens its sounds under it, and stays open for the next press */
+
 .app-headright .app-link{white-space:nowrap}
-.gx-sb{display:flex;gap:1px;background:#1e2024;box-shadow:0 0 0 1px #1e2024}
+/* the TV camera's Follow menu */
 .gx-sbcat{position:relative}
-.gx-sbbtn{display:block;background:#000;border:0;min-height:32px;padding:0 12px;cursor:pointer;font-family:'Michroma',sans-serif;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#b4b8c0}
-.gx-sbbtn:hover:not(:disabled){color:#fff}
-.gx-sbbtn.on{color:#fff;box-shadow:inset 0 -2px 0 #ff4fa3}
-.gx-sbbtn:disabled{cursor:default;color:#5e626a}
 .gx-sbmenu{position:absolute;top:calc(100% + 1px);left:0;z-index:300;display:flex;flex-direction:column;gap:1px;min-width:100%;max-height:calc(100vh - 72px);overflow-y:auto;background:#1e2024;box-shadow:0 0 0 1px #1e2024}
 .gx-sbmenu button{background:#000;border:0;min-height:36px;padding:0 14px;cursor:pointer;font:inherit;font-size:13px;text-align:left;white-space:nowrap;color:#b4b8c0}
 .gx-sbmenu button:hover{color:#fff;background:#14151a}
 .gx-sbmenu button:active{color:#fff;box-shadow:inset 2px 0 0 #ff4fa3}
-@media (max-width:1180px){.app-headright:has(.gx-sb){gap:10px}.gx-sbbtn{padding:0 8px}}
+/* the Sound deck (the LSO - Soundboard canvas): a button on the top bar, and a 440px panel down the right edge */
+.sd-open{position:relative;display:flex;align-items:center;gap:8px;background:#000;border:0;box-shadow:0 0 0 1px #1e2024;min-height:32px;padding:0 14px;cursor:pointer;font-family:'Michroma',sans-serif;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#b4b8c0}
+.sd-open:hover{color:#fff}
+.sd-open.on{color:#fff;box-shadow:0 0 0 1px #1e2024,inset 0 -2px 0 #ff4fa3}
+.sd-live{width:6px;height:6px;border-radius:50%;background:#ff4fa3}
+.sd{position:fixed;right:0;top:56px;bottom:0;z-index:30;width:440px;max-width:100vw;box-sizing:border-box;display:flex;flex-direction:column;background:#000;border-left:1px solid #1e2024;border-top:1px solid #1e2024;color:#e7e9ec;font-size:14px;overflow-y:auto;scrollbar-width:none}
+.sd.keyed{border-left-color:#ff4fa3}
+.sd-head{display:flex;align-items:center;gap:12px;height:44px;flex:none;padding:0 8px 0 16px;border-bottom:1px solid #1e2024}
+.sd-title{font-family:'Michroma',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#fff}
+.sd-lab{font-family:'Michroma',sans-serif;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#8a8e96}
+.sd-code{font-family:'Michroma',sans-serif;font-size:9px;letter-spacing:.2em;color:#8a8e96;white-space:nowrap}
+.sd-tv{margin-left:auto;display:flex;align-items:center;gap:7px;font-family:'Michroma',sans-serif;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#8a8e96}
+.sd-tv i{width:7px;height:7px;border-radius:50%;background:#5e626a}
+.sd-tv.on i{background:#5ee08c}
+.sd-x{width:32px;height:32px;display:grid;place-items:center;background:#000;border:0;color:#8a8e96;font-size:18px;line-height:1;cursor:pointer}
+.sd-x:hover{color:#fff}
+.sd-sec{display:flex;flex-direction:column;gap:6px;padding:10px 16px 12px;border-bottom:1px solid #1e2024}
+.sd-sec.sd-pads{padding-top:4px;border-bottom:0}
+.sd-group{display:flex;flex-direction:column;gap:4px}
+.sd-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.sd-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sd-pad{display:flex;align-items:center;gap:8px;min-height:34px;min-width:0;padding:0 12px;background:#000;border:1px solid #2f3238;color:#b4b8c0;font:inherit;font-size:13px;text-align:left;cursor:pointer}
+.sd-pad:hover:not(:disabled){border-color:#fff;color:#fff}
+.sd-pad:active:not(:disabled){border-color:#ff4fa3}
+.sd-pad:focus-visible,.sd-tab:focus-visible,.sd-open:focus-visible,.sd-x:focus-visible{outline:2px solid #ff4fa3;outline-offset:1px}
+.sd-pad:disabled{cursor:default;color:#5e626a;border-color:#1e2024}
+.sd-pad:hover:not(:disabled) .sd-code,.sd.keyed .sd-pad .sd-code{color:#ff7dbb}
+.sd-name{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sd-track.on{color:#fff;background:#180c13;box-shadow:inset 0 -2px 0 #ff4fa3}
+.sd-flare{min-height:46px;color:#e7e9ec}
+.sd-flare .sd-name{font-weight:600}
+.sd-flare i{width:7px;height:7px;border-radius:50%;flex:none}
+.sd-flare:disabled i{opacity:.35}
+.sd-now{display:flex;align-items:center;gap:12px;height:40px}
+.sd-stop{width:34px;padding:0;justify-content:center;flex:none;color:#fff}
+.sd-nowtxt{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+.sd-nowname{font-size:16px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sd-now input[type=range]{width:96px;accent-color:#ff4fa3}
+.sd-tabs{display:flex;gap:1px;margin:0 -12px}
+.sd-tab{background:#000;border:0;height:36px;padding:0 12px;cursor:pointer;font-family:'Michroma',sans-serif;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#b4b8c0}
+.sd-tab:hover{color:#fff}
+.sd-tab.on{color:#fff;box-shadow:inset 0 -2px 0 #ff4fa3}
+.sd-tab span{color:#8a8e96}
+.sd.keyed .sd-tab span{color:#ff7dbb}
+/* the track a fight brings, in "Who's in the fight" */
+.app-fdmusic{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.app-fdmusic .sd-pad{min-height:30px;padding:0 10px;font-size:12.5px}
 /* Lucan's Burns on the GM's card: a button to play each one on the TV, with what it does beside it */
 .npcb .r4-lab{color:#ff5a4a}
 .npcb-row{margin-top:8px}

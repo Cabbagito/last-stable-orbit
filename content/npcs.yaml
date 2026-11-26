@@ -2,6 +2,7 @@
 # gm_note is only ever sent to the GM. color is the token ring: crew pink, the fixer's people red,
 # Dax amber, ISCO's side white-violet, ordinary residents dusk grey.
 # codex names the NPC's Codex entry (content/codex.yaml); the card shows a Codex button once that entry is unlocked.
+# machine: true is a robot, a droid or a mech: it clanks when it's hit, where a person grunts (the Sound deck's automatic sounds).
 # stats: the die for each stat, like the crew's. The GM rolls an NPC by stat. Only the GM ever sees them.
 # group: where it sits in the GM's Add list. The groups go in the order they first appear below, and everyone in a
 # group in the order they're listed, so keep people who belong together (the Sato brothers, a squad) next to each other.
@@ -129,6 +130,7 @@
   name: BOLT-7
   role: The Lookout, machine mind  # DRAFT
   group: Locals
+  machine: true
   portrait: portraits/bolt-7.gif  # the cyan version from the Portraits canvas; its background is still the slot bank
   color: "#5fd8e6"
   stats: {body: 8, reflex: 6, tech: 10, intel: 8, cool: 4, empathy: 10}  # DRAFT placeholder
@@ -173,6 +175,7 @@
   name: Leverage
   role: Lucan's brute
   group: Muscle
+  machine: true
   portrait: portraits/lucan-brute.gif
   color: "#ff5a4a"
   stats: {body: 20, reflex: 6, tech: 8, intel: 6, cool: 20, empathy: 4}  # DRAFT
@@ -185,6 +188,7 @@
   name: Diligence
   role: Lucan's dog
   group: Muscle
+  machine: true
   portrait: portraits/lucan-dog.gif
   color: "#ff5a4a"
   stats: {body: 10, reflex: 20, tech: 4, intel: 6, cool: 12, empathy: 4}  # DRAFT
@@ -330,6 +334,7 @@
   name: Unit 14
   role: The Cleaner
   group: ISCO
+  machine: true
   portrait: portraits/cleaner-14.gif
   codex: unit-14
   color: "#c9bcff"
@@ -343,6 +348,7 @@
   name: Unit 3  # the generic cleaner; units are numbered in primes, and Unit 14 is the one that watches
   role: Cleaner, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/cleaner-3.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
@@ -355,6 +361,7 @@
   name: Unit 7
   role: Cleaner, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/cleaner-7.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
@@ -367,6 +374,7 @@
   name: Unit 11
   role: Cleaner, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/cleaner-11.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
@@ -379,6 +387,7 @@
   name: Unit 13
   role: Cleaner, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/cleaner-13.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
@@ -391,6 +400,7 @@
   name: Unit 19
   role: Cleaner, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/cleaner-19.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
@@ -403,6 +413,7 @@
   name: Unit 23
   role: Cleaner, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/cleaner-23.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 8, tech: 12, intel: 6, cool: 20, empathy: 4}
@@ -415,6 +426,7 @@
   name: The Concierge
   role: Station helper, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/concierge.gif
   codex: concierge
   color: "#c9bcff"
@@ -428,6 +440,7 @@
   name: Service droid
   role: Staff, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/service-droid.gif
   color: "#c9bcff"
   stats: {body: 8, reflex: 8, tech: 12, intel: 8, cool: 10, empathy: 6}
@@ -467,6 +480,7 @@
   name: CSAT-1
   role: Satisfaction Report, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/survey-droid.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 6, tech: 12, intel: 8, cool: 20, empathy: 10}  # DRAFT
@@ -479,6 +493,7 @@
   name: CSAT-2
   role: Satisfaction Report, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/survey-droid-new.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 6, tech: 12, intel: 8, cool: 20, empathy: 10}  # DRAFT
@@ -491,6 +506,7 @@
   name: CSAT-3
   role: Satisfaction Report, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/survey-droid-new.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 6, tech: 12, intel: 8, cool: 20, empathy: 10}  # DRAFT
@@ -503,6 +519,7 @@
   name: CSAT-4
   role: Satisfaction Report, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/survey-droid-new.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 6, tech: 12, intel: 8, cool: 20, empathy: 10}  # DRAFT
@@ -515,6 +532,7 @@
   name: CSAT-5
   role: Satisfaction Report, ISCO
   group: ISCO
+  machine: true
   portrait: portraits/survey-droid-new.gif
   color: "#c9bcff"
   stats: {body: 6, reflex: 6, tech: 12, intel: 8, cool: 20, empathy: 10}  # DRAFT
@@ -565,6 +583,7 @@
   name: Sarge
   role: "Noodle stall, machine mind"
   group: Residents
+  machine: true
   portrait: portraits/robot-cook.gif
   color: "#a9a2bc"
   stats: {body: 8, reflex: 6, tech: 10, intel: 6, cool: 10, empathy: 10}  # DRAFT
@@ -669,6 +688,7 @@
   name: Old miner
   role: Resident, machine mind
   group: Residents
+  machine: true
   portrait: portraits/robot-miner.gif
   color: "#a9a2bc"
   stats: {body: 12, reflex: 4, tech: 8, intel: 6, cool: 12, empathy: 8}  # DRAFT
@@ -680,6 +700,7 @@
   name: Reader
   role: Resident, machine mind
   group: Residents
+  machine: true
   portrait: portraits/robot-reader.gif
   color: "#a9a2bc"
   stats: {body: 4, reflex: 6, tech: 8, intel: 12, cool: 10, empathy: 10}  # DRAFT
@@ -873,6 +894,7 @@
   name: Spider mech
   role: Security, the Company
   group: Company guards
+  machine: true
   portrait: portraits/spider-mech.gif
   color: "#7fb4ff"
   size: 2

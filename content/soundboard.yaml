@@ -1,42 +1,98 @@
-# The GM's soundboard: each heading is a button on the GM's top bar, and its sounds are what that button opens.
-# Sounds play only on the TV. Ids have to be unique across the whole board.
+# The Sound deck: everything the GM plays on the TV by hand, and the sounds that play by themselves. All of it plays
+# only on the TV. Ids have to be unique across the whole file. Design: the LSO - Soundboard canvas.
 
-- id: fight
-  name: Fight
-  sounds:
-    - { id: punch, name: Punch, file: sounds/fight/punch.mp3 }
-    - { id: punch_heavy, name: Heavy punch, file: sounds/fight/punch_heavy.mp3 }
-    - { id: punch_combo, name: Punch combo, file: sounds/fight/punch_combo.mp3 }
-    - { id: swing_miss, name: Swing and a miss, file: sounds/fight/swing_miss.mp3 }
-    - { id: stun_hit, name: Stun hit, file: sounds/fight/stun_hit.mp3 }
-    - { id: metal_bonk, name: Metal bonk, file: sounds/fight/metal_bonk.mp3 }
-    - { id: body_fall, name: Body fall, file: sounds/fight/body_fall.mp3 }
-    - { id: chair_break, name: Chair break, file: sounds/fight/chair_break.mp3 }
-    - { id: bottle_smash, name: Bottle smash, file: sounds/fight/bottle_smash.mp3 }
-    - { id: glass_break, name: Glass break, file: sounds/fight/glass_break.mp3 }
+# Music. One track plays at a time and loops until another is picked. Each file is a FLAC that ends exactly where its
+# loop does (`length`, in seconds); a track with an opening loops back to `loop_from` instead of to its start.
+# Where they come from: music/licensed.py and music/sk_*.py in the claude.ai Project.
+music:
+  - id: around
+    name: Around
+    tracks:
+      - { id: aurora, name: Aurora, file: music/aurora.flac, length: 164.0 } # Scott Buckley, CC BY 4.0: credited in the Codex
+      - { id: station_air, name: Station air, file: music/station_air.flac, length: 48.0 }
+      - { id: lounge, name: Lounge, file: music/lounge.flac, length: 36.923084 }
+      - { id: funked_up, name: Funked Up, file: music/funked_up.flac, length: 66.202336 } # Joth, CC0
+  - id: fight
+    name: Fight
+    fight: true # offered in "Who's in the fight": the one picked comes in after the bell
+    tracks:
+      - { id: funk, name: Funk, file: music/funk.flac, length: 32.542381 }
+      - { id: arcade, name: Arcade, file: music/arcade.flac, length: 37.894739 }
+      - { id: battle_theme, name: Battle Theme, file: music/battle_theme.flac, length: 93.09093, loop_from: 11.636372 } # Komiku, CC0
+      - { id: boss_battle_2, name: "Boss Battle #2", file: music/boss_battle_2.flac, length: 66.206916, loop_from: 39.72415 } # nene, CC0
+  - id: boss
+    name: Boss
+    fight: true
+    tracks:
+      - { id: nothing_personal, name: Nothing personal, file: music/nothing_personal.flac, length: 58.181814 } # on Lucan's theme
+      - { id: no_way_out, name: No way out, file: music/no_way_out.flac, length: 54.857143 }
 
-- id: droid
-  name: Droid
-  sounds:
-    - { id: droid_happy, name: Happy, file: sounds/droid/droid_happy.mp3 }
-    - { id: droid_question, name: Question, file: sounds/droid/droid_question.mp3 }
-    - { id: droid_grumble, name: Grumble, file: sounds/droid/droid_grumble.mp3 }
-    - { id: droid_alarm, name: Alarm, file: sounds/droid/droid_alarm.mp3 }
-    - { id: main_approach, name: CSAT-1 approach, file: sounds/droid/main_approach.mp3 }
-    - { id: main_destroyed, name: CSAT-1 destroyed, file: sounds/droid/main_destroyed.mp3 }
-    - { id: spotless_approach, name: CSAT-2+ approach, file: sounds/droid/spotless_approach.mp3 }
-    - { id: spotless_destroyed, name: CSAT-2+ destroyed, file: sounds/droid/spotless_destroyed.mp3 }
+# The three buttons that are always in reach. `tone` is only the colour of the button's dot.
+flares:
+  - { id: quest_done, name: Quest done, file: sounds/flares/quest_done.mp3, tone: good }
+  - { id: great_move, name: Great move, file: sounds/flares/great_move.mp3, tone: great }
+  - { id: gone_wrong, name: Gone wrong, file: sounds/flares/gone_wrong.mp3, tone: bad }
 
-- id: heist
-  name: Heist
-  sounds:
-    - { id: access_granted, name: Access granted, file: sounds/heist/access_granted.mp3 }
-    - { id: access_denied, name: Access denied, file: sounds/heist/access_denied.mp3 }
-    - { id: hacking, name: Hacking, file: sounds/heist/hacking.mp3 }
-    - { id: vent_crawl, name: Vent crawl, file: sounds/heist/vent_crawl.mp3 }
+# The sounds that play by themselves when the GM does the thing: no button, no switch. Which moment plays which is in
+# commands.py (_sound_follows); to drop one, take its line out.
+auto:
+  fight_start: sounds/auto/fight_start.mp3 # then the track picked in "Who's in the fight" comes in
+  fight_won: sounds/auto/fight_won.mp3 # a fight ended with the crew standing and nobody else
+  crew_hit: sounds/auto/crew_hit.mp3
+  crew_down: sounds/auto/crew_down.mp3
+  npc_hit: sounds/auto/npc_hit.mp3
+  npc_down: sounds/auto/npc_down.mp3
+  machine_hit: sounds/auto/machine_hit.mp3 # an NPC with `machine: true`
+  machine_down: sounds/auto/machine_down.mp3
+  healed: sounds/auto/healed.mp3
+  item_found: sounds/auto/item_found.mp3
+  item_taken: sounds/auto/item_taken.mp3
+  credits_gained: sounds/auto/credits_gained.mp3
+  credits_spent: sounds/auto/credits_spent.mp3
+  entropy_gained: sounds/auto/entropy_gained.mp3
+  entropy_spent: sounds/auto/entropy_spent.mp3
+  arrive: sounds/auto/arrive.mp3 # the crew arrive somewhere: it lands as the new map comes up
 
-- id: bits
-  name: Bits
-  sounds:
-    - { id: sad_trombone, name: Sad trombone, file: sounds/bits/sad_trombone.mp3 }
-    - { id: bad_recorder, name: Bad recorder, file: sounds/bits/bad_recorder.mp3 }
+# The pads: each heading is a tab, and B then two digits plays one (the tab's digit, then the sound's).
+pads:
+  - id: fight
+    name: Fight
+    sounds:
+      - { id: punch, name: Punch, file: sounds/fight/punch.mp3 }
+      - { id: punch_heavy, name: Heavy punch, file: sounds/fight/punch_heavy.mp3 }
+      - { id: punch_combo, name: Punch combo, file: sounds/fight/punch_combo.mp3 }
+      - { id: swing_miss, name: Swing and a miss, file: sounds/fight/swing_miss.mp3 }
+      - { id: stun_hit, name: Stun hit, file: sounds/fight/stun_hit.mp3 }
+      - { id: metal_bonk, name: Metal bonk, file: sounds/fight/metal_bonk.mp3 }
+      - { id: body_fall, name: Body fall, file: sounds/fight/body_fall.mp3 }
+      - { id: chair_break, name: Chair break, file: sounds/fight/chair_break.mp3 }
+      - { id: bottle_smash, name: Bottle smash, file: sounds/fight/bottle_smash.mp3 }
+      - { id: glass_break, name: Glass break, file: sounds/fight/glass_break.mp3 }
+
+  - id: droid
+    name: Droid
+    sounds:
+      - { id: droid_happy, name: Happy, file: sounds/droid/droid_happy.mp3 }
+      - { id: droid_question, name: Question, file: sounds/droid/droid_question.mp3 }
+      - { id: droid_grumble, name: Grumble, file: sounds/droid/droid_grumble.mp3 }
+      - { id: droid_alarm, name: Alarm, file: sounds/droid/droid_alarm.mp3 }
+      - { id: main_approach, name: CSAT-1 approach, file: sounds/droid/main_approach.mp3 }
+      - { id: main_destroyed, name: CSAT-1 destroyed, file: sounds/droid/main_destroyed.mp3 }
+      - { id: spotless_approach, name: CSAT-2+ approach, file: sounds/droid/spotless_approach.mp3 }
+      - { id: spotless_destroyed, name: CSAT-2+ destroyed, file: sounds/droid/spotless_destroyed.mp3 }
+
+  - id: station
+    name: Station
+    sounds:
+      - { id: pa_chime, name: PA chime, file: sounds/station/pa_chime.mp3 }
+      - { id: guard_radio, name: Guard radio, file: sounds/station/guard_radio.mp3 }
+      - { id: access_granted, name: Access granted, file: sounds/heist/access_granted.mp3 }
+      - { id: access_denied, name: Access denied, file: sounds/heist/access_denied.mp3 }
+      - { id: hacking, name: Hacking, file: sounds/heist/hacking.mp3 }
+      - { id: vent_crawl, name: Vent crawl, file: sounds/heist/vent_crawl.mp3 }
+
+  - id: bits
+    name: Bits
+    sounds:
+      - { id: sad_trombone, name: Sad trombone, file: sounds/bits/sad_trombone.mp3 }
+      - { id: bad_recorder, name: Bad recorder, file: sounds/bits/bad_recorder.mp3 }

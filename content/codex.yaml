@@ -647,10 +647,12 @@ entries:
 - id: music-credit
   sec: lore
   name: Credits
-  role: Opening music
+  role: Music
   label: Lore · credits
   art: {src: icons/items/note.png, kind: icon}
-  lead: 'Opening music: "Aphelion" by Scott Buckley, edited, CC BY 4.0, www.scottbuckley.com.au'
+  lead: 'Opening music: "Aphelion" by Scott Buckley, edited, CC BY 4.0, www.scottbuckley.com.au. Around the station: "Aurora" by Scott
+    Buckley, edited, released under CC BY 4.0, www.scottbuckley.com.au. Also "Funked Up" by Joth, "Battle Theme" by Komiku and
+    "Boss Battle #2" by nene, all CC0, from opengameart.org.'
 - id: rule-roll
   sec: rules
   name: The roll

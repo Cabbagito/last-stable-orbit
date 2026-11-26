@@ -40,7 +40,7 @@ describe('keys', () => {
     expect(resolve(key('KeyR'), d)).toBeNull()
   })
 
-  it('players Burn with B, the GM opens the soundboard with it', () => {
+  it('players Burn with B, the GM opens the Sound deck with it', () => {
     expect(resolve(key('KeyB'), player)).toEqual({ a: 'hold', h: 'burn' })
     expect(resolve(key('KeyB'), gm)).toEqual({ a: 'sound' })
   })

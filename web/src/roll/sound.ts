@@ -40,13 +40,13 @@ export class RollSound {
     return this.ac ? this.ac.decodeAudioData(bytes) : Promise.resolve(null)
   }
 
-  /** A soundboard clip. Pressing again overlaps it, as a second punch would. */
-  clip(buffer: AudioBuffer) {
+  /** A Sound deck clip, `delay` seconds from now. Pressing again overlaps it, as a second punch would. */
+  clip(buffer: AudioBuffer, delay = 0) {
     if (!this.ac) return
     const s = this.ac.createBufferSource()
     s.buffer = buffer
     s.connect(this.out!)
-    s.start()
+    s.start(this.ac.currentTime + Math.max(0, delay))
   }
 
   private osc(type: Wave, f0: number, f1: number, t0: number, dur: number, g0: number, g1: number, peakAt?: number) {

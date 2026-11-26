@@ -74,10 +74,28 @@ export function FightBlock({ fight, map }: { fight: FightView; map: MapView }) {
   )
 }
 
+// The fight track picked last time is the one offered next time; picking none is remembered too.
+const MUSIC_KEY = 'lso.fightMusic'
+const NO_MUSIC = '-'
+const recall = () => {
+  try {
+    return window.localStorage.getItem(MUSIC_KEY)
+  } catch {
+    return null // storage is off: the first track is offered
+  }
+}
+const remember = (v: string) => {
+  try {
+    window.localStorage.setItem(MUSIC_KEY, v)
+  } catch {
+    // storage is off: it's only a convenience
+  }
+}
+
 /**
  * "Who's in the fight": everyone on this map, the crew there first (ticked), then every NPC token (unticked);
  * a hidden one is marked, and shown to everyone when it joins. No dice: they're rolled regardless. During a fight,
- * a tick adds or takes out that fighter at once.
+ * a tick adds or takes out that fighter at once. Before one, the Music row picks the track it brings (or none).
  */
 function FightDialog({ map, onClose }: { map: MapView; onClose: () => void }) {
   return createPortal(<FightDialogBody map={map} onClose={onClose} />, document.querySelector('.r4') ?? document.body)
@@ -93,6 +111,17 @@ function FightDialogBody({ map, onClose }: { map: MapView; onClose: () => void }
   const npcs = onMap.filter((t) => t.kind === 'npc').sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id))
   const [picked, setPicked] = useState<Record<string, boolean>>(() => Object.fromEntries(crew.map((t) => [t.id, true])))
   const [busy, setBusy] = useState(false)
+  // the track the fight brings: it comes in after the bell, and what was playing returns when the fight ends
+  const tracks = (view?.stage.deck?.music ?? []).filter((g) => g.fight).flatMap((g) => g.tracks)
+  const [music, setMusic] = useState<string>(() => {
+    const last = recall()
+    return last === NO_MUSIC ? '' : (tracks.find((t) => t.id === last)?.id ?? tracks[0]?.id ?? '')
+  })
+  const pickMusic = (id: string) => {
+    const next = id === music ? '' : id
+    setMusic(next)
+    remember(next || NO_MUSIC)
+  }
   const inFight = (id: string) => !!fight?.fighters.some((x) => x.token === id)
   const away = (view?.crew ?? []).filter((c) => !crew.some((t) => t.ref === c.id))
   const where = (char: string) => {
@@ -113,7 +142,7 @@ function FightDialogBody({ map, onClose }: { map: MapView; onClose: () => void }
   const start = async () => {
     const tokens = [...crew, ...npcs].filter((t) => picked[t.id]).map((t) => t.id)
     setBusy(true)
-    const ack = await gmRun('gm.fight.start', { map: map.id, tokens })
+    const ack = await gmRun('gm.fight.start', music ? { map: map.id, tokens, music } : { map: map.id, tokens })
     setBusy(false)
     if (ack.ok) onClose()
   }
@@ -150,6 +179,18 @@ function FightDialogBody({ map, onClose }: { map: MapView; onClose: () => void }
         ))}
         {npcs.length > 0 && <div className="r5-sec app-fdsec">Everyone else here</div>}
         {npcs.map((t, i) => row(t, crew.length + i))}
+        {!fight && tracks.length > 0 && (
+          <>
+            <div className="r5-sec app-fdsec">Music</div>
+            <div className="app-fdmusic" role="group" aria-label="The fight's music">
+              {tracks.map((t) => (
+                <button key={t.id} type="button" className={'sd-pad sd-track' + (t.id === music ? ' on' : '')} aria-pressed={t.id === music} onClick={() => pickMusic(t.id)}>
+                  {t.name}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
         <div className="app-fdbtns">
           {fight ? (
             <button type="button" className="r4-btn" onClick={onClose}>

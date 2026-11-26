@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Soundboard } from '../gm/Soundboard'
+import { SoundDeck } from '../gm/SoundDeck'
 import { useGame } from '../store/game'
 
 export type Tab = 'scene' | 'station' | 'codex' | 'gm'
@@ -39,7 +39,7 @@ export function Header({ tab, isGm, onLogout }: { tab: Tab; isGm: boolean; onLog
         ))}
       </nav>
       <div className="app-headright">
-        <Soundboard />
+        <SoundDeck />
         {sandbox && <span className="gx-sbxtag">Sandbox</span>}
         <span className={`app-status ${status}`} role="status">
           <span className="app-dot" aria-hidden="true" />

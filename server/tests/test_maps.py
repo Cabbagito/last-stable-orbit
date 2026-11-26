@@ -409,7 +409,7 @@ def test_the_run_sheet_lists_every_film_and_scene_and_follows_what_is_pressed(co
     e = Engine(content, Store(tmp_path / "r.db"), clock=lambda: 1000.0)
     assert project(e.state, content, GM)["stage"]["run"]["at"] is None
     events = handle(GM, e.state, content, "gm.world.load_preset", {"preset": "session-1-day", "scene": True})
-    assert events[-1] == ("run.at_set", {"step": "scene:session-1-day"})
+    assert ("run.at_set", {"step": "scene:session-1-day"}) in events
     events = handle(GM, e.state, content, "gm.film.play", {"cue": "vigil"}, now=1000.0)
     kinds = [k for k, _ in events]
     assert kinds == ["film.started", "run.at_set", "world.loaded", "codex.set"]  # and the Secure floor's page opens on arrival

@@ -320,10 +320,10 @@ async def test_a_press_reaches_only_the_tv(engine, content, clock):
 
 def test_only_the_tv_gets_the_files_and_only_the_gm_the_names(engine, content):
     tv, gm, player = (stage_of(engine, content, v) for v in (STAGE, GM, TALLY))
-    assert tv["sound_files"]["punch"] == PUNCH and "soundboard" not in tv
-    assert [c["id"] for c in gm["soundboard"]] == ["fight", "droid", "heist", "bits"]
-    assert "sound_files" not in gm and "/assets/" not in json.dumps(gm["soundboard"])
-    assert "sound_files" not in player and "soundboard" not in player
+    assert tv["sound_files"]["punch"] == PUNCH and "deck" not in tv
+    assert [c["id"] for c in gm["deck"]["pads"]] == ["fight", "droid", "station", "bits"]
+    assert "sound_files" not in gm and "/assets/" not in json.dumps(gm["deck"])
+    assert "sound_files" not in player and "deck" not in player
 
 
 async def test_only_the_gm_plays_a_sound_and_only_a_real_one(engine):
@@ -357,7 +357,7 @@ def test_a_sound_file_reaches_only_the_tv_and_the_gm(client, seat):
 
 
 def test_every_sound_on_the_board_exists(content):
-    assert len(content.sounds) == 24
+    assert sum(len(c.sounds) for c in content.deck.pads) == 26  # the pads; the flares and the automatic ones are in test_sound_deck.py
     assert not [m for m in content.missing_assets if m.startswith("sounds/")]
 
 

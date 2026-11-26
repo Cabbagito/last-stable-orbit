@@ -20,7 +20,7 @@ export type Action =
   | { a: 'god' }
   | { a: 'tv' }
   | { a: 'follow'; i: number }
-  | { a: 'sound' } // B: start the soundboard's two digits
+  | { a: 'sound' } // B: the Sound deck, and the start of a pad's two digits
   | { a: 'soundCat'; i: number }
   | { a: 'soundPlay'; i: number }
 
@@ -157,6 +157,7 @@ export const HELP: Record<Role, { title: string; rows: [string, string][] }[]> =
         ['R, then 1 – 6', "Roll that stat for the NPC whose card is open"],
         ['G', 'Arm (or disarm) a God roll on that card'],
         ['N', 'Next turn'],
+        ['B', 'The Sound deck: music, flares and sounds'],
         ['B, then two digits', 'Play a sound: each one shows its digits'],
         ['T', 'TV: whole crew, or cut to whoever rolls'],
         ['Shift + 1 – 5', 'TV follows that one of the crew'],

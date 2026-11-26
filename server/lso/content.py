@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, RunAct, Opening, Overview, Preset, PresetItem, RaceGame, RushGame, Scenario, Shelf, SlotsGame, Sound, SoundCategory, Station
+from .models import CODEX_SECTIONS, STATS, Character, CodexEntry, CodexSection, Cutscene, Item, MapDef, Npc, MapGroup, RunAct, Opening, Overview, Preset, PresetItem, RaceGame, RushGame, Scenario, Shelf, SlotsGame, Sound, SoundDeck, Station
 
 log = logging.getLogger("lso.content")
 
@@ -39,12 +39,13 @@ class Content:
     slots: SlotsGame | None = None  # the slot machines' rules
     rush: RushGame | None = None  # Sarge's rush (rush.yaml)
     race: RaceGame | None = None  # Bot bay racing (race.yaml)
-    soundboard: list[SoundCategory] = field(default_factory=list)  # the GM's top bar, in order
+    deck: SoundDeck = field(default_factory=SoundDeck)  # the Sound deck (soundboard.yaml): music, flares, pads, automatic sounds
     missing_assets: list[str] = field(default_factory=list)
 
     @property
     def sounds(self) -> dict[str, Sound]:
-        return {s.id: s for c in self.soundboard for s in c.sounds}
+        """Every clip the TV can be told to play, by id: the pads, the flares and the automatic ones."""
+        return {s.id: s for s in self.deck.every_sound()}
 
     @property
     def default_preset(self) -> Preset:
@@ -103,7 +104,7 @@ def load_content(content_dir: Path, assets_dir: Path | None = None) -> Content:
     op = content_dir / "opening.yaml"
     c.opening = _parse(Opening, _read(op), "opening.yaml") if op.is_file() else None
     board = content_dir / "soundboard.yaml"
-    c.soundboard = [_parse(SoundCategory, g, "soundboard.yaml") for g in _read(board)] if board.is_file() else []
+    c.deck = _parse(SoundDeck, _read(board) or {}, "soundboard.yaml") if board.is_file() else SoundDeck()
     cdx = content_dir / "codex.yaml"
     if cdx.is_file():
         raw = _read(cdx) or {}
@@ -169,8 +170,11 @@ def check_refs(c: Content) -> None:
         problems += [f"race: no bot name and number for {ch!r}" for ch in c.characters if ch not in c.race.crew]
         problems += [f"race: fuel for an unknown item {i!r}" for i in c.race.fuel if i != "none" and i not in c.items]
         problems += [f"race: unknown soundboard sound {s!r}" for s in c.race.sound.soundboard.values() if s not in c.sounds]
-    if len(c.sounds) != sum(len(g.sounds) for g in c.soundboard):
+    if len(c.sounds) != len(c.deck.every_sound()):
         problems.append("soundboard: two sounds share an id")
+    if len(c.deck.tracks) != sum(len(g.tracks) for g in c.deck.music):
+        problems.append("soundboard: two tracks share an id")
+    problems += [f"soundboard: {t.id}'s file has to be a FLAC, so it loops without a gap" for t in c.deck.tracks.values() if not t.file.endswith(".flac")]
     if c.opening and c.opening.resets_to not in c.presets:
         problems.append(f"opening: resets_to is an unknown preset {c.opening.resets_to!r}")
     if not c.slots:
@@ -337,7 +341,7 @@ def asset_paths(c: Content) -> set[str]:
         paths |= {p for p in (cue.file, cue.still) if p}
     if c.opening:
         paths |= {c.opening.loop, c.opening.film, c.opening.audio, c.opening.still}
-    paths |= {s.file for s in c.sounds.values()}
+    paths |= {s.file for s in c.sounds.values()} | {t.file for t in c.deck.tracks.values()}
     for sec in c.codex_sections:
         paths |= {t.src for t in sec.tiles + sec.strip}
     if c.station:

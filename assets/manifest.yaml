@@ -23,6 +23,7 @@ stores:
   KEEPER: https://claude.ai/artifact/G3omhDn8wAePmtBzufSGHv  # the storyboard; rendered in a claude.ai session by cutscenes/keeper_film.py
   RUSH: https://claude.ai/artifact/5aYBgU1YhVv3cr1m1CQvHN  # drawn by minigames/sarge_art.py, sound by mg_sound.py and mg_music.py
   RACE: https://claude.ai/artifact/5r9V3M158fam1CqMDdEKgn  # Bot bay racing. Sound by minigames/mg_sound.py and mg_music.py, from the kit Peter handed over
+  SOUND: https://claude.ai/artifact/8zLteqgQmJoNiKfrNUVTgG  # the Sound deck's canvas. The audio is made in a claude.ai session by the Project's music/*.py (sk_* are synthesised, licensed.py cuts the licensed tracks into loops); to hear it all: https://claude.ai/artifact/V4X2caLd2KTKt4enDFzVK5
 assets:
   - path: maps/event-horizon/base-open.png
     store: MAPS
@@ -2977,3 +2978,158 @@ assets:
     asset_id: "11879c47bf6e6f1495346cffcac642c6"
     sha256: "3cd477414ae7a2c77828a7ea0e2426fbd9a033c39e7220ba7017962ce87af308"
     bytes: 1123
+  - path: music/aurora.flac
+    store: SOUND
+    asset_id: null  # licensed.py: the quiet close of 'Aurora' by Scott Buckley (CC BY 4.0, www.scottbuckley.com.au), its end faded under its start
+    sha256: "1a6aaa38628eb35dbd97ea98b7b3b5fca80acf165cacaa9e517fec2c7d77cf96"
+    bytes: 13125416
+  - path: music/station_air.flac
+    store: SOUND
+    asset_id: null  # sk_ambient.py
+    sha256: "eba9a6ad8e2bd6b1c4f3f78a40533069c497a78569de475b0d21e8edc1916995"
+    bytes: 3126499
+  - path: music/lounge.flac
+    store: SOUND
+    asset_id: null  # sk_ambient.py
+    sha256: "f851f79d00be56803905adf9e986fa2f606818045cdac21b7990290a0b120e89"
+    bytes: 2866694
+  - path: music/funked_up.flac
+    store: SOUND
+    asset_id: null  # licensed.py: 'Funked Up' by Joth (CC0, opengameart.org/content/funked-up), cut to its 48 bars
+    sha256: "6c50e30b8a41f5407dc5a6038289c3807d5303bcaeea1318a8ee83aac94f4a64"
+    bytes: 5963246
+  - path: music/funk.flac
+    store: SOUND
+    asset_id: null  # sk_fight.py
+    sha256: "bced44e6c8dd970cefac72aaaa36382b408ca9596e688642c79c8fdfd91e15ff"
+    bytes: 3885161
+  - path: music/arcade.flac
+    store: SOUND
+    asset_id: null  # sk_fight.py
+    sha256: "34da5fafb5b2523443c55d6dc7b0736a37e8e085a9bf4e29f56501622874e079"
+    bytes: 3854531
+  - path: music/battle_theme.flac
+    store: SOUND
+    asset_id: null  # licensed.py: 'Battle Theme' by Komiku (CC0, opengameart.org/content/battle-theme-3): 8 bars of opening, then the loop
+    sha256: "97c99999798b357930daaebf44135920537cdd50e8f0ce269f45b559243fde9c"
+    bytes: 10329540
+  - path: music/boss_battle_2.flac
+    store: SOUND
+    asset_id: null  # licensed.py: 'Boss Battle #2 (symphonic metal)' by nene (CC0, opengameart.org/content/boss-battle-2-symphonic-metal): its opening, then its loop
+    sha256: "14bf5b72b895a658371e86b86535ff8b40a2bfc7bb24c6a3c63c2f72848eb307"
+    bytes: 6927792
+  - path: music/nothing_personal.flac
+    store: SOUND
+    asset_id: null  # sk_serious.py: on Lucan's film theme
+    sha256: "b3402f9df8fb4c9e5277de933e09c2adf6182bd9589cd77f006ccc255b06bf22"
+    bytes: 6029781
+  - path: music/no_way_out.flac
+    store: SOUND
+    asset_id: null  # sk_serious.py
+    sha256: "1389edd490e979ecd4d219bb42607fa79a8daaf19116100adba2a43b01957b78"
+    bytes: 5957918
+  - path: sounds/flares/quest_done.mp3
+    store: SOUND
+    asset_id: null  # sk_jingles.py and sk_flares.py
+    sha256: "564f7c61db385368b73ddcf1976c860213f57c2bed703b49e2aaf7e08c1fcda2"
+    bytes: 41318
+  - path: sounds/flares/great_move.mp3
+    store: SOUND
+    asset_id: null  # sk_jingles.py and sk_flares.py
+    sha256: "ce71eb803fc9154551d1d23354ccbe080c7eee48cefa454dd052fc9547115771"
+    bytes: 45498
+  - path: sounds/flares/gone_wrong.mp3
+    store: SOUND
+    asset_id: null  # sk_jingles.py and sk_flares.py
+    sha256: "4e9f45bb4c619c2993717f91ed53cec2bce0417b3a9b78181410b8e2acb8e5e6"
+    bytes: 41318
+  - path: sounds/auto/fight_start.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "f21860b4da22428c855ae75a9140861e8253f65cca071192893c8cbb720e4df1"
+    bytes: 49155
+  - path: sounds/auto/fight_won.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "b4036d37097832422587985f7ce961ddade1c3f8cdf02799507aacd33696d241"
+    bytes: 59604
+  - path: sounds/auto/crew_hit.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "08f4e5ec447ac437009c9f983d7ab52a8a561b4724b22d671efeddb7482f260b"
+    bytes: 13106
+  - path: sounds/auto/crew_down.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "f4f288046f65916175e59e7cdc0128105417d2fd600da6a2e1d52a92bad63c24"
+    bytes: 45498
+  - path: sounds/auto/npc_hit.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "92cf8d04ef82b7acc606551563ec5cc1d080f03cb9f92335fc17e460d123f19f"
+    bytes: 9449
+  - path: sounds/auto/npc_down.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "a2fd661489d49fd9253577e5b569ef2c5d4ef0f52b6c83631af1784941bc8aa7"
+    bytes: 17285
+  - path: sounds/auto/machine_hit.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "ae6486c2556b490db4bea2de3f27914ebd004db415be3de290d98a2f8a7d6ca9"
+    bytes: 11538
+  - path: sounds/auto/machine_down.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "51b2e554e6556b67c1b5df284294f102b176450f5f1f91ea76692fd2567aedcc"
+    bytes: 16241
+  - path: sounds/auto/healed.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "ccf300267f1d267407c87b6b77f1f924a8f3a272911d585535d74a1bb4f9fde1"
+    bytes: 13106
+  - path: sounds/auto/item_found.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "0d02ebbf23543f118505029adf33c7a33ee9edfa3a6f1f7ef15d1a6b99fd010e"
+    bytes: 16241
+  - path: sounds/auto/item_taken.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "e0e7e422c6e51ab8780986527794c97332e55d6b7d474753f5919ba25caabd6a"
+    bytes: 11538
+  - path: sounds/auto/credits_gained.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "a8e2e4219cfebeda203fc436d8dfa079e455084a92a47f58b664cd41a9b040f4"
+    bytes: 17285
+  - path: sounds/auto/credits_spent.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "62babb20aa1c4f3d2301bd9920be4950f5ee37fba66b09160acd2f5cf0e52e81"
+    bytes: 10494
+  - path: sounds/auto/entropy_gained.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "29fa8126485c8b3848547602240db6194d3e00cb0ab36661e57e44e6b22396a0"
+    bytes: 23555
+  - path: sounds/auto/entropy_spent.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "854d370bdc012384beb22c667871fb08f71cc5bfba498fda6cd015a8548f5907"
+    bytes: 21465
+  - path: sounds/auto/arrive.mp3
+    store: SOUND
+    asset_id: null  # sk_events.py, sk_events2.py, sk_jingles.py and sk_flares.py
+    sha256: "b1389b242226b74c7dcb3f1568e7e554ceb9f6c5e645d1b2d501602852b48713"
+    bytes: 49155
+  - path: sounds/station/pa_chime.mp3
+    store: SOUND
+    asset_id: null  # sk_board.py
+    sha256: "b3f7aa912818f787d3465461f6fcf77c2d0cd8965979c51495a915221574790d"
+    bytes: 69530
+  - path: sounds/station/guard_radio.mp3
+    store: SOUND
+    asset_id: null  # sk_board.py
+    sha256: "be50186d0c6831d2f83e23d125150828742414630560cdccbaedcf5fe50aba0a"
+    bytes: 49155

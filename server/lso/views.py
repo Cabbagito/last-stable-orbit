@@ -550,11 +550,22 @@ def _stage_view(state: GameState, content: Content, viewer: Viewer, online: froz
             "acts": [{"act": a.act, "steps": [{"id": x.id, "kind": "film" if x.film else "scene", "ref": x.film or x.scene} for x in a.steps]} for a in content.runsheet],
             "at": st.run_at,
         }
-        out["soundboard"] = [{"id": c.id, "name": c.name, "sounds": [{"id": s.id, "name": s.name} for s in c.sounds]} for c in content.soundboard]
+        deck = content.deck  # the Sound deck: names only, the files are the TV's
+        out["deck"] = {
+            "music": [{"id": g.id, "name": g.name, "fight": g.fight, "tracks": [{"id": t.id, "name": t.name} for t in g.tracks]} for g in deck.music],
+            "flares": [{"id": f.id, "name": f.name, "tone": f.tone} for f in deck.flares],
+            "pads": [{"id": c.id, "name": c.name, "sounds": [{"id": x.id, "name": x.name} for x in c.sounds]} for c in deck.pads],
+        }
+    tracks = content.deck.tracks
+    playing = st.music if st.music and st.music.track in tracks else None  # a track the content has since lost is silence
+    if viewer.is_gm:
+        out["music"] = {"track": playing.track if playing else None, "volume": st.volume}
     if viewer.is_stage:
         out["films"] = [url(c.file) for c in content.cutscenes.values() if c.file]  # fetched ahead, so a cue starts at once
-        out["sound_files"] = {s.id: url(s.file) for s in content.sounds.values()}  # fetched ahead too, so a press plays at once
+        out["sound_files"] = {x.id: url(x.file) for x in content.sounds.values()}  # fetched ahead too, so a press plays at once
         out["sounds"] = [p.model_dump() for p in st.sounds]
+        out["music_files"] = {t.id: {"src": url(t.file), "loop_from": t.loop_from} for t in tracks.values()}
+        out["music"] = {"track": playing.track, "at": playing.at, "fade": playing.fade, "volume": st.volume} if playing else {"track": None, "volume": st.volume}
     return out
 
 

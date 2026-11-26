@@ -162,7 +162,7 @@ async def test_replay_rebuilds_snapshot(engine):
     for seq, ev_type, data in engine.store.events():
         state = apply(state, seq, ev_type, json.loads(data))
     snap_seq, snap = engine.store.load_snapshot()
-    assert state.model_dump(mode="json") == snap and snap_seq == engine.state.seq == 6
+    assert state.model_dump(mode="json") == snap and snap_seq == engine.state.seq == 7  # five changes, and the sound Entropy makes
 
 
 async def test_restart_keeps_state(content, tmp_path):
@@ -170,4 +170,4 @@ async def test_restart_keeps_state(content, tmp_path):
     await e1.run(GM, None, "gm.vitals.set", {"char": "ves", "hp": 2})
     e1.store.close()
     e2 = Engine(content, Store(tmp_path / "r.db"))
-    assert e2.state.vitals["ves"].hp == 2 and e2.state.seq == 2
+    assert e2.state.vitals["ves"].hp == 2 and e2.state.seq == 3  # the change, and the sound a hit makes

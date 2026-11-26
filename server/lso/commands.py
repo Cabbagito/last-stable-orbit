@@ -11,7 +11,7 @@ import random
 from . import rules, rush, sheet
 from .auth import Viewer
 from .content import Content
-from .models import STATION_STATES, RaceLook, BURN_COST, CAMERA_PAN_MAX, CAMERA_ZOOM_MAX, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_CAP, HEALTH_CAP, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
+from .models import STATION_STATES, VOLUME_MAX, RaceLook, BURN_COST, CAMERA_PAN_MAX, CAMERA_ZOOM_MAX, CAMERAS, COUNT_MAX, DIE_SIDES, ENTROPY_CAP, HEALTH_CAP, STATS, GameState, InvEntry, RollState, SlotBank, SlotSeat, TokenState
 from .state import state_from_preset
 from .views import viewer_map
 
@@ -28,6 +28,10 @@ FILM_LEAD = 1.5  # a film starts this long after the GM presses Play. The TV has
 OPENING_LEAD = 0.75  # the opening's film starts on the first beat at least this long after Play, so the TV hears in time
 BURN_LEAD = 0.4  # and every Burn film, so a Burn starts almost at once
 BURN_HOLD = 0.75  # seconds a Burn film's last frame stays up before the hard cut back
+MUSIC_FADE = 1.5  # seconds a track picked on the deck takes to come in, as the one before it goes out
+FIGHT_MUSIC_LEAD = 1.2  # a fight's track starts this long after its bell, on its first beat and at full level
+WON_MUSIC_LEAD = 2.6  # and what was playing before the fight returns this long after the win's jingle starts
+ARRIVE_LEAD = 0.4  # the arriving sound lands as the new map comes up, once the old one has faded (web/src/map/arrival.tsx)
 RUSH_BEHIND = 3000  # ms: a serve the cook's laptop says happened longer ago than this lands this long ago
 RUSH_AHEAD = 500  # ms: and one it says happens later than now lands this much later at most
 RACE_LONGEST = 3.3 + 100  # s from the lights to the flag, at most: the lights, and the longest race (web/src/race/sim.test.ts)
@@ -397,6 +401,7 @@ def _gm_stage(state: GameState, content: Content, kind: str, args: dict, now: fl
         if state.stage.film:  # it ended a moment ago and the sweeper hasn't caught up
             events.append(("film.ended", {"cue": state.stage.film.cue}))
         at = round(now + FILM_LEAD, 3)
+        events += _music_off(state)
         events.append(("film.started", {"cue": cue.id, "at": at, "ends": round(at + cue.length, 3)}))
         events.append(("run.at_set", {"step": f"film:{cue.id}"}))
         if cue.then:  # the film brings its scene: the preset loads behind it, as "Load it" would
@@ -463,7 +468,7 @@ def _gm_opening(state: GameState, content: Content, kind: str, args: dict, now: 
             return [("opening.cleared", {})]
         if film_playing(state, now) or burn_playing(state, now):
             raise _invalid("a film is playing: turn the opening on once it ends")
-        return [("opening.armed", {"loop_at": round(now, 3)})]
+        return _music_off(state) + [("opening.armed", {"loop_at": round(now, 3)})]
 
     if kind == "gm.opening.play":
         if o is None:
@@ -853,6 +858,13 @@ def _gm_fight(state: GameState, content: Content, kind: str, args: dict, rng, no
         events: Events = [("token.hidden_set", {"token": t, "hidden": False}) for t in tokens if state.tokens[t].hidden]
         ini = {t: roll(t) for t in tokens}
         events.append(("fight.started", {"map": map_id, "order": order_of(ini), "rolled": tokens, "ini": ini, "at": now}))
+        if args.get("music") is not None:  # the track picked in "Who's in the fight": it comes in after the bell
+            track = content.deck.tracks.get(_str(args, "music"))
+            if not track:
+                raise _invalid("unknown track")
+            m = state.stage.music
+            back = (m.back if m.fight else m.track) if m else None  # a second fight keeps what the first one interrupted
+            events.append(("stage.music_set", {"track": track.id, "at": round(now + FIGHT_MUSIC_LEAD, 3), "fade": 0.05, "fight": map_id, "back": back}))
         return events
     if f is None:
         raise _invalid("there's no fight on that map")
@@ -885,7 +897,15 @@ def _gm_fight(state: GameState, content: Content, kind: str, args: dict, rng, no
         return [("fight.left", {"map": map_id, "token": tid})]
 
     if kind == "gm.fight.end":
-        return [("fight.ended", {"map": map_id})]
+        events = [("fight.ended", {"map": map_id})]
+        m = state.stage.music
+        if m and m.fight == map_id:  # its track goes with it, and what it interrupted returns (after the win's jingle)
+            if m.back in content.deck.tracks:
+                at = now + (WON_MUSIC_LEAD if _won(state, content, map_id) and "fight_won" in content.deck.auto else 0)
+                events.append(("stage.music_set", {"track": m.back, "at": round(at, 3), "fade": 2.0}))
+            else:
+                events.append(("stage.music_set", {"track": None}))
+        return events
 
     raise _invalid(f"unknown intent {kind!r}")
 
@@ -936,7 +956,95 @@ def sweep(state: GameState, now: float, online: set[str], content: Content | Non
 def handle(viewer: Viewer, state: GameState, content: Content, kind: str, args: dict, rng: rules.Rng | None = None, now: float = 0.0) -> Events:
     """One intent, checked and turned into events. Pages of the Codex that open by themselves are added last."""
     events = _handle(viewer, state, content, kind, args, rng, now)
-    return events + _codex_follows(state, content, events)
+    return events + _codex_follows(state, content, events) + _sound_follows(state, content, kind, events, now)
+
+
+def _sound_follows(state: GameState, content: Content, kind: str, events: Events, now: float) -> Events:
+    """The sounds that play by themselves (content/soundboard.yaml, `auto`): the TV plays one when the GM does the
+    thing it belongs to. Only these GM commands make one, so a player's push, a Burn, a slot pull or a maximum coming
+    down never does: those have their own sound, or none. Nothing here says who or what: the TV gets only the sound."""
+    have = content.deck.auto
+    out: list[tuple[str, float]] = []
+    if kind == "gm.vitals.set":
+        for k, d in events:
+            if k != "vitals.set":
+                continue
+            v = state.vitals.get(d["char"])
+            hp0, en0 = (v.hp, v.entropy) if v else (sheet.max_health(state, content, d["char"]), 2)
+            if d["hp"] < hp0:
+                out.append(("crew_down" if d["hp"] <= 0 else "crew_hit", now))
+            elif d["hp"] > hp0:
+                out.append(("healed", now))
+            if d["entropy"] != en0:
+                out.append(("entropy_gained" if d["entropy"] > en0 else "entropy_spent", now))
+    elif kind == "gm.npc.hp":
+        for k, d in events:
+            t = state.tokens.get(d["token"]) if k == "npc.hp_set" else None
+            if t is None or t.hidden:  # a hidden one makes no noise: nobody at the table knows it's there
+                continue
+            npc = content.npcs[t.ref]
+            hp0 = npc.health if t.hp is None else t.hp
+            who = "machine" if npc.machine else "npc"
+            if d["hp"] < hp0:
+                out.append((f"{who}_down" if d["hp"] <= 0 else f"{who}_hit", now))
+            elif d["hp"] > hp0:
+                out.append(("healed", now))
+    elif kind in ("gm.item.draw", "gm.item.give", "gm.item.take", "gm.item.count"):  # a move between two of the crew is silent
+        for k, d in events:
+            if k == "item.given":
+                it = content.items.get(d["entry"]["item"])
+                out.append(("credits_gained" if it and it.counted else "item_found", now))
+            elif k in ("item.taken", "item.counted"):
+                e = next((e for e in state.inventory.get(d["holder"], []) if e.uid == d["uid"]), None)
+                it = content.items.get(e.item) if e else None
+                if not it:
+                    continue
+                if k == "item.taken":
+                    out.append(("credits_spent" if it.counted else "item_taken", now))
+                elif d["count"] != (e.count or 0):
+                    out.append(("credits_gained" if d["count"] > (e.count or 0) else "credits_spent", now))
+    elif kind == "gm.fight.start":
+        out += [("fight_start", now) for k, _ in events if k == "fight.started"]
+    elif kind == "gm.fight.end":
+        out += [("fight_won", now) for k, d in events if k == "fight.ended" and _won(state, content, d["map"])]
+    elif kind in ("gm.crew.send", "gm.world.load_preset"):  # the crew arrive somewhere else: the map fades out, then in
+        for k, d in events:
+            to = d["map"] if k == "party.map_set" else d["state"]["party_map"] if k == "world.loaded" else None
+            if to and state.party_map and to != state.party_map:
+                out.append(("arrive", now + ARRIVE_LEAD))
+    return [("stage.sound_played", {"id": i, "at": round(at, 3)}) for i, at in out if i in have]
+
+
+def _won(state: GameState, content: Content, map_id: str) -> bool:
+    """A fight the crew plainly won: one of them still up, and nobody else in it is. Anything less sure ends quietly."""
+    f = state.fights.get(map_id)
+    if not f:
+        return False
+    crew = [t for t in f.order if state.tokens[t].kind == "crew"]
+    rest = [t for t in f.order if state.tokens[t].kind != "crew"]
+    return any(not is_down(state, content, t) for t in crew) and bool(rest) and all(is_down(state, content, t) for t in rest)
+
+
+def _music_off(state: GameState) -> Events:
+    """A film has the TV's sound to itself, and what comes after it is another scene: the deck's music ends."""
+    return [("stage.music_set", {"track": None})] if state.stage.music else []
+
+
+def _gm_music(state: GameState, content: Content, kind: str, args: dict, now: float) -> Events:
+    """The deck's music: one track at a time, looping on the TV until the GM picks another or stops it."""
+    if kind == "gm.music.play":
+        track = content.deck.tracks.get(_str(args, "track"))
+        if not track:
+            raise _invalid("unknown track")
+        return [("stage.music_set", {"track": track.id, "at": round(now, 3), "fade": MUSIC_FADE})]
+    if kind == "gm.music.stop":
+        return _music_off(state)
+    if kind == "gm.music.volume":
+        v = _int(args, "volume")
+        if not 0 <= v <= VOLUME_MAX:
+            raise _invalid(f"volume must be 0..{VOLUME_MAX}")
+        return [] if v == state.stage.volume else [("stage.volume_set", {"volume": v})]
+    raise _invalid(f"unknown intent {kind!r}")
 
 
 def _codex_follows(state: GameState, content: Content, events: Events) -> Events:
@@ -1207,6 +1315,9 @@ def _handle(
 
     if kind.startswith("gm.opening."):
         return _gm_opening(state, content, kind, args, now)
+
+    if kind.startswith("gm.music."):  # any time, a film included: it's held silent there, and comes in when the film is over
+        return _gm_music(state, content, kind, args, now)
 
     if kind == "gm.sound.play":  # over anything, films included: it's only a noise, and the GM's call
         sound = content.sounds.get(_str(args, "sound"))

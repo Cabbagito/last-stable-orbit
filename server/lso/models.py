@@ -117,6 +117,7 @@ class Npc(Strict):
     gm_note: str = ""  # never sent to players
     codex: str | None = None  # its Codex entry, once the Codex exists (M6)
     size: float = 1  # token size: the spider mech is a double-size token
+    machine: bool = False  # a robot, a droid, a mech: it clanks when it's hit (the Sound deck's automatic sounds). Never sent out
     health: int = Field(ge=1, le=20)  # the enemy card's health. Players see it only as the HP ring, while it's in a fight
     burns: list[NpcBurn] = []  # GM only, never sent to players
 
@@ -1148,11 +1149,90 @@ class SoundCategory(Strict):
     sounds: list[Sound] = Field(min_length=1)
 
 
+class Flare(Sound):
+    """One of the deck's three big buttons."""
+
+    tone: Literal["good", "great", "bad"] = "good"  # the colour of its dot
+
+
+class Track(Strict):
+    """A piece of music on the deck. Its file is a FLAC that ends exactly where the loop does."""
+
+    id: str
+    name: str
+    file: str  # under assets/
+    length: float = Field(gt=0)  # seconds: the file's length, to the sample
+    loop_from: float = Field(default=0, ge=0)  # seconds: where it goes back to. Past 0, what's before it is an opening, played once
+
+    @model_validator(mode="after")
+    def _loops(self) -> "Track":
+        if self.loop_from >= self.length:
+            raise ValueError(f"{self.id}: loop_from has to be inside the track")
+        return self
+
+
+class MusicGroup(Strict):
+    """A row of tracks on the deck, under one heading."""
+
+    id: str
+    name: str
+    fight: bool = False  # its tracks are offered in "Who's in the fight"
+    tracks: list[Track] = Field(min_length=1)
+
+
+# The moments that make a sound by themselves. commands._sound_follows decides when each one plays.
+AUTO_SOUNDS = (
+    "fight_start", "fight_won", "crew_hit", "crew_down", "npc_hit", "npc_down", "machine_hit", "machine_down", "healed",
+    "item_found", "item_taken", "credits_gained", "credits_spent", "entropy_gained", "entropy_spent", "arrive",
+)  # fmt: skip
+
+
+class SoundDeck(Strict):
+    """content/soundboard.yaml: everything the GM plays on the TV by hand, and the sounds that play by themselves."""
+
+    music: list[MusicGroup] = []
+    flares: list[Flare] = []
+    auto: dict[str, str] = {}  # a moment (one of AUTO_SOUNDS) -> its file. A moment left out is silent
+    pads: list[SoundCategory] = []
+
+    @field_validator("auto")
+    @classmethod
+    def _moments(cls, v: dict[str, str]) -> dict[str, str]:
+        unknown = sorted(set(v) - set(AUTO_SOUNDS))
+        if unknown:
+            raise ValueError(f"auto: nothing plays {unknown}; the moments are {list(AUTO_SOUNDS)}")
+        return v
+
+    @property
+    def tracks(self) -> dict[str, Track]:
+        return {t.id: t for g in self.music for t in g.tracks}
+
+    def every_sound(self) -> list[Sound]:
+        """Pads, flares and the automatic ones, each a clip the TV can be told to play."""
+        auto = [Sound(id=k, name=k, file=f) for k, f in self.auto.items()]
+        return [s for c in self.pads for s in c.sounds] + list(self.flares) + auto
+
+
+VOLUME_MAX = 10  # the deck's music volume goes 0..10
+VOLUME_DEFAULT = 8
+
+
 class SoundPlayed(Strict):
-    """A press on the soundboard, at `at` (server time). The TV plays each one it hasn't played."""
+    """A sound for the TV: a press on the deck, or one that plays by itself. It plays at `at` (server time), which can
+    be a moment ahead. The TV plays each one it hasn't played."""
 
     id: str
     at: float
+
+
+class MusicState(Strict):
+    """The track the TV is looping. Its first bar was, or will be, at `at` (server time)."""
+
+    track: str
+    at: float
+    fade: float = 1.5  # seconds it takes to come in
+    fight: str | None = None  # the map whose fight brought it on: when that fight ends, `back` returns
+    back: str | None = None  # what was playing before the fight, if anything
 
 
 class FilmState(Strict):
@@ -1232,7 +1312,9 @@ class StageState(Strict):
     npc_burn: NpcBurnState | None = None  # GM and TV only
     flood: FloodState | None = None
     join: bool = True  # the join card is on the TV, if the server has one, until the GM hides it
-    sounds: list[SoundPlayed] = []  # the last few soundboard presses, for the TV
+    sounds: list[SoundPlayed] = []  # the last few sounds, for the TV
+    music: MusicState | None = None  # the deck's music, for the TV
+    volume: int = VOLUME_DEFAULT  # and how loud, 0..VOLUME_MAX
     run_at: str | None = None  # the run sheet row the GM last pressed (a RunStep's id): "you are here"
 
 

@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import type { StatKey } from '../types'
 
 // The parts of the screen that can act on a key register a handler while they're on screen: the map, the roll
-// screen, the soundboard, the open NPC card. KeyLayer decides what a key means; whoever holds that name does it.
+// screen, the Sound deck, the open NPC card. KeyLayer decides what a key means; whoever holds that name does it.
 // A handler returns false when it can't act right now (a film is on, no TV), and the key then does nothing.
 
 type Handler = (arg: number) => boolean | void
@@ -36,7 +36,7 @@ export const held = new Set<string>()
 interface KeyState {
   /** B (then its first digit), or the GM's R: the next key belongs to it. */
   chord: null | 'sound' | 'soundCat' | 'roll'
-  /** The soundboard category the first digit picked (its index). */
+  /** The Sound deck tab the first digit picked (its index). */
   soundCat: number | null
   help: boolean
   /** The stat this player last rolled: R opens the roll screen on it. */

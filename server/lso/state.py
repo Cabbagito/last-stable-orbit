@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .content import Content
-from .models import RULES, BurnState, NpcBurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, MaxAdjust, OpeningState, OverviewState, Preset, PresetItem, RaceLook, RacePrep, RaceRoll, RaceState, RollState, RushBowl, RushServe, RushState, SlotBank, SlotSeat, SoundPlayed, TokenState, Vitals
+from .models import RULES, BurnState, NpcBurnState, Fight, FilmState, FloodState, GameState, InvEntry, MapState, MaxAdjust, MusicState, OpeningState, OverviewState, Preset, PresetItem, RaceLook, RacePrep, RaceRoll, RaceState, RollState, RushBowl, RushServe, RushState, SlotBank, SlotSeat, SoundPlayed, TokenState, Vitals
 
 SOUNDS_KEPT = 8  # soundboard presses kept for the TV: a quick run of them can land in one frame
 KEEP_CLOSED_ROLLS = 20  # closed rolls kept in the state for the GM's history; the log keeps all of them
@@ -269,6 +269,10 @@ def apply(state: GameState, seq: int, ev_type: str, data: dict) -> GameState:
         s.stage.zoom, s.stage.pan = data["zoom"], tuple(data["pan"])
     elif ev_type == "stage.sound_played":
         s.stage.sounds = [*s.stage.sounds[-(SOUNDS_KEPT - 1):], SoundPlayed.model_validate(data)]
+    elif ev_type == "stage.music_set":  # the deck's music: a track, or None for silence
+        s.stage.music = MusicState.model_validate(data) if data.get("track") else None
+    elif ev_type == "stage.volume_set":
+        s.stage.volume = int(data["volume"])
     elif ev_type == "stage.join_set":
         s.stage.join = data["show"]
     elif ev_type == "fight.started":

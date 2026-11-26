@@ -391,11 +391,26 @@ export interface PresetCard {
   card: string | null
 }
 
-/** One button on the GM's top bar, and the sounds it opens. */
+/** One tab of pads on the Sound deck. */
 export interface SoundCategory {
   id: string
   name: string
   sounds: { id: string; name: string }[]
+}
+
+/** The GM's Sound deck: names only. Everything on it plays on the TV. */
+export interface DeckView {
+  music: { id: string; name: string; fight: boolean; tracks: { id: string; name: string }[] }[] // `fight`: offered in "Who's in the fight"
+  flares: { id: string; name: string; tone: 'good' | 'great' | 'bad' }[]
+  pads: SoundCategory[]
+}
+
+/** The deck's music. The GM gets what's on and how loud; the TV also when its first bar is and how it comes in. */
+export interface MusicView {
+  track: string | null
+  volume: number // 0..10
+  at?: number // server time (s) of its first bar, which can be a moment ahead
+  fade?: number // seconds it takes to come in
 }
 
 export interface SoundPlayed {
@@ -419,9 +434,11 @@ export interface StageView {
   tv?: boolean // GM only: the TV is connected
   cues?: CueView[] // GM only
   films?: string[] // the TV only: every film, fetched ahead
-  soundboard?: SoundCategory[] // GM only
+  deck?: DeckView // GM only
+  music?: MusicView // the GM and the TV
+  music_files?: Record<string, { src: string; loop_from: number }> // the TV only: every track by id
   sound_files?: Record<string, string> // the TV only: every sound by id, fetched ahead
-  sounds?: SoundPlayed[] // the TV only: the last few presses
+  sounds?: SoundPlayed[] // the TV only: the last few sounds, each to play at its `at`
   flood?: FloodView // the TV only
   join?: JoinView
 }
